@@ -7,9 +7,9 @@
 - steps (LLM inferences): 14 | actions: 13 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(5: succeeded) -> repair(2: succeeded) -> validation(1: unchecked) -> localization(3: succeeded) -> validation(2: unchecked)
+Phases: localization(5: succeeded) -> repair(1: succeeded) -> validation(7: succeeded)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -36,7 +36,7 @@ Search the AnkiDroid codebase in /home/antu_shared/automated_program_repair_for_
 **Result**:
 _delegated to subagent `sub-call_7646518e13ee41db85ab7cfb` -- its 0 actions follow below_
 
-## 2. read_file / localization  (read_file)
+## 2. read / localization  (read_file)
 _step 4 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -84,7 +84,7 @@ The bug report describes clicking through tabs and drawing, but the actual imple
  *
 ```
 
-## 3. read_file / localization  (read_file)
+## 3. read / localization  (read_file)
 _step 4 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -100,7 +100,7 @@ _(same inference as the previous action)_
 Read lines 231-310 of 930 from AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java
 ```
 
-## 4. read_file / localization  (read_file)
+## 4. read / localization  (read_file)
 _step 4 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -116,7 +116,7 @@ _(same inference as the previous action)_
 Read lines 421-520 of 930 from AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java
 ```
 
-## 5. read_file / localization  (read_file)
+## 5. read / localization  (read_file)
 _step 5_
 
 **Thought** (reasoning):
@@ -155,7 +155,7 @@ Now I'm tracing through the bug scenario: the user starts with a blank card wher
 Read lines 260-289 of 407 from AnkiDroid/src/main/java/com/ichi2/anki/Whiteboard.java
 ```
 
-## 6. edit_file / repair  (edit)
+## 6. edit / repair  (edit)
 _step 6_
 
 **Thought** (reasoning):
@@ -185,7 +185,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             if (mCardViewer.
 ```
 
-## 7. build / repair  (run_shell_command)
+## 7. build / validation  (run_shell_command)
 _step 7_
 
 **Thought** (reasoning):
@@ -236,7 +236,7 @@ Signal: (none)
 Process Group PGID: 1981050
 ```
 
-## 9. vcs / localization  (run_shell_command)
+## 9. diff / validation  (run_shell_command)
 _step 9_
 
 **Thought** (reasoning):
@@ -255,7 +255,7 @@ On branch master
 nothing to commit, working tree clean
 ```
 
-## 10. vcs / localization  (run_shell_command)
+## 10. vcs / validation  (run_shell_command)
 _step 10 | **FAILED**_
 
 **Thought** (reasoning):
@@ -279,7 +279,7 @@ Exit Code: 1
 Signal: (none)
 ```
 
-## 11. vcs / localization  (run_shell_command)
+## 11. vcs / validation  (run_shell_command)
 _step 11_
 
 **Thought** (reasoning):
@@ -320,7 +320,7 @@ drwxrwxr-x 6 antu_shared antu_shared 4096 Sep 24 08:07 ..
 /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run1/bug-160
 ```
 
-## 13. read_file / validation  (read_file)
+## 13. read / validation  (read_file)
 _step 13_
 
 **Thought** (reasoning):

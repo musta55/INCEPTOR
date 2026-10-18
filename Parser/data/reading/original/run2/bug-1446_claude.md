@@ -7,9 +7,9 @@
 - steps (LLM inferences): 15 | actions: 14 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(5: blocked) -> validation(2: succeeded)
+Phases: localization(7: succeeded) -> repair(3: blocked) -> validation(4: blocked, succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -35,7 +35,7 @@ settings.gradle
 (eval):1: no matches found: --include=*.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -56,7 +56,7 @@ app/src/androidTest/java/com/cohenadair/anglerslog/backup/JsonTest.java
 app
 ```
 
-## 3. read_file / localization  (Bash)
+## 3. read / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -83,7 +83,7 @@ import com.cohenadair.anglerslog.fragments.ManageContentFragment;
 import com.cohenadair.anglerslog.fragments.ManageFra
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -108,7 +108,7 @@ import com.cohenadair.anglerslog.model.Logbook;
 import com.cohenadair.anglerslog.model.ba
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -137,7 +137,7 @@ import com.cohenadair.anglerslog.R;
 import com.cohenadair.anglersl
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -166,7 +166,7 @@ import com.cohenadair.anglerslog.R;
 import
 ```
 
-## 7. read_file / localization  (Read)
+## 7. read / localization  (Read)
 _step 7_
 
 **Thought** (narration):
@@ -195,7 +195,7 @@ Now let me examine the key buggy area more closely:
 151	        updateAl
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -213,7 +213,7 @@ I've found the defect. Let me apply the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1446/app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -231,7 +231,7 @@ Now let me make the edit callback and view refresh robust:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1446/app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -247,7 +247,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1446/app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. search_code / repair (own phase localization)  (Bash)
+## 11. search / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -265,7 +265,7 @@ grep -n "FISHING_SPOT_ID\|FOREIGN KEY" app/src/main/java/com/cohenadair/anglersl
 235:            WeatherTable.Columns.CATCH_ID + " TEXT PRIMARY KE
 ```
 
-## 12. build / repair  (Bash)
+## 12. build / validation  (Bash)
 _step 12_
 
 **Thought** (narration):
@@ -312,7 +312,7 @@ Network is sandboxed. Let me try offline mode with cached dependencies:
 > Task :a
 ```
 
-## 14. read_file / validation  (Read)
+## 14. read / validation  (Read)
 _step 14_
 
 **Thought** (narration):

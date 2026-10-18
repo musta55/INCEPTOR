@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 21 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(10: succeeded) -> repair(4: blocked) -> validation(7: blocked)
+Phases: planning(1: unchecked) -> localization(9: succeeded) -> repair(2: blocked) -> validation(9: blocked)
 
-## 1. orient / localization  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ screenshots
 settings.gradle
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -57,7 +57,7 @@ grep -ri "_encrypted" /Volumes/Dumpy/Research/automated_program_repair_for_ui_bu
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -73,7 +73,7 @@ grep -ril "encrypted" app/src/main/java | head -50
 app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -92,7 +92,7 @@ app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java:400:     * 
 app/src/main/java/swati4star/crea
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -120,7 +120,7 @@ _(none)_
 332	        @BindView(
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -142,7 +142,7 @@ app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java:214:       
 app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java:237:            if (fdelete.exist
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -169,7 +169,7 @@ grep -n "" app/src/main/java/swati4star/createpdf/util/FileUtils.java | sed -n '
 12:import android.print.PrintAttribu
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ grep -n "FileUtils\|import\|class ViewFilesAdapter" app/src/main/java/swati4star
 13:import a
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 8_
 
 **Thought** (narration):
@@ -219,7 +219,7 @@ grep -n "public static\|public " app/src/main/java/swati4star/createpdf/util/Fil
 76:            public int compare(File fil
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -245,7 +245,7 @@ _(none)_
 129	     * Gives a format
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1198/app/src/main/java/swati4star/createpdf/util/FileUtils.java has been updated successfully.
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 11_
 
 **Thought** (none):
@@ -277,7 +277,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1198/app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java has been updated successfully.
 ```
 
-## 13. search_code / repair (own phase localization)  (Bash)
+## 13. search / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -294,7 +294,7 @@ grep -n "pdf_ext\|\.pdf<" app/src/main/res/values/strings.xml
 116:    <string name="encrypted_file">_encrypted.pdf</string>
 ```
 
-## 14. build / repair  (Bash)
+## 14. build / validation  (Bash)
 _step 13_
 
 **Thought** (narration):
@@ -353,7 +353,7 @@ _(none)_
    > Could not downlo
 ```
 
-## 17. run_test / validation  (Bash)
+## 17. test / validation  (Bash)
 _step 16_
 
 **Thought** (narration):
@@ -447,7 +447,7 @@ javac -d /tmp/parsecheck app/src/main/java/swati4star/createpdf/util/FileUtils.j
    2 package com.afollestad.materialdialogs do
 ```
 
-## 21. read_file / validation  (Read)
+## 21. read / validation  (Read)
 _step 20_
 
 **Thought** (narration):

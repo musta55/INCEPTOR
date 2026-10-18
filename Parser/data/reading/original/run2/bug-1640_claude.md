@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 27 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(17: blocked) -> validation(3: succeeded)
+Phases: localization(7: succeeded) -> repair(1: blocked) -> validation(1: unchecked) -> localization(2: failed) -> validation(4: unchecked) -> localization(1: failed) -> repair(3: blocked) -> validation(8: blocked, succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -34,7 +34,7 @@ drwxr-xr-x@  3 splash  staff     96 Sep 14 00:36 .github
 drwxr-xr-x@  5 splash  staff    160 Sep 14 00:3
 ```
 
-## 2. read_file / localization  (Bash)
+## 2. read / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -57,7 +57,7 @@ cat app/src/main/res/layout/content_info.xml && cat app/src/main/java/com/german
     t
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -73,7 +73,7 @@ find app/src/main/res -name "strings.xml" | xargs ls -la
 -rwxr-xr-x@ 1 splash  staff  5573 Sep 14 00:36 app/src/main/res/values/strings.xml
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (narration):
@@ -100,7 +100,7 @@ The output file is just a log of this session. Let me examine the strings resour
 10	    <string name="navigation_drawer_open
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -139,7 +139,7 @@ android {
         versionCode 119
 ```
 
-## 6. env_setup / localization (own phase understanding)  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (narration):
@@ -171,7 +171,7 @@ buildscript {
         // in the individual module build.gradle files
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (narration):
@@ -196,7 +196,7 @@ notice like this when it starts in an interactive mode:
     <program>  Copyright (C) <year>  <name
 ```
 
-## 8. shell_edit / repair  (Bash)
+## 8. edit / repair  (Bash)
 _step 8_
 
 **Thought** (narration):
@@ -221,7 +221,7 @@ src = open('app/src/main/res/values/strings.xml', encod
 chars: 35987 utf8 bytes of runtime text: 35148
 ```
 
-## 9. build / repair  (Bash)
+## 9. build / validation  (Bash)
 _step 9_
 
 **Thought** (narration):
@@ -240,7 +240,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 EXIT:0
 ```
 
-## 10. search_code / repair  (Bash)
+## 10. search / localization  (Bash)
 _step 10_
 
 **Thought** (narration):
@@ -258,7 +258,7 @@ ls ~/Library/Android/sdk/build-tools 2>/dev/null; find app/build -name "*.apk" |
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## 11. read_file / repair  (Bash)
+## 11. orient / localization  (Bash)
 _step 11 | **FAILED**_
 
 **Thought** (none):
@@ -291,7 +291,7 @@ Exit code 1
 36.1.0
 ```
 
-## 12. search_code / repair  (Bash)
+## 12. read / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -307,7 +307,7 @@ SDK=$(ls -d $ANDROID_SDK_ROOT 2>/dev/null || ls -d /usr/local/share/android-sdk)
 .
 ```
 
-## 13. search_code / repair  (Bash)
+## 13. search / validation  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -324,7 +324,7 @@ exit:127
 (eval):1: no such file or directory: /usr/local/share/android-sdk/build-tools/28.0.3/aapt
 ```
 
-## 14. search_code / repair (own phase localization)  (Bash)
+## 14. search / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -342,7 +342,7 @@ ANDROID_HOME=/Volumes/Dumpy/Android/sdk
 PATH=/Users/splash/.local/bin:/Users/splash/.local/bin:/Users/splash/.jenv/shims:/Users/splash/.jenv/bin:/Users/splash/.nvm/versions/node/v25.0.0/bin:/Users/splash/miniconda3/bin:/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.13/bin:/usr/
 ```
 
-## 15. search_code / repair  (Bash)
+## 15. search / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -361,7 +361,7 @@ exit:0
 5738:      spec resource 0x7f0f0033 com.german_software_engineers.trainerapp:string/large_text: flags=0x00000
 ```
 
-## 16. search_code / repair  (Bash)
+## 16. search / localization  (Bash)
 _step 16_
 
 **Thought** (narration):
@@ -382,7 +382,7 @@ spec resource 0x7f0f0033 com.german_software_engineers.trainerapp:string/large_t
       spec resource 0x7f0f0036 com.german_software_engineers.trainerap
 ```
 
-## 17. shell_edit / repair  (Bash)
+## 17. edit / repair  (Bash)
 _step 17_
 
 **Thought** (narration):
@@ -416,7 +416,7 @@ new='''    <!-- Full license text is shipped as res/raw/license.txt (too long fo
     <string name="navigation_drawer_open">Open navigation dra
 ```
 
-## 18. edit_file / repair  (Write)
+## 18. edit / repair  (Write)
 _step 18_
 
 **Thought** (narration):
@@ -434,7 +434,7 @@ Now update the layout to expose the TextView and add a title:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1640/app/src/main/res/layout/content_info.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 19. edit_file / repair  (Write)
+## 19. edit / repair  (Write)
 _step 19_
 
 **Thought** (narration):
@@ -452,7 +452,7 @@ Now load the complete license text in `InfoActivity`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1640/app/src/main/java/com/german_software_engineers/trainerapp/InfoActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 20. build / repair  (Bash)
+## 20. build / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -469,7 +469,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 BUILD_EXIT:0
 ```
 
-## 21. env_setup / repair  (Bash)
+## 21. read / validation  (Bash)
 _step 21_
 
 **Thought** (narration):
@@ -493,7 +493,7 @@ Public License instead of this License.  But first, please read
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/run
 ```
 
-## 22. search_code / repair  (Bash)
+## 22. search / validation  (Bash)
 _step 22_
 
 **Thought** (none):
@@ -513,7 +513,7 @@ warnings:
 2
 ```
 
-## 23. search_code / repair  (Bash)
+## 23. search / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ grep -n "large_text" /tmp/res2.txt | cut -c1-120; echo "--- tests referencing In
 --- tests referencing Info/license:
 ```
 
-## 24. run_test / repair  (Bash)
+## 24. test / validation  (Bash)
 _step 24_
 
 **Thought** (none):
@@ -581,7 +581,7 @@ BUILD SUCCESSFUL in 5s
 28 actionable tasks: 26 executed, 2 up-to-date
 ```
 
-## 26. search_code / validation (own phase localization)  (Bash)
+## 26. search / validation  (Bash)
 _step 26_
 
 **Thought** (narration):
@@ -606,7 +606,7 @@ git init -q 2>/dev/null; echo "=== FILES CHANGED ==="; ls -l app/src/main/res/ra
 20-    <string name="license_title">License - GPL V 3.0</
 ```
 
-## 27. env_setup / validation  (Bash)
+## 27. edit / validation  (Bash)
 _step 27_
 
 **Thought** (none):

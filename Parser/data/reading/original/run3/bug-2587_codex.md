@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(8: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(5: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(7: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:09:41.508Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the connection flow, patch invalid-host handling, then run the requ
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:09:43.813Z | **FAILED**_
 
 **Thought** (none):
@@ -63,7 +63,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:09:44.605Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ app/src/main/java/io/pslab/fragment/LALogicLinesFragment.java:943:        protec
 app/src/main/java/io/pslab/fragment/LALogicLinesFragment.java:1062:        protected final Void doInBackground(Arr
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:09:48.128Z_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ import android.view.ViewGroup;
 import and
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:09:54.577Z | **FAILED**_
 
 **Thought** (narration):
@@ -147,7 +147,7 @@ Output:
 fatal: no such path 'app/src/main/java/io/pslab/fragment/ESPFragment.java' in HEAD
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:09:57.794Z_
 
 **Thought** (none):
@@ -177,7 +177,7 @@ val KEYSTORE_FILE = rootProject.file("scripts/pslab.jks")
 val GITHUB_B
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-26T17:10:04.941Z_
 
 **Thought** (narration):
@@ -195,7 +195,7 @@ No local unit-test source set or test dependency exists, and this UI fragment is
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-26T17:10:11.512Z_
 
 **Thought** (none):
@@ -226,7 +226,7 @@ Success. Updated the following files:
 M app/src/main/java/io/pslab/fragment/ESPFragment.java
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-26T17:10:13.668Z_
 
 **Thought** (narration):
@@ -244,7 +244,7 @@ Malformed hosts now stop before `AsyncTask`, with the existing snackbar shown. I
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-26T17:10:14.846Z_
 
 **Thought** (none):
@@ -266,7 +266,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-26T17:10:16.670Z_
 
 **Thought** (none):
@@ -286,7 +286,7 @@ Original token count: 0
 Output:
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-26T17:10:22.739Z_
 
 **Thought** (none):
@@ -314,7 +314,7 @@ Android Gradle plugin that has been tested with compileSdk = 35.
 I
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T17:10:28.568Z_
 
 **Thought** (none):
@@ -342,7 +342,7 @@ Note: Processing class GyroData
 Note: Processing class ServoDa
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-26T17:10:34.420Z_
 
 **Thought** (none):
@@ -364,7 +364,7 @@ Output:
 > Task :app:debugRealmAccessorsTransformer
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-26T17:10:40.547Z_
 
 **Thought** (none):
@@ -395,7 +395,7 @@ BUILD SUCCESSFUL in 27s
 37 actio
 ```
 
-## 16. read_file / validation  (exec_command)
+## 16. read / validation  (exec_command)
 _step 20 | 2026-09-26T17:10:46.025Z_
 
 **Thought** (narration):
@@ -427,7 +427,7 @@ Output:
     44	    public View onCreateView(@Non
 ```
 
-## 17. plan / validation  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-26T17:10:48.028Z_
 
 **Thought** (none):

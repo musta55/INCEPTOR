@@ -7,9 +7,9 @@
 - steps (LLM inferences): 16 | actions: 17 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(8: succeeded) -> understanding(2: unchecked) -> repair(2: succeeded) -> validation(5: unchecked)
+Phases: localization(10: succeeded) -> repair(1: succeeded) -> validation(6: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -34,7 +34,7 @@ find . -iname "*robot*" -o -iname "*servo*" | head -50
 ./app/src/main/res/menu/robot
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -56,7 +56,7 @@ grep -n "degree\|getText\|parseInt\|EditText\|Integer\." app/src/main/java/io/ps
 131:        degreeText4 = servo4Layout.findViewById(
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -79,7 +79,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 205	            TextView timeText = timeLineBox.findViewById(R.id.tim
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -103,7 +103,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 348	                v.startDrag(null, myS
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -121,7 +121,7 @@ find . -name "SeekArc.java" -exec grep -n "setProgress\|updateProgress\|onProgre
 (Bash completed with no output)
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -147,7 +147,7 @@ grep -n "editEnter\|int degree\b\|degree =\|private int degree" app/src/main/jav
 486:
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -163,7 +163,7 @@ find . -iname "*SeekArc*" -o -iname "*seekarc*" | head
 (Bash completed with no output)
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 6 | **FAILED**_
 
 **Thought** (none):
@@ -180,7 +180,7 @@ Exit code 2
 app/src/main/java/io/pslab/activity/RoboticArmActivity.java:33:import com.triggertrap.seekarc.SeekArc;
 ```
 
-## 9. search_code / understanding  (Bash)
+## 9. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ find ~/.gradle /root -iname "*seekarc*" 2>/dev/null | head -20
 /Users/splash/.gradle/caches/8.11.1/transfor
 ```
 
-## 10. env_setup / understanding  (Bash)
+## 10. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -225,7 +225,7 @@ private void updateProgress(int, boolean);
       1
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -257,7 +257,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 The file app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. build / repair  (Bash)
+## 12. build / validation  (Bash)
 _step 10_
 
 **Thought** (narration):
@@ -361,7 +361,7 @@ git log --oneline -1 2>&1; git ls-files app/src/main/java/io/pslab/activity/Robo
 d2b96c29 add qwen as a model
 ```
 
-## 17. read_file / validation  (Read)
+## 17. read / validation  (Read)
 _step 15_
 
 **Thought** (narration):

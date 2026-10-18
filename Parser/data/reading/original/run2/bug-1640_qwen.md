@@ -7,9 +7,9 @@
 - steps (LLM inferences): 12 | actions: 12 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(9: succeeded) -> repair(2: succeeded) -> validation(1: unchecked)
+Phases: localization(9: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -34,7 +34,7 @@ Explore this Android project to find all files related to an "Info" page, "about
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-8af1927e60361cf3` -- its 0 actions follow below_
 
-## 2. search_code / localization  (glob)
+## 2. search / localization  (glob)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -54,7 +54,7 @@ app/src/main/java/**/*.java
 Found 22 matching file(s)
 ```
 
-## 3. search_code / localization  (glob)
+## 3. search / localization  (glob)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -70,7 +70,7 @@ app/src/main/res/layout/*.xml
 Found 23 matching file(s)
 ```
 
-## 4. read_file / localization  (read_file)
+## 4. read / localization  (read_file)
 _step 3 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -100,7 +100,7 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bu
 ```
 
-## 5. read_file / localization  (read_file)
+## 5. read / localization  (read_file)
 _step 3 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -123,7 +123,7 @@ _(same inference as the previous action)_
     tools:context=".InfoActi
 ```
 
-## 6. read_file / localization  (read_file)
+## 6. read / localization  (read_file)
 _step 3 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -146,7 +146,7 @@ _(same inference as the previous action)_
     t
 ```
 
-## 7. search_code / localization  (grep_search)
+## 7. search / localization  (grep_search)
 _step 4_
 
 **Thought** (reasoning):
@@ -179,7 +179,7 @@ Wait, I need to check what `@string/large_text` contains - this is likely where 
 Found 2 matches
 ```
 
-## 8. read_file / localization  (read_file)
+## 8. read / localization  (read_file)
 _step 5_
 
 **Thought** (reasoning):
@@ -206,7 +206,7 @@ Let me read the strings.xml to see the license text content.
     <string name="navigation_drawer_open">Open navigation dra
 ```
 
-## 9. search_code / localization  (grep_search)
+## 9. search / localization  (grep_search)
 _step 6_
 
 **Thought** (reasoning):
@@ -243,7 +243,7 @@ Actually wait, I need to think about this differently. The bug says "The License
 Found 8 matches
 ```
 
-## 10. edit_file / repair  (edit)
+## 10. edit / repair  (edit)
 _step 7_
 
 **Thought** (reasoning):
@@ -277,7 +277,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
         an
 ```
 
-## 11. build / repair  (run_shell_command)
+## 11. build / validation  (run_shell_command)
 _step 8_
 
 **Thought** (reasoning):
@@ -300,7 +300,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/reposi
 ```
 
-## 12. read_file / validation  (read_file)
+## 12. read / validation  (read_file)
 _step 9_
 
 **Thought** (reasoning):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 26 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(15: succeeded) -> repair(4: succeeded) -> validation(7: unchecked)
+Phases: localization(15: succeeded) -> repair(3: succeeded) -> validation(8: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -28,7 +28,7 @@ find . -name "ManualEntryDialog.java" -o -name "Entry.java" | head -20
 ./app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java
 ```
 
-## 2. read_file / localization  (Read)
+## 2. read / localization  (Read)
 _step 2 | **FAILED**_
 
 **Thought** (none):
@@ -60,7 +60,7 @@ pwd
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1207
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -83,7 +83,7 @@ _(none)_
 8	 * copies of the Softwar
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -106,7 +106,7 @@ cat app/src/main/res/layout/dialog_manual_entry.xml
     android:paddingEnd="@dimen/activity_margin_large">
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ grep -rn "manual_period\|manual_digits\|TOTP_DEFAULT_PERIOD" --include=*.java --
 (eval):1: no matches found: --include=*.java
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -141,7 +141,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java:121:          
 app/s
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 6 | call 2/2 of this inference | **FAILED**_
 
 **Thought** (none):
@@ -158,7 +158,7 @@ Exit code 2
 ugrep: warning: app/src/main/res/values/strings.xml: No such file or directory
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -182,7 +182,7 @@ app/src/main/res/values-gl-rES/strings_backup.xml
 ap
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 8 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -203,7 +203,7 @@ grep -n "label_period\|label_digits\|hint_\|error" app/src/main/res/values/strin
 96:    <string name="dialog_msg_keystore_error">Failed to load the encryption key from the KeyStore.
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 8 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -222,7 +222,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java:237:    public
 app/src/main/java/org/shadowice/flocke/andotp/
 ```
 
-## 12. read_file / localization  (Read)
+## 12. read / localization  (Read)
 _step 9 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -247,7 +247,7 @@ _(none)_
 109
 ```
 
-## 13. read_file / localization  (Read)
+## 13. read / localization  (Read)
 _step 9 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -277,7 +277,7 @@ _(same inference as the previous action)_
 299	            long time = S
 ```
 
-## 14. read_file / localization  (Read)
+## 14. read / localization  (Read)
 _step 10_
 
 **Thought** (none):
@@ -302,7 +302,7 @@ _(none)_
 10	    <string name
 ```
 
-## 15. read_file / localization  (Read)
+## 15. read / localization  (Read)
 _step 11_
 
 **Thought** (none):
@@ -328,7 +328,7 @@ _(none)_
 40	            '2', '3', '4', '5', '6', '7', '8', '9
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -346,7 +346,7 @@ Now let me implement the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1207/app/src/main/res/values/strings_main.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -362,7 +362,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. edit_file / repair  (Edit)
+## 18. edit / repair  (Edit)
 _step 14_
 
 **Thought** (narration):
@@ -380,7 +380,7 @@ Now the validation watcher and helper methods:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 19. build / repair  (Bash)
+## 19. build / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -440,7 +440,7 @@ git --no-pager diff HEAD -- app/src/main/java app/src/main/res/values/strings_ma
 (Bash completed with no output)
 ```
 
-## 22. vcs / validation  (Bash)
+## 22. diff / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -482,7 +482,7 @@ bug-1207_output.txt
 build
 ```
 
-## 24. vcs / validation  (Bash)
+## 24. diff / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -516,7 +516,7 @@ d2b96c29 add qwen as a model
 .gitignore:40:runs/	app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java
 ```
 
-## 26. read_file / validation  (Read)
+## 26. read / validation  (Read)
 _step 22_
 
 **Thought** (none):

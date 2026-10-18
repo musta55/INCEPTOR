@@ -7,9 +7,9 @@
 - steps (LLM inferences): 18 | actions: 21 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(13: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: localization(13: succeeded) -> repair(3: succeeded) -> validation(5: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -39,7 +39,7 @@ tools
 (eval):1: no matches found: --include=*.xml
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -55,7 +55,7 @@ grep -rni "pattern" --include=*.kt --include=*.java -l . | head -30
 (eval):1: no matches found: --include=*.kt
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -72,7 +72,7 @@ app/src/main/res/values/strings.xml:10:        Write the locale name in the loca
 app/src/main/res/values/strings.xml:409:By clicking a part it will be set as the new url, useful for example if one of the queries or paths was an encoded redirection url.
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -93,7 +93,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/companions/VersionManager.ja
 app/src/main/
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ import org.json.JSONObject;
 public class PatternCatalog extends Js
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ VersionManager.java
 VirusTotalUtility.java
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -173,7 +173,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/AModuleData.java
 app/src/main/java/com/trianguloy/urlch
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ import com.trianguloy.urlchecker.utilities.methods.AndroidUtils;
 import com.triang
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -217,7 +217,7 @@ app/src/main/res/values/strings.xml:172:- 'regex': string|list, required: a vali
 app/
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -235,7 +235,7 @@ app/src/main/java/com/trianguloy/urlchecker/utilities/wrappers/RegexFix.java:24:
 app/src/main/java/com/trianguloy/urlchecker/utilities/wrappers/RegexFix.java:28:        pttrn_regexfix = new GenericPref.Bool("pttrn_regexfix", true, cntx);
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -253,7 +253,7 @@ app/src/main/res/values-ru/strings.xml:114:\n- Предлагать измени
 app/src/mai
 ```
 
-## 12. read_file / localization  (Bash)
+## 12. read / localization  (Bash)
 _step 10 | **FAILED**_
 
 **Thought** (none):
@@ -285,7 +285,7 @@ import org.json.JSONObject;
 pub
 ```
 
-## 13. read_file / localization  (Read)
+## 13. read / localization  (Read)
 _step 11_
 
 **Thought** (none):
@@ -305,7 +305,7 @@ _(none)_
 169	    <string name="auto_error_toast">Show toast if au
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 12 | call 1/3 of this inference_
 
 **Thought** (narration):
@@ -323,7 +323,7 @@ Now let me apply the fix to the built-in pattern regexes.
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-447/app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 12 | call 2/3 of this inference_
 
 **Thought** (narration):
@@ -339,7 +339,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-447/app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 12 | call 3/3 of this inference_
 
 **Thought** (narration):
@@ -355,7 +355,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-447/app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. read_file / repair  (Bash)
+## 17. read / validation  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -375,7 +375,7 @@ Preview (first 2KB):
 SystemMessage(subtype='init', data={'typ
 ```
 
-## 18. search_code / repair (own phase localization)  (Bash)
+## 18. search / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -400,7 +400,7 @@ ShortcutsActivity.java
 TutorialActivity.java
 ```
 
-## 19. build / repair  (Bash)
+## 19. build / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -426,7 +426,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note
 ```
 
-## 20. env_setup / validation  (Bash)
+## 20. test / validation  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -455,7 +455,7 @@ bad? https://reddit1com/x -> false
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-
 ```
 
-## 21. env_setup / validation  (Bash)
+## 21. search / validation  (Bash)
 _step 17_
 
 **Thought** (none):

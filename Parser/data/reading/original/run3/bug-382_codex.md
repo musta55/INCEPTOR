@@ -7,9 +7,9 @@
 - steps (LLM inferences): 16 | actions: 11 | failed actions: 0
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(2: succeeded) -> repair(4: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:23:19.993Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace URI parameter parsing, patch the decoding order, then build the app
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:23:22.936Z_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  8 sage  staff   256 Sep  9 11:55 .github
 -rw-r--r--@  1 sage
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:23:23.792Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ app/src/main/java/com/trianguloy/urlchecker/activities/BackupActivity.java
 app/src/main/
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:23:26.015Z_
 
 **Thought** (none):
@@ -115,7 +115,7 @@ import com.trianguloy.urlchecker.R;
 import com.trianguloy.u
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-26T17:23:31.826Z_
 
 **Thought** (narration):
@@ -133,7 +133,7 @@ The URI API decodes the full query too early, turning an encoded ampersand into 
 Plan updated
 ```
 
-## 6. edit_file / repair  (exec_command)
+## 6. edit / repair  (exec_command)
 _step 10 | 2026-09-26T17:23:35.976Z_
 
 **Thought** (none):
@@ -163,7 +163,7 @@ Success. Updated the following files:
 M app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java
 ```
 
-## 7. build / repair  (exec_command)
+## 7. build / validation  (exec_command)
 _step 11 | 2026-09-26T17:23:39.643Z_
 
 **Thought** (narration):
@@ -189,7 +189,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 8. wait_process / repair  (write_stdin)
+## 8. other / validation  (write_stdin)
 _step 12 | 2026-09-26T17:23:45.608Z_
 
 **Thought** (none):
@@ -214,7 +214,7 @@ Found locales: "ar","be","bn","cs","de","el","en","es","fr-FR","hi","in","it","i
 Extracted translators: 404potato,
 ```
 
-## 9. wait_process / repair  (write_stdin)
+## 9. other / validation  (write_stdin)
 _step 13 | 2026-09-26T17:23:51.751Z_
 
 **Thought** (none):
@@ -242,7 +242,7 @@ Output:
 > Task :app:writeDebugSigningConfig
 ```
 
-## 10. read_file / validation  (exec_command)
+## 10. read / validation  (exec_command)
 _step 14 | 2026-09-26T17:23:56.029Z_
 
 **Thought** (narration):
@@ -275,7 +275,7 @@ Source context:
     71
 ```
 
-## 11. plan / validation  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T17:24:00.096Z_
 
 **Thought** (none):

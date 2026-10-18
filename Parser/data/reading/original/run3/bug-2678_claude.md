@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 20 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(12: succeeded) -> repair(3: succeeded) -> localization(2: succeeded) -> repair(3: succeeded)
+Phases: localization(12: succeeded) -> repair(3: succeeded) -> validation(2: unchecked) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ settings.gradle.kts
 (eval):1: no matches found: --include=*
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ app/src/main/java/io/pslab/fragment/InstrumentsFragment.java
 app/src/debug/AndroidManifest.xml
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -85,7 +85,7 @@ wc -l app/src/main/java/io/pslab/activity/RoboticArmActivity.java && grep -n "de
 124:        View servo1La
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -109,7 +109,7 @@ TextView servo4Title = servo4Layout.findViewById(R.id.servo_title);
                 if (editEnter) {
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -137,7 +137,7 @@ grep -n "processDegreeInput" -A 30 app/src/main/java/io/pslab/activity/RoboticAr
 370-
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -161,7 +161,7 @@ grep -n "private void processDegreeInput" -A 30 app/src/main/java/io/pslab/activ
 489-                degree
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -185,7 +185,7 @@ grep -n "degree\b\|editEnter" app/src/main/java/io/pslab/activity/RoboticArmActi
 274:                if (editEnter
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -201,7 +201,7 @@ find . -name "SeekArc*.java" | head; grep -n "setProgress\|updateProgress" -A 20
 (Bash completed with no output)
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -220,7 +220,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:68:    private SeekA
 app/src/main/java/io/pslab/activity/RoboticArmActivity.java:225:        seekArc1.setOnSeekArcChangeListener(new SeekArc.OnSeekArc
 ```
 
-## 10. search_code / localization (own phase understanding)  (Bash)
+## 10. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -236,7 +236,7 @@ ls libs; find ~/.gradle /Volumes/Dumpy -name "seekarc*" 2>/dev/null | head
 library-1.0.4.aar
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -262,7 +262,7 @@ sed -n '506,707p' app/src/main/java/io/pslab/activity/RoboticArmActivity.java
         doubl
 ```
 
-## 12. read_file / localization  (Read)
+## 12. read / localization  (Read)
 _step 12_
 
 **Thought** (narration):
@@ -289,7 +289,7 @@ Now let me implement the fix.
 69	    private LinearLayout servo1TimeLine,
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -305,7 +305,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2678/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully.
 ```
 
-## 14. shell_edit / repair  (Bash)
+## 14. edit / repair  (Bash)
 _step 14_
 
 **Thought** (narration):
@@ -333,7 +333,7 @@ for n in range(1,5):
 (Bash completed with no output)
 ```
 
-## 15. shell_edit / repair  (Bash)
+## 15. edit / repair  (Bash)
 _step 15_
 
 **Thought** (narration):
@@ -360,7 +360,7 @@ old_method = """    private void processDegreeInput(EditText degreeText, SeekArc
 (Bash completed with no output)
 ```
 
-## 16. read_file / localization  (Read)
+## 16. read / validation  (Read)
 _step 16_
 
 **Thought** (none):
@@ -386,7 +386,7 @@ _(none)_
 238
 ```
 
-## 17. read_file / localization  (Read)
+## 17. read / validation  (Read)
 _step 17_
 
 **Thought** (none):
@@ -404,7 +404,7 @@ _(none)_
 488
 ```
 
-## 18. shell_edit / repair  (Bash)
+## 18. edit / repair  (Bash)
 _step 18 | **FAILED**_
 
 **Thought** (none):
@@ -428,7 +428,7 @@ Exit code 1
 (eval):14: no matches found: --include=*.java
 ```
 
-## 19. search_code / repair (own phase localization)  (Bash)
+## 19. search / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -447,7 +447,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:404:                
 app/src/ma
 ```
 
-## 20. build / repair  (Bash)
+## 20. build / validation  (Bash)
 _step 20_
 
 **Thought** (narration):

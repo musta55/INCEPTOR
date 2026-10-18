@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 19 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(6: succeeded) -> repair(8: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(5: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:00:49.942Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the directory reload and list state flow, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:00:53.296Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r-
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:00:55.520Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/main/java/io/lerk/lrkFM/entities/HistoryEntry.java
 app/src/main/java/io/lerk/lrkFM/
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T09:00:59.161Z_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T09:01:02.979Z_
 
 **Thought** (none):
@@ -133,7 +133,7 @@ import android.content.Intent;
 impo
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:01:04.948Z_
 
 **Thought** (none):
@@ -161,7 +161,7 @@ Total output lines: 864
 216:
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:01:08.810Z_
 
 **Thought** (none):
@@ -188,7 +188,7 @@ Total output lines: 713
    304	                }
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T09:01:12.414Z_
 
 **Thought** (none):
@@ -221,7 +221,7 @@ Total output lines: 185
     public void loadArchivePath(String path, FMA
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:01:16.802Z_
 
 **Thought** (none):
@@ -250,7 +250,7 @@ Total output lines: 276
    111
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-23T09:01:32.494Z_
 
 **Thought** (narration):
@@ -268,7 +268,7 @@ The defect is confirmed: every refresh replaces the `ListView` adapter, but `rel
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-23T09:01:40.008Z_
 
 **Thought** (none):
@@ -300,7 +300,7 @@ Success. Updated the following files:
 M app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java
 ```
 
-## 12. diff / repair  (exec_command)
+## 12. read / validation  (exec_command)
 _step 16 | 2026-09-23T09:01:45.602Z_
 
 **Thought** (narration):
@@ -332,7 +332,7 @@ Output:
         int firstVisibleOffset = firstVisibleView == null
 ```
 
-## 13. vcs / repair  (exec_command)
+## 13. search / validation  (exec_command)
 _step 17 | 2026-09-23T09:01:49.269Z_
 
 **Thought** (none):
@@ -357,7 +357,7 @@ drwxr-xr-x@ 6 sage  staff    192 Sep  9 11:54 app
 -rw-r--r--@ 1 sage  staff  45793 Sep 23 05:01 app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T09:01:53.315Z_
 
 **Thought** (none):
@@ -373,7 +373,7 @@ The existing tests are placeholders and the behavior depends on Android ListView
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-23T09:01:56.558Z_
 
 **Thought** (narration):
@@ -397,7 +397,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 6 stopped Daemons could not be reused, use --status for details
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T09:02:01.533Z_
 
 **Thought** (none):
@@ -420,7 +420,7 @@ Android SDK Build Tools 29.0.2 will be used.
 To suppress this warning, remove "buildToolsVersion '28.0.2'" from your bui
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-23T09:02:08.515Z_
 
 **Thought** (none):
@@ -445,7 +445,7 @@ BUILD SUCCESSFUL in 9s
 28 actionable tasks: 26 executed, 2 up-to-date
 ```
 
-## 18. plan / repair  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-23T09:02:11.162Z_
 
 **Thought** (narration):
@@ -463,7 +463,7 @@ The required build passes. I’m doing one final patch check and locating the ge
 Plan updated
 ```
 
-## 19. read_file / validation  (exec_command)
+## 19. read / validation  (exec_command)
 _step 23 | 2026-09-23T09:02:15.336Z_
 
 **Thought** (none):

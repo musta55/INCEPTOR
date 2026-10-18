@@ -7,9 +7,9 @@
 - steps (LLM inferences): 25 | actions: 20 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(5: succeeded) -> repair(10: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:23:58.918Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the robotic-arm input flow, patch the stale-value reuse, then run t
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:24:01.069Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:24:01.970Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ libs/library-1.0.4.aar
 docs
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T05:24:03.764Z_
 
 **Thought** (none):
@@ -106,7 +106,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:24:06.559Z_
 
 **Thought** (none):
@@ -132,7 +132,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:56:public class Robo
 app/src/main/java/io/psl
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:24:07.301Z_
 
 **Thought** (narration):
@@ -162,7 +162,7 @@ Total output lines: 771
 129:
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:24:11.128Z_
 
 **Thought** (none):
@@ -190,7 +190,7 @@ Total output lines: 393
         TextView servo4Title = servo
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-25T05:24:13.035Z_
 
 **Thought** (none):
@@ -218,7 +218,7 @@ Output:
                 if (actionId == EditorI
 ```
 
-## 9. plan / localization  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-25T05:24:24.225Z_
 
 **Thought** (narration):
@@ -236,7 +236,7 @@ The defect is the single activity-wide cache. I’m replacing it with one cached
 Plan updated
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-25T05:24:45.651Z_
 
 **Thought** (none):
@@ -269,7 +269,7 @@ Success. Updated the following files:
 M app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 ```
 
-## 11. search_code / repair  (exec_command)
+## 11. search / validation  (exec_command)
 _step 15 | 2026-09-25T05:24:52.129Z_
 
 **Thought** (narration):
@@ -301,7 +301,7 @@ Output:
     private EditText degreeText1, degreeText2, degreeText3, degreeText4;
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-25T05:24:57.768Z_
 
 **Thought** (none):
@@ -317,7 +317,7 @@ The project has only screenshot instrumentation coverage and no local unit-test 
 Plan updated
 ```
 
-## 13. build / repair  (exec_command)
+## 13. build / validation  (exec_command)
 _step 17 | 2026-09-25T05:24:59.990Z_
 
 **Thought** (narration):
@@ -344,7 +344,7 @@ Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for
 [2A[1B[1m> Starting Daemon[m[17D[1B[1A> IDLE[0K[6D[1B
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T05:25:02.090Z_
 
 **Thought** (none):
@@ -365,7 +365,7 @@ Output:
 [2A[1m<[0;1m-------------> 0% INITIALIZING [71ms][m[38D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [173ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [264ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [373ms][m[39D[1B[1m> Running init scripts
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T05:25:08.489Z_
 
 **Thought** (none):
@@ -386,7 +386,7 @@ Output:
 [2A[1m<[0;1m-------------> 0% CONFIGURING [6s][m[35D[2B[2A[1m<[0;1m-------------> 0% CONFIGURING [7s][m[35D[2B[1A[1m> root project > Resolve dependencies of classpath[m[50D[1B[1A[1m> root project[m[0K[14D[1B[1A[1m> root project > Resolve files of configuration
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T05:25:14.979Z_
 
 **Thought** (none):
@@ -408,7 +408,7 @@ Output:
 [4A[1m<[0;32;1m=====[0;39;1m--------> 43% EXECUTING [12s][m[0K[35D[3B[1m> :app:mergeDebugAsse
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T05:25:21.078Z_
 
 **Thought** (none):
@@ -431,7 +431,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T05:25:28.052Z_
 
 **Thought** (none):
@@ -452,7 +452,7 @@ Output:
 [5A[1m<[0;32;1m==========[0;39;1m---> 79% EXECUTING [25s][m[35D[5B[5A[1m<[0;32;1m==========[0;39;1m---> 79% EXECUTING [26s][m[35D[5B[5A[1m<[0;32;1m==========[0;39;1m---> 79% EXECUTING [27s][m[35D[5B[5A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [27s][m[35D[1B[1m
 ```
 
-## 19. plan / repair  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-25T05:25:35.307Z_
 
 **Thought** (narration):
@@ -470,7 +470,7 @@ The required build passes. I’m doing one final repository-state check so the h
 Plan updated
 ```
 
-## 20. read_file / validation  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-25T05:25:38.414Z_
 
 **Thought** (none):

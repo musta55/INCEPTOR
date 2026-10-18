@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 15 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(5: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:02:23.199Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the checkbox selection flow, patch the mutation bug, then run the r
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:02:27.423Z | **FAILED**_
 
 **Thought** (none):
@@ -48,7 +48,7 @@ Output:
 /Users/sage/APR_with_high_quality_bug_reports/runs/original_run1/bug-1568
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:02:28.551Z_
 
 **Thought** (narration):
@@ -77,7 +77,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r--@  1 sage  staff      4 Sep  9 11:54 .java-vers
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:02:31.629Z_
 
 **Thought** (none):
@@ -108,7 +108,7 @@ import android.os.Vibrator;
 import android.view.LayoutInflate
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:02:34.785Z_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ Output:
    126	                if (!f.isDirectory())
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-23T09:02:45.813Z_
 
 **Thought** (narration):
@@ -153,7 +153,7 @@ The crash has two coupled causes: removal occurs inside an enhanced loop, and ro
 Plan updated
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-23T09:02:49.957Z | **FAILED**_
 
 **Thought** (none):
@@ -180,7 +180,7 @@ Output:
     86
 ```
 
-## 8. vcs / localization  (exec_command)
+## 8. diff / localization  (exec_command)
 _step 12 | 2026-09-23T09:02:52.571Z_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ Output:
 HARNESS
 ```
 
-## 9. edit_file / repair  (exec_command)
+## 9. edit / repair  (exec_command)
 _step 13 | 2026-09-23T09:02:57.384Z_
 
 **Thought** (none):
@@ -240,7 +240,7 @@ M app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java
    144	                ((Vibrat
 ```
 
-## 10. plan / repair  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-23T09:03:04.143Z_
 
 **Thought** (narration):
@@ -258,7 +258,7 @@ The adapter now initializes checkbox state before attaching callbacks and remove
 Plan updated
 ```
 
-## 11. build / repair  (exec_command)
+## 11. build / validation  (exec_command)
 _step 15 | 2026-09-23T09:03:07.452Z_
 
 **Thought** (none):
@@ -280,7 +280,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 6 stopped Daemons could not be reused, use --status for details
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-23T09:03:09.876Z_
 
 **Thought** (none):
@@ -303,7 +303,7 @@ Android SDK Build Tools 29.0.2 will be used.
 To suppress this warning, remove "buildToolsVersion '28.0.3'" from your build
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-23T09:03:16.349Z_
 
 **Thought** (none):
@@ -333,7 +333,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:merge
 ```
 
-## 14. search_code / validation  (exec_command)
+## 14. search / validation  (exec_command)
 _step 18 | 2026-09-23T09:03:21.551Z_
 
 **Thought** (narration):
@@ -359,7 +359,7 @@ Output:
 188:                contextFiles.remove(index);
 ```
 
-## 15. plan / validation  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-23T09:03:24.937Z_
 
 **Thought** (none):

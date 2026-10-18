@@ -1,30 +1,36 @@
-"""Phase taxonomy v3: action -> phase -> subphase.
+"""Phases by lookup table: action -> phase -> subphase (the Final lookup tables).
 
-Spec: ``Parser/Phase taxonomy.md``.  Every action is in exactly one subphase, every
-subphase in exactly one phase span, and both are contiguous (``check_hierarchy``).
+Spec: ``Parser/Phase taxonomy.md`` and the tab "Final lookup table" of the annotation workbook
+(``atif.lookup``).  Every action is in exactly one subphase, every subphase in exactly one
+phase span, and both are contiguous (``check_hierarchy``).
 
-phase     one of PHASES, given to every action by four deterministic passes:
-          P1  a table over the action's L1 category, the role of its files and whether it
-              comes before the anchor (the first edit of application source);
-          P2  keep rules: an attempt keeps its judging run (K1), a delegation is one block
-              (K2), a poll takes the phase of its run (K3);
-          P3  a neutral action after the anchor takes the phase of the action before it;
-          P4  smoothing: a single action between two spans of the same phase joins them
-              (A1); any longer stretch keeps its own phase.
+phase     one of PHASES, from the phase table (``atif.lookup``): the first matching row
+          (1-15) over the action's category (the action table), the target of its files (the
+          target table), whether the agent has changed those files, and its position: at the
+          start of the trajectory, before, at or after the first edit of a source file (the
+          anchor, the first fix), and, for a read of a source file after it, whether the next
+          source edit comes before the next build, test or diff.  Rows 14 and 15 and the
+          general rule give the phase of the previous step (the very first step: Planning).
+          Nothing moves an action afterwards: there are no grouping rules, so one action can
+          form a span of its own, and the build right after an edit is Validation.
 subphase  a maximal stretch of one phase span with one outcome: succeeded, failed, blocked
           or unchecked, with the same meaning in every phase (did the check in the stretch
           show that the phase's goal was reached?).  The span's events (a decisive run, an
           attempt) get outcomes, every other action belongs to the event it leads to, and
           consecutive events with the same outcome merge (run-length encoding).  The
-          ``evidence`` attribute records the strongest check behind the outcome.
+          ``evidence`` attribute records the strongest check behind the outcome.  A repair
+          span holds edits only; its outcome is that of its attempt, which the first decisive
+          run after the edits (in the validation span that follows) decides.
 
-Nothing is fitted: the constant below was set before any labels existed, swept in a
-sensitivity analysis and frozen.  It was lowered from 3 to 1, and the old repair-gap rule
-(A2: up to 10 actions between two repair spans joined repair) was removed, after the
-round-1 manual check (codebook change of 2026-10-11): both hid validation and localization
-work inside repair.  The segment and purpose layers of ``atif.segment`` are
-not used; that module stays unchanged as baseline B3, and only its per-action helpers are
-reused here.
+The outcomes read what the runs did, from the taxonomy's finer action kinds (``kind``,
+``mid_level``: a test run, a build, a poll of a background run), which the verdict parser
+needs; the lookup category decides only the phase.
+
+Nothing is fitted.  The grouping rules of codebook version 3 (G1-G7) were replaced by the
+codebook's Table 4 (rows P1-P11 and *follow*) on 2026-10-14, and that table by the Final
+lookup tables on 2026-10-17; both survive as baselines B4 and B5 (``atif.baselines``).  The
+segment and purpose layers of ``atif.segment`` are not used; that module stays unchanged as
+baseline B3, and only its per-action helpers are reused here.
 """
 from __future__ import annotations
 
@@ -33,12 +39,13 @@ import os
 import re
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
-from . import segment, taxonomy
+from . import lookup, project, segment, taxonomy
 
-PHASES = ("understanding", "localization", "reproduction", "repair", "validation")
-UNDERSTANDING, LOCALIZATION, REPRODUCTION, REPAIR, VALIDATION = PHASES
-#: phases that occur only before / only from the anchor on (``check_hierarchy``)
-PRE_ONLY = {UNDERSTANDING, REPRODUCTION}
+PHASES = lookup.PHASES
+PLANNING, LOCALIZATION, REPRODUCTION, REPAIR, VALIDATION = PHASES
+#: phases that occur only before / only from the anchor on (``check_hierarchy``).  Planning
+#: occurs anywhere: a plan is Planning wherever it comes (row 1)
+PRE_ONLY = {REPRODUCTION}
 POST_ONLY = {REPAIR, VALIDATION}
 
 #: one question per stretch, the same in every phase: did its check show that the phase's
@@ -50,10 +57,10 @@ OUTCOMES = ("succeeded", "failed", "blocked", "unchecked")
 #: distinction between a plausible and a compilable patch), the target file list
 #: (Localization), or nothing
 EVIDENCE = ("test", "build", "target_file", "none")
-#: the outcomes each phase can have.  Understanding never fails (a pre-fix build failure is
-#: not the agent's doing, so it is blocked); Localization is never blocked
+#: the outcomes each phase can have.  Planning never fails (a build of the untouched project
+#: that fails is not the agent's doing, so it is blocked); Localization is never blocked
 PHASE_OUTCOMES: Dict[str, Tuple[str, ...]] = {
-    UNDERSTANDING: ("unchecked", "succeeded", "blocked"),
+    PLANNING: ("unchecked", "succeeded", "blocked"),
     LOCALIZATION: ("succeeded", "failed", "unchecked"),
     REPRODUCTION: ("unchecked", "succeeded", "failed", "blocked"),
     REPAIR: ("unchecked", "succeeded", "failed", "blocked"),
@@ -63,24 +70,22 @@ PHASE_OUTCOMES: Dict[str, Tuple[str, ...]] = {
 FLAGS = ("test_modified", "environment_workaround", "repeated_failure", "repeated_reads",
          "manual_ui_check")
 
-#: A1: an interruption of at most this many actions joins the phase around it (G7)
-ABSORB_MAX = 1
 #: the repeated_reads flag: one file read at least this many times in a subphase
 REPEATED_READS = 3
 
-# P1 markers, resolved before P4
-NEUTRAL = "neutral"
-PREP = "prep"
-WAIT = "wait"
-_LOOKUP = {LOCALIZATION, NEUTRAL, UNDERSTANDING}
+#: a user row's value for "the phase of the previous step" (``atif.rules``)
+FOLLOW = "follow"
+NEUTRAL = FOLLOW
 
 #: results of a run that decide an event; a passing build ("build_pass") is weak
 DECISIVE = ("pass", "test_fail", "build_fail", "blocked")
+#: the most deciding actions a subphase lists (``checks``)
+CHECKS_MAX = 5
 #: run result -> outcome, per phase.  Before the fix a failing test is the goal
 #: (Reproduction succeeded); after it, the same result is a failure
 _RUN_OUTCOME: Dict[str, Dict[str, str]] = {
-    UNDERSTANDING: {"build_pass": "succeeded", "pass": "succeeded", "build_fail": "blocked",
-                    "blocked": "blocked", "test_fail": "blocked"},
+    PLANNING: {"build_pass": "succeeded", "pass": "succeeded", "build_fail": "blocked",
+               "blocked": "blocked", "test_fail": "blocked"},
     REPRODUCTION: {"test_fail": "succeeded", "pass": "failed", "build_fail": "blocked",
                    "blocked": "blocked"},
     REPAIR: {"pass": "succeeded", "build_pass": "succeeded", "test_fail": "failed",
@@ -118,9 +123,9 @@ def _strongest(evidence: Iterable[str]) -> str:
 
 
 def source_edit(a: dict) -> bool:
-    """An edit of application source: an edit tool or shell write whose role is source,
-    or a command that writes source on its way to a run (``taxonomy.annotate``)."""
-    return a.get("edit_role") == "source"
+    """An edit of a source file (the lookup's category edit whose target is a source file,
+    or unknown: ``lookup.prepare``); the first one is the anchor, the first fix."""
+    return bool(a.get("source_edit"))
 
 
 #: toolchain locations outside the project; ``segment.enrich`` (R2) misses ``~/.gradle`` and
@@ -149,7 +154,7 @@ def _probe(a: dict) -> bool:
         return any(os.path.basename(p) in segment.HARNESS_FILES or p.startswith("build/")
                    or "/build/outputs" in p or p.endswith((".log", ".png"))
                    for p in a["files"]) or bool(segment.ENV_HINT.search(a.get("cmd") or ""))
-    return taxonomy.CATEGORY_FAMILY.get(a["category"]) == "inspect" and not a["files"] \
+    return taxonomy.KIND_FAMILY.get(a["kind"]) == "inspect" and not a["files"] \
         and any(_TOOLCHAIN_PLACE.search(p) for p in _outside(a))
 
 
@@ -166,32 +171,15 @@ def _match(path: str, targets: Set[str]) -> bool:
 
 # ----------------------------------------------------------------------------- context
 def context(acts: List[dict], targets: Optional[Iterable[str]] = None) -> Dict[str, Any]:
-    """Per-trajectory facts the passes read: delegation blocks, the anchor, the last
-    source edit, the files the agent edits, and the Localization target files."""
+    """Per-trajectory facts the passes read: the anchor (the first edit of a source file,
+    ``lookup.prepare``), the last source edit, each decisive run's predecessor, and the
+    Localization target files (the developer's fix, else the files of the agent's patch)."""
     segment.enrich(acts)
-    blocks: List[Tuple[int, int, str]] = []
-    block_of: Dict[int, int] = {}
-    i = 0
-    while i < len(acts):
-        if acts[i]["mid_level"] == "delegate":                     # K2
-            j = segment.delegated_scopes(acts, i)
-            edits = any(source_edit(acts[x]) for x in range(i, j)) \
-                or segment.delegated_edit(acts[i])
-            blocks.append((i, j, REPAIR if edits else LOCALIZATION))
-            for x in range(i, j):
-                block_of[x] = len(blocks) - 1
-            i = j
-            continue
-        i += 1
-    first = next((x for x, a in enumerate(acts) if source_edit(a)), len(acts))
-    for start, end, phase in blocks:                 # an edit delegation starts the fix
-        if phase == REPAIR and start < first:
-            first = start
-        if start <= first < end:
-            first = start
+    first = lookup.prepare(acts)
     last = max((x for x, a in enumerate(acts) if source_edit(a)), default=-1)
-    edited = set(f for a in acts if a["category"] in _EDITS for f in a["files"])
     patch = set(f for a in acts if source_edit(a) for f in a.get("edit_files") or [])
+    patch |= {lookup.repo_rel(t) for a in acts if source_edit(a) for t in a["targets"]
+              if lookup.target(t) == "source"}
     chosen = set(targets) if targets else patch
     previous_run: Dict[int, int] = {}            # each decisive run -> the one before it
     last_run: Optional[int] = None
@@ -200,115 +188,39 @@ def context(acts: List[dict], targets: Optional[Iterable[str]] = None) -> Dict[s
             if last_run is not None:
                 previous_run[x] = last_run
             last_run = x
-    return {"blocks": blocks, "block_of": block_of, "anchor": first, "last_src": last,
-            "edited": edited, "targets": chosen, "previous_run": previous_run,
+    return {"anchor": first, "last_src": last, "targets": chosen, "previous_run": previous_run,
             "target_source": "developer_fix" if targets else "final_patch" if patch else "none"}
 
 
-# ----------------------------------------------------------------------------- P1
-def _lookup_phase(a: dict, x: int, ctx: dict, unknown: str) -> str:
-    """T4 / T7: an inspection of source or test code locates; one of docs, build files
-    or the harness, or of paths outside the checkout only, is neutral.  ``unknown`` is the
-    phase of an inspection that names no path (``rg pattern`` locates, ``git status``
-    does not)."""
-    pre = x < ctx["anchor"]
-    roles = {taxonomy.object_role(f) for f in a["files"]}
-    outside = _outside(a)
-    code_outside = any(o.endswith((".java", ".kt", ".xml")) for o in outside)
-    if not (a["files"] or outside) and unknown != LOCALIZATION:
-        return unknown
-    if roles & {"source", "test"} or code_outside or not (a["files"] or outside):
-        if not pre and x > ctx["last_src"] >= 0 and a["files"] \
-                and set(a["files"]) <= ctx["edited"]:
-            a["_own_read"] = True
-            return VALIDATION                       # reading back one's own patch
-        return LOCALIZATION
-    return NEUTRAL
+# ----------------------------------------------------------------------------- the phase table
+def table(acts: List[dict], ctx: dict) -> Tuple[List[Optional[str]], List[str]]:
+    """The phase table (``lookup.rows``): per action, its phase, or None for the previous
+    step's phase, and the id of the row that gave it (L1-L15, or LG for the general rule).
+    Sets ``own_patch`` on the reads of row 11 that read back files the agent changed."""
+    found = lookup.rows(acts, ctx["anchor"])
+    return [phase for _, phase in found], [rid for rid, _ in found]
 
 
-def table(acts: List[dict], ctx: dict) -> List[str]:
-    """P1: one phase, or a NEUTRAL / PREP / WAIT marker, per action (spec §6, T1-T9)."""
-    out: List[str] = []
-    for x, a in enumerate(acts):
-        a.pop("_own_read", None)
-        cat, pre = a["category"], x < ctx["anchor"]
-        if x in ctx["block_of"]:
-            phase = ctx["blocks"][ctx["block_of"][x]][2]                       # T9
-        elif source_edit(a):
-            phase = REPAIR                                                     # T1
-        elif cat in _EDITS:
-            if a.get("reverts"):
-                phase = NEUTRAL if pre else REPAIR
-            elif a.get("edit_role") == "test":
-                phase = REPRODUCTION if pre else VALIDATION                    # T3
-            else:
-                phase = PREP                                                   # T6
-        elif cat == "wait_process":
-            phase = WAIT                                                       # T8
-        elif cat in ("run_test", "device_ops"):
-            phase = REPRODUCTION if pre else VALIDATION                        # T2
-        elif cat in ("build", "env_setup") or _probe(a):
-            phase = PREP                                                       # T6
-        elif cat == "diff":
-            phase = NEUTRAL if pre else VALIDATION                             # T5
-        elif cat in ("read_file", "search_code"):
-            phase = _lookup_phase(a, x, ctx, LOCALIZATION)                     # T4 / T7
-        elif cat in ("vcs", "orient"):              # git blame / show HEAD:F.java locate
-            phase = _lookup_phase(a, x, ctx, NEUTRAL)                          # T4 / T7
-        else:
-            phase = NEUTRAL                                                    # T7
-        out.append(phase)
-    return out
+def follow(cells: List[Optional[str]], ctx: Optional[dict] = None) -> List[str]:
+    """The previous step's phase for every None; the very first step: Planning."""
+    return lookup.resolve(cells)
 
 
-def _stretch_member(a: dict) -> bool:
-    """An action that can sit inside an execution stretch on the way to its run."""
-    return a["cls"] == "EXEC" or (a["category"] in _EDITS and not source_edit(a)) \
-        or a["category"] in ("orient", "plan", "other", "vcs", "diff")
-
-
-def resolve_markers(acts: List[dict], ph: List[str], ctx: dict) -> List[str]:
-    """T6: a preparatory action takes the phase of the next test or device run in its
-    execution stretch (else Understanding before the anchor, Validation after).
-    T8 / K3: a poll takes the phase of the run it polls, else of the action before it."""
-    out = list(ph)
-    for x, phase in enumerate(out):
-        if phase != PREP:
-            continue
-        pre = x < ctx["anchor"]
-        found = None
-        for y in range(x + 1, len(acts)):
-            b = acts[y]
-            if y in ctx["block_of"] or source_edit(b) or not _stretch_member(b):
-                break
-            if segment.eff_mid(acts, b) in ("run_test", "device_ops"):
-                found = REPRODUCTION if y < ctx["anchor"] else VALIDATION
-                break
-        out[x] = found or (UNDERSTANDING if pre else VALIDATION)
-    for x, phase in enumerate(out):
-        if phase != WAIT:
-            continue
-        w = acts[x].get("waits_pos")
-        polled = out[w] if w is not None and w < x else (out[x - 1] if x else UNDERSTANDING)
-        if x >= ctx["anchor"] and polled in PRE_ONLY:
-            polled = VALIDATION             # a run started before the fix, polled after it
-        out[x] = polled
-    return out
-
-
-# ----------------------------------------------------------------------------- P2 (K1)
-def attempts(acts: List[dict]) -> List[dict]:
+# ----------------------------------------------------------------------------- attempts
+def attempts(acts: List[dict], edits=None) -> List[dict]:
     """K1.  An attempt is a block of source edits checked by one run.  Its judging run is
     the first decisive run at or after its first edit (an action that edits and runs,
     ``apply_patch ... && ./gradlew test``, judges itself), and its outcome comes from that
     run.  A passing build is a weak judge: when the agent edits again after one, with no
     decisive run in between, the build closed the attempt (``builds``) and the new edit
     starts the next one; edit -> build -> test stays one attempt, judged by the test.
-    Without any judge the attempt is ``unchecked``."""
+    Without any judge the attempt is ``unchecked``.  ``edits`` tells a source edit (default
+    ``source_edit``; the baselines pass their own)."""
+    is_edit = edits or source_edit
     out: List[dict] = []
     cur: Optional[dict] = None
     for x, a in enumerate(acts):
-        if source_edit(a):
+        if is_edit(a):
             if cur is not None and cur["judge"] is None and cur["weak"] is not None:
                 cur["judge"] = cur["weak"]               # edit -> build passes -> edit
             if cur is None or cur["judge"] is not None:
@@ -337,31 +249,6 @@ def attempts(acts: List[dict]) -> List[dict]:
     return out
 
 
-def keep_attempts(ph: List[str], tries: List[dict]) -> List[str]:
-    """K1: every action from an attempt's first edit to its judging run is Repair, except
-    lookups, which keep their own phase: a single lookup joins the repair span again (A1),
-    a longer one stays a localization span inside the attempt."""
-    out = list(ph)
-    for at in tries:
-        for x in range(at["start"], at["end"] + 1):
-            if out[x] not in _LOOKUP:
-                out[x] = REPAIR
-    return out
-
-
-def resolve_neutral(ph: List[str]) -> List[str]:
-    """P3: a neutral action (orienting, planning, inspecting git, reading docs or build
-    files) takes the phase of the action before it; the neutral actions that open the
-    trajectory are Understanding.  Planning calls interleaved with lookups (Codex's
-    ``update_plan``) therefore stay in the lookup's phase."""
-    out = list(ph)
-    for x, phase in enumerate(out):
-        if phase == NEUTRAL:
-            out[x] = out[x - 1] if x else UNDERSTANDING
-    return out
-
-
-# ----------------------------------------------------------------------------- P4
 def _spans(ph: List[str]) -> List[List[Any]]:
     out: List[List[Any]] = []
     for x, phase in enumerate(ph):
@@ -369,30 +256,6 @@ def _spans(ph: List[str]) -> List[List[Any]]:
             out[-1][2] = x + 1
         else:
             out.append([phase, x, x + 1])
-    return out
-
-
-def smooth(acts: List[dict], ph: List[str], absorb_max: int,
-           locked: Optional[Set[int]] = None) -> List[str]:
-    """P4 (A1), to a fixed point: a span of at most ``absorb_max`` actions (1: a single
-    action) between two spans of the same phase joins them; a longer span keeps its phase.
-    Two spans are never absorbed: a Repair span, because every source edit stays in Repair,
-    and a span that holds a decisive run, because its check would vanish from the
-    subphases.  Nor is a span that holds a ``locked`` position (a user rule's phase)."""
-    out = list(ph)
-    decisive = [run_result(acts, a) in DECISIVE or x in (locked or ())
-                for x, a in enumerate(acts)]
-    changed = True
-    while changed:
-        changed = False
-        spans = _spans(out)
-        for k in range(1, len(spans) - 1):
-            phase, lo, hi = spans[k]
-            if spans[k - 1][0] == spans[k + 1][0] and hi - lo <= absorb_max \
-                    and phase != REPAIR and not any(decisive[lo:hi]):
-                out[lo:hi] = [spans[k - 1][0]] * (hi - lo)
-                changed = True
-                break
     return out
 
 
@@ -423,16 +286,21 @@ def _localization(acts: List[dict], lo: int, hi: int, ctx: dict) -> List[dict]:
     if not ctx["targets"]:
         outcome, evidence = "unchecked", "none"
     else:
-        hit = any(_match(f, ctx["targets"]) for x in range(lo, hi) for f in acts[x]["files"])
-        outcome, evidence = ("succeeded" if hit else "failed"), "target_file"
+        hits = [x for x in range(lo, hi)
+                if any(_match(f, ctx["targets"]) for f in acts[x]["files"])]
+        outcome, evidence = ("succeeded" if hits else "failed"), "target_file"
     return [{"outcome": outcome, "evidence": evidence, "lo": lo, "hi": hi,
-             "n_events": 1, "n_attempts": 0, "repeats": 0, "workarounds": 0}]
+             "n_events": 1, "n_attempts": 0, "repeats": 0, "workarounds": 0,
+             "checks": hits[:CHECKS_MAX] if ctx["targets"] else []}]
 
 
 def subphases(acts: List[dict], lo: int, hi: int, phase: str, tries: List[dict],
               ctx: dict) -> List[dict]:
-    """The span's subphases: dicts with outcome, evidence, [lo, hi), n_events, n_attempts
-    and repeats (events that repeat the previous failing run unchanged, K4)."""
+    """The span's subphases: dicts with outcome, evidence, [lo, hi), n_events, n_attempts,
+    repeats (events that repeat the previous failing run unchanged, K4) and checks: the
+    positions of the actions that decided the outcome (each event's run; an attempt's
+    judging run, which may lie after the span; Localization: the actions that touched a
+    target file, at most ``CHECKS_MAX``)."""
     if phase == LOCALIZATION:
         return _localization(acts, lo, hi, ctx)
     keys = _event_keys(acts, lo, hi, phase, tries)
@@ -443,7 +311,8 @@ def subphases(acts: List[dict], lo: int, hi: int, phase: str, tries: List[dict],
             for i, k in enumerate(keys)]
     if not any(keys):
         return [{"outcome": "unchecked", "evidence": "none", "lo": lo, "hi": hi,
-                 "n_events": 0, "n_attempts": 0, "repeats": 0, "workarounds": 0}]
+                 "n_events": 0, "n_attempts": 0, "repeats": 0, "workarounds": 0,
+                 "checks": []}]
     nxt = None                                   # an action belongs to the event it leads to
     for i in range(len(keys) - 1, -1, -1):
         if keys[i] is None:
@@ -468,7 +337,9 @@ def subphases(acts: List[dict], lo: int, hi: int, phase: str, tries: List[dict],
         ev["repeat"] = ev["workaround"] = False
         if kind == "attempt":
             ev["outcome"], ev["evidence"] = by_id[value]["outcome"], by_id[value]["evidence"]
+            ev["check"] = by_id[value]["judge"]
         else:
+            ev["check"] = value
             ev["outcome"] = _RUN_OUTCOME[phase][run_result(acts, acts[value])]
             ev["evidence"] = run_evidence(acts, acts[value])
             before = ctx["previous_run"].get(value)
@@ -485,10 +356,13 @@ def subphases(acts: List[dict], lo: int, hi: int, phase: str, tries: List[dict],
             last["repeats"] += ev["repeat"]
             last["workarounds"] += ev["workaround"]
             last["evidence"] = _strongest((last["evidence"], ev["evidence"]))
+            if ev["check"] is not None and ev["check"] not in last["checks"]:
+                last["checks"].append(ev["check"])
         else:
             out.append({"outcome": ev["outcome"], "evidence": ev["evidence"], "lo": ev["lo"],
                         "hi": ev["hi"], "n_events": 1, "n_attempts": int(attempt),
-                        "repeats": int(ev["repeat"]), "workarounds": int(ev["workaround"])})
+                        "repeats": int(ev["repeat"]), "workarounds": int(ev["workaround"]),
+                        "checks": [] if ev["check"] is None else [ev["check"]]})
     return out
 
 
@@ -515,7 +389,7 @@ def _changed_rerun(acts: List[dict], before: int, now: int) -> bool:
     if a["key"] != b["key"]:
         return False
     return a["run_key"] != b["run_key"] or any(
-        acts[x]["category"] == "env_setup" for x in range(before + 1, now))
+        acts[x]["kind"] == "env_setup" for x in range(before + 1, now))
 
 
 #: what a failed search prints when it really failed; ``grep``/``rg`` exit 1 on no match
@@ -526,10 +400,23 @@ _SEARCH_ERROR = re.compile(r"No such file|not found|[Ee]rror|Permission denied|[
 def _tool_error(a: dict) -> bool:
     """A lookup, edit or other non-execution call that failed.  A search that exits non-zero
     without an error message found nothing; that is a result, not an error."""
-    if a.get("failed") is not True or taxonomy.CATEGORY_FAMILY.get(a["category"]) not in (
+    if a.get("failed") is not True or taxonomy.KIND_FAMILY.get(a["kind"]) not in (
             "inspect", "modify", "other"):
         return False
-    return a["category"] != "search_code" or bool(_SEARCH_ERROR.search(a.get("result") or ""))
+    return a["kind"] != "search_code" or bool(_SEARCH_ERROR.search(a.get("result") or ""))
+
+
+def _changes_tests(a: dict) -> bool:
+    """An edit of test code.  In a SWE-bench project, not of the agent's own reproduction and
+    scratch scripts (``project.scratch``), which every run writes: only of the repository's
+    tests."""
+    if a.get("edit_role") != "test":
+        return False
+    proj = project.current()
+    if not proj.swebench:
+        return True
+    return any(taxonomy.file_role(f) == "test" and not project.scratch(f, proj)
+               for f in a.get("edit_files") or [])
 
 
 def flags(acts: List[dict], lo: int, hi: int, repeats: int, workarounds: int,
@@ -537,36 +424,36 @@ def flags(acts: List[dict], lo: int, hi: int, repeats: int, workarounds: int,
     """The subphase's flags (FLAGS, spec §7)."""
     rows = acts[lo:hi]
     found: List[str] = []
-    edited = [os.path.basename(f) for a in rows if a["category"] in _EDITS
+    edited = [os.path.basename(f) for a in rows if a["kind"] in _EDITS
               for f in a.get("edit_files") or []]
-    if any(a.get("edit_role") == "test" for a in rows) or \
-            set(edited) & taxonomy.HARNESS_SCRIPTS:
+    if any(_changes_tests(a) for a in rows) or set(edited) & taxonomy.HARNESS_SCRIPTS:
         found.append("test_modified")
     build_config = any(a.get("edit_role") == "toolchain" and not set(
         os.path.basename(f) for f in a.get("edit_files") or []) <= taxonomy.HARNESS_SCRIPTS
         for a in rows)
     failing = any(run_result(acts, a) in _FAILURES for a in rows)
-    if build_config or workarounds or (failing and any(a["category"] == "env_setup"
+    if build_config or workarounds or (failing and any(a["kind"] == "env_setup"
                                                        for a in rows)):
         found.append("environment_workaround")
     if repeats:
         found.append("repeated_failure")
-    reads = collections.Counter(f for a in rows if a["category"] == "read_file"
+    reads = collections.Counter(f for a in rows if a["kind"] == "read_file"
                                 for f in a["files"])
     if reads and max(reads.values()) >= min_reads:
         found.append("repeated_reads")
-    if any(a["category"] == "device_ops" for a in rows):
+    if any(a["kind"] == "device_ops" for a in rows):
         found.append("manual_ui_check")            # drives the app: no automatic verdict
     return found
 
 
 # ----------------------------------------------------------------------------- assembly
 def override_problem(acts: List[dict], x: int, phase: str, ctx: dict) -> Optional[str]:
-    """Why a user rule cannot put action ``x`` in ``phase`` (NEUTRAL: let it follow the
-    work around it), or None when it can.  The rules never break the invariants: a source
-    edit is Repair, and the first fix bounds the pre-only and post-only phases (G1)."""
+    """Why a user's table row cannot put action ``x`` in ``phase`` (FOLLOW: let it take the
+    phase of the previous step), or None when it can.  A user row never breaks the
+    invariants: an edit of a source file is Repair, and the first fix bounds the pre-only and
+    post-only phases."""
     if source_edit(acts[x]):
-        return "an edit of app source is always repair"
+        return "an edit of a source file is always repair"
     if phase in PRE_ONLY and x >= ctx["anchor"]:
         return f"{phase} happens only before the first fix"
     if phase in POST_ONLY and x < ctx["anchor"]:
@@ -575,35 +462,26 @@ def override_problem(acts: List[dict], x: int, phase: str, ctx: dict) -> Optiona
 
 
 def assign(acts: List[dict], targets: Optional[Iterable[str]] = None, *,
-           absorb_max: int = ABSORB_MAX, keep_rules: bool = True,
-           smoothing: bool = True, overrides: Optional[Dict[int, str]] = None,
+           overrides: Optional[Dict[int, str]] = None,
            repeated_reads: int = REPEATED_READS) -> Dict[str, Any]:
-    """Phases and subphases of prepared actions (``segment.prepare``).  ``keep_rules`` and
-    ``smoothing`` switch P2 and P4 off for baselines and ablations (B2 = both off).
+    """Phases and subphases of prepared actions (``segment.prepare``).
 
-    ``overrides`` ({position: phase or NEUTRAL}) are user rules (``atif.rules``): each
-    replaces the P1 phase of its action, again after K1, and its action is never absorbed
-    by P4; one that would break an invariant (``override_problem``) is skipped.  The
-    result's ``overrides`` says, per position, None (applied) or why it was skipped."""
+    ``overrides`` ({position: phase or FOLLOW}) are the user's phase rows (``atif.rules``):
+    each replaces the phase table's value for its action; one that would break an invariant
+    (``override_problem``) is skipped.  The result's ``overrides`` says, per position, None
+    (applied) or why it was skipped, and ``table_row`` gives each action's phase-table row
+    (L1-L15, LG for the general rule, or ``user`` for an applied override)."""
     if not acts:
-        return {"phases": [], "own_phase": [], "phase": [], "attempts": [],
+        return {"phases": [], "own_phase": [], "phase": [], "table_row": [], "attempts": [],
                 "anchor": None, "context": {}, "metrics": {}, "overrides": {}}
     ctx = context(acts, targets)
-    ph = table(acts, ctx)
+    cells, rows = table(acts, ctx)
     status = {x: override_problem(acts, x, p, ctx) for x, p in (overrides or {}).items()}
-    forced = {x: p for x, p in (overrides or {}).items() if status[x] is None}
-    for x, p in forced.items():
-        ph[x] = p
-    ph = resolve_markers(acts, ph, ctx)
+    for x, p in (overrides or {}).items():
+        if status[x] is None:
+            cells[x], rows[x] = (None if p == FOLLOW else p), "user"
+    final = follow(cells, ctx)
     tries = attempts(acts)
-    if keep_rules:
-        ph = keep_attempts(ph, tries)
-        for x, p in forced.items():
-            if p != NEUTRAL:
-                ph[x] = p
-    own = resolve_neutral(ph)
-    locked = {x for x, p in forced.items() if p != NEUTRAL}
-    final = smooth(acts, own, absorb_max, locked) if smoothing else list(own)
     spans: List[dict] = []
     for k, (phase, lo, hi) in enumerate(_spans(final), 1):
         subs = []
@@ -614,15 +492,17 @@ def assign(acts: List[dict], targets: Optional[Iterable[str]] = None, *,
                 "end": acts[sp["hi"] - 1]["action_index"],
                 "n_actions": sp["hi"] - sp["lo"], "n_events": sp["n_events"],
                 "n_attempts": sp["n_attempts"],
+                "checks": [acts[x]["action_index"] for x in sp["checks"][:CHECKS_MAX]],
                 "flags": flags(acts, sp["lo"], sp["hi"], sp["repeats"], sp["workarounds"],
                                repeated_reads),
-                "own_phases": dict(collections.Counter(own[sp["lo"]:sp["hi"]])),
+                "own_phases": dict(collections.Counter(final[sp["lo"]:sp["hi"]])),
                 "_lo": sp["lo"], "_hi": sp["hi"],
             })
         spans.append({"id": f"p{k}", "phase": phase, "start": acts[lo]["action_index"],
                       "end": acts[hi - 1]["action_index"], "n_actions": hi - lo,
                       "subphases": subs, "_lo": lo, "_hi": hi})
-    result = {"phases": spans, "own_phase": own, "phase": final, "attempts": tries,
+    result = {"phases": spans, "own_phase": final, "phase": final, "table_row": rows,
+              "attempts": tries,
               "anchor": acts[ctx["anchor"]]["action_index"] if ctx["anchor"] < len(acts)
               else None, "context": ctx, "overrides": status}
     result["metrics"] = metrics(acts, result)
@@ -634,8 +514,9 @@ def phases(trajectory: dict, bug_id: str, targets: Optional[Iterable[str]] = Non
     """Phase one trajectory; ``check_hierarchy`` runs on the result.  Returns ``actions``
     (annotated rows), ``phases`` (spans with their subphases), ``own_phase`` and ``phase``
     per action, ``attempts``, ``anchor`` (an action_index, or None) and ``metrics``."""
-    acts = segment.prepare(trajectory, bug_id)
-    result = assign(acts, targets, **options)
+    with project.use(trajectory):
+        acts = segment.prepare(trajectory, bug_id)
+        result = assign(acts, targets, **options)
     result["actions"] = acts
     check_hierarchy(acts, result, name=f"bug-{bug_id}")
     return result
@@ -654,12 +535,38 @@ def action_labels(result: Dict[str, Any]) -> List[Dict[str, Any]]:
     attempt_of = {x: at["id"] for at in result["attempts"]
                   for x in range(at["start"], at["end"] + 1)}
     anchor = result["context"].get("anchor", len(acts)) if acts else 0
-    return [{"category": a["category"], "file_role": taxonomy.action_roles(a),
+    return [{"category": a["category"], "file_role": lookup.action_targets(a),
              "fix_stage": "pre-fix" if x < anchor else "post-fix",
              "phase": result["phase"][x], "own_phase": result["own_phase"][x],
              "subphase": sub_of[x]["id"], "subphase_outcome": sub_of[x]["outcome"],
              "subphase_evidence": sub_of[x]["evidence"], "attempt": attempt_of.get(x, "")}
             for x, a in enumerate(acts)]
+
+
+def step_outcomes(result: Dict[str, Any]) -> List[Optional[Tuple[str, str]]]:
+    """Per action of a ``phases`` result, the (outcome, evidence) its own step shows, or None
+    (unchecked): a Localization step that touches a target file succeeded (``target_file``);
+    an edit of a repair attempt takes the attempt's outcome once a run judged it; a decisive
+    run (or a passing build) has the outcome its result means in its phase (``_RUN_OUTCOME``:
+    a failing test before the fix is a reproduction that succeeded)."""
+    acts, ctx = result["actions"], result["context"]
+    out: List[Optional[Tuple[str, str]]] = [None] * len(acts)
+    for at in result["attempts"]:
+        if at["judge"] is not None:
+            for x in at["edits"]:
+                out[x] = (at["outcome"], at["evidence"])
+    for x, a in enumerate(acts):
+        ph = result["phase"][x]
+        if out[x] is not None:
+            continue
+        if ph == LOCALIZATION:
+            if ctx.get("targets") and any(_match(f, ctx["targets"]) for f in a["files"]):
+                out[x] = ("succeeded", "target_file")
+            continue
+        outcome = _RUN_OUTCOME.get(ph, {}).get(run_result(acts, a) or "")
+        if outcome:
+            out[x] = (outcome, run_evidence(acts, a))
+    return out
 
 
 # ----------------------------------------------------------------------------- metrics
@@ -668,13 +575,13 @@ def metrics(acts: List[dict], result: Dict[str, Any]) -> Dict[str, Any]:
     phase counts add up to ``tool_actions``."""
     final, spans, tries = result["phase"], result["phases"], result["attempts"]
     ctx = result["context"]
-    work = [x for x, a in enumerate(acts) if a["category"] != "wait_process"]
+    work = [x for x, a in enumerate(acts) if a["kind"] != "wait_process"]
     out: Dict[str, Any] = {"tool_actions": len(work)}
     for phase in PHASES:
         out[f"{phase}_actions"] = sum(1 for x in work if final[x] == phase)
-    out["env_actions"] = sum(1 for x in work if acts[x]["category"] == "env_setup"
+    out["env_actions"] = sum(1 for x in work if acts[x]["kind"] == "env_setup"
                              or _probe(acts[x]) or acts[x]["fail_kind"] == "env"
-                             or (acts[x]["category"] in _EDITS
+                             or (acts[x]["kind"] in _EDITS
                                  and acts[x].get("edit_role") == "toolchain"))
     out["n_attempts"] = len(tries)
     out["n_failed_attempts"] = sum(1 for at in tries if at["outcome"] == "failed")
@@ -698,7 +605,7 @@ def metrics(acts: List[dict], result: Dict[str, Any]) -> Dict[str, Any]:
     out["tool_errors"] = sum(1 for x in work if _tool_error(acts[x]))
     out["reverts"] = sum(1 for x in work if acts[x].get("reverts"))
     out["self_reviews"] = sum(1 for x in work if acts[x]["category"] == "diff"
-                              or acts[x].get("_own_read"))
+                              or acts[x].get("own_patch"))
     for phase in (REPAIR, VALIDATION):
         last = next((sp for p, sp in reversed(subs) if p == phase), None)
         out[f"final_{phase}_outcome"] = last["outcome"] if last else None

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 99 | actions: 102 | failed actions: 6
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(70: succeeded) -> repair(5: blocked) -> localization(2: succeeded) -> repair(3: blocked) -> validation(1: unchecked) -> localization(8: succeeded) -> repair(1: unchecked) -> localization(9: succeeded) -> validation(2: succeeded) -> repair(1: unchecked)
+Phases: localization(70: succeeded) -> repair(1: blocked) -> validation(1: unchecked) -> repair(1: blocked) -> localization(1: succeeded) -> repair(1: blocked) -> validation(1: unchecked) -> localization(1: succeeded) -> repair(1: blocked) -> validation(15: blocked) -> repair(1: succeeded) -> validation(3: unchecked) -> repair(1: succeeded) -> validation(4: succeeded)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -31,7 +31,7 @@ I need to find the code responsible for the "Copy Url" functionality in this And
 **Result**:
 _delegated to subagent `sub-call_5a99434f3f95483ead73f3d7` -- its 0 actions follow below_
 
-## 2. wait_process / localization  (list_agents)
+## 2. other / localization  (list_agents)
 _step 2_
 
 **Thought** (reasoning):
@@ -47,7 +47,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 3. wait_process / localization  (list_agents)
+## 3. other / localization  (list_agents)
 _step 3_
 
 **Thought** (reasoning):
@@ -63,7 +63,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -79,7 +79,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 5. read_file / localization  (read_file)
+## 5. read / localization  (read_file)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -109,7 +109,7 @@ buildscript {
         classpath "org.jetbra
 ```
 
-## 6. search_code / localization  (glob)
+## 6. search / localization  (glob)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -125,7 +125,7 @@ _(same inference as the previous action)_
 Found 2 matching file(s)
 ```
 
-## 7. read_file / localization  (read_file)
+## 7. read / localization  (read_file)
 _step 6 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -157,7 +157,7 @@ android {
         versionName "2.988"    // digits of the *fra
 ```
 
-## 8. wait_process / localization  (list_agents)
+## 8. other / localization  (list_agents)
 _step 6 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -171,7 +171,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 9. wait_process / localization  (list_agents)
+## 9. other / localization  (list_agents)
 _step 7 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -187,7 +187,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 10. search_code / localization  (glob)
+## 10. search / localization  (glob)
 _step 7 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -203,7 +203,7 @@ app/src/extra/java/free/rm/skytube/app/**/*.java
 No files found
 ```
 
-## 11. search_code / localization  (glob)
+## 11. search / localization  (glob)
 _step 8 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -221,7 +221,7 @@ app/src/extra/java/free/rm/skytube/app/**/*.kt
 No files found
 ```
 
-## 12. search_code / localization  (glob)
+## 12. search / localization  (glob)
 _step 8 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -237,7 +237,7 @@ app/src/main/java/**/*.kt
 No files found
 ```
 
-## 13. search_code / localization  (glob)
+## 13. search / localization  (glob)
 _step 9 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -255,7 +255,7 @@ app/src/main/java/**/*.java
 Found 176 matching file(s) (truncated)
 ```
 
-## 14. wait_process / localization  (list_agents)
+## 14. other / localization  (list_agents)
 _step 9 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -269,7 +269,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 15. search_code / localization  (grep_search)
+## 15. search / localization  (grep_search)
 _step 10 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -287,7 +287,7 @@ copy.*[Uu]rl|Copy.*[Uu]rl|copyUrl|COPY_URL
 Found 14 matches
 ```
 
-## 16. search_code / localization  (grep_search)
+## 16. search / localization  (grep_search)
 _step 10 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -303,7 +303,7 @@ clipboard|Clipboard
 Found 16 matches
 ```
 
-## 17. read_file / localization  (read_file)
+## 17. read / localization  (read_file)
 _step 11_
 
 **Thought** (reasoning):
@@ -339,7 +339,7 @@ So the issue is in `getVideoUrl()` method. Let me read the YouTubeVideo.java fil
  * MERC
 ```
 
-## 18. wait_process / localization  (list_agents)
+## 18. other / localization  (list_agents)
 _step 12 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -388,7 +388,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 19. search_code / localization  (grep_search)
+## 19. search / localization  (grep_search)
 _step 12 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -404,7 +404,7 @@ _(same inference as the previous action)_
 Found 16 matches
 ```
 
-## 20. read_file / localization  (read_file)
+## 20. read / localization  (read_file)
 _step 13_
 
 **Thought** (reasoning):
@@ -432,7 +432,7 @@ Let me look at the `NewPipeService.java` file, particularly the `getVideoUrl` me
  * ME
 ```
 
-## 21. read_file / localization  (read_file)
+## 21. read / localization  (read_file)
 _step 14_
 
 **Thought** (reasoning):
@@ -484,7 +484,7 @@ The bug report shows a malformed URL like `https://www.youtube.com/https://www.y
  * MERC
 ```
 
-## 22. wait_process / localization  (list_agents)
+## 22. other / localization  (list_agents)
 _step 15 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -525,7 +525,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 23. search_code / localization  (grep_search)
+## 23. search / localization  (grep_search)
 _step 15 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -541,7 +541,7 @@ getVideoUrl\(\)
 Found 8 matches
 ```
 
-## 24. delegate / localization  (agent)
+## 24. sub-agent / localization  (agent)
 _step 16_
 
 **Thought** (reasoning):
@@ -573,7 +573,7 @@ ht
 **Result**:
 _delegated to subagent `sub-call_6b27ffeea136461ab9a562d3` -- its 0 actions follow below_
 
-## 25. search_code / localization  (glob)
+## 25. search / localization  (glob)
 _step 17_
 
 **Thought** (reasoning):
@@ -591,7 +591,7 @@ Let me look at the CardData class to understand the `id` field.
 Found 1 matching file(s)
 ```
 
-## 26. read_file / localization  (read_file)
+## 26. read / localization  (read_file)
 _step 18_
 
 **Thought** (reasoning):
@@ -621,7 +621,7 @@ public class CardData implements Serializable {
     protected boole
 ```
 
-## 27. read_file / localization  (read_file)
+## 27. read / localization  (read_file)
 _step 19_
 
 **Thought** (reasoning):
@@ -651,7 +651,7 @@ Now let me check the `VideoId` class to see if it does anything unusual with the
  * ME
 ```
 
-## 28. read_file / localization  (read_file)
+## 28. read / localization  (read_file)
 _step 20_
 
 **Thought** (reasoning):
@@ -679,7 +679,7 @@ Now let me check the `ContentId` class.
  * ME
 ```
 
-## 29. read_file / localization  (read_file)
+## 29. read / localization  (read_file)
 _step 21_
 
 **Thought** (reasoning):
@@ -730,7 +730,7 @@ The malformed URL `https:
 Read lines 351-450 of 596 from app/src/main/java/free/rm/skytube/gui/activities/MainActivity.java
 ```
 
-## 30. search_code / localization  (grep_search)
+## 30. search / localization  (grep_search)
 _step 22_
 
 **Thought** (reasoning):
@@ -748,7 +748,7 @@ openUrl|public static void openUrl
 Found 4 matches
 ```
 
-## 31. read_file / localization  (read_file)
+## 31. read / localization  (read_file)
 _step 23_
 
 **Thought** (reasoning):
@@ -766,7 +766,7 @@ Let me read the `openUrl` method in `SkyTubeApp.java`.
 Read lines 461-510 of 562 from app/src/main/java/free/rm/skytube/app/SkyTubeApp.java
 ```
 
-## 32. search_code / localization  (grep_search)
+## 32. search / localization  (grep_search)
 _step 24_
 
 **Thought** (reasoning):
@@ -784,7 +784,7 @@ parseUrl
 Found 6 matches
 ```
 
-## 33. read_file / localization  (read_file)
+## 33. read / localization  (read_file)
 _step 25_
 
 **Thought** (reasoning):
@@ -802,7 +802,7 @@ Let me read the `parseUrl` method in SkyTubeApp.java.
 Read lines 431-480 of 562 from app/src/main/java/free/rm/skytube/app/SkyTubeApp.java
 ```
 
-## 34. wait_process / localization  (list_agents)
+## 34. other / localization  (list_agents)
 _step 26_
 
 **Thought** (reasoning):
@@ -836,7 +836,7 @@ _(none)_
 Listed 2 background agents.
 ```
 
-## 35. read_file / localization  (read_file)
+## 35. read / localization  (read_file)
 _step 27_
 
 **Thought** (reasoning):
@@ -864,7 +864,7 @@ Both agents are still running. Let me look at the `Linker.java` class since it h
  * MERC
 ```
 
-## 36. read_file / localization  (read_file)
+## 36. read / localization  (read_file)
 _step 28_
 
 **Thought** (reasoning):
@@ -885,7 +885,7 @@ This is used for long-clicking URLs in descriptions/comments/etc. The URL being 
 Read lines 671-720 of 994 from app/src/main/java/free/rm/skytube/gui/fragments/YouTubePlayerV1Fragment.java
 ```
 
-## 37. wait_process / localization  (list_agents)
+## 37. other / localization  (list_agents)
 _step 29_
 
 **Thought** (reasoning):
@@ -919,7 +919,7 @@ _(none)_
 Listed 2 background agents.
 ```
 
-## 38. search_code / localization  (glob)
+## 38. search / localization  (glob)
 _step 30_
 
 **Thought** (reasoning):
@@ -937,7 +937,7 @@ Both agents are still running. Let me check the first exploration agent's area m
 Found 50 matching file(s)
 ```
 
-## 39. search_code / localization  (grep_search)
+## 39. search / localization  (grep_search)
 _step 31_
 
 **Thought** (reasoning):
@@ -955,7 +955,7 @@ copy_url|url_copied|copyUrl|video_url|channel_url
 No matches found
 ```
 
-## 40. search_code / localization  (grep_search)
+## 40. search / localization  (grep_search)
 _step 32_
 
 **Thought** (reasoning):
@@ -973,7 +973,7 @@ clipboard|copied_to_clipboard
 No matches found
 ```
 
-## 41. search_code / localization  (grep_search)
+## 41. search / localization  (grep_search)
 _step 33_
 
 **Thought** (reasoning):
@@ -991,7 +991,7 @@ copy|clip|url
 No matches found
 ```
 
-## 42. read_file / localization  (read_file)
+## 42. read / localization  (read_file)
 _step 34_
 
 **Thought** (reasoning):
@@ -1017,7 +1017,7 @@ Strange. Let me read the strings.xml directly.
 	<string name="gps_missing_title">Google Play Services not f
 ```
 
-## 43. read_file / localization  (read_file)
+## 43. read / localization  (read_file)
 _step 35_
 
 **Thought** (reasoning):
@@ -1040,7 +1040,7 @@ This is just the extra flavor strings. Let me look at the main strings.xml.
     <string name="could_not_get_sponsorblock">Could not retrieve SponsorBlock info: %s.</string>
 ```
 
-## 44. search_code / localization  (grep_search)
+## 44. search / localization  (grep_search)
 _step 36_
 
 **Thought** (reasoning):
@@ -1058,7 +1058,7 @@ url_copied|copy_url|share_via|open_in_browser
 No matches found
 ```
 
-## 45. search_code / localization  (run_shell_command)
+## 45. search / localization  (run_shell_command)
 _step 37_
 
 **Thought** (reasoning):
@@ -1076,7 +1076,7 @@ grep -n "url_copied\|copy_url\|share_via\|open_in_browser" /home/antu_shared/aut
 Command exited with code: 1
 ```
 
-## 46. search_code / localization  (run_shell_command)
+## 46. search / localization  (run_shell_command)
 _step 38_
 
 **Thought** (reasoning):
@@ -1094,7 +1094,7 @@ wc -l /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_
 34 /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run1/bug-1255/app/src/main/res/values/strings.xml
 ```
 
-## 47. search_code / localization  (run_shell_command)
+## 47. search / localization  (run_shell_command)
 _step 39_
 
 **Thought** (reasoning):
@@ -1118,7 +1118,7 @@ Signal: (none)
 Process Group PGID: 1946915
 ```
 
-## 48. read_file / localization  (read_file)
+## 48. read / localization  (read_file)
 _step 40_
 
 **Thought** (reasoning):
@@ -1149,7 +1149,7 @@ I'm still puzzled by how the video URL ends up containing a channel URL—the bu
 Read lines 411-440 of 562 from app/src/main/java/free/rm/skytube/app/SkyTubeApp.java
 ```
 
-## 49. wait_process / localization  (list_agents)
+## 49. other / localization  (list_agents)
 _step 41_
 
 **Thought** (reasoning):
@@ -1167,7 +1167,7 @@ _(none)_
 Listed 2 background agents.
 ```
 
-## 50. wait_process / localization  (send_message)
+## 50. other / localization  (send_message)
 _step 42 | **FAILED**_
 
 **Thought** (reasoning):
@@ -1185,7 +1185,7 @@ Please provide your final results about where the "Copy Url" functionality is im
 params must have required property 'message'
 ```
 
-## 51. wait_process / localization  (send_message)
+## 51. other / localization  (send_message)
 _step 43_
 
 **Thought** (reasoning):
@@ -1203,7 +1203,7 @@ Please provide your final results about where the "Copy Url" functionality is im
 Continued Explore codebase for copy url
 ```
 
-## 52. search_code / localization  (grep_search)
+## 52. search / localization  (grep_search)
 _step 44_
 
 **Thought** (reasoning):
@@ -1241,7 +1241,7 @@ The bug has two parts:
 Found 17 matches
 ```
 
-## 53. read_file / localization  (read_file)
+## 53. read / localization  (read_file)
 _step 45_
 
 **Thought** (reasoning):
@@ -1276,7 +1276,7 @@ Also, let me look at the `ChannelId` class to see how it handles channel ID extr
  * ME
 ```
 
-## 54. read_file / localization  (read_file)
+## 54. read / localization  (read_file)
 _step 46_
 
 **Thought** (reasoning):
@@ -1296,7 +1296,7 @@ Let me now also check what `Utils.removeChannelIdPrefix()` does.
 Read lines 1-60 of 90 from app/src/main/java/free/rm/skytube/app/Utils.java
 ```
 
-## 55. read_file / localization  (read_file)
+## 55. read / localization  (read_file)
 _step 47_
 
 **Thought** (reasoning):
@@ -1314,7 +1314,7 @@ Let me read more of the Utils.java to see the `removeChannelIdPrefix` method.
 Read lines 56-90 of 90 from app/src/main/java/free/rm/skytube/app/Utils.java
 ```
 
-## 56. wait_process / localization  (list_agents)
+## 56. other / localization  (list_agents)
 _step 48_
 
 **Thought** (reasoning):
@@ -1352,7 +1352,7 @@ _(none)_
 Listed 2 background agents.
 ```
 
-## 57. wait_process / localization  (send_message)
+## 57. other / localization  (send_message)
 _step 49_
 
 **Thought** (reasoning):
@@ -1370,7 +1370,7 @@ Please provide your complete findings.
 Continued Find URL duplication source
 ```
 
-## 58. read_file / localization  (read_file)
+## 58. read / localization  (read_file)
 _step 50_
 
 **Thought** (reasoning):
@@ -1398,7 +1398,7 @@ The agent is continuing. It should return its results shortly. In the meantime, 
  * ME
 ```
 
-## 59. read_file / localization  (read_file)
+## 59. read / localization  (read_file)
 _step 51_
 
 **Thought** (reasoning):
@@ -1444,7 +1444,7 @@ Looking
  * ME
 ```
 
-## 60. search_code / localization  (grep_search)
+## 60. search / localization  (grep_search)
 _step 52_
 
 **Thought** (reasoning):
@@ -1490,7 +1490,7 @@ youtubeChannel.*getChannelUrl|getChannelUrl\(\)|\.getChannelUrl
 Found 3 matches
 ```
 
-## 61. read_file / localization  (read_file)
+## 61. read / localization  (read_file)
 _step 53_
 
 **Thought** (reasoning):
@@ -1508,7 +1508,7 @@ Now I understand the code flow. Let me also look at how the YouTube player fragm
 Read lines 711-760 of 1290 from app/src/main/java/free/rm/skytube/gui/fragments/YouTubePlayerV2Fragment.java
 ```
 
-## 62. search_code / localization  (grep_search)
+## 62. search / localization  (grep_search)
 _step 54_
 
 **Thought** (reasoning):
@@ -1534,7 +1534,7 @@ setChannel\(|youtubeChannel\s*=|setYouTubeVideo
 Found 22 matches
 ```
 
-## 63. read_file / localization  (read_file)
+## 63. read / localization  (read_file)
 _step 55_
 
 **Thought** (reasoning):
@@ -1552,7 +1552,7 @@ Interesting! Let me look at `YouTubeTasks.java` line 160, which does `details.se
 Read lines 131-190 of 467 from app/src/main/java/free/rm/skytube/businessobjects/YouTube/YouTubeTasks.java
 ```
 
-## 64. read_file / localization  (read_file)
+## 64. read / localization  (read_file)
 _step 56_
 
 **Thought** (reasoning):
@@ -1578,7 +1578,7 @@ When the share intent arrives, `getUrlFromIntent()` extracts the URL and `parseU
 Read lines 256-305 of 319 from app/src/main/java/free/rm/skytube/gui/businessobjects/adapters/GridViewHolder.java
 ```
 
-## 65. search_code / localization  (glob)
+## 65. search / localization  (glob)
 _step 57 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -1656,7 +1656,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 d380e1f (HEAD -> master) harness baseline
 ```
 
-## 68. read_file / localization  (read_file)
+## 68. read / localization  (read_file)
 _step 59_
 
 **Thought** (reasoning):
@@ -1684,7 +1684,7 @@ Only one commit. Let me also look at the NewPipe `ChannelIdTest` to see how chan
  * ME
 ```
 
-## 69. read_file / localization  (read_file)
+## 69. read / localization  (read_file)
 _step 60_
 
 **Thought** (reasoning):
@@ -1728,7 +1728,7 @@ Looking at the constructor signatures, `YouTubeChannel` takes a String ID, but I
  * ME
 ```
 
-## 70. read_file / localization  (read_file)
+## 70. read / localization  (read_file)
 _step 61_
 
 **Thought** (reasoning):
@@ -1763,7 +1763,7 @@ Let me look at the exact lines I need to modify in `NewPipeService.getDetails()`
 Read lines 396-445 of 565 from app/src/main/java/free/rm/skytube/businessobjects/YouTube/newpipe/NewPipeService.java
 ```
 
-## 71. edit_file / repair  (edit)
+## 71. edit / repair  (edit)
 _step 62_
 
 **Thought** (reasoning):
@@ -1804,7 +1804,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             viewCount = 0;
 ```
 
-## 72. read_file / repair (own phase localization)  (read_file)
+## 72. read / validation  (read_file)
 _step 63_
 
 **Thought** (reasoning):
@@ -1822,7 +1822,7 @@ Now I need to add the helper method `getChannelIdFromUrl()` to `NewPipeService.j
 Read lines 516-535 of 566 from app/src/main/java/free/rm/skytube/businessobjects/YouTube/newpipe/NewPipeService.java
 ```
 
-## 73. edit_file / repair  (edit)
+## 73. edit / repair  (edit)
 _step 64_
 
 **Thought** (reasoning):
@@ -1845,7 +1845,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
         return streamingService.getStreamLHFactory().getUrl(videoId)
 ```
 
-## 74. read_file / repair (own phase localization)  (read_file)
+## 74. read / localization  (read_file)
 _step 65_
 
 **Thought** (reasoning):
@@ -1863,7 +1863,7 @@ Good, now I need to fix the same issue in `VideoPager.convert()`. Let me edit th
 Read lines 86-115 of 134 from app/src/main/java/free/rm/skytube/businessobjects/YouTube/newpipe/VideoPager.java
 ```
 
-## 75. edit_file / repair  (edit)
+## 75. edit / repair  (edit)
 _step 66_
 
 **Thought** (reasoning):
@@ -1887,7 +1887,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             Log
 ```
 
-## 76. search_code / localization  (grep_search)
+## 76. search / validation  (grep_search)
 _step 67_
 
 **Thought** (reasoning):
@@ -1913,7 +1913,7 @@ new YouTubeChannel\(.*Uploader|new YouTubeChannel\(.*uploader
 Found 4 matches
 ```
 
-## 77. read_file / localization  (read_file)
+## 77. read / localization  (read_file)
 _step 68_
 
 **Thought** (reasoning):
@@ -1941,7 +1941,7 @@ I see there's one more place that needs fixing: `VideoPagerWithChannel.java:46`.
  * ME
 ```
 
-## 78. edit_file / repair  (edit)
+## 78. edit / repair  (edit)
 _step 69_
 
 **Thought** (reasoning):
@@ -1966,7 +1966,7 @@ import org.schabi.newpipe.extractor.ListExtractor;
 import org.schabi.newpipe.extractor.Str
 ```
 
-## 79. build / repair  (run_shell_command)
+## 79. build / validation  (run_shell_command)
 _step 70_
 
 **Thought** (reasoning):
@@ -1994,7 +1994,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 > Task
 ```
 
-## 80. run_test / repair  (run_shell_command)
+## 80. test / validation  (run_shell_command)
 _step 71_
 
 **Thought** (reasoning):
@@ -2046,7 +2046,7 @@ Signal: (none)
 Process Group PGID: 1950167
 ```
 
-## 82. vcs / localization  (run_shell_command)
+## 82. diff / validation  (run_shell_command)
 _step 73_
 
 **Thought** (reasoning):
@@ -2065,7 +2065,7 @@ On branch master
 nothing to commit, working tree clean
 ```
 
-## 83. search_code / localization  (run_shell_command)
+## 83. search / validation  (run_shell_command)
 _step 74_
 
 **Thought** (reasoning):
@@ -2084,7 +2084,7 @@ grep -n "getChannelIdFromUrl\|getChannelId" /home/antu_shared/automated_program_
 /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run1/bug-1255/app/src/main/java/free/rm/skytube/businessobjects/YouTube/
 ```
 
-## 84. diff / localization (own phase validation)  (run_shell_command)
+## 84. diff / validation  (run_shell_command)
 _step 75_
 
 **Thought** (reasoning):
@@ -2108,7 +2108,7 @@ Signal: (none)
 Process Group PGID: 1950216
 ```
 
-## 85. vcs / localization  (run_shell_command)
+## 85. vcs / validation  (run_shell_command)
 _step 76 | **FAILED**_
 
 **Thought** (reasoning):
@@ -2129,7 +2129,7 @@ Output: d380e1fc6d1cd57909440b8c0c58b7834302e7ce harness baseline
 fatal: path 'app/src/main/java/free/
 ```
 
-## 86. vcs / localization  (run_shell_command)
+## 86. vcs / validation  (run_shell_command)
 _step 77_
 
 **Thought** (reasoning):
@@ -2147,7 +2147,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 HARNESS
 ```
 
-## 87. read_file / localization  (read_file)
+## 87. read / validation  (read_file)
 _step 78 | **FAILED**_
 
 **Thought** (reasoning):
@@ -2165,7 +2165,7 @@ I see! The git repository only has a file called `HARNESS` tracked. The source c
 File not found: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run1/bug-1255/HARNESS
 ```
 
-## 88. vcs / localization  (run_shell_command)
+## 88. vcs / validation  (run_shell_command)
 _step 79_
 
 **Thought** (reasoning):
@@ -2183,7 +2183,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 100644 ef37ed15e16c9c65e686263e607390566312bb2e 0       HARNESS
 ```
 
-## 89. read_file / localization  (run_shell_command)
+## 89. other / validation  (run_shell_command)
 _step 80 | **FAILED**_
 
 **Thought** (reasoning):
@@ -2211,7 +2211,7 @@ Signal: (none)
 Process Group PGID: 1950293
 ```
 
-## 90. shell_edit / repair  (run_shell_command)
+## 90. edit / validation  (run_shell_command)
 _step 81_
 
 **Thought** (reasoning):
@@ -2235,7 +2235,7 @@ Signal: (none)
 Process Group PGID: 1950296
 ```
 
-## 91. read_file / localization  (run_shell_command)
+## 91. other / validation  (run_shell_command)
 _step 82 | **FAILED**_
 
 **Thought** (reasoning):
@@ -2259,7 +2259,7 @@ Signal: (none)
 Process Group PGID: 1950300
 ```
 
-## 92. vcs / localization  (run_shell_command)
+## 92. vcs / validation  (run_shell_command)
 _step 83_
 
 **Thought** (reasoning):
@@ -2278,7 +2278,7 @@ Stand-in repository so `git rev-parse HEAD` answers during a build.
 Not the project's history. See f_apr_agents/read_guard.py.
 ```
 
-## 93. vcs / localization  (run_shell_command)
+## 93. vcs / validation  (run_shell_command)
 _step 84 | **FAILED**_
 
 **Thought** (reasoning):
@@ -2300,7 +2300,7 @@ Directory: (root)
 Output: fa
 ```
 
-## 94. env_setup / localization (own phase validation)  (run_shell_command)
+## 94. edit / repair  (run_shell_command)
 _step 85_
 
 **Thought** (reasoning):
@@ -2324,7 +2324,7 @@ Signal: (none)
 Process Group PGID: 1950350
 ```
 
-## 95. vcs / localization  (run_shell_command)
+## 95. vcs / validation  (run_shell_command)
 _step 86_
 
 **Thought** (reasoning):
@@ -2342,7 +2342,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 d380e1f (HEAD -> master) harness baseline
 ```
 
-## 96. vcs / localization  (run_shell_command)
+## 96. vcs / validation  (run_shell_command)
 _step 87_
 
 **Thought** (reasoning):
@@ -2366,7 +2366,7 @@ Signal: (none)
 Process Group PGID: 1950394
 ```
 
-## 97. vcs / localization  (run_shell_command)
+## 97. diff / validation  (run_shell_command)
 _step 88_
 
 **Thought** (reasoning):
@@ -2391,7 +2391,7 @@ Signal: (none)
 Process Group PGID: 1950416
 ```
 
-## 98. env_setup / localization (own phase validation)  (run_shell_command)
+## 98. edit / repair  (run_shell_command)
 _step 89_
 
 **Thought** (reasoning):
@@ -2416,7 +2416,7 @@ Signal: (none)
 Process Group PGID: 1950421
 ```
 
-## 99. search_code / localization  (run_shell_command)
+## 99. search / validation  (run_shell_command)
 _step 90_
 
 **Thought** (reasoning):
@@ -2464,7 +2464,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 > Task :app:assembleOss
 ```
 
-## 101. diff / validation  (run_shell_command)
+## 101. search / validation  (run_shell_command)
 _step 97_
 
 **Thought** (reasoning):
@@ -2491,7 +2491,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 422:        String channelId = get
 ```
 
-## 102. edit_file / repair  (write_file)
+## 102. edit / validation  (write_file)
 _step 98_
 
 **Thought** (reasoning):

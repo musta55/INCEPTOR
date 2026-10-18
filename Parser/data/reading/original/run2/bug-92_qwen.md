@@ -9,7 +9,7 @@
 
 Phases: localization(6: unchecked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -29,7 +29,7 @@ Search this Android codebase for all files related to "vendor search", "MAC vend
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-b8d1d02427a838d4` -- its 0 actions follow below_
 
-## 2. read_file / localization  (read_file)
+## 2. read / localization  (read_file)
 _step 1 | call 2/2 of this inference | **FAILED**_
 
 **Thought** (reasoning):
@@ -45,7 +45,7 @@ _(same inference as the previous action)_
 File not found: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run2/bug-92/.git/config
 ```
 
-## 3. wait_process / localization  (list_agents)
+## 3. other / localization  (list_agents)
 _step 2_
 
 **Thought** (reasoning):
@@ -61,7 +61,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 3_
 
 **Thought** (reasoning):
@@ -77,7 +77,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 5. wait_process / localization  (list_agents)
+## 5. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -93,7 +93,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 6. wait_process / localization  (list_agents)
+## 6. other / localization  (list_agents)
 _step 5_
 
 **Thought** (reasoning):

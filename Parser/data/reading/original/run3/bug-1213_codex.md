@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(7: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:34:15.363Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the authentication dialog and compare its visibility handling with 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:34:17.431Z_
 
 **Thought** (none):
@@ -56,7 +56,7 @@ Auth-related matches:
 ./CHANGELOG.md:86: * New feature: Preve
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:34:18.631Z | **FAILED**_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ Settings authentication code:
                     useAutoBackup.setSummary(R.string.settings_desc_auto_backup_requirements);
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:34:21.198Z_
 
 **Thought** (none):
@@ -111,7 +111,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.
 app/src/main/java/org/shadowice/flocke/andotp/Preferences/PasswordEncry
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-26T16:34:23.440Z_
 
 **Thought** (none):
@@ -139,7 +139,7 @@ Total output lines: 491
  * in the Software without restriction, including without limi
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-26T16:34:25.847Z_
 
 **Thought** (narration):
@@ -157,7 +157,7 @@ The introductory screen already dispatches the toggle to both inputs. I’m comp
 Plan updated
 ```
 
-## 7. search_code / localization (own phase understanding)  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T16:34:29.165Z_
 
 **Thought** (none):
@@ -186,7 +186,7 @@ Total output lines: 296
     91	    public CredentialsPreference(Context context, AttributeSet attrs) {
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-26T16:34:30.009Z_
 
 **Thought** (none):
@@ -213,7 +213,7 @@ Output:
    191
 ```
 
-## 9. plan / localization  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-26T16:34:35.944Z_
 
 **Thought** (narration):
@@ -231,7 +231,7 @@ The root cause is confirmed: `TextInputLayout` owns the toggle for `passwordInpu
 Plan updated
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-26T16:34:40.499Z_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T16:34:42.087Z_
 
 **Thought** (narration):
@@ -279,7 +279,7 @@ The settings dialog now applies each toggle to both fields and preserves both cu
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-26T16:34:43.858Z_
 
 **Thought** (none):
@@ -301,7 +301,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T16:34:45.855Z_
 
 **Thought** (none):
@@ -329,7 +329,7 @@ Output:
 > Ta
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-26T16:34:54.024Z_
 
 **Thought** (none):
@@ -352,7 +352,7 @@ warn: removing resource org.shadowice.flocke.andotp.dev:string/backup_new_format
 warn: removing resource org.shadowice.flocke.
 ```
 
-## 15. search_code / validation  (exec_command)
+## 15. search / validation  (exec_command)
 _step 19 | 2026-09-26T16:34:58.472Z_
 
 **Thought** (narration):
@@ -381,7 +381,7 @@ Output:
    2
 ```
 
-## 16. plan / validation  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-26T16:35:00.973Z_
 
 **Thought** (none):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 23 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(5: unchecked) -> localization(6: succeeded) -> repair(3: succeeded) -> localization(2: succeeded) -> repair(6: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(4: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:17:56.595Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the filtering path for top 24/48 views, patch the root cause, then 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:18:01.017Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:18:02.353Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r--@  1 sag
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T09:18:05.954Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / understanding  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:18:08.838Z_
 
 **Thought** (narration):
@@ -125,7 +125,7 @@ app/src/main/res/values/strings.xml:26:        <item>Last 24 hours</item>
 app/src/main/java/com/simon/harmonichackernews/StoriesFragment.java:73:
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-23T09:18:11.433Z_
 
 **Thought** (none):
@@ -156,7 +156,7 @@ import android.os.Bundle;
 import androi
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:18:16.125Z_
 
 **Thought** (none):
@@ -181,7 +181,7 @@ Total output lines: 467
    332	                    int targetY = y - topInset - Utils.pxFromDpInt(getResources(), 10) -
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T09:18:22.286Z_
 
 **Thought** (none):
@@ -212,7 +212,7 @@ Total output lines: 455
    442	    private void clickedComments(int posi
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:18:27.083Z_
 
 **Thought** (none):
@@ -241,7 +241,7 @@ Total output lines: 268
    531	        popup.setOnMenuItemClickL
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:18:29.764Z_
 
 **Thought** (none):
@@ -268,7 +268,7 @@ Output:
    626
 ```
 
-## 11. plan / localization  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-23T09:18:46.845Z_
 
 **Thought** (narration):
@@ -286,7 +286,7 @@ The defect is localized: top 24/48 use Algolia and bypass the filter checks used
 Plan updated
 ```
 
-## 12. edit_file / repair  (exec_command)
+## 12. edit / repair  (exec_command)
 _step 16 | 2026-09-23T09:18:56.555Z_
 
 **Thought** (none):
@@ -315,7 +315,7 @@ Success. Updated the following files:
 M app/src/main/java/com/simon/harmonichackernews/StoriesFragment.java
 ```
 
-## 13. diff / repair  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-23T09:18:58.520Z_
 
 **Thought** (none):
@@ -340,7 +340,7 @@ Output:
    482
 ```
 
-## 14. diff / repair  (exec_command)
+## 14. diff / validation  (exec_command)
 _step 18 | 2026-09-23T09:19:01.230Z_
 
 **Thought** (narration):
@@ -363,7 +363,7 @@ Output:
 fatal: Unable to mark file app/src/main/java/com/simon/harmonichackernews/StoriesFragment.java
 ```
 
-## 15. read_file / localization  (exec_command)
+## 15. read / validation  (exec_command)
 _step 19 | 2026-09-23T09:19:04.970Z | **FAILED**_
 
 **Thought** (none):
@@ -386,7 +386,7 @@ HARNESS
 ls: .git: No such file or directory
 ```
 
-## 16. search_code / localization  (exec_command)
+## 16. search / validation  (exec_command)
 _step 20 | 2026-09-23T09:19:12.548Z_
 
 **Thought** (none):
@@ -412,7 +412,7 @@ Output:
     95	        clickedIds = SettingsUtils.readIntSetFromSharedPreferences(requireContext(),
 ```
 
-## 17. edit_file / repair  (exec_command)
+## 17. edit / repair  (exec_command)
 _step 21 | 2026-09-23T09:19:20.684Z_
 
 **Thought** (none):
@@ -449,7 +449,7 @@ import com.simon.harmonichackernews.utils.Utils;
 import com.simon.harmonicha
 ```
 
-## 18. plan / repair  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-23T09:19:28.953Z_
 
 **Thought** (narration):
@@ -467,7 +467,7 @@ The repository has no local unit-test source set or test dependency, so the patc
 Plan updated
 ```
 
-## 19. build / repair  (exec_command)
+## 19. build / validation  (exec_command)
 _step 23 | 2026-09-23T09:19:32.464Z_
 
 **Thought** (none):
@@ -492,7 +492,7 @@ Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for
 [2A[1B[1m> Starting Daemon[m[17D[1B[1A> IDLE[0K[6D[1B[2A[1m<[0;1m-------------> 0% INITIALIZING [58ms][m[38D[2B
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-23T09:19:35.079Z_
 
 **Thought** (none):
@@ -513,7 +513,7 @@ Output:
 [2A[1m<[0;1m-------------> 0% INITIALIZING [161ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [261ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [358ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [457ms][m[39D[2B[2ACalculating task grap
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-23T09:19:42.428Z_
 
 **Thought** (none):
@@ -534,7 +534,7 @@ Output:
 [9A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [6s][m[34D[5B[1m> :app:processDebugResources[m[28D[4B[9A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [7s][m[34D[9B[9A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [8s][m[34D[9B[9A[1m<[0;32;1m==========[0;39;1
 ```
 
-## 22. plan / repair  (update_plan)
+## 22. plan / planning  (update_plan)
 _step 26 | 2026-09-23T09:19:50.335Z_
 
 **Thought** (narration):
@@ -552,7 +552,7 @@ The required build passes. I’m doing one final source/output check and then I�
 Plan updated
 ```
 
-## 23. read_file / validation  (exec_command)
+## 23. read / validation  (exec_command)
 _step 27 | 2026-09-23T09:19:53.963Z_
 
 **Thought** (none):

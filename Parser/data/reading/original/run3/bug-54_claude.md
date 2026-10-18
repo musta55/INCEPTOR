@@ -7,9 +7,9 @@
 - steps (LLM inferences): 69 | actions: 70 | failed actions: 6
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(9: succeeded) -> understanding(2: unchecked) -> repair(3: blocked) -> validation(1: unchecked) -> localization(5: failed) -> repair(13: blocked) -> validation(36: blocked, failed, succeeded, failed, succeeded)
+Phases: localization(14: succeeded) -> repair(1: blocked) -> validation(10: unchecked) -> repair(1: blocked) -> validation(1: unchecked) -> repair(1: blocked) -> localization(1: succeeded) -> validation(2: unchecked) -> repair(1: blocked) -> validation(38: blocked, failed, succeeded, failed, succeeded)
 
-## 1. read_file / understanding  (Bash)
+## 1. read / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -40,7 +40,7 @@ settings.gradle
 include ':app'
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -62,7 +62,7 @@ find . -path ./build -prune -o -name "*.kt" -print -o -name "*.java" -print | he
 ./app/thirdparty/java/o
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -92,7 +92,7 @@ This is Markor. Let me examine the document editing and saving logic.
 13	im
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -120,7 +120,7 @@ _(same inference as the previous action)_
 13	import
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 3_
 
 **Thought** (none):
@@ -148,7 +148,7 @@ _(none)_
 13	impor
 ```
 
-## 6. read_file / localization  (Read)
+## 6. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -176,7 +176,7 @@ _(none)_
 13	im
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -197,7 +197,7 @@ Preview (first 2KB):
 SystemMessage(s
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -218,7 +218,7 @@ cat app/src/test/java/net/gsantner/markor/model/DocumentTest.java; sed -n 1,80p 
  * sue me if something goes wrong. No attribution required.    - Gregor Santner
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -248,7 +248,7 @@ import java.io.BufferedInputStream;
 i
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -276,7 +276,7 @@ if (lc.endsWith("." + extension.toLowerCase(Locale.ROOT))) {
         // renameTo will fail in case of case-changed filename i
 ```
 
-## 11. env_setup / understanding  (Bash)
+## 11. orient / localization  (Bash)
 _step 9_
 
 **Thought** (narration):
@@ -306,7 +306,7 @@ Sim2.java
 gsantner
 ```
 
-## 12. env_setup / understanding  (Bash)
+## 12. other / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -324,7 +324,7 @@ cp /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs
 ok
 ```
 
-## 13. edit_file / repair  (Write)
+## 13. other / localization  (Write)
 _step 11 | **FAILED**_
 
 **Thought** (none):
@@ -340,7 +340,7 @@ _(none)_
 PreToolUse:Write hook error: Access outside repo directory is not allowed: /tmp/mysim/Sim.java
 ```
 
-## 14. edit_file / repair  (Write)
+## 14. edit / localization  (Write)
 _step 12_
 
 **Thought** (none):
@@ -356,7 +356,7 @@ _(none)_
 File created successfully at: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54/.sim/Sim.java (file state is current in your context — no need to Read it back)
 ```
 
-## 15. run_test / repair  (Bash)
+## 15. edit / repair  (Bash)
 _step 13 | **FAILED**_
 
 **Thought** (none):
@@ -378,7 +378,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Error: Could not find or load main class Sim
 ```
 
-## 16. run_test / validation  (Bash)
+## 16. test / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -400,7 +400,7 @@ After typing title:
    doc: file=Document-57e8c2c5-cb8a-4de7-90e8-cc9263b697f5.m
 ```
 
-## 17. search_code / localization  (Bash)
+## 17. search / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -433,7 +433,7 @@ cd /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_orig
   - More checks for storage acc
 ```
 
-## 18. search_code / localization  (Bash)
+## 18. search / validation  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -451,7 +451,7 @@ app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java:160:   
 app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java:196:            case R.id.action_save: {
 ```
 
-## 19. search_code / localization  (Bash)
+## 19. search / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -469,7 +469,7 @@ app/src/main/java/net/gsantner/opoc/util/ShareUtil.java:161:    public void crea
 app/src/main/java/net/gsantner/markor/util/ShareUtil.java:36:    pub
 ```
 
-## 20. read_file / localization  (Bash)
+## 20. read / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -493,7 +493,7 @@ sed -n 250,300p app/src/main/java/net/gsantner/markor/activity/MainActivity.java
             case R.id.fab_add_new_item: {
 ```
 
-## 21. search_code / localization  (Bash)
+## 21. search / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -516,7 +516,7 @@ app/src/main/res/values/strings.xml:111:    <string name="history">History</stri
 app/src/main/res/values/strings.xml:248:    <string name="enable_undo_and_redo_be_patient">Enable undo and redo actions. Only suited for advanced use, be pat
 ```
 
-## 22. edit_file / repair  (Write)
+## 22. edit / validation  (Write)
 _step 20_
 
 **Thought** (narration):
@@ -534,7 +534,7 @@ Found a strong lead: `isEditorHistoryEnabled()` defaults to **false**, which mea
 File created successfully at: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54/.sim/Sim2.java (file state is current in your context — no need to Read it back)
 ```
 
-## 23. run_test / repair  (Bash)
+## 23. test / validation  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -556,7 +556,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
       [save] target=MyTitle.md initialVersionFile=Document-bc0f4387-8190-48e1-ab66-75b880292560.md initialVersionContent='Hello content' editorText='Hello content'
 ```
 
-## 24. run_test / repair  (Bash)
+## 24. test / validation  (Bash)
 _step 22_
 
 **Thought** (narration):
@@ -585,7 +585,7 @@ java -Dfixed=true -cp out Sim2 2>&1 | grep -v "Picked up"
       [save] target=MyTitle.md
 ```
 
-## 25. run_test / repair  (Bash)
+## 25. edit / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -617,7 +617,7 @@ FIXED hist=true files=[Beta.md]
     Beta.md => 'content v2'
 ```
 
-## 26. edit_file / repair  (Edit)
+## 26. edit / repair  (Edit)
 _step 24_
 
 **Thought** (narration):
@@ -635,7 +635,7 @@ Renaming behavior is preserved. Now let me apply the fix to the real source:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54/app/src/main/java/net/gsantner/markor/util/DocumentIO.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 27. read_file / repair (own phase localization)  (Read)
+## 27. read / validation  (Read)
 _step 25_
 
 **Thought** (narration):
@@ -659,7 +659,7 @@ Important edge case: an untouched new note must not create an empty file. Let me
 119	        final String filename = DocumentIO.normalizeTitleForFilename(document) + documen
 ```
 
-## 28. edit_file / repair  (Edit)
+## 28. edit / repair  (Edit)
 _step 26_
 
 **Thought** (none):
@@ -675,7 +675,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54/app/src/main/java/net/gsantner/markor/util/DocumentIO.java has been updated successfully.
 ```
 
-## 29. read_file / repair (own phase localization)  (Bash)
+## 29. read / localization  (Bash)
 _step 27_
 
 **Thought** (narration):
@@ -698,7 +698,7 @@ public static synchronized boolean saveDocument(Document document, boolean argAl
         docum
 ```
 
-## 30. run_test / repair  (Bash)
+## 30. edit / validation  (Bash)
 _step 28_
 
 **Thought** (none):
@@ -729,7 +729,7 @@ PASS hist=false existing note renamed   -> [Renamed.md] [Renamed.md='old content
 PASS hist=false all
 ```
 
-## 31. run_test / repair  (Bash)
+## 31. edit / validation  (Bash)
 _step 29_
 
 **Thought** (none):
@@ -750,7 +750,7 @@ PASS hist=false existing note renamed   -> [Renamed.md] [Renamed.md='old content
 PASS hist=false allowRename=false       ->
 ```
 
-## 32. edit_file / repair  (Edit)
+## 32. edit / repair  (Edit)
 _step 30_
 
 **Thought** (narration):
@@ -768,7 +768,7 @@ The fix works. Now let me harden a closely-related path in the fragment — afte
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 33. env_setup / repair  (Bash)
+## 33. edit / validation  (Bash)
 _step 31_
 
 **Thought** (narration):
@@ -806,7 +806,7 @@ README.md
 settings.gradle
 ```
 
-## 34. build / repair  (Bash)
+## 34. build / validation  (Bash)
 _step 32_
 
 **Thought** (none):
@@ -842,7 +842,7 @@ _(none)_
    > Could not download databinding-common.jar (androidx.databinding:databinding-common:3.2.1)
 ```
 
-## 36. read_file / validation  (Bash)
+## 36. orient / validation  (Bash)
 _step 34_
 
 **Thought** (none):
@@ -877,7 +877,7 @@ androidx.documentfile
 android
 ```
 
-## 37. read_file / validation  (Bash)
+## 37. orient / validation  (Bash)
 _step 35_
 
 **Thought** (none):
@@ -924,7 +924,7 @@ ls ~/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle 2>/dev/nu
 28.1-jre
 ```
 
-## 38. search_code / validation  (Bash)
+## 38. search / validation  (Bash)
 _step 36 | **FAILED**_
 
 **Thought** (none):
@@ -956,7 +956,7 @@ android-35
 android-36
 ```
 
-## 39. search_code / validation  (Bash)
+## 39. search / validation  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -980,7 +980,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.
 ```
 
-## 40. run_shell / validation  (Bash)
+## 40. other / validation  (Bash)
 _step 38_
 
 **Thought** (none):
@@ -1002,7 +1002,7 @@ com.jakewharton/butterknife: 10.2.3 8.5.1 8.8.1
 com.jak
 ```
 
-## 41. read_file / validation  (Bash)
+## 41. orient / validation  (Bash)
 _step 39_
 
 **Thought** (none):
@@ -1024,7 +1024,7 @@ flexmark-ext-autolink
 0.42.10
 ```
 
-## 42. env_setup / validation  (Bash)
+## 42. search / validation  (Bash)
 _step 40_
 
 **Thought** (narration):
@@ -1059,7 +1059,7 @@ support-fragment-28.0.0.jar
 s
 ```
 
-## 43. env_setup / validation  (Bash)
+## 43. search / validation  (Bash)
 _step 41_
 
 **Thought** (none):
@@ -1079,7 +1079,7 @@ org.nibor.autolink/autolink -> 0.6.0
       32
 ```
 
-## 44. search_code / validation  (Bash)
+## 44. search / validation  (Bash)
 _step 42_
 
 **Thought** (none):
@@ -1098,7 +1098,7 @@ BuildConfig.IS_TEST_BUILD
 BuildConfig.VERSION_CODE
 ```
 
-## 45. run_shell / validation  (Bash)
+## 45. other / validation  (Bash)
 _step 43_
 
 **Thought** (none):
@@ -1180,7 +1180,7 @@ javac 1.8.0_452
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54/app/thirdparty/java/other/so/AndroidBug5497Workaround.java:10: error: package android.graphi
 ```
 
-## 49. env_setup / validation  (Bash)
+## 49. search / validation  (Bash)
 _step 47_
 
 **Thought** (none):
@@ -1196,7 +1196,7 @@ ls -la ~/Library/Android/sdk/platforms/android-27/ | head; unzip -l ~/Library/An
 ls: /Users/splash/Library/Android/sdk/platforms/android-27/: No such file or directory
 ```
 
-## 50. read_file / validation  (Bash)
+## 50. orient / validation  (Bash)
 _step 48_
 
 **Thought** (none):
@@ -1242,7 +1242,7 @@ Exit code 1
 /Vo
 ```
 
-## 52. env_setup / validation  (Bash)
+## 52. search / validation  (Bash)
 _step 50_
 
 **Thought** (none):
@@ -1287,7 +1287,7 @@ cd /tmp/ccheck && AJ=/Volumes/Dumpy/Android/sdk/platforms/android-27/android.jar
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54
 ```
 
-## 54. search_code / validation  (Bash)
+## 54. search / validation  (Bash)
 _step 52_
 
 **Thought** (none):
@@ -1365,7 +1365,7 @@ IDENTICAL: patch introduces no new compile errors
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54
 ```
 
-## 57. read_file / validation  (Bash)
+## 57. read / validation  (Bash)
 _step 55_
 
 **Thought** (none):
@@ -1432,7 +1432,7 @@ cd /tmp/ccheck && B=/Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54
 ```
 
-## 60. run_test / validation  (Bash)
+## 60. test / validation  (Bash)
 _step 58_
 
 **Thought** (narration):
@@ -1464,7 +1464,7 @@ Caused by: java.lang.ClassNotFoundException: android.text.InputFilter
 	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(
 ```
 
-## 61. run_test / validation  (Bash)
+## 61. test / validation  (Bash)
 _step 59_
 
 **Thought** (none):
@@ -1486,7 +1486,7 @@ cd /tmp/ccheck && java -cp "iso/out:/Volumes/Dumpy/Android/sdk/platforms/android
   PASS  allowRename=false keeps file
 ```
 
-## 62. run_test / validation  (Bash)
+## 62. test / validation  (Bash)
 _step 60_
 
 **Thought** (narration):
@@ -1531,7 +1531,7 @@ C=~/.gradle/caches/modules-2/files-2.1; ls $C/junit/junit 2>/dev/null; ls $C/org
 1.3
 ```
 
-## 64. edit_file / validation  (Write)
+## 64. edit / validation  (Write)
 _step 62_
 
 **Thought** (none):
@@ -1547,7 +1547,7 @@ _(none)_
 File created successfully at: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54/app/src/test/java/net/gsantner/markor/util/DocumentIoTest.java (file state is current in your context — no need to Read it back)
 ```
 
-## 65. run_test / validation  (Bash)
+## 65. test / validation  (Bash)
 _step 63_
 
 **Thought** (none):
@@ -1563,7 +1563,7 @@ cd /tmp/ccheck && C=~/.gradle/caches/modules-2/files-2.1 && J=$(find $C/junit/ju
 /Users/splash/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar|/Users/splash/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar|/Users/splash/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.8.0/b209d90ff2e279bee3e02547ee7b11349c52d0e3/assertj-core-3
 ```
 
-## 66. run_test / validation  (Bash)
+## 66. test / validation  (Bash)
 _step 64_
 
 **Thought** (none):
@@ -1584,7 +1584,7 @@ OK (7 tests)
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54
 ```
 
-## 67. run_test / validation  (Bash)
+## 67. test / validation  (Bash)
 _step 65_
 
 **Thought** (narration):
@@ -1608,7 +1608,7 @@ Tests run: 7,  Failures: 4
 Shell cwd was reset to /Vo
 ```
 
-## 68. run_test / validation  (Bash)
+## 68. test / validation  (Bash)
 _step 66_
 
 **Thought** (none):
@@ -1629,7 +1629,7 @@ OK (10 tests)
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-54
 ```
 
-## 69. read_file / validation  (Bash)
+## 69. diff / validation  (Bash)
 _step 67_
 
 **Thought** (narration):
@@ -1650,7 +1650,7 @@ diff -ruN --exclude=.* orig/app/src/main/java/net/gsantner/markor/activity/Docum
 @@ -296,6 +296,13 @@
 ```
 
-## 70. search_code / validation  (Bash)
+## 70. search / validation  (Bash)
 _step 68_
 
 **Thought** (none):

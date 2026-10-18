@@ -7,9 +7,9 @@
 - steps (LLM inferences): 105 | actions: 104 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(9: succeeded) -> understanding(13: unchecked) -> localization(1: succeeded) -> repair(11: blocked) -> validation(50: unchecked) -> repair(19: succeeded) -> localization(1: failed)
+Phases: localization(23: succeeded) -> repair(6: blocked) -> validation(1: unchecked) -> repair(2: blocked) -> validation(52: blocked) -> repair(1: succeeded) -> validation(8: unchecked) -> repair(1: succeeded) -> validation(10: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -45,7 +45,7 @@ settings.gradle.kts
 ./app/src/main/res/layout/activity_robotic_a
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ wc -l app/src/main/java/io/pslab/activity/RoboticArmActivity.java && grep -rln "
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -84,7 +84,7 @@ app/src/main/java/io/pslab/communication/ScienceLab.java
 app/src/main/java/io/pslab/interfaces/sensorloggers/Servo
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -106,7 +106,7 @@ app/src/main/java/io/pslab/communication/ScienceLab.java
 app/src/main/java/io/pslab/filters/Ba
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ grep -n "Knob\|knob" app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 (Bash completed with no output)
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ cat app/src/main/res/layout/activity_robotic_arm.xml
     android:orientation="vertical"
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -170,7 +170,7 @@ cat app/src/main/res/layout/servo_controller_layout.xml
         android:id="@+id/servo_title"
 ```
 
-## 8. read_file / localization  (Read)
+## 8. read / localization  (Read)
 _step 8_
 
 **Thought** (none):
@@ -198,7 +198,7 @@ _(none)_
 13	import android.view.Dis
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -214,7 +214,7 @@ ls libs; find . -ipath '*seekarc*' -name '*.java' -not -path '*/build/*' | head
 library-1.0.4.aar
 ```
 
-## 10. env_setup / understanding  (Bash)
+## 10. orient / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ res
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677
 ```
 
-## 11. env_setup / understanding  (Bash)
+## 11. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -260,7 +260,7 @@ cls/com/gigamole/navigationtabstrip/NavigationTabStrip$SavedState.class
 cls/com/gigamole/navigationtabstri
 ```
 
-## 12. search_code / understanding  (Bash)
+## 12. search / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -280,7 +280,7 @@ grep -rn "seekarc" --include=*.kts --include=*.gradle --include=*.toml . 2>/dev/
 /Users/
 ```
 
-## 13. env_setup / understanding  (Bash)
+## 13. search / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -302,7 +302,7 @@ cd /tmp && rm -rf sk && mkdir sk && cd sk && unzip -o -q /Users/splash/.gradle/c
 1117:  publ
 ```
 
-## 14. read_file / understanding  (Bash)
+## 14. read / localization  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -328,7 +328,7 @@ private void updateProgress(int, boolean);
       1
 ```
 
-## 15. search_code / understanding  (Bash)
+## 15. search / localization  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -353,7 +353,7 @@ private void updateOnTouch(android.view.MotionEvent);
       13: ilo
 ```
 
-## 16. search_code / understanding  (Bash)
+## 16. search / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -374,7 +374,7 @@ activity
 SystemMessage(subtype='init',
 ```
 
-## 17. search_code / understanding (own phase localization)  (Bash)
+## 17. search / localization  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -390,7 +390,7 @@ find app/src/androidTest app/src/test -type f 2>/dev/null | head -30
 app/src/androidTest/java/io/pslab/activity/ScreenshotsTest.java
 ```
 
-## 18. search_code / understanding  (Bash)
+## 18. search / localization  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -406,7 +406,7 @@ grep -n "public void setMax\|public int getMax" -A 20 /tmp/seekarc.txt | sed -n 
 (Bash completed with no output)
 ```
 
-## 19. search_code / understanding  (Bash)
+## 19. search / localization  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -428,7 +428,7 @@ grep -n "Max" /tmp/seekarc.txt | head -20
 413:     369: getfield      #3                  // Field m
 ```
 
-## 20. search_code / understanding  (Bash)
+## 20. search / localization  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -455,7 +455,7 @@ sed -n '960,1000p' /tmp/seekarc.txt; grep -n "^  public\|^  private\|^  protecte
       26: getfield      #3                  // Field mMax:I
 ```
 
-## 21. search_code / understanding  (Bash)
+## 21. search / localization  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -474,7 +474,7 @@ find /Users/splash/.gradle/caches -ipath '*SeekArc*' -name '*.aar' 2>/dev/null |
 /Users/splash/.gradle/cach
 ```
 
-## 22. search_code / understanding  (Bash)
+## 22. search / localization  (Bash)
 _step 22_
 
 **Thought** (none):
@@ -506,7 +506,7 @@ attr actionMenuTextColor
 attr actionModeBa
 ```
 
-## 23. search_code / localization  (Bash)
+## 23. search / localization  (Bash)
 _step 23_
 
 **Thought** (narration):
@@ -527,7 +527,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:230:                
 app/src/main/java/io/pslab/activity/RoboticArmActivity.java:232:                    degreeText1.se
 ```
 
-## 24. edit_file / repair  (Edit)
+## 24. edit / repair  (Edit)
 _step 24_
 
 **Thought** (narration):
@@ -550,7 +550,7 @@ Plus `degree`/`editEnter` are single fields shared by all 4 servos (cross-talk).
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677/app/src/main/res/layout/servo_controller_layout.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 25. edit_file / repair  (Edit)
+## 25. edit / repair  (Edit)
 _step 25_
 
 **Thought** (narration):
@@ -568,7 +568,7 @@ Now the activity. First the four listeners:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 26. edit_file / repair  (Edit)
+## 26. edit / repair  (Edit)
 _step 26_
 
 **Thought** (none):
@@ -584,7 +584,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 27. edit_file / repair  (Edit)
+## 27. edit / repair  (Edit)
 _step 27_
 
 **Thought** (none):
@@ -600,7 +600,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 28. edit_file / repair  (Edit)
+## 28. edit / repair  (Edit)
 _step 28_
 
 **Thought** (none):
@@ -616,7 +616,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 29. edit_file / repair  (Edit)
+## 29. edit / repair  (Edit)
 _step 29_
 
 **Thought** (narration):
@@ -634,7 +634,7 @@ Now the fields and the input-processing logic:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 30. read_file / repair (own phase localization)  (Read)
+## 30. read / validation  (Read)
 _step 30_
 
 **Thought** (none):
@@ -660,7 +660,7 @@ _(none)_
 450
 ```
 
-## 31. edit_file / repair  (Edit)
+## 31. edit / repair  (Edit)
 _step 31_
 
 **Thought** (none):
@@ -676,7 +676,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully.
 ```
 
-## 32. shell_edit / repair  (Bash)
+## 32. edit / repair  (Bash)
 _step 32_
 
 **Thought** (none):
@@ -697,7 +697,7 @@ perl -0pi -e 's/new InputMinMaxFilter\(0, 360\)/new InputMinMaxFilter(0, MAX_DEG
 155:        degreeText4.setFilter
 ```
 
-## 33. build / repair  (Bash)
+## 33. build / validation  (Bash)
 _step 33_
 
 **Thought** (narration):
@@ -723,7 +723,7 @@ Note: Processing class CompassData
 Note: Processing c
 ```
 
-## 34. orient / repair  (Bash)
+## 34. orient / validation  (Bash)
 _step 34_
 
 **Thought** (none):
@@ -739,7 +739,7 @@ ls -la app/build/outputs/apk/debug/*.apk
 -rw-r--r--@ 1 splash  staff  59033206 Sep 29 17:08 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## 35. search_code / validation  (Bash)
+## 35. build / validation  (Bash)
 _step 35_
 
 **Thought** (narration):
@@ -758,7 +758,7 @@ AAPT2=$(ls -d $HOME/Library/Android/sdk/build-tools/* 2>/dev/null | tail -1)/aap
 /aapt2
 ```
 
-## 36. search_code / validation  (Bash)
+## 36. search / validation  (Bash)
 _step 36_
 
 **Thought** (none):
@@ -800,7 +800,7 @@ scripts
 settings.gradle.kts
 ```
 
-## 37. search_code / validation  (Bash)
+## 37. build / validation  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -820,7 +820,7 @@ A: http://schemas.android.com/apk/res/android:layout_height(0x010100f5)=-2
               A: http://schemas.android.com/apk/res/android:id(0x01
 ```
 
-## 38. search_code / validation  (Bash)
+## 38. search / validation  (Bash)
 _step 38_
 
 **Thought** (none):
@@ -838,7 +838,7 @@ app/build/intermediates/runtime_symbol_list/debug/processDebugResources/R.txt:10
 app/build/intermediates/runtime_symbol_list/debug/processDebugResources/R.txt:10469:int[] styleable SeekArc { 0x7f04004c, 0x7f04004f, 0x7f040100, 0x7f0401d3, 0x7f0403ae, 0x7f040487, 0x7f04048a, 0x7f04048b, 0x7f0404a
 ```
 
-## 39. search_code / validation  (Bash)
+## 39. search / validation  (Bash)
 _step 39_
 
 **Thought** (none):
@@ -864,7 +864,7 @@ grep -n "styleable SeekArc_" app/build/intermediates/runtime_symbol_list/debug/p
 104
 ```
 
-## 40. device_ops / validation  (Bash)
+## 40. test / validation  (Bash)
 _step 40_
 
 **Thought** (narration):
@@ -888,7 +888,7 @@ android-35
 android-36
 ```
 
-## 41. device_ops / validation  (Bash)
+## 41. test / validation  (Bash)
 _step 41_
 
 **Thought** (narration):
@@ -908,7 +908,7 @@ Success
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677
 ```
 
-## 42. search_code / validation  (Bash)
+## 42. test / validation  (Bash)
 _step 42_
 
 **Thought** (none):
@@ -928,7 +928,7 @@ Physical size: 1080x1920
   mCurrentFocus=Window{6b81733 u0 fr.neamar.kiss.debug/fr.neamar.kiss.MainActivity}
 ```
 
-## 43. read_file / validation (own phase localization)  (Bash)
+## 43. test / validation  (Bash)
 _step 43_
 
 **Thought** (none):
@@ -947,7 +947,7 @@ Security exception: Permission Denial: starting Intent { flg=0x10000000 cmp=io.p
 java.lang.SecurityException: Permission Denial: starting Intent { flg=0x10000000 cmp=io.pslab/.activity.RoboticArmActivity } from null (pid=13926, uid=2000) not
 ```
 
-## 44. search_code / validation  (Bash)
+## 44. test / validation  (Bash)
 _step 44_
 
 **Thought** (none):
@@ -963,7 +963,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell monkey -p io.pslab -c android.i
 mCurrentFocus=Window{97df638 u0 io.pslab/io.pslab.activity.MainActivity}
 ```
 
-## 45. search_code / validation  (Bash)
+## 45. test / validation  (Bash)
 _step 45_
 
 **Thought** (none):
@@ -979,7 +979,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell uiautomator dump /sdcard/u.xml 
 (Bash completed with no output)
 ```
 
-## 46. search_code / validation  (Bash)
+## 46. test / validation  (Bash)
 _step 46_
 
 **Thought** (none):
@@ -1002,7 +1002,7 @@ text="MULTIMETER"
 text="OSCILLOSCOPE"
 ```
 
-## 47. search_code / validation  (Bash)
+## 47. test / validation  (Bash)
 _step 47_
 
 **Thought** (none):
@@ -1025,7 +1025,7 @@ text="Measures the Linear acceleration in XYZ directions"
 text="Three axes magnetometer pointing to magnetic north"
 ```
 
-## 48. search_code / validation  (Bash)
+## 48. test / validation  (Bash)
 _step 48_
 
 **Thought** (none):
@@ -1041,7 +1041,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; for i in 1 2 3 4 5 6; do $ADB shell input 
 (Bash completed with no output)
 ```
 
-## 49. search_code / validation  (Bash)
+## 49. test / validation  (Bash)
 _step 49_
 
 **Thought** (none):
@@ -1058,7 +1058,7 @@ text=""  class="android.widget.FrameLayout" package="io.pslab" content-desc="" c
 text=""  class="android.widget.LinearLayout" package="io.pslab" content-desc="" checkable="false" checked="false" clic
 ```
 
-## 50. wait_process / validation  (Bash)
+## 50. test / validation  (Bash)
 _step 50_
 
 **Thought** (none):
@@ -1074,7 +1074,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; for i in $(seq 1 10); do $ADB shell uiauto
 (Bash completed with no output)
 ```
 
-## 51. search_code / validation  (Bash)
+## 51. test / validation  (Bash)
 _step 51_
 
 **Thought** (none):
@@ -1095,7 +1095,7 @@ text="SOUND METER"
 text="To measure the loudness in the environment in decibel(dB)"
 ```
 
-## 52. search_code / validation  (Bash)
+## 52. test / validation  (Bash)
 _step 52_
 
 **Thought** (none):
@@ -1113,7 +1113,7 @@ text="MULTIMETER"
 text="OSCILLOSCOPE"
 ```
 
-## 53. search_code / validation  (Bash)
+## 53. test / validation  (Bash)
 _step 53_
 
 **Thought** (none):
@@ -1134,7 +1134,7 @@ text="ACCELEROMETER" text="LUX METER" text="POWER SOURCE"   <-- step 5
 text="ACCELEROMETER" text="BAROMETER" text="LUX METER"   <-- step
 ```
 
-## 54. search_code / validation  (Bash)
+## 54. test / validation  (Bash)
 _step 54_
 
 **Thought** (none):
@@ -1150,7 +1150,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input swipe 540 900 540 1400 30
 (Bash completed with no output)
 ```
 
-## 55. search_code / validation  (Bash)
+## 55. test / validation  (Bash)
 _step 55_
 
 **Thought** (none):
@@ -1167,7 +1167,7 @@ text="GAS SENSOR" bounds="[21,607][426,738]"
 text="DUST SENSOR" bounds="[21,1240][459,1371]"
 ```
 
-## 56. search_code / validation  (Bash)
+## 56. test / validation  (Bash)
 _step 56_
 
 **Thought** (none):
@@ -1185,7 +1185,7 @@ text="GAS SENSOR" bounds="[21,1143][426,1274]"
 text="DUST SENSOR" bounds="[21,1776][459,1794]"
 ```
 
-## 57. search_code / validation  (Bash)
+## 57. test / validation  (Bash)
 _step 57_
 
 **Thought** (none):
@@ -1201,7 +1201,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input tap 240 575; sleep 4; $AD
 mCurrentFocus=Window{fe30d3 u0 ImmersiveModeConfirmation}
 ```
 
-## 58. search_code / validation  (Bash)
+## 58. test / validation  (Bash)
 _step 58_
 
 **Thought** (none):
@@ -1217,7 +1217,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input tap 540 1000; sleep 2; $A
 mCurrentFocus=Window{fe30d3 u0 ImmersiveModeConfirmation}
 ```
 
-## 59. search_code / validation  (Bash)
+## 59. test / validation  (Bash)
 _step 59_
 
 **Thought** (none):
@@ -1233,7 +1233,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell settings put secure immersive_m
 mCurrentFocus=Window{fe30d3 u0 ImmersiveModeConfirmation}
 ```
 
-## 60. search_code / validation  (Bash)
+## 60. test / validation  (Bash)
 _step 60_
 
 **Thought** (none):
@@ -1257,7 +1257,7 @@ text="To exit, swipe down from the top." bounds="[461,327][1459,417]"
 text="GOT IT" bounds="[1123,464][1354,590]"
 ```
 
-## 61. search_code / validation  (Bash)
+## 61. test / validation  (Bash)
 _step 61_
 
 **Thought** (none):
@@ -1275,7 +1275,7 @@ text="" resource-id="" class="android.widget.FrameLayout" package="io.pslab" con
 text="" resource-id=""
 ```
 
-## 62. search_code / validation  (Bash)
+## 62. test / validation  (Bash)
 _step 62_
 
 **Thought** (narration):
@@ -1293,7 +1293,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; read_val() { $ADB shell uiautomator dump /
 text="100"
 ```
 
-## 63. search_code / validation  (Bash)
+## 63. test / validation  (Bash)
 _step 63_
 
 **Thought** (narration):
@@ -1311,7 +1311,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input tap 223 410; sleep 2; $AD
 mShowRequested=true mShowExplicitlyRequested=true mShowForced=false mInputShown=true
 ```
 
-## 64. search_code / validation  (Bash)
+## 64. test / validation  (Bash)
 _step 64_
 
 **Thought** (none):
@@ -1330,7 +1330,7 @@ after typing:
 text="38"
 ```
 
-## 65. search_code / validation  (Bash)
+## 65. test / validation  (Bash)
 _step 65_
 
 **Thought** (narration):
@@ -1351,7 +1351,7 @@ text="0"
 text="0"
 ```
 
-## 66. search_code / validation  (Bash)
+## 66. test / validation  (Bash)
 _step 66_
 
 **Thought** (narration):
@@ -1373,7 +1373,7 @@ drag to bottom (180): text="180" text="0" text="0" text="0"
 drag to left (270):   text="270" text="0" text="0" text="0"
 ```
 
-## 67. search_code / validation  (Bash)
+## 67. test / validation  (Bash)
 _step 67_
 
 **Thought** (narration):
@@ -1403,7 +1403,7 @@ typed 360 -> "360" "0" "0" "0"
 typed 0 -> "0" "0" "0" "0"
 ```
 
-## 68. search_code / validation  (Bash)
+## 68. test / validation  (Bash)
 _step 68_
 
 **Thought** (narration):
@@ -1427,7 +1427,7 @@ servo4 <- 333:     "45" "210" "7" "333"
 servo1 <- empty:   "" "210" "7" "333"   (keeps current angle)
 ```
 
-## 69. search_code / validation  (Bash)
+## 69. test / validation  (Bash)
 _step 69_
 
 **Thought** (narration):
@@ -1445,7 +1445,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input tap 223 410; sleep 1; $AD
 (Bash completed with no output)
 ```
 
-## 70. search_code / validation  (Bash)
+## 70. test / validation  (Bash)
 _step 70_
 
 **Thought** (none):
@@ -1466,7 +1466,7 @@ package="io.pslab"
   mActive=true mRestartOn
 ```
 
-## 71. orient / validation  (Bash)
+## 71. test / validation  (Bash)
 _step 71_
 
 **Thought** (none):
@@ -1482,7 +1482,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell screencap -p /sdcard/s.png; $AD
 -rw-r--r--@ 1 splash  wheel  105219 Sep 29 17:16 /tmp/s.png
 ```
 
-## 72. read_file / validation  (Read)
+## 72. read / validation  (Read)
 _step 72 | **FAILED**_
 
 **Thought** (none):
@@ -1498,7 +1498,7 @@ _(none)_
 PreToolUse:Read hook error: Access outside repo directory is not allowed: /tmp/s.png
 ```
 
-## 73. env_setup / validation  (Bash)
+## 73. edit / validation  (Bash)
 _step 73_
 
 **Thought** (none):
@@ -1514,7 +1514,7 @@ cp /tmp/s.png /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/
 ok
 ```
 
-## 74. read_file / validation  (Read)
+## 74. read / validation  (Read)
 _step 74_
 
 **Thought** (none):
@@ -1530,7 +1530,7 @@ _(none)_
 [image: image/png, 140,292 base64 chars omitted]
 ```
 
-## 75. search_code / validation  (Bash)
+## 75. test / validation  (Bash)
 _step 75_
 
 **Thought** (narration):
@@ -1548,7 +1548,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input keyevent KEYCODE_BACK; sl
 bounds="[263,460][1657,511]"
 ```
 
-## 76. search_code / validation  (Bash)
+## 76. test / validation  (Bash)
 _step 76_
 
 **Thought** (none):
@@ -1565,7 +1565,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input tap 960 485; sleep 2; $AD
 text="" text="210" text="245" text="333"
 ```
 
-## 77. search_code / validation  (Bash)
+## 77. test / validation  (Bash)
 _step 77_
 
 **Thought** (none):
@@ -1581,7 +1581,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input tap 1740 63; sleep 2; $AD
 0
 ```
 
-## 78. search_code / validation  (Bash)
+## 78. test / validation  (Bash)
 _step 78_
 
 **Thought** (narration):
@@ -1604,7 +1604,7 @@ $ADB shell input tap 223 410; sleep 1; $ADB shell input tap 223 410; sle
 3) after tapping green Enter:    "38" "210" "245" "333"
 ```
 
-## 79. env_setup / validation  (Bash)
+## 79. edit / validation  (Bash)
 _step 79_
 
 **Thought** (narration):
@@ -1622,7 +1622,7 @@ ADB=$ANDROID_HOME/platform-tools/adb; $ADB shell input keyevent KEYCODE_BACK; sl
 ok
 ```
 
-## 80. read_file / validation  (Read)
+## 80. read / validation  (Read)
 _step 80_
 
 **Thought** (none):
@@ -1638,7 +1638,7 @@ _(none)_
 [image: image/png, 180,260 base64 chars omitted]
 ```
 
-## 81. search_code / validation  (Bash)
+## 81. test / validation  (Bash)
 _step 81_
 
 **Thought** (none):
@@ -1658,7 +1658,7 @@ $ADB shell uiautomator dump /sdcard/u.xml >/dev/null 2>&1; $ADB shell cat /sdcar
 fresh open: "0" "0" "0" "0"
 ```
 
-## 82. env_setup / validation  (Bash)
+## 82. edit / validation  (Bash)
 _step 82_
 
 **Thought** (none):
@@ -1680,7 +1680,7 @@ $ADB shell
 shot-ok
 ```
 
-## 83. read_file / validation  (Read)
+## 83. read / validation  (Read)
 _step 83_
 
 **Thought** (none):
@@ -1696,7 +1696,7 @@ _(none)_
 [image: image/png, 145,744 base64 chars omitted]
 ```
 
-## 84. env_setup / validation  (Bash)
+## 84. orient / validation  (Bash)
 _step 84_
 
 **Thought** (narration):
@@ -1717,7 +1717,7 @@ RoboticArmActivity.java
 servo_controller_layout.xml
 ```
 
-## 85. shell_edit / repair  (Bash)
+## 85. edit / repair  (Bash)
 _step 85_
 
 **Thought** (none):
@@ -1741,7 +1741,7 @@ reverted
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-2677
 ```
 
-## 86. read_file / repair  (Bash)
+## 86. diff / validation  (Bash)
 _step 86_
 
 **Thought** (none):
@@ -1766,7 +1766,7 @@ diff /tmp/fixbak/RoboticArmActivity.java app/src/main/java/io/pslab/activity/Rob
 >     private boolean editEnter = false;
 ```
 
-## 87. build / repair  (Bash)
+## 87. build / validation  (Bash)
 _step 87_
 
 **Thought** (narration):
@@ -1784,7 +1784,7 @@ The working tree is back to the original buggy code. Let me build and run the id
 -rw-r--r--@ 1 splash  staff  59787301 Sep 29 17:19 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## 88. read_file / repair (own phase localization)  (Bash)
+## 88. test / validation  (Bash)
 _step 88_
 
 **Thought** (none):
@@ -1801,7 +1801,7 @@ Performing Streamed Install
 Success
 ```
 
-## 89. search_code / repair  (Bash)
+## 89. test / validation  (Bash)
 _step 89_
 
 **Thought** (none):
@@ -1820,7 +1820,7 @@ $ADB shell dumpsys window | grep mCurrentFocus
 mCurrentFocus=Window{f5b61ec u0 io.pslab/io.pslab.activity.MainActivity}
 ```
 
-## 90. search_code / repair  (Bash)
+## 90. test / validation  (Bash)
 _step 90_
 
 **Thought** (none):
@@ -1839,7 +1839,7 @@ for i in $(seq 1 12); do
 found bounds="[21,1749][458,1794]"
 ```
 
-## 91. search_code / repair  (Bash)
+## 91. test / validation  (Bash)
 _step 91_
 
 **Thought** (none):
@@ -1857,7 +1857,7 @@ $ADB shell uiautomator dump /sdcard/u.xml >/dev/null 2>&1; $ADB shell cat /sdcar
 bounds="[21,1217][458,1348]"
 ```
 
-## 92. search_code / repair  (Bash)
+## 92. test / validation  (Bash)
 _step 92_
 
 **Thought** (none):
@@ -1878,7 +1878,7 @@ mCurrentFocus=Window{772e12f u0 io.pslab/io.pslab.activity.RoboticArmActivity}
 open: "0" "0" "0" "0"
 ```
 
-## 93. search_code / repair  (Bash)
+## 93. test / validation  (Bash)
 _step 93_
 
 **Thought** (narration):
@@ -1901,7 +1901,7 @@ $ADB shell input tap 223 410; sleep 1; $ADB shell input tap 223 410; sleep 2
 3) green Enter -> "36" "0" "0" "0"
 ```
 
-## 94. env_setup / repair  (Bash)
+## 94. edit / repair  (Bash)
 _step 94_
 
 **Thought** (narration):
@@ -1920,7 +1920,7 @@ cp /tmp/fixbak/RoboticArmActivity.java app/src/main/java/io/pslab/activity/Robot
 36:            app:max="360"
 ```
 
-## 95. build / repair  (Bash)
+## 95. build / validation  (Bash)
 _step 95_
 
 **Thought** (none):
@@ -1937,7 +1937,7 @@ _(none)_
 Success
 ```
 
-## 96. search_code / repair  (Bash)
+## 96. test / validation  (Bash)
 _step 96_
 
 **Thought** (narration):
@@ -1960,7 +1960,7 @@ card y=211267
 open:
 ```
 
-## 97. search_code / repair  (Bash)
+## 97. test / validation  (Bash)
 _step 97_
 
 **Thought** (none):
@@ -1977,7 +1977,7 @@ $ADB shell uiautomator dump /sdcard/u.xml >/dev/null 2>&1; $ADB shell cat /sdcar
 bounds="[21,1267][458,1398]"
 ```
 
-## 98. search_code / repair  (Bash)
+## 98. test / validation  (Bash)
 _step 98_
 
 **Thought** (none):
@@ -1996,7 +1996,7 @@ mCurrentFocus=Window{31745f8 u0 io.pslab/io.pslab.activity.RoboticArmActivity}
 open: "0" "0" "0" "0"
 ```
 
-## 99. search_code / repair  (Bash)
+## 99. test / validation  (Bash)
 _step 99_
 
 **Thought** (none):
@@ -2028,7 +2028,7 @@ type 38 + Enter -> "38" "0" "0" "0"
   typed 0 -> "0"
 ```
 
-## 100. search_code / repair  (Bash)
+## 100. test / validation  (Bash)
 _step 100_
 
 **Thought** (narration):
@@ -2054,7 +2054,7 @@ servo4 <- 333:   "45" "210" "7" "333"
 servo1 <- empty: "45" "210" "7" "333"   (should keep 45)
 ```
 
-## 101. env_setup / repair  (Bash)
+## 101. edit / validation  (Bash)
 _step 101_
 
 **Thought** (narration):
@@ -2085,7 +2085,7 @@ open(p,'w').write(open(p).read
 +    android:l
 ```
 
-## 102. run_shell / repair  (Bash)
+## 102. diff / validation  (Bash)
 _step 102_
 
 **Thought** (narration):
@@ -2115,7 +2115,7 @@ diff -u /tmp/orig/res/servo_controller_layout.xml app/src/main/res/layout/servo_
              app:progressColor="@color/colorPrimary"
 ```
 
-## 103. build / repair  (Bash)
+## 103. build / validation  (Bash)
 _step 103_
 
 **Thought** (none):
@@ -2136,7 +2136,7 @@ BUILD SUCCESSFUL in 19s
 -rw-r--r--@ 1 splash  staff  59033206 Sep 29 17:26 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## 104. search_code / localization  (Bash)
+## 104. orient / validation  (Bash)
 _step 104_
 
 **Thought** (none):

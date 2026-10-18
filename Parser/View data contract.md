@@ -83,7 +83,7 @@ as "not converted").
   "stats": {
     "n_phases": 4,                             // phase spans
     "n_subphases": 5,
-    "n_attempts": 1,                           // repair attempts (rule K1 / G4)
+    "n_attempts": 1,                           // repair attempts (edits and the run that checks them)
     "n_failed_actions": 2,                     // verdict fail or the log's own error flag
     "anchor": 9,                               // same as the trajectory's anchor
     "duration_s": 312.4,                       // first to last step timestamp; null without timestamps
@@ -98,6 +98,8 @@ as "not converted").
                   tool calls */ },
 
   "actions": [ /* Action, ordered by i */ ],
+  "targets": { "source": "final_patch", // the Localization target files: developer_fix | final_patch | none
+               "files": ["app/src/…/Foo.java"] },   // repository paths, sorted (<= 12)
   "phases": [ /* Phase span */ ],
   "attempts": [ /* Attempt */ ]
 }
@@ -114,24 +116,49 @@ the viewer then draws the timeline over the action index only.
   "step": 6,                       // ATIF step id of the LLM turn that issued the call
   "scope": "main",                 // or "sub-<delegating call id>" for a sub-agent's call
   "tool": "Bash",                  // the raw tool name
-  "category": "run_test",          // L1 action category (vocab.categories, codebook Table 2)
+  "category": "test",              // action category (vocab.categories, the action table of the
+                                   //   Final lookup tables, atif/lookup.py)
+  "item": "gradlew test tasks",    // extra: the action table's entry that gave the category
   "phase": "reproduction",         // final phase: the phase span the action is in
-  "own_phase": "localization",     // only when it differs from phase: the phase before smoothing
-                                   //   (a single row between two stretches of one phase joins them, G7)
-  "file_role": "source, test",     // roles of the files it touches (codebook Table 3), comma-
-                                   //   separated; "outside" for paths outside the checkout; "" for none
+  "row": "L6",                     // the phase table's row that gave the phase (L1-L15, LG for
+                                   //   the general rule), or "user" for a phase row of the user's
+  "own_patch": true,               // only when true: it reads back files the agent already changed
+  "file_role": "source, test",     // the targets of the files it works on (the target table:
+                                   //   source, test, docs, build, other, outside), comma-
+                                   //   separated, in table order; "" for none
   "target": "./run_pipeline.sh …", // <= 200 chars, whitespace-collapsed
   "verdict": "pass|fail|none",     // of a build / test run
   "fail_kind": "test|build|env|exit|null",
+  "evidence": "build_ok",          // extra, only with a verdict (or "no_test_evidence"): the marker
+                                   //   that decided it (atif.verdict: results, gradle_tests, build_ok,
+                                   //   build_fail, exit, pytest, ...)
+  "evidence_line": "BUILD SUCCESSFUL in 1m 55s",   // extra, when a line shows it: the result's
+                                   //   line with that marker (<= 200 chars), so the verdict can be
+                                   //   checked although "result" keeps only the first 300 chars
   "failed_raw": false,             // the log's own error flag on the tool result
   "reverts": true,                 // only when the action undoes changes (git checkout / restore / ...)
   "ts": "2026-…" | null,
   "thought": "…",                  // <= 300 chars: reasoning or narration of the issuing turn
                                    //   (parallel calls of one turn repeat it)
   "thought_source": "reasoning|narration|none",   // extra
-  "result": "…",                   // <= 300 chars of the tool result
+  "result": "…",                   // <= 300 chars of the tool result; the full thought and
+                                   //   result are in the ATIF (corpus packs, or the upload's own)
   "call_id": "toolu_…",
   "edits": ["app/src/…/Foo.java"], // extra, only on edits: files written (<= 6, each <= 200 chars)
+  "files": ["app/src/…/Foo.java"], // extra: repository files the action names (atif.segment.enrich,
+                                   //   folders left out; <= 12); a search's "-name Foo.java" gives the name only
+  "found": ["app/src/…/Bar.java"], // extra, only on searches: repository files its output lists, a
+                                   //   path that starts its line (grep -rn / rg / find / grep -l; <= 20)
+  "n_found": 36,                   // extra, only when a search lists more files than "found" keeps
+  "tests": ["CardBrowserTest"],    // extra, only on test runs: what it tests, by name: its --tests /
+                                   //   -e class filters, else the test or scratch files it names,
+                                   //   else "task testDebugUnitTest" (the suite), "dry run of x.patch"
+                                   //   or "the app on a device (adb)"
+  "step_outcome": "succeeded",     // extra: the outcome this step itself shows (atif.phase.step_outcomes):
+                                   //   a Localization step that touches a target file; an edit of a
+                                   //   judged repair attempt (the attempt's outcome); a decisive run
+                                   //   (its result in its phase). Absent = unchecked
+  "step_evidence": "test",         // extra, with step_outcome: test | build | target_file
   "cmd": "rg -n Foo app/src"       // extra, only when it differs from target: the shell command
                                    //   (<= 200 chars); Claude's Bash target is its description
 }
@@ -151,18 +178,28 @@ the viewer then draws the timeline over the action index only.
   "start": 23, "end": 33, "n_actions": 11,
   "n_events": 1,                               // checks (decisive runs or attempts) merged into it
   "n_attempts": 1,                             // repair attempts among them
-  "flags": ["environment_workaround"],         // vocab.flags (codebook Table 7)
-  "own_phases": {"repair": 8, "localization": 3} }   // own phase of its actions, counted
+  "checks": [33],                              // the actions that decided the outcome (<= 5): each
+                                               //   run, an attempt's judging run (which may come
+                                               //   after the subphase: an edit-only stretch of an
+                                               //   attempt is judged by the build or test after it),
+                                               //   in Localization the actions that touch a patch file
+  "flags": ["environment_workaround"],         // vocab.flags (codebook Table 6)
+  "own_phases": {"repair": 11} }               // the phases of its actions, counted (one phase
+                                               //   since the lookup tables: nothing is absorbed)
 
-// Attempt: app-source edits up to the run that judges them (rule K1 / G4); in action order,
-// disjoint
+// Attempt: app-source edits up to the run that judges them (the first decisive run after the
+// edits, which the phase table puts in the validation span that follows); in action order, disjoint
 { "id": 1, "start": 23, "end": 33,             // first edit .. judging run (or last edit)
   "edits": [23, 26, 27], "judge": 33,          // judge is null for an attempt never run
   "outcome": "succeeded|failed|blocked|unchecked", "evidence": "test|build|none" }
 ```
 
-**Outcome colours.** succeeded green ✓, failed red ✗, blocked purple ⊘ (the environment
-stopped the check), unchecked grey ○ (no check). The same four outcomes are used in every
+**Outcome colours.** succeeded green ✓, failed red ✗, blocked dark slate ⊘ (the environment
+stopped the check), unchecked light grey ○ (no check); the glyph always goes with the colour.
+The phases are planning pink, localization blue, reproduction orange, repair violet and
+validation amber, so no phase shares a hue with an outcome. The viewer shows subphases only as
+the outcomes of their phase (a phase whose checks changed has an outcome history, ✗ → ✓); its
+Trajectory view nests phases → categories (consecutive actions of one category) → steps. The same four outcomes are used in every
 phase; what they mean in each phase is the codebook's Table 6, carried in `vocab.text.outcomes`.
 
 ## Overview file: `trajview-overview/3`
@@ -206,24 +243,31 @@ action, thought or result text is in the overview.
 ## Vocabulary (`vocab`, the same in both files)
 
 ```jsonc
-{ "categories": ["read_file", "search_code", "orient", "vcs", "diff", "web", "edit_file", "shell_edit",
-                 "build", "run_test", "device_ops", "run_shell", "env_setup", "plan", "delegate",
-                 "wait_process", "other"],
-  "category_family": {"read_file": "inspect", ...},          // inspect | modify | execute | configure | coordinate | other
-  "phases": ["understanding", "localization", "reproduction", "repair", "validation"],
+{ "categories": ["search", "read", "orient", "edit", "build", "test", "diff", "vcs", "plan",
+                 "sub-agent", "other"],                       // the action table, in its order
+  "category_family": {"search": "inspect", ...},             // inspect | modify | execute | coordinate | other
+  "phases": ["planning", "localization", "reproduction", "repair", "validation"],
   "outcomes": ["succeeded", "failed", "blocked", "unchecked"],
-  "phase_outcomes": {"understanding": ["unchecked", "succeeded", "blocked"], ...},  // the outcomes each phase can have
+  "phase_outcomes": {"planning": ["unchecked", "succeeded", "blocked"], ...},  // the outcomes each phase can have
   "evidence": ["test", "build", "target_file", "none"],
   "flags": ["test_modified", "environment_workaround", "repeated_failure", "repeated_reads", "manual_ui_check"],
   "verdicts": ["pass", "fail", "none"],
   "fail_kinds": ["test", "build", "env", "exit"],
-  "file_roles": ["source", "test", "toolchain", "harness", "docs", "outside"],
-  "text": {                                                  // the codebook's words (atif/codebook.py)
-    "phases":     {"repair": {"doing": "…", "typical": "…", "where": "…"}, ...},      // Table 1
-    "categories": {"read_file": {"family": "inspect", "does": "…", "tools": "…"}, ...},  // Table 2
+  "file_roles": ["source", "test", "docs", "build", "other", "outside"],  // the target table
+  "text": {                                                  // atif/lookup.py and atif/codebook.py
+    "phases":     {"repair": {"doing": "…", "typical": "…", "where": "…"}, ...},      // the phase table by phase
+    "categories": {"read": {"family": "inspect", "does": "…", "tools": "…"}, ...},   // tools: the action
+                                                             //   table's two columns, word for word
     "outcomes":   {"repair": {"check": "…", "succeeded": "…", "failed": "…",
-                              "blocked": "…", "unchecked": "…"}, ...},                  // Table 6 ("–" = cannot occur)
-    "flags":      {"test_modified": "…", ...} } }                                       // Table 7
+                              "blocked": "…", "unchecked": "…"}, ...},                  // Table 5 ("–" = cannot occur)
+    "flags":      {"test_modified": "…", ...} },                                        // Table 6
+  "tables": { /* the lookup tables in plain words (atif.rules.tables); see "Lookup tables" below */ },
+  "lookup": { /* everything the built-in tables hold, for the Lookup tables page (atif.rules.contents):
+                 "version" ("Final lookup table"), "version_date", "actions" [{type, family, does,
+                 shell, native, tools: [{agent, names}], other_agents}], "shell_tools" [{agent,
+                 names}], "ignored", "compound", "targets" [{target, name, files}],
+                 "targets_swebench", "phases" [{n: 1-15, id: "L1".."L15", phase, categories,
+                 target, position}], "general", "same" */ } }
 ```
 
 The lists are written from `atif.phase`, `atif.taxonomy` and `atif.codebook` at export time,
@@ -241,44 +285,116 @@ it, on the phase result):
    subphases of a span never have the same outcome.
 4. Every action's `phase` is the phase of the span it is in.
 5. Every span `phase`, subphase `outcome` (within `vocab.phase_outcomes` of its phase),
-   `evidence` and `flag`, and every action `category`, `phase` and `own_phase` is in `vocab`.
+   `evidence` and `flag`, and every action `category` and `phase` is in `vocab`.
 6. Attempts lie within `1..n_actions`, with `start <= end`; `anchor` is null or within `1..n_actions`.
 7. Every source edit is in Repair; Understanding and Reproduction occur only before the anchor,
    Repair and Validation only from it on (`phase.check_hierarchy`).
 
 ## Viewer deep links (`bug.html`)
 
-`bug.html#bug=<id>&t=<agent>-r<k>&i=<action>&v=trajectory|timeline|fingerprint&lvl=phases|subphases|steps&fp=agents|runs&speed=1|2|4|8|16&details=0&play=1&theme=auto|light|dark`
+`bug.html#bug=<id>&t=<agent>-r<k>&i=<action>&v=trajectory|timeline|fingerprint&lvl=phases|categories|steps&fp=agents|runs&speed=1|2|4|8|16&details=0&play=1&theme=auto|light|dark`
 — all but `bug` optional. `play=1` starts the playhead on open; `details=0` keeps the action details
 closed while the cursor is set. Older links keep working: `lvl=purposes` opens `phases`,
-`lvl=segments` opens `subphases`, `v=compare` opens the fingerprint.
-`index.html#tab=stats&q=<search>&f=allpass|anyfail|disagree|flaky&ag=<agent>:pass|fail&sort=actions|failures`.
+`lvl=subphases` and `lvl=segments` open `categories`, `v=compare` opens the fingerprint.
+`index.html#tab=stats&q=<search>&ag=<agent>&oc=pass|fail|mixed&sort=actions|failures` (links of the
+earlier `ag=<agent>:pass|fail` and `f=allpass|disagree` filters still open). An upload's page is
+`analyze.html#u=<id>`; the Lookup tables page takes `tables.html#draft=<row JSON>&back=<page>`
+(`rules.html` redirects there, hash included).
 
-## Rules in the vocabulary
+## Lookup tables in the vocabulary
 
-`vocab.rules` lists the mandatory rules (`atif.rules.MANDATORY`, G1–G7 and F1, `mandatory: true`,
-always `on`; G7 and F1 carry their fixed `value`) and then every optional rule
-(`atif.rules.OPTIONAL`: O1–O4, `mandatory: false`, `on` when added, `kind`):
-`{id, title, text, sentence, mandatory, on, value?, kind?}`, where `sentence` is `text` with the
-number filled in. Data built with `view --rules FILE` also carries
-`vocab.custom_rules`: the rule set's own rules, each with its `sentence`.
+`vocab.rules` lists the built-in rows (`atif.rules.BUILTIN`: the phase table's rows L1–L15, its
+general rule LG and the repeated-reads flag F1; `mandatory: true`, always `on`; F1 carries its
+fixed `value`; L-rows carry `table: 4`, `n`, `phase`, `categories`, `target` and `position`) and
+then every ready-made row
+(`atif.rules.OPTIONAL`: O1–O4, `mandatory: false`, `on` when added, `kind`, `table`):
+`{id, title, text, sentence, mandatory, on, table, value?, kind?}`, where `sentence` is `text`
+with the number filled in. `vocab.tables` is the summary in plain words (`atif.rules.tables`:
+`actions` [{type, does, examples}], `phases` [{id, n, phase, categories, target, position}],
+`same`), and
+`vocab.lookup` everything the built-in tables hold (`atif.rules.contents`, above), which the
+Lookup tables page shows. Data built with `view --rules FILE` also carries `vocab.custom_rules`:
+the file's own rows, each with its `sentence`. A table file is
+`{"schema": "trajectiers-tables/1", "optional": [...], "custom": [...]}`; `trajectiers-rules/1`
+and `/2` files are read too, without their version-3 grouping rules, and so are files written
+for codebook version 4 (their values mapped: run_test → test, toolchain → build, understanding
+→ planning; their ids P1–P11 and FW ignored). A row of `custom` is
+`{id, kind, field, match, regex, value, enabled}`: kind `category` (a category), `phase`
+(a phase or `follow`) or `file_role` (a target; field `path`), whose `field` is `target` (the command or
+target), `tool`, `any` or `program` (the programs of a shell command, each with its first
+argument; plain text matches a whole program name: `make`, `cargo test`); or kind `shell_tool`
+(field `tool`): the tool named exactly in `match` runs shell commands, given in its argument
+`value`, and its commands are read like Bash's.
 
 ## Single upload: `trajview-single/1`
 
-The Analyze page (`analyze.html`) gets this from `POST /api/analyze` of `python3 -m atif.cli
-serve` (`atif.upload.analyze`); `analyze --json FILE` writes the same object.
+The viewer gets this from `atif.upload.request` (an upload from the corpus page, and again on an
+upload's page, `analyze.html#u=<id>`), run in the browser by Pyodide (`viewer/engine/`) or
+answered by `POST /api/analyze` of `python3 -m atif.cli serve`; `analyze --json FILE` writes the
+same object. A request with `"atif": true` also gets `"atif"`: the trajectory as ATIF, which the
+viewer keeps beside the upload for the details panel's full texts and raw JSON.
 
 ```jsonc
 { "schema": "trajview-single/1", "generated_by": "atif <parser_version>",
   "trajectory": { /* one trajview/3 trajectory; id "upload/<agent>/<file name>", config
-                     "upload", run 1, outcome {"pass": true|false|null, "by_run": {"1": ...}} */ },
-  "vocab": { /* as above, for the rule set used */ },
-  "rules": { "schema": "trajectiers-rules/2", "ruleset": {"optional": [...], "custom": [...]},
+                     "upload", run 1, outcome {"pass": true|false|null, "by_run": {"1": ...}};
+                     a SWE-bench run also has "project": "swebench" */ },
+  "vocab": { /* as above, for the table file used */ },
+  "rules": { "schema": "trajectiers-tables/1", "ruleset": {"optional": [...], "custom": [...]},
              "mandatory": [...], "optional": [ /* as vocab.rules; an added ready-made rule also
                                                  has matched / skipped */ ],
-             "custom": [ { /* the rule */ "sentence": "...", "matched": [3, 9],
+             "custom": [ { /* the row */ "table": 4, "sentence": "...", "matched": [3, 9],
                            "skipped": [{"i": 12, "why": "reproduction happens only before the first fix"}] } ] },
-  "source": { "name": "...", "format": "claude_code_stream_json|claude_agent_sdk_repr|codex_rollout_jsonl|qwen_stream_json|atif",
-              "agent": "claude", "model": "...", "bug": "18", "bug_inferred": true, "steps": 40 },
-  "warnings": ["..."] }
+  "source": { "name": "...", "format": "claude_code_stream_json|claude_agent_sdk_repr|codex_rollout_jsonl|qwen_stream_json|atif"
+                               "|sweagent_traj|sweagent_chat|openhands_messages|openhands_events|mini_swe_agent",
+              "agent": "claude", "model": "...", "bug": "18", "bug_inferred": true,
+              "project": "android|swebench", "repo_root": "/testbed" /* swebench only, else null */,
+              "steps": 40 },
+  "warnings": ["..."],
+  "unrecognized": {                       // steps no lookup table recognises (atif.diagnose)
+    "n_actions": 9, "n_unrecognized": 8,  // all steps; those whose lookup fell through
+    "n_follow": 8,                        // of them, those that took the phase of the step before
+    "groups": [ { "kind": "tool|program", "key": "run_terminal_cmd",   // or "cargo test"
+                  "n": 3, "n_follow": 3, "category": "other",  // what they count as now
+                  "examples": [{"i": 4, "text": "./gradlew assembleDebug"}],   // <= 3
+                  "suggest": { "row": { /* a row of the table file: kind category (field tool
+                                           or program) or shell_tool */ },
+                               "why": "its argument “command” holds command lines" } | null } ] } }
 ```
+
+A SWE-bench run (`source.project = "swebench"`: a SWE-agent, OpenHands or mini-swe-agent log,
+or an ATIF file whose task names the repository folder; `atif.project`) is analysed with Python
+conventions and kept apart from the corpus: its `bug` is the SWE-bench instance id when the log
+or the file name gives one (`astropy__astropy-12907`, never a corpus bug), it has no `app`, the
+upload's page does not compare it with the corpus runs, and the Statistics tab counts it in its own
+group per agent ("yours · SWE-bench").
+
+The viewer keeps each such result in the browser (IndexedDB) with the file itself and its ATIF,
+and analyses it again whenever the table rows change (or the engine's tables do: the cache key
+carries their version).
+
+## Corpus packs: `trajectiers-pack/1`
+
+`view` also writes `viewer/data/atif/run<k>/bug-<id>.json.gz`: one bug's converted ATIF in one
+run, gzipped with no timestamp (an unchanged corpus rewrites every file byte for byte).
+
+```jsonc
+{ "schema": "trajectiers-pack/1", "bug": "18", "config": "original", "run": 1,
+  "trajectories": { "claude": { /* ATIF */ }, "codex": { ... }, "qwen": { ... } } }
+```
+
+When the user has added rows (`tables.html`, kept in `localStorage['tv-rules']`),
+the viewer re-runs packs with `atif.upload.corpus_request` (in the browser worker, which fetches
+and gunzips them, or `POST /api/corpus {"rules", "summary", "paths": [...]}` of `serve`, which
+reads only paths of this form inside the viewer directory):
+
+```jsonc
+{ "schema": "trajectiers-corpus/1", "vocab": { /* for the rule set */ },
+  "packs": [ { "bug": "18", "config": "original", "run": 1,
+               "views": { "claude": { /* a trajview/3 trajectory, or with "summary": true its
+                                          overview form; plus "rule_hits": {"O3": 2, "R1": 5} */ } } } ] }
+```
+
+The outcome (`outcome`, `pass`, `by_run`) and the app name do not depend on the rules; the viewer
+keeps those of the exported files. Under the default rules a pack gives exactly the exported view
+(`tests/test_rules.py`, `PackTests`). The run-1 summaries under a rule set are cached in IndexedDB.

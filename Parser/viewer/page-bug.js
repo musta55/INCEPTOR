@@ -8,17 +8,28 @@
  * Playhead (ported from the old viewer.js): play / pause (space), step -/+ (k / j), a range
  * slider over the actions, speed 1-16 actions per second. The cursor S.i drives every view
  * (onCursor) and the details panel. Hash keys: bug, t, i, v (trajectory|timeline|fingerprint),
- * lvl (phases|subphases|steps), fp (agents|runs), speed, details=0 (cursor set, panel
- * closed), theme; play=1 starts playing on open (read only, never written back). */
+ * lvl (phases|categories|steps; subphases and segments open categories, purposes phases),
+ * fp (agents|runs), speed, details=0 (cursor set, panel closed), theme; play=1 starts playing
+ * on open (read only, never written back). */
 (function () {
   'use strict';
   var TV = window.TV, esc = TV.esc, $ = TV.$, $$ = TV.$$;
   var VIEWS = ['trajectory', 'timeline', 'fingerprint'];
-  var LEVELS = ['phases', 'subphases', 'steps'];
   var SPEEDS = [1, 2, 4, 8, 16];
-  var S = TV.state = { bug: null, t: null, i: 0, view: 'trajectory', level: 'subphases', fp: 'agents', timeMode: false,
+  var S = TV.state = { bug: null, t: null, i: 0, view: 'trajectory', level: 'categories', fp: 'agents', timeMode: false,
     expanded: {}, playing: false, speed: 4, panel: false };
   var B = null;          // the loaded bug: {data, trajs, byKey, agents, runs, maxN}
+  var RS = TV.ruleset.get(), RKEY = TV.ruleset.key(RS);
+  TV.watchRules(RKEY);
+  function status(kind, html) {
+    var el = $('#status');
+    el.hidden = !html;
+    el.className = 'status' + (kind ? ' ' + kind : '');
+    el.innerHTML = html || '';
+  }
+  function rulesLine(extra) {
+    return '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span>' + (extra ? '<span class="rs-x">' + extra + '</span>' : '') + '<a class="rs-edit" href="tables.html">Edit the tables</a>';
+  }
 
   /* ---------------------------------------------------------------- bug order (overview) */
   var OV = window.TRAJ_OVERVIEW;
@@ -31,15 +42,10 @@
   TV.exp = function (t) {
     t = t || TV.traj();
     var e = S.expanded[t.id];
-    if (!e) { e = S.expanded[t.id] = { p: {}, s: {} }; TV.applyLevel(t, S.level); }
+    if (!e) e = S.expanded[t.id] = TV.levelExpansion(t, S.level);
     return e;
   };
-  TV.applyLevel = function (t, level) {
-    var e = S.expanded[t.id] || (S.expanded[t.id] = { p: {}, s: {} });
-    e.p = {}; e.s = {};
-    if (level === 'subphases' || level === 'steps') t.phases.forEach(function (p) { e.p[p.id] = 1; });
-    if (level === 'steps') t.subs.forEach(function (s) { e.s[s.id] = 1; });
-  };
+  TV.applyLevel = function (t, level) { S.expanded[t.id] = TV.levelExpansion(t, level); };
 
   /* ---------------------------------------------------------------- hash (throttled while playing) */
   var hashTimer = 0;
@@ -48,14 +54,15 @@
     hashTimer = setTimeout(function () {
       hashTimer = 0;
       TV.writeHash({ bug: S.bug, t: S.t, i: S.i || '', v: S.view === 'trajectory' ? '' : S.view,
-        lvl: S.level === 'subphases' ? '' : S.level, fp: S.fp === 'agents' ? '' : S.fp,
+        lvl: S.level === 'categories' ? '' : S.level, fp: S.fp === 'agents' ? '' : S.fp,
         speed: S.speed === 4 ? '' : S.speed, details: S.i && !S.panel ? '0' : '', theme: TV.readHash().theme });
     }, 150);
   }
   function readHash() {
     var q = TV.readHash();
     if (VIEWS.indexOf(q.v) >= 0) S.view = q.v;
-    if (LEVELS.indexOf(q.lvl) >= 0) S.level = q.lvl;
+    else if (q.v === 'compare') S.view = 'fingerprint';
+    if (TV.levelOf(q.lvl)) S.level = TV.levelOf(q.lvl);
     if (q.fp === 'runs') S.fp = 'runs';
     if (SPEEDS.indexOf(+q.speed) >= 0) S.speed = +q.speed;
     if (q.time) S.timeMode = true;
@@ -66,6 +73,7 @@
   function noData(html) {
     stopPlay();
     $('#app').hidden = true;
+    document.body.classList.remove('docked');
     var nd = $('#nodata');
     nd.hidden = false;
     nd.innerHTML = html;
@@ -98,7 +106,24 @@
       if (S.bug !== id) return;
       var d = window.TRAJ_BUG;
       if (!d || String(d.bug) !== id || !(d.trajectories || []).length) { missing(id, d); return; }
-      ready(d, opts);
+      if (TV.ruleset.isDefault(RS) || d.schema !== 'trajview/3') { ready(d, opts); return; }
+      /* the user's rules: re-run this bug's runs from the corpus packs */
+      if (!TV.engine.usable()) {
+        status('warn', rulesLine('your rows need the analysis engine, which a page opened from a file cannot start; this page shows the <b>built-in lookup tables</b>'));
+        ready(d, opts);
+        return;
+      }
+      $('#view').innerHTML = '<div class="loading">Applying your table rows to bug-' + esc(id) + '…</div>';
+      status('busy', rulesLine('applying them to the ' + d.trajectories.length + ' runs of bug-' + esc(id) + '…'));
+      TV.corpus.bug(d, RS).then(function () {
+        if (S.bug !== id) return;
+        status('ok', rulesLine('applied'));
+        ready(d, opts);
+      }, function (err) {
+        if (S.bug !== id) return;
+        status('warn', rulesLine('could not be applied (' + esc(err.message) + '); this page shows the <b>built-in lookup tables</b>'));
+        ready(window.TRAJ_BUG, opts);
+      });
     };
     s.onerror = function () { if (S.bug === id) missing(id); };
     document.head.appendChild(s);
@@ -113,7 +138,7 @@
   }
   function ready(d, opts) {
     if (d.schema !== 'trajview/3') {
-      noData('<h2>Old data for bug-' + esc(d.bug) + '</h2><p>The bug file has schema <code>' + esc(d.schema || '?') + '</code>; this viewer draws phases and subphases (<code>trajview/3</code>). Regenerate the data from the Parser directory:</p>' +
+      noData('<h2>Old data for bug-' + esc(d.bug) + '</h2><p>The bug file has schema <code>' + esc(d.schema || '?') + '</code>; this dashboard reads phases and their outcomes (<code>trajview/3</code>). Regenerate the data from the Parser directory:</p>' +
         '<pre>cd Parser\npython3 -m atif.cli view --all</pre>');
       return;
     }
@@ -133,6 +158,7 @@
     var t = TV.traj();
     S.i = opts.i ? TV.clamp(+opts.i || 0, 0, t.n) : 0;
     S.panel = !!S.i && opts.details !== '0';
+    document.body.classList.add('docked');
     renderMatrix();
     renderTrajbar();
     setView(S.view, true);
@@ -176,7 +202,7 @@
         var key = a + '-r' + r, t = B.byKey[key];
         if (!t) { h += '<div class="cell missing">not converted</div>'; return; }
         h += '<button type="button" class="cell" data-key="' + esc(key) + '" aria-pressed="' + (key === S.t) + '" aria-label="' + esc(a + ' run ' + r + ', ' + t.oc) + '">' +
-          '<span class="c1">' + TV.passPill(t.outcome.pass) + '<span class="cn">' + t.n + '<span class="lng"> actions</span><span class="sg"> · ' + t.subs.length + '<span class="lng"> sub</span></span></span></span>' +
+          '<span class="c1">' + TV.passPill(t.outcome.pass) + '<span class="cn">' + t.n + '<span class="lng"> actions</span></span></span>' +
           '<span class="track">' + TV.stripsHTML(t.strip, t.subStrip, t.n, B.maxN) + '</span>' +
           attemptsBadge(t) +
           '</button>';
@@ -196,13 +222,13 @@
     if (!t.attempts.length) return '';
     var bad = t.attempts.filter(function (at) { return at.outcome === 'failed'; }).length;
     var tip = t.attempts.map(function (at) { return 'attempt ' + at.id + ': ' + at.outcome + (TV.EVIDENCE_SHORT[at.evidence] ? ' (' + TV.EVIDENCE_SHORT[at.evidence] + ')' : ''); }).join(' · ');
-    return '<span class="c3"><span class="attbadge' + (bad ? ' bad' : '') + '" data-tip="' + esc('repair attempts (rule G4): ' + tip) + '">⟲ ' + TV.plural(t.attempts.length, 'attempt') + (bad ? ', ' + bad + ' failed' : '') + '</span></span>';
+    return '<span class="c3"><span class="attbadge' + (bad ? ' bad' : '') + '" data-tip="' + esc('repair attempts (edits of app code and the run that checks them): ' + tip) + '">⟲ ' + TV.plural(t.attempts.length, 'attempt') + (bad ? ', ' + bad + ' failed' : '') + '</span></span>';
   }
   function renderTrajbar() {
     var t = TV.traj();
     var dur = t.stats.duration_s != null ? t.stats.duration_s : t.stats.reported_duration_s;
     $('#trajbar').innerHTML = '<h2>' + TV.agentHTML(t.agent) + '<span class="muted">run ' + t.run + '</span>' + TV.passPill(t.outcome.pass) + '</h2>' +
-      '<span class="facts">' + TV.plural(t.n, 'action') + ' · ' + TV.plural(t.phases.length, 'phase') + ' · ' + TV.plural(t.subs.length, 'subphase') + ' · ' + TV.plural(t.attempts.length, 'attempt') +
+      '<span class="facts">' + TV.plural(t.n, 'action') + ' · ' + TV.plural(t.phases.length, 'phase') + ' · ' + TV.plural(t.attempts.length, 'attempt') +
       (t.anchor ? ' · first fix #' + t.anchor : ' · no app-source edit') +
       (dur != null ? ' · ' + TV.fmtDur(dur) : '') + '</span>' +
       '<span class="badges">' + TV.badgeHTML(t.badges, t.outcome.pass) + '</span>';
@@ -219,17 +245,12 @@
     var t = TV.traj();
     if (changed) S.i = 0;
     if (opts.i) S.i = TV.clamp(Math.round(+opts.i), 1, t.n);
-    if (opts.revealSub) {
-      var e = TV.exp(t), s = t.subById[opts.revealSub];
-      if (s) { e.p[s.p.id] = 1; e.s[s.id] = 1; S.i = s.start; }
-    }
     S.panel = !!S.i;
     $$('#matrix .cell[data-key]').forEach(function (c) { c.setAttribute('aria-pressed', c.dataset.key === key ? 'true' : 'false'); });
     renderTrajbar();
+    syncPanel();                                        // the layout first, then the view at its width
     if (opts.view) setView(opts.view, true); else render();
-    syncPanel();
     updateCursorUI();
-    if (opts.revealSub) scrollToCur();
     saveHash();
   };
   /* move the playhead; opts.playing = a playback tick (keeps the panel as the user left it),
@@ -249,12 +270,6 @@
     updateCursorUI();
     saveHash();
   };
-  function scrollToCur() {
-    setTimeout(function () {
-      var n = $('#view .cur');
-      if (n) n.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    }, 30);
-  }
 
   /* ---------------------------------------------------------------- playhead */
   var timer = 0;
@@ -320,7 +335,7 @@
     $('#speed').value = String(S.speed);
     $('#cursorLabel').innerHTML = a ? '<b>#' + a.i + '</b><span class="muted">/' + t.n + '</span> <span class="cl-mid">' + esc(a.category) + '</span>' +
         (a.verdict !== 'none' ? ' <span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + '</span>' : '') +
-        (a.sub ? ' <span class="opill mini o-' + a.sub.outcome + '" data-tip="' + esc(a.sub.p.phase + ' subphase #' + a.sub.start + '–#' + a.sub.end + ': ' + TV.outcomeDef(a.sub.p.phase, a.sub.outcome)) + '"><b aria-hidden="true">' +
+        (a.sub ? ' <span class="opill mini o-' + a.sub.outcome + '" data-tip="' + esc(a.sub.p.phase + ' outcome: ' + TV.outcomeDef(a.sub.p.phase, a.sub.outcome)) + '"><b aria-hidden="true">' +
           TV.OUTCOME_GLYPH[a.sub.outcome] + '</b><span class="ell">' + esc(a.sub.p.phase) + '</span></span>' : '')
       : '<b>#–</b><span class="muted">/' + t.n + ' · press ▶ or j</span>';
   }
@@ -346,9 +361,7 @@
   function tabCtl() {
     var t = TV.traj(), h = '';
     if (S.view === 'trajectory') {
-      h = '<span class="seg small" role="group" aria-label="Level">' + [['phases', 'Phases'], ['subphases', '+ Subphases'], ['steps', '+ Steps']].map(function (x) {
-        return '<button type="button" data-level="' + x[0] + '" aria-pressed="' + (S.level === x[0]) + '">' + x[1] + '</button>';
-      }).join('') + '</span>';
+      h = TV.levelCtlHTML(S.level);
     } else if (S.view === 'timeline') {
       h = t.hasTs ? '<span class="seg small" role="group" aria-label="x axis"><button type="button" data-x="index" aria-pressed="' + !S.timeMode + '">action #</button>' +
         '<button type="button" data-x="time" aria-pressed="' + S.timeMode + '">wall-clock</button></span>' : '<span class="muted small">x = action # (no timestamps in this log)</span>';
@@ -383,8 +396,30 @@
   var resizeTimer = 0;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () { measureSticky(); relayout(); }, 120);
+    resizeTimer = setTimeout(function () { measureSticky(); if (!RO) relayout(); }, 120);
   });
+  /* the view follows its own width: a ResizeObserver redraws it in the frame where the width
+   * changed (the details panel opened or closed, the window resized), so no frame with the old
+   * layout is ever painted (a delayed redraw made the view flicker) */
+  var viewW = 0, RO = window.ResizeObserver;
+  if (RO) {
+    new RO(function (entries) {
+      var w = Math.round(entries[0].contentRect.width);
+      if (!w || w === viewW) return;
+      var first = !viewW;
+      viewW = w;
+      if (!first) relayout();
+    }).observe(widthProbe($('#view')));
+  }
+  /* a zero-height box as wide as the view: its size never follows the view's content, so a
+   * redraw cannot notify the observer again */
+  function widthProbe(view) {
+    var probe = document.createElement('div');
+    probe.className = 'wprobe';
+    probe.setAttribute('aria-hidden', 'true');
+    view.parentNode.insertBefore(probe, view);
+    return probe;
+  }
   /* width-dependent views re-render; the Trajectory view only re-fits its labels (keeps scroll) */
   function relayout() {
     if (!B) return;
@@ -405,8 +440,15 @@
     var want = !!(t && S.i && S.panel);
     var was = document.body.classList.contains('panel-open');
     document.body.classList.toggle('panel-open', want);
-    if (want) renderPanel();
-    if (want !== was) setTimeout(relayout, 180);                          // the view got narrower / wider
+    if (want) renderPanel(); else emptyPanel();
+    if (want !== was && !RO) setTimeout(relayout, 180);                   // no ResizeObserver: redraw after the slide
+  }
+  /* no action picked: the docked column says how to fill it */
+  function emptyPanel() {
+    $('#dtI').textContent = '#–';
+    $('#dtOf').textContent = '';
+    $('#dtPrev').disabled = $('#dtNext').disabled = true;
+    $('#dtBody').innerHTML = '<p class="dt-empty">Click an action, or press <kbd>j</kbd>.</p>';
   }
   function closePanel(silent) {
     S.panel = false;
@@ -421,7 +463,8 @@
     $('#dtOf').textContent = 'of ' + t.n + ' · ' + t.agent + ' run ' + t.run;
     $('#dtPrev').disabled = a.i <= 1;
     $('#dtNext').disabled = a.i >= t.n;
-    $('#dtBody').innerHTML = TV.actionDetailsHTML(t, a);
+    $('#dtBody').innerHTML = TV.detailsActsHTML(a) + TV.actionDetailsHTML(t, a);
+    if (TV.steps) TV.steps.fill($('#dtBody'), t, a);
     $('#dtBody').scrollTop = 0;
   }
   $('#dtPrev').addEventListener('click', function () { TV.setCursor(S.i - 1); });

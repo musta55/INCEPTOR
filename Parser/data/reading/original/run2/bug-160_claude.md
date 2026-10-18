@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 21 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(10: succeeded) -> repair(5: unchecked) -> localization(3: failed) -> repair(1: unchecked) -> validation(1: unchecked) -> localization(1: succeeded)
+Phases: localization(10: succeeded) -> repair(2: unchecked) -> validation(1: unchecked) -> repair(2: unchecked) -> localization(3: failed) -> repair(1: unchecked) -> validation(2: unchecked)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -40,7 +40,7 @@ tools
 (eval):1: no matches found: --include=*.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -56,7 +56,7 @@ grep -rl "Eraser\|eraser" AnkiDroid/src/main | head -30
 AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -78,7 +78,7 @@ grep -n "raser\|ndo\|Whiteboard\|whiteboard" AnkiDroid/src/main/java/com/ichi2/a
 209:            boolean whiteboardVisibility = MetaDB.getWhiteboardVisibility(this, getPa
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -104,7 +104,7 @@ private void setWhiteboardEnabledState(boolean state) {
         mWhiteboard = new Whiteboard(this, isInNightMode(), mBlackWhiteboard);
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -131,7 +131,7 @@ canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
     public boolean handleTouchEv
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -156,7 +156,7 @@ menu.findItem(R.id.action_flag).setIcon(R.drawable.ic_flag_red);
                 menu.fi
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -184,7 +184,7 @@ showSelectTtsDialogue();
             case R.i
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -204,7 +204,7 @@ Preview (first 2KB):
 AnkiDroid/src/main/java/com/ichi2/compat/
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ _(none)_
 433	            // Whiteboard undo queue non-empty. Switch the undo icon to a whiteboard specific one.
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -249,7 +249,7 @@ cd "/Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_ori
 32:    public final static int ALPHA_ICON_ENABLED_DARK = 138; // 54%
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -267,7 +267,7 @@ Now applying the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-160/AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (none):
@@ -283,7 +283,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-160/AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. read_file / repair (own phase localization)  (Bash)
+## 13. read / validation  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -310,7 +310,7 @@ import android.view.KeyEvent;
 import android
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 14_
 
 **Thought** (none):
@@ -326,7 +326,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-160/AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 15_
 
 **Thought** (narration):
@@ -344,7 +344,7 @@ Now harden the whiteboard visibility icon the same way (it also mutates shared d
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-160/AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. read_file / localization  (Bash)
+## 16. read / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -366,7 +366,7 @@ setupButton(preferences, R.id.action_mark_card, "customButtonMarkCard", SHOW_AS_
         mCustomButtons.put(resourceId, Integer.parseInt(pre
 ```
 
-## 17. search_code / localization  (Bash)
+## 17. search / localization  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -398,7 +398,7 @@ import androidx.annotation.Nullable;
 import tim
 ```
 
-## 18. search_code / localization  (Bash)
+## 18. search / localization  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -417,7 +417,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java:822:        if (mCurrentCar
 AnkiDroid/src/main/java/com/ichi2/anki/reviewer/Review
 ```
 
-## 19. edit_file / repair  (Edit)
+## 19. edit / repair  (Edit)
 _step 19_
 
 **Thought** (none):
@@ -453,7 +453,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 ```
 
-## 21. read_file / localization  (Bash)
+## 21. read / validation  (Bash)
 _step 21_
 
 **Thought** (none):

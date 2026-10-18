@@ -7,9 +7,9 @@
 - steps (LLM inferences): 7 | actions: 9 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt
 
-Phases: localization(6: succeeded) -> repair(2: succeeded) -> validation(1: unchecked)
+Phases: localization(6: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (glob)
+## 1. search / localization  (glob)
 _step 1 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -32,7 +32,7 @@ Let me explore the codebase to find these files.
 Found 1 matching file(s)
 ```
 
-## 2. search_code / localization  (glob)
+## 2. search / localization  (glob)
 _step 1 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -48,7 +48,7 @@ _(same inference as the previous action)_
 Found 1 matching file(s)
 ```
 
-## 3. search_code / localization  (glob)
+## 3. search / localization  (glob)
 _step 1 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -64,7 +64,7 @@ _(same inference as the previous action)_
 Found 36 matching file(s)
 ```
 
-## 4. read_file / localization  (read_file)
+## 4. read / localization  (read_file)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -89,7 +89,7 @@ Good, I found the two key files. Let me read them both to understand the bug.
  * copies of the Software, and to permit
 ```
 
-## 5. read_file / localization  (read_file)
+## 5. read / localization  (read_file)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -112,7 +112,7 @@ _(same inference as the previous action)_
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ```
 
-## 6. read_file / localization  (read_file)
+## 6. read / localization  (read_file)
 _step 3_
 
 **Thought** (reasoning):
@@ -170,7 +170,7 @@ The fix should:
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ```
 
-## 7. edit_file / repair  (edit)
+## 7. edit / repair  (edit)
 _step 4_
 
 **Thought** (reasoning):
@@ -216,7 +216,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
                 if (TextUtils.isEmpty(labelInput.getText()) || TextUt
 ```
 
-## 8. build / repair  (run_shell_command)
+## 8. build / validation  (run_shell_command)
 _step 5_
 
 **Thought** (reasoning):
@@ -239,7 +239,7 @@ Configuration 'compile' in project ':app' is deprecated. Use 'implementation' in
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.android.com/repository/android/common/01
 ```
 
-## 9. read_file / validation  (read_file)
+## 9. read / validation  (read_file)
 _step 6_
 
 **Thought** (reasoning):

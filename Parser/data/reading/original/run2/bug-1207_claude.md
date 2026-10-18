@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 26 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(8: succeeded) -> repair(4: succeeded) -> localization(3: succeeded) -> repair(2: succeeded) -> localization(2: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: localization(8: succeeded) -> repair(4: succeeded) -> localization(3: succeeded) -> repair(2: succeeded) -> validation(4: succeeded) -> repair(2: succeeded) -> validation(3: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -55,7 +55,7 @@ README.md
 settings.gradle
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2_
 
 **Thought** (none):
@@ -78,7 +78,7 @@ _(none)_
 8	 * copies of the Softwar
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ cat app/src/main/res/layout/dialog_manual_entry.xml && grep -n "DEFAULT_PERIOD\|
     android:paddingEnd="@dimen/activity_margin_large">
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ sed -n 1,140p app/src/main/java/org/shadowice/flocke/andotp/Utilities/TokenCalcu
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -161,7 +161,7 @@ strings_settings.xml
 app/src/main/res/value
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -188,7 +188,7 @@ grep -n "hint_\|label_period\|label_digits\|toast_\|<!--" app/src/main/res/value
 54:    <string name="to
 ```
 
-## 8. read_file / localization  (Read)
+## 8. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -213,7 +213,7 @@ _(none)_
 10	    <string name
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -231,7 +231,7 @@ Now let me implement the fix. First, add validation error strings:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/res/values/strings_main.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -249,7 +249,7 @@ Now the main fix in `ManualEntryDialog`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -265,7 +265,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -283,7 +283,7 @@ Now replace the watcher with a full validation of all fields:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. read_file / localization  (Bash)
+## 13. read / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -310,7 +310,7 @@ if(url.getHost().equals("totp")){
         String digits = uri.getQueryPar
 ```
 
-## 14. search_code / localization  (Bash)
+## 14. search / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -334,7 +334,7 @@ private static final String JSON_TYPE = "type";
     pr
 ```
 
-## 15. read_file / localization  (Read)
+## 15. read / localization  (Read)
 _step 14_
 
 **Thought** (none):
@@ -368,7 +368,7 @@ _(none)_
 246	        this
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 15_
 
 **Thought** (narration):
@@ -386,7 +386,7 @@ Now add a defensive guard so no invalid period can ever cause a division by zero
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -402,7 +402,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. search_code / localization  (Bash)
+## 18. search / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -420,7 +420,7 @@ app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java:179:  
 app/src/main/java/org/shadowice/flocke/andotp/Activi
 ```
 
-## 19. read_file / localization  (Bash)
+## 19. read / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -444,7 +444,7 @@ sed -n 360,385p app/src/main/java/org/shadowice/flocke/andotp/Activities/MainAct
                 try {
 ```
 
-## 20. build / repair  (Bash)
+## 20. build / validation  (Bash)
 _step 19_
 
 **Thought** (narration):
@@ -472,7 +472,7 @@ Note: Recompile with -Xlint:unchecked for details.
 :app:compileDeb
 ```
 
-## 21. read_file / repair (own phase localization)  (Read)
+## 21. read / validation  (Read)
 _step 20_
 
 **Thought** (narration):
@@ -499,7 +499,7 @@ Let me refine so no error popup appears immediately when the dialog opens:
 205	            public void onTex
 ```
 
-## 22. edit_file / repair  (Edit)
+## 22. edit / repair  (Edit)
 _step 21_
 
 **Thought** (none):
@@ -515,7 +515,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 23. edit_file / repair  (Edit)
+## 23. edit / repair  (Edit)
 _step 22_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 24. build / repair  (Bash)
+## 24. build / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -554,7 +554,7 @@ BUILD SUCCESSFUL in 3s
 26 actionable tasks: 7 executed, 19 up-to-date
 ```
 
-## 25. build / validation  (Bash)
+## 25. test / validation  (Bash)
 _step 24_
 
 **Thought** (narration):
@@ -588,7 +588,7 @@ period='99999999999' valid=false saved=30
 period='1'          valid=true
 ```
 
-## 26. env_setup / validation  (Bash)
+## 26. read / validation  (Bash)
 _step 25_
 
 **Thought** (none):

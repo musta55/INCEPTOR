@@ -9,7 +9,7 @@
 
 Phases: localization(12: succeeded) -> repair(1: unchecked) -> validation(6: unchecked)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -44,7 +44,7 @@ settings.gradle
 tools
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -63,7 +63,7 @@ AnkiDroid/src/main/res/values/02-strings.xml:244:    <string name="decks_rename_
 AnkiDroid/src/main/res/values/10-p
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -81,7 +81,7 @@ AnkiDroid/src/main/res/values/02-strings.xml:88:    <string name="custom_study_i
 AnkiDroid/src/main/res/values/02-strings.xml:89:    <string name="custom_study_review_forgotten">Review forgotten card
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -97,7 +97,7 @@ grep -rn "custom_study_deck_exists" --include="*.kt" --include="*.java" AnkiDroi
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java:440:                    .content(R.string.custom_study_deck_exists)
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -120,7 +120,7 @@ private String getText2() {
             case CUSTOM_STUDY_FORGOT:
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -140,7 +140,7 @@ sed -n 1,80p AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.ja
  * the terms of the GNU General Public L
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -156,7 +156,7 @@ grep -n "showThemedToast" AnkiDroid/src/main/java/com/ichi2/anki/UIUtils.java
 27:    public static void showThemedToast(Context context, String text, boolean shortLength) {
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ grep -rln "CustomStudyDialog" AnkiDroid/src/test AnkiDroid/src/androidTest 2>/de
 AnkiDroid/src/test/java/com/ichi2/anki/dialogs/CustomStudyDialogTest.java
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 9 | **FAILED**_
 
 **Thought** (none):
@@ -188,7 +188,7 @@ _(none)_
 Access outside repo directory is not allowed: /app/AnkiDroid/src/test/java/com/ichi2/anki/dialogs/CustomStudyDialogTest.java
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -210,7 +210,7 @@ pwd; cat AnkiDroid/src/test/java/com/ichi2/anki/dialogs/CustomStudyDialogTest.ja
  Foundation; either version 3 of the License, or (at your option) any later
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -241,7 +241,7 @@ import com.ichi2.async.CollectionTask;
 import java.util.Cal
 ```
 
-## 12. read_file / localization  (Read)
+## 12. read / localization  (Read)
 _step 12_
 
 **Thought** (narration):
@@ -265,7 +265,7 @@ Now let me apply the fix.
 431	        long
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -281,7 +281,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-123451/AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. read_file / validation  (Bash)
+## 14. read / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -358,7 +358,7 @@ git --no-pager diff HEAD -- AnkiDroid/src/main/java/com/ichi2/anki/dialogs/Custo
 (Bash completed with no output)
 ```
 
-## 18. search_code / validation  (Bash)
+## 18. search / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -379,7 +379,7 @@ true
 441:                UIUtils.showThemedToast(this.getContext(), getString(R.string.c
 ```
 
-## 19. read_file / validation  (Bash)
+## 19. read / validation  (Bash)
 _step 19_
 
 **Thought** (none):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 13 | actions: 13 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(5: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> repair(2: succeeded) -> localization(1: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. orient / localization  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -39,7 +39,7 @@ settings.gradle
 tools
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -56,7 +56,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-273/AnkiDroid/src/main/java/com/ichi2/anki/Previewer.java
 ```
 
-## 3. read_file / localization  (Bash)
+## 3. read / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -76,7 +76,7 @@ cat /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_ori
  *
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -93,7 +93,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/AbstractFlashcardViewer.java:793:    prot
 AnkiDroid/src/main/java/com/ichi2/anki/AbstractFlashcardViewer.java:798:        super.onCreate(savedInstanceState);
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ if (getCol().getSched().answerButtons(mCurrentCard) == 4) {
     protected void onCreate(Bundle sa
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ grep -n "Previewer\|Reviewer\|configChanges" -A3 AnkiDroid/src/main/AndroidManif
 173-        </activity>
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -169,7 +169,7 @@ grep -n "Previewer" -B2 -A6 AnkiDroid/src/main/AndroidManifest.xml
 297-            android:name="com.ichi2.widget.AnkiDroidWidgetSmall"
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 7_
 
 **Thought** (narration):
@@ -187,7 +187,7 @@ Now I understand the defect. Let me fix the `Previewer`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-273/AnkiDroid/src/main/java/com/ichi2/anki/Previewer.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 8_
 
 **Thought** (none):
@@ -203,7 +203,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-273/AnkiDroid/src/main/java/com/ichi2/anki/Previewer.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. read_file / repair (own phase localization)  (Read)
+## 10. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -224,7 +224,7 @@ _(none)_
 293	            android:label="@string/preview_title" />
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -240,7 +240,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-273/AnkiDroid/src/main/AndroidManifest.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. build / repair  (Bash)
+## 12. build / validation  (Bash)
 _step 11_
 
 **Thought** (narration):
@@ -266,7 +266,7 @@ Now let me build to verify it compiles:
 > Task :AnkiDroid:s
 ```
 
-## 13. read_file / validation  (Read)
+## 13. read / validation  (Read)
 _step 12_
 
 **Thought** (none):

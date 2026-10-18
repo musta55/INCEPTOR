@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(5: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:53:39.400Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace dialog button construction across the app, patch ordering consisten
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:53:42.119Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r-
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:53:43.418Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ app/src/main/assets/pdf/vendor/pdf.js/1.9.658/pdf.worker.js
 app/src/main/assets/pdf/vendor/pdf.js/1.9.658/images/shadow.p
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T04:53:47.863Z_
 
 **Thought** (none):
@@ -107,7 +107,7 @@ app/src/main/java/com/simon/harmonichackernews/MainActivity.java:251:           
 app/src/main/j
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-25T04:53:51.677Z_
 
 **Thought** (narration):
@@ -125,7 +125,7 @@ The defect is localized: `Discard` is assigned the negative slot and `Cancel` th
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T04:53:57.545Z_
 
 **Thought** (none):
@@ -150,7 +150,7 @@ app/src/main/java/com/simon/harmonichackernews/StoriesFragment.java:508:        
 app/src/main/res/layout
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-25T04:54:00.283Z | **FAILED**_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ Output:
 fatal: no such path 'app/src/main/java/com/simon/harmonichackernews/ComposeActivity.java' in HEAD
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-25T04:54:05.504Z_
 
 **Thought** (narration):
@@ -190,7 +190,7 @@ The audit found no other destructive confirmation dialog; custom login actions a
 Plan updated
 ```
 
-## 9. edit_file / repair  (exec_command)
+## 9. edit / repair  (exec_command)
 _step 13 | 2026-09-25T04:54:10.022Z_
 
 **Thought** (none):
@@ -224,7 +224,7 @@ M app/src/main/java/com/simon/harmonichackernews/ComposeActivity.java
                 //we ju
 ```
 
-## 10. plan / repair  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-25T04:54:11.755Z_
 
 **Thought** (narration):
@@ -242,7 +242,7 @@ Button roles are corrected without changing behavior. Next I’m running the req
 Plan updated
 ```
 
-## 11. build / repair  (exec_command)
+## 11. build / validation  (exec_command)
 _step 15 | 2026-09-25T04:54:14.816Z_
 
 **Thought** (none):
@@ -265,7 +265,7 @@ Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status fo
 Configuration cache is an incubating feature.
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-25T04:54:18.510Z_
 
 **Thought** (none):
@@ -286,7 +286,7 @@ Output:
 Calculating task graph as no configuration cache is available for tasks: clean assembleDebug
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T04:54:26.326Z_
 
 **Thought** (none):
@@ -314,7 +314,7 @@ Output:
 > Task :app:generateDebugResVal
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T04:54:34.658Z_
 
 **Thought** (narration):
@@ -345,7 +345,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :
 ```
 
-## 15. search_code / validation  (exec_command)
+## 15. search / validation  (exec_command)
 _step 19 | 2026-09-25T04:54:38.639Z_
 
 **Thought** (narration):
@@ -376,7 +376,7 @@ Corrected assignments:
 213:                        .setP
 ```
 
-## 16. plan / validation  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-25T04:54:43.974Z_
 
 **Thought** (none):

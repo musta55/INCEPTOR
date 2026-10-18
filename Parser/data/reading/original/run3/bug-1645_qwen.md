@@ -7,9 +7,9 @@
 - steps (LLM inferences): 16 | actions: 20 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(13: succeeded) -> repair(2: blocked) -> validation(1: blocked) -> localization(1: succeeded) -> repair(1: unchecked) -> validation(2: unchecked)
+Phases: localization(13: succeeded) -> repair(1: blocked) -> validation(3: blocked) -> repair(1: unchecked) -> validation(2: unchecked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -27,7 +27,7 @@ Explore this Android project to find all code related to the "Add Exercise Dialo
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-850b4730c9ae8db7` -- its 0 actions follow below_
 
-## 2. wait_process / localization  (send_message)
+## 2. other / localization  (send_message)
 _step 2 | **FAILED**_
 
 **Thought** (reasoning):
@@ -45,7 +45,7 @@ Explore-chatcmpl-tool-850b4730c9ae8db7
 params must have required property 'message'
 ```
 
-## 3. wait_process / localization  (send_message)
+## 3. other / localization  (send_message)
 _step 3_
 
 **Thought** (reasoning):
@@ -63,7 +63,7 @@ Please return your findings now.
 Message queued for Explore Add Exercise Dialog code
 ```
 
-## 4. search_code / localization  (glob)
+## 4. search / localization  (glob)
 _step 4 | call 1/4 of this inference_
 
 **Thought** (reasoning):
@@ -81,7 +81,7 @@ The agent is working in the background. I should wait for the completion notific
 Found 4 matching file(s)
 ```
 
-## 5. search_code / localization  (glob)
+## 5. search / localization  (glob)
 _step 4 | call 2/4 of this inference_
 
 **Thought** (reasoning):
@@ -97,7 +97,7 @@ _(same inference as the previous action)_
 No files found
 ```
 
-## 6. search_code / localization  (glob)
+## 6. search / localization  (glob)
 _step 4 | call 3/4 of this inference_
 
 **Thought** (reasoning):
@@ -113,7 +113,7 @@ _(same inference as the previous action)_
 Found 1 matching file(s)
 ```
 
-## 7. search_code / localization  (glob)
+## 7. search / localization  (glob)
 _step 4 | call 4/4 of this inference_
 
 **Thought** (reasoning):
@@ -129,7 +129,7 @@ _(same inference as the previous action)_
 Found 6 matching file(s)
 ```
 
-## 8. read_file / localization  (read_file)
+## 8. read / localization  (read_file)
 _step 5 | call 1/5 of this inference_
 
 **Thought** (reasoning):
@@ -165,7 +165,7 @@ import android.util.Log;
 import android.vie
 ```
 
-## 9. read_file / localization  (read_file)
+## 9. read / localization  (read_file)
 _step 5 | call 2/5 of this inference_
 
 **Thought** (reasoning):
@@ -193,7 +193,7 @@ import com.german_software_engineers.trainerapp.Model.Exercise;
 import com.german_software_engineers.trainerapp.
 ```
 
-## 10. read_file / localization  (read_file)
+## 10. read / localization  (read_file)
 _step 5 | call 3/5 of this inference_
 
 **Thought** (reasoning):
@@ -222,7 +222,7 @@ public class Exercise {
     private boolean IsWei
 ```
 
-## 11. read_file / localization  (read_file)
+## 11. read / localization  (read_file)
 _step 5 | call 4/5 of this inference_
 
 **Thought** (reasoning):
@@ -247,7 +247,7 @@ _(same inference as the previous action)_
         android:layout_height="
 ```
 
-## 12. read_file / localization  (read_file)
+## 12. read / localization  (read_file)
 _step 5 | call 5/5 of this inference_
 
 **Thought** (reasoning):
@@ -271,7 +271,7 @@ _(same inference as the previous action)_
     <android.support.d
 ```
 
-## 13. wait_process / localization  (send_message)
+## 13. other / localization  (send_message)
 _step 6_
 
 **Thought** (reasoning):
@@ -305,7 +305,7 @@ Return your findings.
 Message queued for Explore Add Exercise Dialog code
 ```
 
-## 14. edit_file / repair  (edit)
+## 14. edit / repair  (edit)
 _step 7_
 
 **Thought** (reasoning):
@@ -329,7 +329,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             footPos = Integer.valueOf(((TextView)dialog.findViewById(R.id.FootEdit)).getText()
 ```
 
-## 15. build / repair  (run_shell_command)
+## 15. build / validation  (run_shell_command)
 _step 8 | **FAILED**_
 
 **Thought** (reasoning):
@@ -385,7 +385,7 @@ A problem occurred configuring root project 'bug-1645'.
       > No cached version of com.android.tools.build:gradle:3
 ```
 
-## 17. read_file / localization  (read_file)
+## 17. read / validation  (read_file)
 _step 10_
 
 **Thought** (reasoning):
@@ -415,7 +415,7 @@ import com.german_software_engineers.trainerapp.Model.Exercise;
 import com.german_software_engineers.trainerapp.
 ```
 
-## 18. edit_file / repair  (edit)
+## 18. edit / repair  (edit)
 _step 11_
 
 **Thought** (reasoning):
@@ -445,7 +445,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             weight = Double.valueOf(((TextView)dialog.findViewById(R.id.WeightEdit)).getText
 ```
 
-## 19. search_code / validation  (grep_search)
+## 19. search / validation  (grep_search)
 _step 12_
 
 **Thought** (reasoning):
@@ -463,7 +463,7 @@ Good, now let me verify the final state of the file to make sure there are no re
 No matches found
 ```
 
-## 20. read_file / validation  (read_file)
+## 20. read / validation  (read_file)
 _step 13_
 
 **Thought** (reasoning):

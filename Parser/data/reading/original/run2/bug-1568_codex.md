@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(9: succeeded)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> localization(1: succeeded) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:04:17.158Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the checkbox selection flow, patch the mutation bug, then run the r
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:04:19.833Z | **FAILED**_
 
 **Thought** (none):
@@ -64,7 +64,7 @@ settings.gradle
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:04:22.468Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java:37:public class Fi
 app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java:149:            checkBox.setOnCheckedChangeListener((buttonView, isChe
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-25T05:04:26.801Z_
 
 **Thought** (none):
@@ -121,7 +121,7 @@ import android.os.Vibrator;
 import android.view.LayoutInflate
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:04:28.303Z_
 
 **Thought** (none):
@@ -148,7 +148,7 @@ Output:
    126	                if (!f.isDirectory())
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-25T05:04:37.082Z_
 
 **Thought** (narration):
@@ -166,7 +166,7 @@ The defect is confirmed: programmatic `setChecked()` calls fire a listener while
 Plan updated
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:04:39.935Z_
 
 **Thought** (none):
@@ -186,7 +186,7 @@ Original token count: 0
 Output:
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-25T05:04:44.300Z_
 
 **Thought** (none):
@@ -221,7 +221,7 @@ Success. Updated the following files:
 M app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-25T05:04:50.457Z_
 
 **Thought** (narration):
@@ -239,7 +239,7 @@ The patch now computes selection once before registering the listener and uses `
 Plan updated
 ```
 
-## 10. diff / repair  (exec_command)
+## 10. search / validation  (exec_command)
 _step 14 | 2026-09-25T05:04:53.356Z_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ Output:
 --- unsafe removals in adapter ---
 ```
 
-## 11. read_file / repair  (exec_command)
+## 11. read / validation  (exec_command)
 _step 15 | 2026-09-25T05:04:55.332Z_
 
 **Thought** (none):
@@ -291,7 +291,7 @@ false
     18	impo
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-25T05:04:57.527Z_
 
 **Thought** (narration):
@@ -309,7 +309,7 @@ Focused verification passes, and this workspace has no Git metadata for a render
 Plan updated
 ```
 
-## 13. build / repair  (exec_command)
+## 13. build / validation  (exec_command)
 _step 17 | 2026-09-25T05:04:59.940Z_
 
 **Thought** (none):
@@ -331,7 +331,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T05:05:02.303Z_
 
 **Thought** (none):
@@ -354,7 +354,7 @@ Android SDK Build Tools 29.0.2 will be used.
 To suppress this warning, remove "buildToolsVersion '28.0.3'" from your bui
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T05:05:08.695Z_
 
 **Thought** (none):
@@ -383,7 +383,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeProjectDexDebug
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-25T05:05:12.216Z_
 
 **Thought** (none):

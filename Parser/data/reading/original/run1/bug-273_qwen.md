@@ -7,9 +7,9 @@
 - steps (LLM inferences): 7 | actions: 6 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: understanding(1: unchecked) -> localization(5: unchecked)
+Phases: planning(1: unchecked) -> localization(5: unchecked)
 
-## 1. other / understanding  (run_shell)
+## 1. other / planning  (run_shell)
 _step 1 | call 1/2 of this inference | **FAILED**_
 
 **Thought** (reasoning):
@@ -31,7 +31,7 @@ git log -n 5 --oneline
 Tool "run_shell" not found in registry. Tools must use the exact names that are registered. Did you mean one of: "skill", "get_goal", "tool_call"?
 ```
 
-## 2. delegate / localization  (agent)
+## 2. sub-agent / localization  (agent)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -45,7 +45,7 @@ Search the AnkiDroid codebase under /home/antu_shared/automated_program_repair_f
 **Result**:
 _delegated to subagent `sub-call_0c92fac0859c478c9ab1ea4e` -- its 0 actions follow below_
 
-## 3. wait_process / localization  (list_agents)
+## 3. other / localization  (list_agents)
 _step 2_
 
 **Thought** (reasoning):
@@ -61,7 +61,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 3_
 
 **Thought** (reasoning):
@@ -77,7 +77,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 5. wait_process / localization  (list_agents)
+## 5. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -93,7 +93,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 6. wait_process / localization  (list_agents)
+## 6. other / localization  (list_agents)
 _step 5_
 
 **Thought** (reasoning):

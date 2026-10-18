@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 19 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(9: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(4: succeeded) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:07:55.804Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the whiteboard/eraser state flow, patch the root cause, then run th
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:07:58.934Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:08:01.298Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ AnkiDroid/src/main/res/values-es-rAR/10-preferences.xml:51:    <string name="pre
 AnkiDroid/src/main/res/values-es-rAR/10-preferences.xml:68:    <string name="whiteboard_stroke_width">Ancho del trazo
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:08:03.761Z_
 
 **Thought** (none):
@@ -115,7 +115,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/MetaDB.java:78:            mMetaDb.execSQ
 AnkiDroid/src/main/java/com/ichi2/anki/MetaDB.java:
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:08:05.294Z_
 
 **Thought** (none):
@@ -140,7 +140,7 @@ Total output lines: 536
  * Copyright (c) 2009 Nicolas Raoul <nicolas.raoul@gmail.com>                           *
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-25T05:08:08.181Z_
 
 **Thought** (none):
@@ -169,7 +169,7 @@ Total output lines: 432
     96	        mPaint.setStrokeJoin(Paint.J
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:08:10.163Z | **FAILED**_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ Total output lines: 312
    210
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-25T05:08:14.113Z_
 
 **Thought** (narration):
@@ -220,7 +220,7 @@ The whiteboard correctly invalidates the options menu when its first new stroke 
 Plan updated
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T05:08:19.120Z_
 
 **Thought** (none):
@@ -247,7 +247,7 @@ AnkiDroid/src/test/java/com/ichi2/compat/CompatCopyFileTest.java
 AnkiDroid/src/test/java/com/ichi2/async/Co
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-25T05:08:22.083Z_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import static org.junit.Assert.assertNo
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-25T05:08:27.284Z_
 
 **Thought** (none):
@@ -305,7 +305,7 @@ AnkiDroid/src/main/java/com/ichi2/themes/Themes.java:32:    public final static 
 AnkiDroid/sr
 ```
 
-## 12. read_file / localization  (exec_command)
+## 12. read / localization  (exec_command)
 _step 16 | 2026-09-25T05:08:30.327Z_
 
 **Thought** (none):
@@ -333,7 +333,7 @@ Output:
    36
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-25T05:08:40.605Z_
 
 **Thought** (narration):
@@ -364,7 +364,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-25T05:08:47.940Z_
 
 **Thought** (narration):
@@ -382,7 +382,7 @@ Patched both menu branches where undo is available so a previously disabled acti
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-25T05:08:50.719Z_
 
 **Thought** (none):
@@ -404,7 +404,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T05:08:52.969Z_
 
 **Thought** (none):
@@ -433,7 +433,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 > Task
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T05:09:00.137Z_
 
 **Thought** (none):
@@ -460,7 +460,7 @@ Output:
 > Task :
 ```
 
-## 18. search_code / validation  (exec_command)
+## 18. search / validation  (exec_command)
 _step 22 | 2026-09-25T05:09:03.250Z_
 
 **Thought** (narration):
@@ -489,7 +489,7 @@ Output:
    434	            menu
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-25T05:09:06.059Z_
 
 **Thought** (none):

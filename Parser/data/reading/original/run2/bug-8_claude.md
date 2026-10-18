@@ -9,7 +9,7 @@
 
 Phases: localization(7: succeeded) -> repair(13: unchecked) -> validation(3: unchecked)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -40,7 +40,7 @@ sign
 ./app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -59,7 +59,7 @@ find . -path ./build -prune -o -name "*.java" -print | head -80
 ./app/src/androidTest/java/de/koelle/christian/trickytripper/dataaccess/suite/AllPersistenc
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2_
 
 **Thought** (none):
@@ -85,7 +85,7 @@ _(none)_
 11	import android.view.M
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -111,7 +111,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -130,7 +130,7 @@ app/src/main/java/de/koelle/christian/trickytripper/activities/ExchangeRateManag
 app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -155,7 +155,7 @@ import de.koelle.christian.trickytripper.activities.ParticipantTabActivity;
 import de.koelle.christian.trickytripper.ac
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -176,7 +176,7 @@ int idDeleteConfirmation = (payment.isMoneyTransfer()) ?
                 getPrefixTextForPaymentDeletion(payment, getActivit
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 6 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -194,7 +194,7 @@ Now let me apply the fix to `ParticipantTabActivity`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 6 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -210,7 +210,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 7 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -228,7 +228,7 @@ Now I'll make the action-mode callback and helpers defensive against the detache
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 7 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -244,7 +244,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 8 | call 1/3 of this inference_
 
 **Thought** (narration):
@@ -262,7 +262,7 @@ Now register the started mode in the long-click listener, clear it on destroy, a
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 8 | call 2/3 of this inference_
 
 **Thought** (narration):
@@ -278,7 +278,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 8 | call 3/3 of this inference_
 
 **Thought** (narration):
@@ -294,7 +294,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 9 | call 1/3 of this inference_
 
 **Thought** (narration):
@@ -312,7 +312,7 @@ Now the same defect pattern exists in `PaymentTabActivity`. Let me apply the ana
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 9 | call 2/3 of this inference_
 
 **Thought** (narration):
@@ -328,7 +328,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 9 | call 3/3 of this inference_
 
 **Thought** (narration):
@@ -344,7 +344,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. edit_file / repair  (Edit)
+## 18. edit / repair  (Edit)
 _step 10 | call 1/3 of this inference_
 
 **Thought** (none):
@@ -360,7 +360,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 19. edit_file / repair  (Edit)
+## 19. edit / repair  (Edit)
 _step 10 | call 2/3 of this inference_
 
 **Thought** (none):
@@ -376,7 +376,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 20. edit_file / repair  (Edit)
+## 20. edit / repair  (Edit)
 _step 10 | call 3/3 of this inference_
 
 **Thought** (none):
@@ -416,7 +416,7 @@ Merged dex #3 (437 defs/468.5KiB)
 Merged dex #4 (130 d
 ```
 
-## 22. search_code / validation (own phase localization)  (Bash)
+## 22. search / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -433,7 +433,7 @@ app/build/outputs/apk/app-debug-unaligned.apk
 app/build/outputs/apk/app-debug.apk
 ```
 
-## 23. read_file / validation  (Bash)
+## 23. read / validation  (Bash)
 _step 13_
 
 **Thought** (narration):

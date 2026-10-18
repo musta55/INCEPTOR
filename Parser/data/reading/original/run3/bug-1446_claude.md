@@ -7,9 +7,9 @@
 - steps (LLM inferences): 14 | actions: 13 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(3: blocked) -> validation(3: blocked, succeeded)
+Phases: localization(7: succeeded) -> repair(2: blocked) -> validation(4: blocked, succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -35,7 +35,7 @@ settings.gradle
 (eval):1: no matches found: --include=*.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -55,7 +55,7 @@ app/src/androidTest/java/com/cohenadair/anglerslog/model/CatchTest.java
 app/src/androidTest/java/com/cohenadair/anglerslog/backup/iOSImportTe
 ```
 
-## 3. read_file / localization  (Bash)
+## 3. read / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -82,7 +82,7 @@ import com.cohenadair.anglerslog.fragments.ManageContentFragment;
 import com.cohenadair.anglerslog.fragments.ManageFra
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -111,7 +111,7 @@ import com.cohenadair.anglerslog.R;
 import com.cohenadair.anglersl
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -136,7 +136,7 @@ import com.cohenadair.anglerslog.model.Logbook;
 import com.cohenadair.anglerslog.model.b
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -165,7 +165,7 @@ import com.cohenadair.anglerslog.R;
 import
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -190,7 +190,7 @@ protected void initObject(InitializeInterface init) {
                 // populate the photos view with the existing photos
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -208,7 +208,7 @@ Now let me apply the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1446/app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -224,7 +224,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1446/app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. build / repair  (Bash)
+## 10. build / validation  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -285,7 +285,7 @@ _(none)_
 > Task :app:m
 ```
 
-## 13. read_file / validation  (Bash)
+## 13. read / validation  (Bash)
 _step 13_
 
 **Thought** (none):

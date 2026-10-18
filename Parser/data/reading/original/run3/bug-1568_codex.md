@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 15 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(5: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> repair(2: succeeded) -> planning(3: succeeded) -> validation(1: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:55:37.940Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the checkbox selection flow, patch the mutation bug, then run the r
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:55:39.112Z | **FAILED**_
 
 **Thought** (none):
@@ -64,7 +64,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:55:39.862Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ app/src/main/java/io/lerk/lrkFM/adapter/ArchiveArrayAdapter.java:66:    protecte
 app/src/main/java/io/lerk/lrkFM/adapter/BaseAr
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:55:41.959Z_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ import android.os.Vibrator;
 import android.view.LayoutInflate
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T16:55:42.616Z_
 
 **Thought** (none):
@@ -149,7 +149,7 @@ Output:
    126	                if (!f.isDirectory())
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-26T16:55:47.372Z | **FAILED**_
 
 **Thought** (narration):
@@ -174,7 +174,7 @@ Blame relevant lines:
 fatal: no such path 'app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java' in HEAD
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T16:55:49.298Z_
 
 **Thought** (none):
@@ -203,7 +203,7 @@ android {
         applicationId "io.lerk.lrkFM"
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-26T16:55:51.663Z_
 
 **Thought** (none):
@@ -219,7 +219,7 @@ Located two coupled mutation hazards in row binding and selection removal.
 Plan updated
 ```
 
-## 9. edit_file / repair  (exec_command)
+## 9. edit / repair  (exec_command)
 _step 13 | 2026-09-26T16:55:55.066Z_
 
 **Thought** (none):
@@ -254,7 +254,7 @@ Success. Updated the following files:
 M app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java
 ```
 
-## 10. build / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-26T16:55:56.161Z_
 
 **Thought** (none):
@@ -289,7 +289,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T16:55:59.261Z_
 
 **Thought** (narration):
@@ -307,7 +307,7 @@ The patch now initializes each checkbox exactly once before attaching its listen
 Plan updated
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / planning  (write_stdin)
 _step 16 | 2026-09-26T16:56:00.506Z_
 
 **Thought** (none):
@@ -330,7 +330,7 @@ Android SDK Build Tools 29.0.2 will be used.
 To suppress this warning, remove "buildToolsVersion '28.0.3'" from your build
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / planning  (write_stdin)
 _step 17 | 2026-09-26T16:56:06.206Z_
 
 **Thought** (none):
@@ -358,7 +358,7 @@ BUILD SUCCESSFUL in 9s
 28 actionable tasks: 26 executed, 2 up-to-date
 ```
 
-## 14. read_file / validation  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-26T16:56:07.536Z_
 
 **Thought** (narration):
@@ -389,7 +389,7 @@ Output:
     18	import jav
 ```
 
-## 15. plan / validation  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T16:56:09.055Z_
 
 **Thought** (none):

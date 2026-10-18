@@ -7,9 +7,9 @@
 - steps (LLM inferences): 32 | actions: 27 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(4: succeeded) -> understanding(7: unchecked) -> repair(1: succeeded) -> localization(2: succeeded) -> repair(8: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(10: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:27:11.386Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the Robotic Arm input flow, patch the value handling, then run the 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:27:15.455Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:27:17.312Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  8 sage  staff    256 Sep  9 11:55 .github
 -rw-r--r--@  1 sage
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T09:27:21.121Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:27:24.069Z_
 
 **Thought** (narration):
@@ -133,7 +133,7 @@ import android.os.Build;
 import android.os.Bu
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:27:28.752Z_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ Total output lines: 241
    108	                    getString(R.string.device_not_connected), null, null, S
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:27:31.955Z_
 
 **Thought** (none):
@@ -183,7 +183,7 @@ Output:
    198	            servo
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-23T09:27:35.648Z_
 
 **Thought** (none):
@@ -210,7 +210,7 @@ Output:
    471	    private void setReceived
 ```
 
-## 9. env_setup / understanding  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:27:45.089Z_
 
 **Thought** (narration):
@@ -234,7 +234,7 @@ Output:
 /Users/sage/.gradle/caches/transforms-3/7a6f91f7b8a89af4e2cad68f7e324eb2/transformed/co
 ```
 
-## 10. search_code / understanding  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:27:57.965Z_
 
 **Thought** (none):
@@ -254,7 +254,7 @@ Original token count: 0
 Output:
 ```
 
-## 11. wait_process / understanding  (write_stdin)
+## 11. other / localization  (write_stdin)
 _step 15 | 2026-09-23T09:28:11.845Z_
 
 **Thought** (none):
@@ -270,7 +270,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 12. search_code / understanding  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-23T09:28:16.481Z_
 
 **Thought** (none):
@@ -293,7 +293,7 @@ Output:
 /Users/sage/.
 ```
 
-## 13. env_setup / understanding  (exec_command)
+## 13. read / localization  (exec_command)
 _step 17 | 2026-09-23T09:28:40.199Z_
 
 **Thought** (none):
@@ -323,7 +323,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
   public int getProgress();
 ```
 
-## 14. env_setup / understanding  (exec_command)
+## 14. read / localization  (exec_command)
 _step 18 | 2026-09-23T09:28:42.918Z_
 
 **Thought** (none):
@@ -353,7 +353,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
        1: getfield      #7                  // Fie
 ```
 
-## 15. plan / understanding  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-23T09:28:57.199Z_
 
 **Thought** (narration):
@@ -371,7 +371,7 @@ The widget callback is synchronous and the shared flag can also leak across serv
 Plan updated
 ```
 
-## 16. edit_file / repair  (exec_command)
+## 16. edit / repair  (exec_command)
 _step 20 | 2026-09-23T09:29:35.529Z_
 
 **Thought** (none):
@@ -403,7 +403,7 @@ Success. Updated the following files:
 M app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 ```
 
-## 17. search_code / localization  (exec_command)
+## 17. search / validation  (exec_command)
 _step 21 | 2026-09-23T09:29:38.095Z_
 
 **Thought** (narration):
@@ -432,7 +432,7 @@ Output:
 277:                    degreeText3.setTag(degree);
 ```
 
-## 18. vcs / localization  (exec_command)
+## 18. diff / validation  (exec_command)
 _step 22 | 2026-09-23T09:29:42.926Z_
 
 **Thought** (none):
@@ -456,7 +456,7 @@ HARNESS
  1 file changed, 2 insertions(+)
 ```
 
-## 19. edit_file / repair  (exec_command)
+## 19. edit / repair  (exec_command)
 _step 23 | 2026-09-23T09:29:49.937Z_
 
 **Thought** (narration):
@@ -490,7 +490,7 @@ M app/src/main/java/io/pslab/activity/RoboticArmActivity.java
             ((TextView) servo3TimeLine.getChildAt(i).findViewById(R.id.timeline_box_degree_text)).setText(servoData.getDegree3() + getResources().getString(R.string.robotic_arm_degree_symbol));
 ```
 
-## 20. plan / repair  (update_plan)
+## 20. plan / planning  (update_plan)
 _step 24 | 2026-09-23T09:29:55.656Z_
 
 **Thought** (none):
@@ -506,7 +506,7 @@ The project has no local unit-test source set or unit-test dependencies for this
 Plan updated
 ```
 
-## 21. build / repair  (exec_command)
+## 21. build / validation  (exec_command)
 _step 25 | 2026-09-23T09:29:59.313Z_
 
 **Thought** (narration):
@@ -530,7 +530,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 22. wait_process / repair  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-23T09:30:02.973Z_
 
 **Thought** (none):
@@ -558,7 +558,7 @@ Output:
 > Task :app:generateDebugResValu
 ```
 
-## 23. wait_process / repair  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-23T09:30:09.912Z_
 
 **Thought** (narration):
@@ -589,7 +589,7 @@ Output:
 > Tas
 ```
 
-## 24. wait_process / repair  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-23T09:30:16.957Z_
 
 **Thought** (none):
@@ -615,7 +615,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:compileDebugJavaWithJavac
 ```
 
-## 25. wait_process / repair  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-23T09:30:23.305Z_
 
 **Thought** (none):
@@ -645,7 +645,7 @@ Output:
 > Task :app:as
 ```
 
-## 26. plan / repair  (update_plan)
+## 26. plan / planning  (update_plan)
 _step 30 | 2026-09-23T09:30:30.532Z_
 
 **Thought** (narration):
@@ -663,7 +663,7 @@ The required build succeeds. I’m doing a final line-reference and artifact che
 Plan updated
 ```
 
-## 27. search_code / validation  (exec_command)
+## 27. search / validation  (exec_command)
 _step 31 | 2026-09-23T09:30:36.276Z_
 
 **Thought** (none):

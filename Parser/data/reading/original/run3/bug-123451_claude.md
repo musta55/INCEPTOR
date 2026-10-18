@@ -7,9 +7,9 @@
 - steps (LLM inferences): 15 | actions: 14 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(9: succeeded) -> repair(2: blocked) -> validation(3: succeeded)
+Phases: localization(9: succeeded) -> repair(1: blocked) -> validation(4: blocked, succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -44,7 +44,7 @@ tools
 (eval):1: no matches found: --include=*.xml
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -63,7 +63,7 @@ AnkiDroid/src/main/res/values/02-strings.xml:243:    <string name="decks_rename_
 AnkiDroid/src/main/res/val
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -79,7 +79,7 @@ grep -rni "custom_study_session\|custom study session\|CUSTOM_STUDY_SESSION" Ank
 (eval):1: no matches found: --include=*.xml
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -98,7 +98,7 @@ AnkiDroid/src/main/res/values-ckb/01-core.xml:164:    <string name="custom_study
 AnkiDroid/src/main/res/values-yue/01
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -116,7 +116,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/dialogs/DeckPickerContextMenu.java:100:  
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java:433:        String customStudyDeck = getReso
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -143,7 +143,7 @@ case CUSTOM_STUDY_AHEAD:
     private Strin
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -160,7 +160,7 @@ AnkiDroid/src/main/res/values/01-core.xml:149:    <string name="custom_study_dec
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java:440:                    .content(R.string.custom_study_deck_exists)
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (narration):
@@ -182,7 +182,7 @@ sed -n 1,60p AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.ja
  * the terms of the GNU General Public L
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -198,7 +198,7 @@ grep -n "showThemedToast" AnkiDroid/src/main/java/com/ichi2/anki/UIUtils.java
 27:    public static void showThemedToast(Context context, String text, boolean shortLength) {
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -214,7 +214,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-123451/AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java has been updated successfully.
 ```
 
-## 11. build / repair  (Bash)
+## 11. build / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -242,7 +242,7 @@ Daemon vm is shutting down... The daemon has exited normally or was terminated i
 ----- End of the daemon log
 ```
 
-## 12. env_setup / validation  (Bash)
+## 12. orient / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -286,7 +286,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :AnkiDroid:multiDexList
 ```
 
-## 14. read_file / validation  (Bash)
+## 14. read / validation  (Bash)
 _step 14_
 
 **Thought** (narration):

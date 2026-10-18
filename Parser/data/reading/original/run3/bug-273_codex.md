@@ -7,9 +7,9 @@
 - steps (LLM inferences): 36 | actions: 31 | failed actions: 4
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(2: failed) -> localization(3: failed) -> repair(5: failed) -> validation(11: blocked, failed, succeeded)
+Phases: planning(1: unchecked) -> localization(8: succeeded) -> planning(1: unchecked) -> repair(1: failed) -> validation(14: failed, blocked, failed) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:16:54.020Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the preview screen’s state restoration across configuration chang
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:16:56.225Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:16:57.329Z_
 
 **Thought** (narration):
@@ -89,7 +89,7 @@ AnkiDroid/src/main/res/values-no/03-dialogs.xml:64:    <string name="preview_tit
 AnkiDroid/src/main/res/values-no/03-dialogs.xml:99:    <string na
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:17:00.297Z_
 
 **Thought** (none):
@@ -114,7 +114,7 @@ Total output lines: 318
  * Copyright (c) 2013 Jolta Technologies                                                *
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:17:01.890Z_
 
 **Thought** (none):
@@ -138,7 +138,7 @@ Output:
  * Copyright (c) 2014 Brun
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:17:04.850Z_
 
 **Thought** (narration):
@@ -164,7 +164,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/analytics/AnkiDroidCrashReportDialog.java
 AnkiDroid/src/main/java/com/ichi2/anki/analytics/AnkiDroidCrashReportDialog.java:126:        super.onSaveInstanceState(o
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T17:17:07.547Z_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ Output:
         if (getCol().getSched().answerButtons(mCurrentCard) == 4) {
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T17:17:09.569Z_
 
 **Thought** (none):
@@ -222,7 +222,7 @@ Output:
 2
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-26T17:17:11.558Z_
 
 **Thought** (none):
@@ -247,7 +247,7 @@ Total output lines: 376
  *                                                                                      *
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-26T17:17:16.273Z_
 
 **Thought** (none):
@@ -263,7 +263,7 @@ Confirmed Previewer discards Activity saved state and unconditionally renders th
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-26T17:17:18.283Z_
 
 **Thought** (narration):
@@ -298,7 +298,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/java/com/ichi2/anki/Previewer.java
 ```
 
-## 12. diff / repair  (exec_command)
+## 12. read / validation  (exec_command)
 _step 16 | 2026-09-26T17:17:22.727Z_
 
 **Thought** (none):
@@ -326,7 +326,7 @@ public class Previewer extends AbstractFlashcardViewer {
     privat
 ```
 
-## 13. search_code / localization  (exec_command)
+## 13. search / validation  (exec_command)
 _step 17 | 2026-09-26T17:17:24.772Z_
 
 **Thought** (none):
@@ -349,7 +349,7 @@ AnkiDroid/src/test/java/com/ichi2/anki/ReviewerTest.java:20:        try (Activit
 AnkiDr
 ```
 
-## 14. search_code / localization  (exec_command)
+## 14. search / validation  (exec_command)
 _step 18 | 2026-09-26T17:17:26.923Z_
 
 **Thought** (none):
@@ -372,7 +372,7 @@ AnkiDroid/src/test/java/com/ichi2/libanki/ClozeTest.java:40:        assertTrue(d
 AnkiDroid/src/test/java/com/ichi2/libanki/ClozeTest.java:42:        f = d.newN
 ```
 
-## 15. search_code / localization  (exec_command)
+## 15. search / validation  (exec_command)
 _step 19 | 2026-09-26T17:17:30.543Z_
 
 **Thought** (none):
@@ -403,7 +403,7 @@ public class ClozeTest extends RobolectricTest {
         Note f = d.newNote
 ```
 
-## 16. run_test / repair  (exec_command)
+## 16. edit / validation  (exec_command)
 _step 20 | 2026-09-26T17:17:36.100Z_
 
 **Thought** (narration):
@@ -444,7 +444,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:17:42.224Z_
 
 **Thought** (none):
@@ -472,7 +472,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.a
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:17:48.210Z_
 
 **Thought** (none):
@@ -492,7 +492,7 @@ Original token count: 0
 Output:
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:17:58.465Z_
 
 **Thought** (none):
@@ -520,7 +520,7 @@ Output:
 > Task :api:compileDebugRenderscript NO-SOURCE
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-26T17:18:09.455Z | **FAILED**_
 
 **Thought** (none):
@@ -547,7 +547,7 @@ Output:
 > Task :AnkiDroid:generateDebugUnitTestConf
 ```
 
-## 21. run_test / validation  (exec_command)
+## 21. test / validation  (exec_command)
 _step 25 | 2026-09-26T17:18:14.248Z | **FAILED**_
 
 **Thought** (narration):
@@ -573,7 +573,7 @@ Downloading https://services.gradle.org/distributions/gradle-6.0.1-bin.zip
 Exception in thread "main" java.net.SocketException: Oper
 ```
 
-## 22. run_test / validation  (exec_command)
+## 22. test / validation  (exec_command)
 _step 26 | 2026-09-26T17:18:17.924Z_
 
 **Thought** (none):
@@ -595,7 +595,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true -Duser.home=/Users/
 To honour the JVM settings for this build a new JVM will be forked. Please consider using the daemon: https://docs.gradle.
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-26T17:18:20.357Z_
 
 **Thought** (none):
@@ -623,7 +623,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-26T17:18:31.486Z_
 
 **Thought** (none):
@@ -651,7 +651,7 @@ Output:
 > Task :api:packageDebugRenderscript NO-SOURCE
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-26T17:18:42.529Z | **FAILED**_
 
 **Thought** (none):
@@ -677,7 +677,7 @@ Output:
 > Task :AnkiDroid:compileDebug
 ```
 
-## 26. plan / validation  (update_plan)
+## 26. plan / planning  (update_plan)
 _step 30 | 2026-09-26T17:18:47.720Z_
 
 **Thought** (none):
@@ -693,7 +693,7 @@ The regression test compiles, but execution is blocked because Robolectric's And
 Plan updated
 ```
 
-## 27. build / validation  (exec_command)
+## 27. edit / validation  (exec_command)
 _step 31 | 2026-09-26T17:18:49.529Z_
 
 **Thought** (narration):
@@ -717,7 +717,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 ```
 
-## 28. wait_process / validation  (write_stdin)
+## 28. other / validation  (write_stdin)
 _step 32 | 2026-09-26T17:18:51.940Z_
 
 **Thought** (none):
@@ -745,7 +745,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.
 ```
 
-## 29. wait_process / validation  (write_stdin)
+## 29. other / validation  (write_stdin)
 _step 33 | 2026-09-26T17:19:02.889Z_
 
 **Thought** (none):
@@ -772,7 +772,7 @@ Use '--warning-mode all' to show the individual deprecation warnings.
 See https://docs.gradle.org/6.0.1/user
 ```
 
-## 30. plan / validation  (update_plan)
+## 30. plan / planning  (update_plan)
 _step 34 | 2026-09-26T17:19:09.112Z_
 
 **Thought** (narration):
@@ -790,7 +790,7 @@ The required clean build passes. I’m doing one final source/status check and c
 Plan updated
 ```
 
-## 31. diff / validation  (exec_command)
+## 31. read / validation  (exec_command)
 _step 35 | 2026-09-26T17:19:12.642Z_
 
 **Thought** (none):

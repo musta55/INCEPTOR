@@ -7,9 +7,9 @@
 - steps (LLM inferences): 33 | actions: 28 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(9: succeeded) -> understanding(2: unchecked) -> localization(2: succeeded) -> repair(5: succeeded) -> validation(7: succeeded)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> localization(9: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(9: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:49:44.383Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the favorites visibility logic, patch the root cause, then run the 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:49:46.895Z | **FAILED**_
 
 **Thought** (none):
@@ -65,7 +65,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:49:49.204Z_
 
 **Thought** (narration):
@@ -92,7 +92,7 @@ app/src/main/java/fr/neamar/kiss/MainActivity.java:117:     * Favorites bar. Can
 app/
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:49:53.808Z_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInf
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:49:56.774Z_
 
 **Thought** (none):
@@ -148,7 +148,7 @@ Total output lines: 411
    113	                    builder.setPositiveButton(android.R.string.ok, (dialog,
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-25T05:49:59.387Z_
 
 **Thought** (narration):
@@ -166,7 +166,7 @@ The tap action still knows how to reveal favorites; I’m narrowing down why tha
 Plan updated
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:50:05.304Z_
 
 **Thought** (none):
@@ -196,7 +196,7 @@ Total output lines: 536
    206	        if (i
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T05:50:06.440Z_
 
 **Thought** (none):
@@ -226,7 +226,7 @@ Total output lines: 507
    187	        if(toBeDisposed ==
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-25T05:50:09.554Z | **FAILED**_
 
 **Thought** (none):
@@ -253,7 +253,7 @@ Output:
    221	        t
 ```
 
-## 10. vcs / localization  (exec_command)
+## 10. diff / localization  (exec_command)
 _step 14 | 2026-09-25T05:50:19.099Z_
 
 **Thought** (narration):
@@ -281,7 +281,7 @@ GitHub issue search:
 Commit search via remote log API:
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-25T05:50:23.304Z_
 
 **Thought** (none):
@@ -309,7 +309,7 @@ drwxr-xr-x@ 20 sage  staff   640 Sep 23 14:57 ..
 drwxr-xr-x@  6 sage  staff   192 Sep  9 11:55 src
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-25T05:50:30.992Z_
 
 **Thought** (none):
@@ -337,7 +337,7 @@ Total output lines: 287
    150	        android:summary="@string/user_experience_s
 ```
 
-## 13. search_code / understanding  (exec_command)
+## 13. search / localization  (exec_command)
 _step 17 | 2026-09-25T05:50:35.060Z_
 
 **Thought** (none):
@@ -362,7 +362,7 @@ app/src/main/res/values-de/strings.xml:64:    <string name="history_onclick_name
 app/src/main/res/values-fi/str
 ```
 
-## 14. search_code / understanding  (exec_command)
+## 14. search / localization  (exec_command)
 _step 18 | 2026-09-25T05:50:46.027Z_
 
 **Thought** (none):
@@ -388,7 +388,7 @@ cat: HARNESS: No such file or directory
 ./qa-suite.md:77:* [ ] When kiss bar is opened, inte
 ```
 
-## 15. search_code / localization  (exec_command)
+## 15. search / localization  (exec_command)
 _step 19 | 2026-09-25T05:50:53.156Z_
 
 **Thought** (none):
@@ -414,7 +414,7 @@ Output:
     69	* [ ] When going back to KISS, the favorite
 ```
 
-## 16. plan / localization  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-25T05:51:02.822Z_
 
 **Thought** (narration):
@@ -432,7 +432,7 @@ The QA contract confirms that enabling minimalistic favorites alone must make an
 Plan updated
 ```
 
-## 17. edit_file / repair  (exec_command)
+## 17. edit / repair  (exec_command)
 _step 21 | 2026-09-25T05:51:12.018Z_
 
 **Thought** (none):
@@ -463,7 +463,7 @@ M app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java
 M app/src/androidTest/java/fr/neamar/kiss/androidTest/FavoritesTest.java
 ```
 
-## 18. plan / repair  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-25T05:51:13.796Z_
 
 **Thought** (narration):
@@ -481,7 +481,7 @@ The behavioral fix and regression coverage are in place. I’m now running the r
 Plan updated
 ```
 
-## 19. build / repair  (exec_command)
+## 19. build / validation  (exec_command)
 _step 23 | 2026-09-25T05:51:15.892Z_
 
 **Thought** (none):
@@ -503,7 +503,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 7 stopped Daemons could not be reused, use --status for details
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-25T05:51:20.086Z_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ Output:
 > Task :app:gener
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-25T05:51:26.966Z_
 
 **Thought** (none):
@@ -589,7 +589,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 7 stopped Daemons could not be reused, use --status for details
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-25T05:51:32.343Z_
 
 **Thought** (none):
@@ -609,7 +609,7 @@ Original token count: 0
 Output:
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-25T05:51:39.266Z_
 
 **Thought** (none):
@@ -629,7 +629,7 @@ Original token count: 0
 Output:
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-25T05:51:45.477Z_
 
 **Thought** (none):
@@ -649,7 +649,7 @@ Original token count: 0
 Output:
 ```
 
-## 26. wait_process / validation  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-25T05:51:51.813Z_
 
 **Thought** (none):
@@ -669,7 +669,7 @@ Original token count: 0
 Output:
 ```
 
-## 27. wait_process / validation  (write_stdin)
+## 27. other / validation  (write_stdin)
 _step 31 | 2026-09-25T05:52:03.221Z_
 
 **Thought** (none):
@@ -698,7 +698,7 @@ Total output lines: 219
 > Task :app:mainA
 ```
 
-## 28. plan / validation  (update_plan)
+## 28. plan / planning  (update_plan)
 _step 32 | 2026-09-25T05:52:26.668Z_
 
 **Thought** (none):

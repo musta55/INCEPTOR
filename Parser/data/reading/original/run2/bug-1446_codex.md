@@ -7,9 +7,9 @@
 - steps (LLM inferences): 30 | actions: 25 | failed actions: 3
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(7: succeeded) -> repair(8: blocked) -> validation(6: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(7: succeeded) -> repair(2: blocked) -> planning(1: unchecked) -> validation(10: blocked, succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:00:34.039Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the fishing-spot edit/save flow, patch the root cause, then run the
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:00:38.528Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:00:39.647Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  7 sage  staff   224 Sep  9 11:54 app
 -rw-r--r--@  1 sage  staff
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T05:00:41.675Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:00:43.378Z_
 
 **Thought** (narration):
@@ -126,7 +126,7 @@ app/src/androidTest/java/com/cohenadair/anglerslog/backup/JsonTest.java:57:    p
 app/src/androidT
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:00:45.537Z_
 
 **Thought** (none):
@@ -164,7 +164,7 @@ import android.widget.LinearLayout;
 import com.cohenadair.a
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:00:48.560Z_
 
 **Thought** (none):
@@ -196,7 +196,7 @@ Total output lines: 299
     96
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T05:00:51.633Z_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ Total output lines: 431
    214
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-25T05:00:56.543Z | **FAILED**_
 
 **Thought** (narration):
@@ -265,7 +265,7 @@ Total output lines: 503
      8	import android
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-25T05:01:00.130Z_
 
 **Thought** (none):
@@ -300,7 +300,7 @@ import com.cohenadair.anglerslog.database.cursors.FishingSpotCursor;
 import com.cohenadair.angle
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-25T05:01:04.326Z_
 
 **Thought** (none):
@@ -335,7 +335,7 @@ Total output lines: 273
    128
 ```
 
-## 12. edit_file / repair  (exec_command)
+## 12. edit / repair  (exec_command)
 _step 16 | 2026-09-25T05:01:11.595Z_
 
 **Thought** (narration):
@@ -366,7 +366,7 @@ Success. Updated the following files:
 M app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-25T05:01:16.819Z_
 
 **Thought** (none):
@@ -398,7 +398,7 @@ Success. Updated the following files:
 M app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-25T05:01:19.982Z_
 
 **Thought** (none):
@@ -414,7 +414,7 @@ The defect was an in-place self-append of the staged fishing-spot list whenever 
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-25T05:01:22.592Z_
 
 **Thought** (narration):
@@ -438,7 +438,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T05:01:24.888Z_
 
 **Thought** (none):
@@ -463,7 +463,7 @@ It will be removed in version 5.0 of the Android Gradle plugin.
 For more information, see http://d.android.com/r/tools/update-dependency-configurations.html
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T05:01:31.232Z_
 
 **Thought** (none):
@@ -483,7 +483,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T05:01:37.149Z_
 
 **Thought** (none):
@@ -503,7 +503,7 @@ Original token count: 0
 Output:
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T05:01:43.237Z | **FAILED**_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ Execution failed for task ':app:mergeReleaseFlavorDebugAssets'.
 > Could not resolve all files for configuration ':app:releaseFlavorDe
 ```
 
-## 20. search_code / validation  (exec_command)
+## 20. search / validation  (exec_command)
 _step 24 | 2026-09-25T05:01:49.382Z_
 
 **Thought** (narration):
@@ -587,7 +587,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 22. wait_process / validation  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-25T05:01:59.990Z_
 
 **Thought** (none):
@@ -612,7 +612,7 @@ It will be removed in version 5.0 of the Android Gradle plugin.
 For more information, see http://d.android.com/r/tools/update-dependency-configurations.htm
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-25T05:02:10.284Z_
 
 **Thought** (none):
@@ -638,7 +638,7 @@ Output:
 > Task :app:compileUiTestingDebugRenderscrip
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-25T05:02:16.213Z_
 
 **Thought** (none):
@@ -665,7 +665,7 @@ Use '--warning-mode all' to show the individual deprecation warnings.
 See https://docs.gradle.
 ```
 
-## 25. plan / validation  (update_plan)
+## 25. plan / planning  (update_plan)
 _step 29 | 2026-09-25T05:02:17.767Z_
 
 **Thought** (none):

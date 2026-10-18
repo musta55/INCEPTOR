@@ -9,7 +9,7 @@
 
 Phases: localization(6: unchecked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -33,7 +33,7 @@ Search the codebase thoroughly for code related to PDF encryption. Look for:
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-893ae73006198b6a` -- its 0 actions follow below_
 
-## 2. wait_process / localization  (task_stop)
+## 2. other / localization  (task_stop)
 _step 2 | **FAILED**_
 
 **Thought** (reasoning):
@@ -49,7 +49,7 @@ _(none)_
 params must have required property 'task_id'
 ```
 
-## 3. wait_process / localization  (list_agents)
+## 3. other / localization  (list_agents)
 _step 3_
 
 **Thought** (reasoning):
@@ -65,7 +65,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -81,7 +81,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 5. wait_process / localization  (list_agents)
+## 5. other / localization  (list_agents)
 _step 5_
 
 **Thought** (reasoning):
@@ -97,7 +97,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 6. wait_process / localization  (list_agents)
+## 6. other / localization  (list_agents)
 _step 6_
 
 **Thought** (reasoning):

@@ -14,7 +14,7 @@ import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
-from . import taxonomy, verdict as verdict_mod
+from . import lookup, project, taxonomy, verdict as verdict_mod
 
 # ----------------------------------------------------------------------------- classes
 EXEC = {"build", "run_test", "device_ops", "run_shell"}
@@ -34,7 +34,16 @@ EXEC_KINDS = ("exec", "fix_attempt", "toolchain_fix", "test_edit")
 
 
 def repo_rel(path: str, bug: str) -> Optional[str]:
-    """Path relative to the bug checkout, or None if it lies outside it."""
+    """Path relative to the bug checkout (a SWE-bench project: to the repository root), or
+    None if it lies outside it."""
+    proj = project.current()
+    if proj.swebench:
+        rest = proj.below_root(path)
+        if rest is not None:
+            return rest or "."
+        if path.startswith(("/", "~")):
+            return None
+        return path[2:] if path.startswith("./") else path
     match = re.search(r"/bug-%s(?:/(.*)|/?$)" % re.escape(bug), path)
     if match:
         return match.group(1) or "."
@@ -1137,8 +1146,10 @@ def check_hierarchy(obj: Dict[str, Any], n_actions: int, actions: Optional[List[
 
 # ----------------------------------------------------------------------------- entry point
 def prepare(trajectory: dict, bug_id: str) -> List[dict]:
-    """Annotated actions with verdicts, in the shape the rules read."""
+    """Annotated actions with verdicts and their lookup category (``atif.lookup``), in the
+    shape the rules read."""
     rows = verdict_mod.attach(taxonomy.annotate(trajectory))
+    lookup.annotate(rows)
     for row in rows:
         row["bug_id"] = str(bug_id)
         row["args"] = row.get("arguments") or {}
@@ -1153,11 +1164,12 @@ def segment(trajectory: dict, bug_id: str) -> Dict[str, Any]:
     Returns ``actions`` (annotated rows), ``segments``/``purposes``/``loops`` in internal
     form, ``hierarchy`` (purposes and loops in the ``trajview/1`` shape, invariant-checked)
     and ``first_source_edit`` (an action_index, or None)."""
-    acts = prepare(trajectory, bug_id)
-    if not acts:
-        return {"actions": [], "segments": [], "purposes": [], "loops": [],
-                "hierarchy": {"purposes": [], "loops": []}, "first_source_edit": None}
-    segs, purposes, loops, first_src = segment_actions(acts)
+    with project.use(trajectory):
+        acts = prepare(trajectory, bug_id)
+        if not acts:
+            return {"actions": [], "segments": [], "purposes": [], "loops": [],
+                    "hierarchy": {"purposes": [], "loops": []}, "first_source_edit": None}
+        segs, purposes, loops, first_src = segment_actions(acts)
     for s in segs:
         s["type"] = segment_type(s)
     tree = hierarchy(acts, segs, purposes, loops)

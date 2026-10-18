@@ -7,9 +7,9 @@
 - steps (LLM inferences): 25 | actions: 20 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(4: succeeded) -> localization(2: succeeded) -> repair(4: succeeded)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(2: failed) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:44:01.761Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the JSON editor’s default regex sources, patch escaping, then run
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:44:07.173Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  8 sage  staff   256 Sep  9 11:55 .github
 -rw-r--r--@  1 sage  s
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:44:09.082Z_
 
 **Thought** (narration):
@@ -87,7 +87,7 @@ app/src/main/play/release-notes/en-US/default.txt
 app/src/main/play/release-notes/es-ES/de
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:44:14.152Z_
 
 **Thought** (none):
@@ -111,7 +111,7 @@ app/src/main/assets/backup_readme.txt:5:If it does, you'll need to delete the co
 app/src/main/res/values-fr-rFR/strings.xml:10:        Write the locale name in the locale language, for users that doesn't know engl
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:44:18.246Z_
 
 **Thought** (narration):
@@ -144,7 +144,7 @@ import org.json.JSONException;
 import org.json.JS
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-23T09:44:25.455Z_
 
 **Thought** (none):
@@ -176,7 +176,7 @@ import android.view.ViewGroup;
 import android.widget.T
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:44:29.125Z_
 
 **Thought** (none):
@@ -204,7 +204,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.ja
 app/src/main/java/com/trianguloy/urlchec
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-23T09:44:36.838Z_
 
 **Thought** (narration):
@@ -222,7 +222,7 @@ Repository inspection traced the issue to unescaped dots in PatternCatalog’s b
 Plan updated
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:44:43.513Z_
 
 **Thought** (none):
@@ -255,7 +255,7 @@ app/src/main/play/listings/en-US
 app/src
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:44:46.408Z_
 
 **Thought** (none):
@@ -287,7 +287,7 @@ import android.widget.Button;
 import andro
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-23T09:44:50.128Z_
 
 **Thought** (narration):
@@ -318,7 +318,7 @@ Success. Updated the following files:
 M app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java
 ```
 
-## 12. diff / repair  (exec_command)
+## 12. search / validation  (exec_command)
 _step 16 | 2026-09-23T09:44:58.919Z_
 
 **Thought** (none):
@@ -341,7 +341,7 @@ Output:
 68:                        .put("regex", "^https?://(?:[a-z0-9-]+\\.)*?youtube\\.com/(.*)")
 ```
 
-## 13. read_file / repair  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-23T09:45:03.099Z_
 
 **Thought** (none):
@@ -367,7 +367,7 @@ show exit=128
 fatal: path 'app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java' exists on disk, but not in 'HEAD'
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T09:45:08.628Z_
 
 **Thought** (narration):
@@ -385,7 +385,7 @@ Patched all three affected PatternCatalog defaults. The project has no local uni
 Plan updated
 ```
 
-## 15. search_code / localization  (exec_command)
+## 15. search / validation  (exec_command)
 _step 19 | 2026-09-23T09:45:15.412Z_
 
 **Thought** (none):
@@ -418,7 +418,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/AutomationRules.java:57:    
 app/src/main/java/com/trianguloy/urlchecker/modules/AutomationRules.java:58:
 ```
 
-## 16. plan / localization  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:45:18.828Z_
 
 **Thought** (narration):
@@ -436,7 +436,7 @@ Focused checks confirm every affected default now produces `\.` as regex syntax 
 Plan updated
 ```
 
-## 17. build / repair  (exec_command)
+## 17. build / validation  (exec_command)
 _step 21 | 2026-09-23T09:45:24.806Z_
 
 **Thought** (none):
@@ -458,7 +458,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T09:45:27.571Z_
 
 **Thought** (none):
@@ -483,7 +483,7 @@ Found locales: "ar","be","bn","ca","cs","de","el","en","es","fr-FR","hi","in","i
 Extracted translators: 404po
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-23T09:45:34.504Z_
 
 **Thought** (none):
@@ -513,7 +513,7 @@ Output:
 > Task :app:gener
 ```
 
-## 20. plan / repair  (update_plan)
+## 20. plan / planning  (update_plan)
 _step 24 | 2026-09-23T09:45:42.184Z_
 
 **Thought** (narration):

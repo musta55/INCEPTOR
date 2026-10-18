@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 28 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt
 
-Phases: understanding(1: unchecked) -> localization(13: succeeded) -> repair(2: blocked) -> validation(9: blocked) -> localization(3: succeeded)
+Phases: planning(1: unchecked) -> localization(13: succeeded) -> repair(1: blocked) -> validation(13: blocked)
 
-## 1. other / understanding  (tool_search)
+## 1. other / planning  (tool_search)
 _step 1_
 
 **Thought** (reasoning):
@@ -36,7 +36,7 @@ select:grep_search,glob,read_file,edit,write_file,run_shell_command
 Reviewed 5 tool(s), 1 truncated
 ```
 
-## 2. search_code / localization  (glob)
+## 2. search / localization  (glob)
 _step 2 | call 1/4 of this inference_
 
 **Thought** (reasoning):
@@ -54,7 +54,7 @@ Let me start by exploring the codebase structure and searching for files related
 No files found
 ```
 
-## 3. search_code / localization  (glob)
+## 3. search / localization  (glob)
 _step 2 | call 2/4 of this inference_
 
 **Thought** (reasoning):
@@ -70,7 +70,7 @@ _(same inference as the previous action)_
 Found 128 matching file(s) (truncated)
 ```
 
-## 4. search_code / localization  (grep_search)
+## 4. search / localization  (grep_search)
 _step 2 | call 3/4 of this inference_
 
 **Thought** (reasoning):
@@ -86,7 +86,7 @@ Hide\s*favorites
 Found 2 matches
 ```
 
-## 5. search_code / localization  (grep_search)
+## 5. search / localization  (grep_search)
 _step 2 | call 4/4 of this inference_
 
 **Thought** (reasoning):
@@ -102,7 +102,7 @@ favorites.*bar|favoritesBar|FavoritesBar
 Found 193 matches (truncated)
 ```
 
-## 6. read_file / localization  (read_file)
+## 6. read / localization  (read_file)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -137,7 +137,7 @@ import android.provider.Settings;
 imp
 ```
 
-## 7. read_file / localization  (read_file)
+## 7. read / localization  (read_file)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -165,7 +165,7 @@ import android.provider.ContactsContract;
 import android.ut
 ```
 
-## 8. search_code / localization  (grep_search)
+## 8. search / localization  (grep_search)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -200,7 +200,7 @@ displayKissBar|isViewingSearchResults|isViewingAllApps
 Found 19 matches
 ```
 
-## 9. search_code / localization  (grep_search)
+## 9. search / localization  (grep_search)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -216,7 +216,7 @@ favorites-hide|history-hide
 Found 7 matches
 ```
 
-## 10. read_file / localization  (read_file)
+## 10. read / localization  (read_file)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -234,7 +234,7 @@ Let me read the key parts of MainActivity.java to understand the flow better.
 Read lines 621-730 of 926 from app/src/main/java/fr/neamar/kiss/MainActivity.java
 ```
 
-## 11. read_file / localization  (read_file)
+## 11. read / localization  (read_file)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -250,7 +250,7 @@ _(same inference as the previous action)_
 Read lines 861-890 of 926 from app/src/main/java/fr/neamar/kiss/MainActivity.java
 ```
 
-## 12. read_file / localization  (read_file)
+## 12. read / localization  (read_file)
 _step 6_
 
 **Thought** (reasoning):
@@ -283,7 +283,7 @@ Now I'm examining `onDisplayKissBar()` more closely. It only explicitly hides th
 Read lines 516-575 of 926 from app/src/main/java/fr/neamar/kiss/MainActivity.java
 ```
 
-## 13. read_file / localization  (read_file)
+## 13. read / localization  (read_file)
 _step 7_
 
 **Thought** (reasoning):
@@ -318,7 +318,7 @@ I'm noticing something odd though - the `isViewingSearchResults()` method return
 Read lines 386-425 of 926 from app/src/main/java/fr/neamar/kiss/MainActivity.java
 ```
 
-## 14. read_file / localization  (read_file)
+## 14. read / localization  (read_file)
 _step 8_
 
 **Thought** (reasoning):
@@ -357,7 +357,7 @@ The issue is that this only executes when `prefs.getBoolean("history-onclick", f
 Read lines 221-250 of 357 from app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java
 ```
 
-## 15. edit_file / repair  (edit)
+## 15. edit / repair  (edit)
 _step 9_
 
 **Thought** (reasoning):
@@ -402,7 +402,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
                 // By default, help text is displayed -- not in minimalistic mode.
 ```
 
-## 16. build / repair  (run_shell_command)
+## 16. build / validation  (run_shell_command)
 _step 10_
 
 **Thought** (reasoning):
@@ -484,7 +484,7 @@ A problem occurred configuring root project 'bug-71'.
       > No cached version of com.android.tools.build:gradle
 ```
 
-## 18. read_file / validation  (read_file)
+## 18. read / validation  (read_file)
 _step 11 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -516,7 +516,7 @@ allprojects {
 }
 ```
 
-## 19. read_file / validation  (run_shell_command)
+## 19. orient / validation  (run_shell_command)
 _step 12_
 
 **Thought** (reasoning):
@@ -544,7 +544,7 @@ gradle-6.0.1-bin
 gradle-6.1.1-all
 ```
 
-## 20. search_code / validation  (run_shell_command)
+## 20. search / validation  (run_shell_command)
 _step 13_
 
 **Thought** (reasoning):
@@ -564,7 +564,7 @@ find ~/.gradle/caches -name "gradle-*.jar" -path "*/com.android.tools.build/*" 2
 /home/antu_shared/.gradle/caches/8.11.1/generated-gradle-jars/gradle-api-8.11.1.jar
 ```
 
-## 21. search_code / validation  (run_shell_command)
+## 21. search / validation  (run_shell_command)
 _step 14_
 
 **Thought** (reasoning):
@@ -613,7 +613,7 @@ Signal: (none)
 Process Group PGID: 522897
 ```
 
-## 23. read_file / validation  (read_file)
+## 23. read / validation  (read_file)
 _step 16_
 
 **Thought** (reasoning):
@@ -650,7 +650,7 @@ On branch master
 nothing to commit, working tree clean
 ```
 
-## 25. search_code / validation  (grep_search)
+## 25. search / validation  (grep_search)
 _step 18_
 
 **Thought** (reasoning):
@@ -668,7 +668,7 @@ Wait, the git status says "nothing to commit, working tree clean". That means th
 Found 1 match
 ```
 
-## 26. vcs / localization  (run_shell_command)
+## 26. vcs / validation  (run_shell_command)
 _step 19_
 
 **Thought** (reasoning):
@@ -686,7 +686,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 fatal: path 'app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java' exists on disk, but not in 'HEAD'
 ```
 
-## 27. vcs / localization  (run_shell_command)
+## 27. vcs / validation  (run_shell_command)
 _step 20_
 
 **Thought** (reasoning):
@@ -706,7 +706,7 @@ HARNESS
 a106895 (HEAD -> master) harness baseline
 ```
 
-## 28. search_code / localization  (run_shell_command)
+## 28. search / validation  (run_shell_command)
 _step 21_
 
 **Thought** (reasoning):

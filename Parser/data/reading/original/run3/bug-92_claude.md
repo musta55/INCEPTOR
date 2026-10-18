@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 27 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(3: blocked) -> validation(17: blocked, failed)
+Phases: localization(7: succeeded) -> repair(2: blocked) -> validation(18: blocked, failed)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -49,7 +49,7 @@ settings.gradle
 ./app/src/main/res/layout/ven
 ```
 
-## 2. read_file / localization  (Bash)
+## 2. read / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -74,7 +74,7 @@ cat app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorDB.java app/src/m
  * This program is distributed in the
 ```
 
-## 3. read_file / localization  (Bash)
+## 3. read / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -98,7 +98,7 @@ head: app/src/main/res/raw/data: No such file or directory
  * (at your option) a
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -127,7 +127,7 @@ gpl.txt
  * it under the terms of the GNU General Public
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ head -3 app/src/main/res/raw/data.txt | cut -c1-120
 10NET COMMUNICATIONS DCA|080024
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -170,7 +170,7 @@ cat app/src/test/java/com/vrem/wifianalyzer/vendor/model/VendorDBTest.java | sed
  * This program is distributed in the
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -192,7 +192,7 @@ app/src/main/java/com/vrem/wifianalyzer/wifi/model/ChannelRating.java:137:      
 app/src/main/java/com/vrem/wifianalyzer/wifi/model/ChannelRating.java:140:                .append(lhs.getSSID().toUpperCase(), rhs.getSSID().toUpperCase())
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -210,7 +210,7 @@ Now let me apply the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-92/app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorDB.java has been updated successfully.
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -226,7 +226,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-92/app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorDB.java has been updated successfully.
 ```
 
-## 10. build / repair  (Bash)
+## 10. build / validation  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -283,7 +283,7 @@ _(none)_
    > Could not download c
 ```
 
-## 13. search_code / validation  (Bash)
+## 13. search / validation  (Bash)
 _step 13 | **FAILED**_
 
 **Thought** (none):
@@ -338,7 +338,7 @@ transforms-4
 /Users/splash/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.6/9d28a6b23650e8a7e9063c04588ace6cf7012c17/
 ```
 
-## 14. search_code / validation  (Bash)
+## 14. search / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -355,7 +355,7 @@ find ~/.gradle/caches -name "*annotation*28.0*" -name "*.jar" 2>/dev/null | head
 /Users/splash/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/28.0.0-rc01/4fec72569449246ee917f3249147f8e47910b119/support-annotations-28.0.0-rc01.jar
 ```
 
-## 15. search_code / validation  (Bash)
+## 15. search / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -371,7 +371,7 @@ find ~/.gradle/caches -name "commons-collections4*.jar" 2>/dev/null | head; find
 (Bash completed with no output)
 ```
 
-## 16. env_setup / validation  (Bash)
+## 16. other / validation  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -436,7 +436,7 @@ app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorDB.java:39: error: ca
 ap
 ```
 
-## 19. read_file / validation  (Bash)
+## 19. orient / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -452,7 +452,7 @@ ls -la ~/Library/Android/sdk/platforms/android-28/ | head
 ls: /Users/splash/Library/Android/sdk/platforms/android-28/: No such file or directory
 ```
 
-## 20. read_file / validation  (Bash)
+## 20. orient / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -485,7 +485,7 @@ CP="$ANDROID_HOME/platforms/android-28/android.jar:/Users/splash/.gradle/caches/
 COMPILE DONE
 ```
 
-## 22. run_test / validation  (Bash)
+## 22. test / validation  (Bash)
 _step 22_
 
 **Thought** (narration):
@@ -518,7 +518,7 @@ Exception in thread "main" java.lang.NoClassDefFoundError: Landroid/content/res/
 Caused by: java.lang.ClassNotFoundException: android.content.res.Resou
 ```
 
-## 23. run_test / validation  (Bash)
+## 23. test / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -539,7 +539,7 @@ Exception in thread "main" java.lang.NullPointerException
 	at com.vrem.wifianalyzer.vendor.model.Harness.main(Harness.java:35)
 ```
 
-## 24. run_test / validation  (Bash)
+## 24. test / validation  (Bash)
 _step 24_
 
 **Thought** (none):
@@ -574,7 +574,7 @@ filter=[1394 ] -> 2 first=1394 PRINTER WORKING GROUP
 filter=[cisco systems] -> 1 first=CISCO SYSTEMS I
 ```
 
-## 25. env_setup / validation  (Bash)
+## 25. read / validation  (Bash)
 _step 25_
 
 **Thought** (narration):
@@ -599,7 +599,7 @@ prep
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-92
 ```
 
-## 26. run_test / validation  (Bash)
+## 26. test / validation  (Bash)
 _step 26_
 
 **Thought** (none):
@@ -631,7 +631,7 @@ filter=[CISCO SYSTEMS] -> 1 first=CISCO SYSTEMS INC
 filter=[CiScO sYsTeMs] -> 0
 ```
 
-## 27. env_setup / validation  (Bash)
+## 27. diff / validation  (Bash)
 _step 27_
 
 **Thought** (none):

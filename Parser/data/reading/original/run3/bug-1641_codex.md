@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(4: succeeded) -> understanding(2: unchecked) -> repair(4: succeeded) -> validation(6: succeeded) -> localization(1: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(5: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(2: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:00:43.121Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the exercise editor’s training-type data flow, patch persistence/
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:00:46.289Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:00:47.334Z_
 
 **Thought** (narration):
@@ -81,7 +81,7 @@ drwxr-xr-x@  3 sage  staff      96 Sep  9 11:54 .github
 -rw-r--r--@  1 sage  staff    2096 Sep
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T17:00:49.722Z_
 
 **Thought** (none):
@@ -97,7 +97,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:00:51.819Z_
 
 **Thought** (narration):
@@ -123,7 +123,7 @@ trainerappmodel/src/main/java/com/german_software_engineers/trainerappmodel/Mode
 trainerappmodel/src/main/java/com/german_software_engineers/trainerappmodel/Model/XMLParser.java:95:
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-26T17:00:54.611Z_
 
 **Thought** (none):
@@ -153,7 +153,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T17:00:57.833Z_
 
 **Thought** (none):
@@ -185,7 +185,7 @@ import java.util.List;
 public class
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-26T17:01:01.040Z_
 
 **Thought** (none):
@@ -211,7 +211,7 @@ Output:
     android:orientation="horizontal">
 ```
 
-## 9. read_file / understanding  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-26T17:01:03.773Z_
 
 **Thought** (narration):
@@ -243,7 +243,7 @@ import android.support.v7.widget.Toolbar;
 import and
 ```
 
-## 10. plan / understanding  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-26T17:01:12.067Z_
 
 **Thought** (none):
@@ -259,7 +259,7 @@ _(none)_
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-26T17:01:14.365Z_
 
 **Thought** (narration):
@@ -294,7 +294,7 @@ M trainerappmodel/src/main/java/com/german_software_engineers/trainerappmodel/Le
 M trainerappmodel/src/main/java/com/german_software_engineers/trainerappmodel/Model/XMLPars
 ```
 
-## 12. run_test / repair  (exec_command)
+## 12. edit / validation  (exec_command)
 _step 16 | 2026-09-26T17:01:23.565Z_
 
 **Thought** (narration):
@@ -327,7 +327,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T17:01:31.263Z_
 
 **Thought** (none):
@@ -353,7 +353,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-26T17:01:38.603Z_
 
 **Thought** (none):
@@ -393,7 +393,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 ```
 
-## 16. wait_process / validation  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T17:01:43.724Z_
 
 **Thought** (none):
@@ -419,7 +419,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schem
 ```
 
-## 17. wait_process / validation  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:01:49.866Z_
 
 **Thought** (none):
@@ -443,7 +443,7 @@ Gradle may disable incremental compilation as the following annotation processor
 Consider setting the experimental feature flag android.enableSeparateAnn
 ```
 
-## 18. diff / validation  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-26T17:01:55.281Z_
 
 **Thought** (narration):
@@ -475,7 +475,7 @@ Total output lines: 311
      6	import android.support.v7.app.AppCompatA
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-26T17:02:01.334Z_
 
 **Thought** (none):
@@ -519,7 +519,7 @@ fatal: path 'app/src/main/java/com/german_software_engineers/trainerapp/GeneralT
 -- h
 ```
 
-## 21. search_code / localization  (exec_command)
+## 21. search / validation  (exec_command)
 _step 25 | 2026-09-26T17:02:09.309Z_
 
 **Thought** (none):

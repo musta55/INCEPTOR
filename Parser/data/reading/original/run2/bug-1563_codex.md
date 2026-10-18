@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(8: succeeded) -> repair(7: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(7: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(3: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:02:26.586Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the directory reload and list-state lifecycle, then patch and build
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:02:30.015Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:02:31.366Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ icons/current_mendezand/dev/Background.png
 icons/current_mendezand/dev/icon.svg
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T05:02:36.159Z_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:02:38.682Z_
 
 **Thought** (narration):
@@ -127,7 +127,7 @@ app/src/main/res/layout/layout_file.xml:16:        android:layout_marginStart="@
 app/src/main/res/layout/layout_file.xml:17:        android:layout_marginEnd=
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-25T05:02:42.789Z_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ Total output lines: 877
    119	    private static final String CURRENT_DI
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:02:46.008Z_
 
 **Thought** (none):
@@ -184,7 +184,7 @@ app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java:179:    private Has
 app/src/main/java/io/lerk/lrkFM/activities
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-25T05:02:50.146Z_
 
 **Thought** (narration):
@@ -213,7 +213,7 @@ Total output lines: 926
    303	                    reloadCurrentDirectory();
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-25T05:02:54.509Z_
 
 **Thought** (none):
@@ -242,7 +242,7 @@ Total output lines: 721
      7	import android.content.Context;
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-25T05:02:57.787Z_
 
 **Thought** (none):
@@ -272,7 +272,7 @@ Total output lines: 503
     97	        menu.add(0, ID_DELETE, 0, act
 ```
 
-## 11. vcs / localization  (exec_command)
+## 11. diff / localization  (exec_command)
 _step 15 | 2026-09-25T05:03:09.854Z_
 
 **Thought** (narration):
@@ -295,7 +295,7 @@ Output:
 dcec26d harness baseline
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-25T05:03:23.966Z_
 
 **Thought** (none):
@@ -311,7 +311,7 @@ _(none)_
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-25T05:03:27.670Z_
 
 **Thought** (none):
@@ -341,7 +341,7 @@ Success. Updated the following files:
 M app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java
 ```
 
-## 14. diff / repair  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-25T05:03:29.976Z_
 
 **Thought** (narration):
@@ -374,7 +374,7 @@ Output:
    570	        int fi
 ```
 
-## 15. vcs / repair  (exec_command)
+## 15. vcs / validation  (exec_command)
 _step 19 | 2026-09-25T05:03:34.444Z_
 
 **Thought** (none):
@@ -397,7 +397,7 @@ eec83480fd3672fb385cb2fd65a4d81711af1277  app/src/main/java/io/lerk/lrkFM/activi
 fatal: path 'app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java' exists on
 ```
 
-## 16. read_file / repair  (exec_command)
+## 16. vcs / validation  (exec_command)
 _step 20 | 2026-09-25T05:03:37.724Z_
 
 **Thought** (none):
@@ -426,7 +426,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r--@  1 sage  staff      4 Sep  9 11:54 .java-
 ```
 
-## 17. plan / repair  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-25T05:03:44.272Z_
 
 **Thought** (none):
@@ -442,7 +442,7 @@ _(none)_
 Plan updated
 ```
 
-## 18. build / repair  (exec_command)
+## 18. build / validation  (exec_command)
 _step 22 | 2026-09-25T05:03:46.751Z_
 
 **Thought** (none):
@@ -464,7 +464,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T05:03:51.686Z_
 
 **Thought** (none):
@@ -487,7 +487,7 @@ Android SDK Build Tools 29.0.2 will be used.
 To suppress this warning, remove "buildToolsVersion '28.0.2'" from your build.gradle f
 ```
 
-## 20. diff / validation  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-25T05:04:02.706Z_
 
 **Thought** (narration):
@@ -516,7 +516,7 @@ Output:
    572	        int firstVisibleOffset = firstVisib
 ```
 
-## 21. plan / validation  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-25T05:04:07.197Z_
 
 **Thought** (none):

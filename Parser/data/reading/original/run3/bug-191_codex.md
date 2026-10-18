@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 23 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(6: succeeded) -> understanding(2: unchecked) -> repair(5: succeeded) -> validation(4: unchecked) -> localization(2: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(2: unchecked) -> localization(1: failed) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(8: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:07:32.794Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace tower placement and credit accounting, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:07:34.481Z | **FAILED**_
 
 **Thought** (none):
@@ -60,7 +60,7 @@ sprites
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:07:35.261Z_
 
 **Thought** (narration):
@@ -98,7 +98,7 @@ sprites/flyer.xcf
 sprites/grenade.xc
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T17:07:36.748Z_
 
 **Thought** (none):
@@ -114,7 +114,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:07:37.840Z_
 
 **Thought** (narration):
@@ -142,7 +142,7 @@ app/src/main/res/raw/tower_settings.xml:36:        <value>15000</value>
 app/src/main/res/raw/tower_settings.xml:54:        <value
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:07:39.757Z_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ import ch.logixisland.anuto.business.score.ScoreBoard;
 import ch.logixisland.anut
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T17:07:41.872Z_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ Total output lines: 278
      8	import androi
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-26T17:07:43.245Z_
 
 **Thought** (none):
@@ -232,7 +232,7 @@ Output:
             View.DragShadowBuilder shadowBuilde
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / planning  (exec_command)
 _step 13 | 2026-09-26T17:07:46.310Z_
 
 **Thought** (narration):
@@ -264,7 +264,7 @@ However it features astonishing hand-drawn graphics and a smooth gameplay.
 - [Google Play Store](https://play.google.com/store/apps/details?id=
 ```
 
-## 10. vcs / localization  (exec_command)
+## 10. other / planning  (exec_command)
 _step 14 | 2026-09-26T17:07:49.179Z_
 
 **Thought** (none):
@@ -286,7 +286,7 @@ fatal: unable to access 'https://github.com/mjaun/android-anuto.git/': CONNECT t
 fatal: unable to access 'https://github.com/mjaun/Anuto.git/': CONNECT tunnel failed, response 403
 ```
 
-## 11. search_code / understanding  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-26T17:07:50.835Z_
 
 **Thought** (none):
@@ -315,7 +315,7 @@ import ch.logixisland.anuto.entity.Types;
 import ch.logixisland.anuto.entity.plateau.Plate
 ```
 
-## 12. plan / understanding  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-26T17:07:57.370Z_
 
 **Thought** (narration):
@@ -333,7 +333,7 @@ I found the invariant breach in `ScoreBoard.takeCredits`; I’ll make deduction 
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-26T17:08:00.377Z_
 
 **Thought** (none):
@@ -368,7 +368,7 @@ M app/src/main/java/ch/logixisland/anuto/business/score/ScoreBoard.java
 M app/src/main/java/ch/logixisland/anuto/business/control/TowerInserter.java
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-26T17:08:02.901Z_
 
 **Thought** (narration):
@@ -386,7 +386,7 @@ The project has no existing test source set or test dependencies; keeping the fi
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-26T17:08:04.889Z_
 
 **Thought** (none):
@@ -408,7 +408,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T17:08:06.616Z_
 
 **Thought** (none):
@@ -434,7 +434,7 @@ WARNING: Configuration 'compile' is obsolete and has been replaced with 'impleme
 It will be removed at the end of 2018. For more information see: http://d.android.com/r/tools/update-dependency-configurations.h
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:08:12.627Z_
 
 **Thought** (narration):
@@ -464,7 +464,7 @@ Output:
 > Task :
 ```
 
-## 18. diff / validation  (exec_command)
+## 18. search / validation  (exec_command)
 _step 22 | 2026-09-26T17:08:13.505Z_
 
 **Thought** (narration):
@@ -515,7 +515,7 @@ fatal: path 'app/src/main/java/ch/logixisland/anuto/business/control/TowerInsert
 -- index flags
 ```
 
-## 20. read_file / validation (own phase localization)  (exec_command)
+## 20. diff / validation  (exec_command)
 _step 24 | 2026-09-26T17:08:20.001Z_
 
 **Thought** (none):
@@ -539,7 +539,7 @@ HARNESS
  1 file changed, 2 insertions(+)
 ```
 
-## 21. read_file / validation  (exec_command)
+## 21. read / validation  (exec_command)
 _step 25 | 2026-09-26T17:08:21.726Z_
 
 **Thought** (none):
@@ -566,7 +566,7 @@ drwxr-xr-x@  5 sage  staff    160 Sep 26 13:08 .gradle
 -rw-r--r--@  1 sage
 ```
 
-## 22. vcs / localization  (exec_command)
+## 22. diff / validation  (exec_command)
 _step 26 | 2026-09-26T17:08:25.738Z_
 
 **Thought** (none):
@@ -588,7 +588,7 @@ Output:
 /var/folders/28/_9_mht7s10d5tf_cw0nmz8tc0000gn/T/uiab-read-guard/codex_original_run3/bug-191/git-stub.git
 ```
 
-## 23. plan / localization  (update_plan)
+## 23. plan / planning  (update_plan)
 _step 27 | 2026-09-26T17:08:29.268Z_
 
 **Thought** (none):

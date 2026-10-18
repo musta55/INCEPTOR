@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(6: succeeded) -> repair(4: succeeded) -> validation(2: succeeded) -> localization(2: succeeded)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> repair(3: succeeded) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:35:25.354Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace URI parsing and parameter rebuilding, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:35:27.820Z | **FAILED**_
 
 **Thought** (none):
@@ -59,7 +59,7 @@ settings.gradle
 -- files --
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:35:29.757Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ app/src/main/play/release-notes/es-ES/default.txt
 ap
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:35:32.542Z_
 
 **Thought** (none):
@@ -123,7 +123,7 @@ import android.widget.TextView;
 import com.trianguloy.urlchecker.R
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T09:35:34.979Z_
 
 **Thought** (none):
@@ -153,7 +153,7 @@ Output:
     54	    pri
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:35:48.858Z_
 
 **Thought** (narration):
@@ -184,7 +184,7 @@ fatal: no such path 'app/src/main/java/com/trianguloy/urlchecker/modules/list/Ur
 /Users/sage/Library/Android/sdk/platforms
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-23T09:36:11.946Z_
 
 **Thought** (none):
@@ -210,7 +210,7 @@ public class android.net.UrlQuerySanitizer {
   public android.net.UrlQuerySanitizer$ValueSaniti
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-23T09:36:25.258Z_
 
 **Thought** (narration):
@@ -228,7 +228,7 @@ Located the failure in UrlQuerySanitizer.unescape: it converts each percent byte
 Plan updated
 ```
 
-## 9. build / repair  (exec_command)
+## 9. edit / repair  (exec_command)
 _step 13 | 2026-09-23T09:36:30.459Z_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 10. wait_process / repair  (write_stdin)
+## 10. other / repair  (write_stdin)
 _step 14 | 2026-09-23T09:36:32.732Z_
 
 **Thought** (none):
@@ -284,7 +284,7 @@ Output:
 Extracted translators: 404potato, Aʙᴜ Sᴀʀɪᴍ, CikiMomogi, CloneWith, GMishx, Idris, Ilithy, Metezd, Mika, Murilogs1910, Nhman Mazuz, PabloOQ, Seviche CC, T, Tiago Carmo (ReduxFlakes), Validbit, Vitabytes, dperruso, ilotoki0804, ngocanhtve, povidlos, symbuzzer
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / repair  (write_stdin)
 _step 15 | 2026-09-23T09:36:39.145Z_
 
 **Thought** (none):
@@ -315,7 +315,7 @@ Total output lines: 146
 > Task :app:generateDebugRe
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-23T09:36:46.103Z_
 
 **Thought** (narration):
@@ -354,7 +354,7 @@ Output:
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 ```
 
-## 14. wait_process / validation  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-23T09:36:51.724Z_
 
 **Thought** (none):
@@ -379,7 +379,7 @@ Total output lines: 173
 Extracted translators: 404potato, Aʙᴜ Sᴀʀɪᴍ, CikiMomogi, CloneWith, GMishx, Idris, Ilithy, Metezd, Mika, Murilogs1910, Nhman Mazuz, PabloOQ, Seviche CC, T, Tiago Carmo (ReduxFlakes), Validbit, Vitabytes, dperruso, ilotoki0804, ngocanhtve, povid
 ```
 
-## 15. read_file / localization  (exec_command)
+## 15. read / validation  (exec_command)
 _step 19 | 2026-09-23T09:37:00.484Z_
 
 **Thought** (narration):
@@ -409,7 +409,7 @@ Output:
     79	            public String unescape(String string) {
 ```
 
-## 16. plan / localization  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:37:04.333Z_
 
 **Thought** (none):

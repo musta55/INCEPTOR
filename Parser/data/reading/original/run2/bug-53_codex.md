@@ -7,9 +7,9 @@
 - steps (LLM inferences): 35 | actions: 30 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(6: succeeded) -> repair(2: blocked) -> validation(2: succeeded) -> repair(13: succeeded) -> validation(2: unchecked) -> localization(2: succeeded)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(1: failed) -> repair(2: blocked) -> validation(2: succeeded) -> repair(7: succeeded) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked) -> validation(2: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:45:03.430Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the new-file dialog state flow, patch the mismatch, then run the re
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:45:06.068Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep  9 11:55 .github
 -rw-r--r--@  1 sag
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:45:07.081Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/main/AndroidManifest.xml:200:                  #  Filter extension based
 app/src/main/AndroidManifest.xml:
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:45:09.083Z_
 
 **Thought** (none):
@@ -108,7 +108,7 @@ app/src/main/res/layout/main__activity.xml:62:            android:contentDescrip
 app/src/main/java/net/gsantner/markor/ui/NewFileDialo
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:45:12.029Z_
 
 **Thought** (none):
@@ -139,7 +139,7 @@ Total output lines: 344
 ####################
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:45:13.075Z_
 
 **Thought** (none):
@@ -167,7 +167,7 @@ Total output lines: 315
         final AppSettings appSettings = new AppSettings(inflater.getContext());
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:45:18.949Z_
 
 **Thought** (narration):
@@ -199,7 +199,7 @@ Total output lines: 226
     *  https://github.com/gsantner/opo
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-25T05:45:27.832Z_
 
 **Thought** (none):
@@ -215,7 +215,7 @@ The saved extension is restored independently of the spinner, whose default rema
 Plan updated
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T05:45:29.546Z_
 
 **Thought** (narration):
@@ -246,7 +246,7 @@ Output:
 ##############################################
 ```
 
-## 10. run_test / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-25T05:45:32.857Z_
 
 **Thought** (none):
@@ -278,7 +278,7 @@ Failed to find expected lines in /Users/sage/APR_with_high_quality_bug_reports/r
     private byte[] getTemplateContent(Spinner templateSpinner, File basedir,
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / repair  (write_stdin)
 _step 15 | 2026-09-25T05:45:41.184Z | **FAILED**_
 
 **Thought** (none):
@@ -307,7 +307,7 @@ Task 'testDebugUnitTest' not found in root project 'bug-53'.
 Run gradlew tasks to get a list of available tasks. Run with --stacktrace option to get the stack trace. Run with -
 ```
 
-## 12. build / validation  (exec_command)
+## 12. search / validation  (exec_command)
 _step 16 | 2026-09-25T05:45:42.554Z_
 
 **Thought** (narration):
@@ -333,7 +333,7 @@ Output:
 203:    private byte[] getT
 ```
 
-## 13. wait_process / validation  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T05:45:46.216Z_
 
 **Thought** (none):
@@ -358,7 +358,7 @@ app:assembleFlavorAtest - Assembles main outputs for all FlavorAtest variants.
 app:build
 ```
 
-## 14. run_test / repair  (exec_command)
+## 14. edit / repair  (exec_command)
 _step 18 | 2026-09-25T05:45:49.679Z_
 
 **Thought** (none):
@@ -390,7 +390,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 5 stopped Daem
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / repair  (write_stdin)
 _step 19 | 2026-09-25T05:45:55.241Z_
 
 **Thought** (none):
@@ -416,7 +416,7 @@ Configuration on demand is an incubating feature.
 > Task :app:generateFlavorDefaultDebugBui
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / repair  (write_stdin)
 _step 20 | 2026-09-25T05:46:01.309Z_
 
 **Thought** (none):
@@ -441,7 +441,7 @@ Output:
 Gradle may disable incremental compilation as the following annotation processors are not incremental: butterknife-compiler-8.8.1.jar (com.ja
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / repair  (write_stdin)
 _step 21 | 2026-09-25T05:46:07.087Z_
 
 **Thought** (none):
@@ -461,7 +461,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / repair  (write_stdin)
 _step 22 | 2026-09-25T05:46:13.088Z_
 
 **Thought** (none):
@@ -481,7 +481,7 @@ Original token count: 0
 Output:
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / repair  (write_stdin)
 _step 23 | 2026-09-25T05:46:18.883Z_
 
 **Thought** (none):
@@ -501,7 +501,7 @@ Original token count: 0
 Output:
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / repair  (write_stdin)
 _step 24 | 2026-09-25T05:46:25.641Z_
 
 **Thought** (narration):
@@ -532,7 +532,7 @@ BUILD SUCCESSFUL in 35s
 14 actionable tasks: 14 executed
 ```
 
-## 21. plan / repair  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-25T05:46:31.973Z_
 
 **Thought** (none):
@@ -548,7 +548,7 @@ _(none)_
 Plan updated
 ```
 
-## 22. build / repair  (exec_command)
+## 22. build / validation  (exec_command)
 _step 26 | 2026-09-25T05:46:34.602Z_
 
 **Thought** (narration):
@@ -572,7 +572,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 6 stopped Daemons could not be reused, use --status for details
 ```
 
-## 23. wait_process / repair  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-25T05:46:37.487Z_
 
 **Thought** (none):
@@ -600,7 +600,7 @@ Configuration on demand is an incubating feature.
 > Task :app:compileFlavorAtes
 ```
 
-## 24. wait_process / repair  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-25T05:46:43.485Z_
 
 **Thought** (none):
@@ -627,7 +627,7 @@ Output:
 > Task :app:
 ```
 
-## 25. wait_process / repair  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-25T05:46:49.267Z_
 
 **Thought** (none):
@@ -653,7 +653,7 @@ Output:
 > Task :app:desugarFlavorGplayDebugFileDepe
 ```
 
-## 26. wait_process / repair  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-25T05:46:55.113Z_
 
 **Thought** (none):
@@ -678,7 +678,7 @@ Gradle may disable incremental compilation as the following annotation processor
 Consider setting the
 ```
 
-## 27. diff / validation  (exec_command)
+## 27. read / validation  (exec_command)
 _step 31 | 2026-09-25T05:47:00.952Z_
 
 **Thought** (narration):
@@ -704,7 +704,7 @@ Output:
     91	        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES
 ```
 
-## 28. plan / validation  (update_plan)
+## 28. plan / planning  (update_plan)
 _step 32 | 2026-09-25T05:47:05.870Z_
 
 **Thought** (none):
@@ -720,7 +720,7 @@ _(none)_
 Plan updated
 ```
 
-## 29. vcs / localization  (exec_command)
+## 29. diff / validation  (exec_command)
 _step 33 | 2026-09-25T05:47:06.951Z_
 
 **Thought** (none):
@@ -745,7 +745,7 @@ fatal: path 'app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java' exists
 --- raw status ---
 ```
 
-## 30. read_file / localization  (exec_command)
+## 30. read / validation  (exec_command)
 _step 34 | 2026-09-25T05:47:10.273Z_
 
 **Thought** (narration):

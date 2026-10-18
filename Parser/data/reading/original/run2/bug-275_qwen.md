@@ -9,7 +9,7 @@
 
 Phases: localization(5: unchecked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -33,7 +33,7 @@ Search
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-9f75402efc31a3f9` -- its 0 actions follow below_
 
-## 2. wait_process / localization  (list_agents)
+## 2. other / localization  (list_agents)
 _step 2_
 
 **Thought** (reasoning):
@@ -49,7 +49,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 3. wait_process / localization  (list_agents)
+## 3. other / localization  (list_agents)
 _step 3_
 
 **Thought** (reasoning):
@@ -65,7 +65,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -81,7 +81,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 5. wait_process / localization  (list_agents)
+## 5. other / localization  (list_agents)
 _step 5_
 
 **Thought** (reasoning):

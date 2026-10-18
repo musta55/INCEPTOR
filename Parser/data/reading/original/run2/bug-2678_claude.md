@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 22 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(11: succeeded) -> repair(10: succeeded) -> validation(1: unchecked)
+Phases: localization(11: succeeded) -> repair(3: succeeded) -> validation(1: unchecked) -> repair(1: succeeded) -> validation(6: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ settings.gradle.kts
 (eval):1: no matches found: --include=*
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ app/src/main/java/io/pslab/fragment/InstrumentsFragment.java
 app/src/debug/AndroidManifest.xml
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -85,7 +85,7 @@ wc -l app/src/main/java/io/pslab/activity/RoboticArmActivity.java && grep -n "de
 124:        View servo1La
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -110,7 +110,7 @@ sed -n 60,120p app/src/main/java/io/pslab/activity/RoboticArmActivity.java
     private LinearLayout servo1TimeLine, servo2TimeLine, servo3TimeLin
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ removeStatusBar();
                     degre
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ grep -n "processDegreeInput" -A 25 app/src/main/java/io/pslab/activity/RoboticAr
 489-                degree
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ find . -name "SeekArc*" | head; grep -rn "setProgress\|updateProgress\|onProgres
 bug-2678_output.txt:16:UserMessage(content=[ToolResultBlock(tool_use_id='toolu_01RnSRiMXqXjJ6gU3unmsm5V', content='        removeStatusBar();\n\n        seekArc1.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {\n            @Override\n            public void onProgressChanged(SeekArc seekArc, int i, boolean b) {\n                if (editEnter) {\n                    degreeText1.s
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -200,7 +200,7 @@ degreeText3.setOnClickListener(new View.OnClickListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent even
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -216,7 +216,7 @@ ls libs; find . -path ./bug-2678_output.txt -prune -o -iname "*seekarc*" -print
 library-1.0.4.aar
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -235,7 +235,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:225:        seekArc1
 app/build.gradle.kts:87:
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -259,7 +259,7 @@ grep -n "\bdegree\b\|editEnter" app/src/main/java/io/pslab/activity/RoboticArmAc
 274:                if (editEnter
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -277,7 +277,7 @@ Now I'll apply the fix: replace the shared `degree`/`editEnter` state with per-s
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2678/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -293,7 +293,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2678/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. shell_edit / repair  (Bash)
+## 14. edit / repair  (Bash)
 _step 14_
 
 **Thought** (narration):
@@ -330,7 +330,7 @@ servo3Title.setText(getResources().getString(R.string.servo3_title));
             public void onProgre
 ```
 
-## 15. read_file / repair (own phase localization)  (Read)
+## 15. read / validation  (Read)
 _step 15_
 
 **Thought** (narration):
@@ -353,7 +353,7 @@ Now update `processDegreeInput` and add the helper methods:
 465	        String degreeStr = degreeText.getText().toStr
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -369,7 +369,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2678/app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. search_code / repair  (Bash)
+## 17. search / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -391,7 +391,7 @@ grep -n "DragListener" -A 30 app/src/main/java/io/pslab/activity/RoboticArmActiv
 189-            timeLineBox.setLayoutParams(servoTime
 ```
 
-## 18. search_code / repair  (Bash)
+## 18. search / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -407,7 +407,7 @@ grep -n "servo1DragListener = \|servo1DragListener" -A 40 app/src/main/java/io/p
 (Bash completed with no output)
 ```
 
-## 19. search_code / repair  (Bash)
+## 19. search / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -424,7 +424,7 @@ grep -n "servo1DragListener" app/src/main/java/io/pslab/activity/RoboticArmActiv
 577:    private final View.OnDragListener servo1DragListener = new View.OnDragListener() {
 ```
 
-## 20. read_file / repair  (Read)
+## 20. read / validation  (Read)
 _step 20_
 
 **Thought** (none):
@@ -446,7 +446,7 @@ _(none)_
 583
 ```
 
-## 21. build / repair  (Bash)
+## 21. build / validation  (Bash)
 _step 21_
 
 **Thought** (narration):
@@ -473,7 +473,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files use u
 ```
 
-## 22. search_code / validation  (Bash)
+## 22. search / validation  (Bash)
 _step 22_
 
 **Thought** (none):

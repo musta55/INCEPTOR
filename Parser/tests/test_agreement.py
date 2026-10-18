@@ -135,6 +135,34 @@ class WorkbookReaderTests(unittest.TestCase):
         self.assertEqual(tabs["T01"]["status"], "invalid")
         self.assertTrue(any("action rows" in p for p in problems))
 
+    def _one_sheet(self, a1, a2, n_t02=2):
+        """The version 4 workbook: every trajectory on the Annotation sheet."""
+        from openpyxl import Workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Annotation"
+        ws.append(["trajectory", "bug_id", "agent", "action", "A1 phase", "A1 category_fix",
+                   "A1 notes", "A2 phase", "A2 category_fix", "A2 notes", "step", "category"])
+        for k, (m1, m2) in enumerate(zip(a1, a2), 1):
+            ws.append(["T01", "bug-1", "claude", k, m1, None, None, m2, "NEW" if k == 2 else None,
+                       None, k, "read_file"])
+        for k in range(1, n_t02 + 1):
+            ws.append(["T02", "bug-2", "qwen", k, None, None, None, None, None, None, k, "build"])
+        path = Path(self.tmp.name) / "one.xlsx"
+        wb.save(path)
+        return path, [{"tab": "T01", "actions": len(a1)}, {"tab": "T02", "actions": 3}]
+
+    def test_the_one_sheet_workbook_gives_each_annotator_their_columns(self):
+        import score_ground_truth as sgt
+        path, sample = self._one_sheet(["localization", None, "repair"], ["repair", None, None])
+        one, problems = sgt.read_workbook(path, sample, 1)
+        self.assertEqual(one["T01"]["phase"], [A, A, B])
+        two, _ = sgt.read_workbook(path, sample, 2)
+        self.assertEqual(two["T01"]["phase"], [B, B, B])
+        self.assertEqual(two["T01"]["category_fix"], ["", "NEW", ""])
+        self.assertEqual(one["T02"]["status"], "invalid")       # 2 rows for 3 actions
+        self.assertTrue(any("T02" in p for p in problems))
+
 
 KIT = HERE.parent / "Ground Truth"
 ANNOTATION = HERE.parent / "data" / "annotation" / "original" / "run1"
@@ -154,7 +182,7 @@ class KitTests(unittest.TestCase):
         self.assertEqual(len(self.tool), 15)
         self.assertEqual(sum(e["actions"] for e in self.sample), 630)
         for e in self.sample:
-            for method in ("tool", "B1", "B2", "B3", "no_K1", "no_P4"):
+            for method in ("tool", "B1", "B3", "B4", "B5"):
                 self.assertEqual(len(self.tool[e["tab"]][method]), e["actions"], (e["tab"], method))
             self.assertTrue(set(self.tool[e["tab"]]["tool"]) <= set(phase.PHASES))
 

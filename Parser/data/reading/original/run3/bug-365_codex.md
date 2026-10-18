@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(7: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> reproduction(1: unchecked) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:22:23.247Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the query-removal path, reproduce the failing edge case, then patch
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:22:25.414Z | **FAILED**_
 
 **Thought** (none):
@@ -60,7 +60,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. run_shell / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:22:26.480Z_
 
 **Thought** (narration):
@@ -87,7 +87,7 @@ Query references:
 ./app/src/main/play/release-notes/en-US/default.txt:120:- Remov
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:22:28.611Z | **FAILED**_
 
 **Thought** (none):
@@ -117,7 +117,7 @@ import com.trianguloy.urlchecker.activities.ModulesActivity;
 import com.trianguloy.ur
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-26T17:22:33.104Z_
 
 **Thought** (narration):
@@ -135,7 +135,7 @@ I found the defect: Java’s default `split("=")` drops trailing empty fields, s
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. test / reproduction  (exec_command)
 _step 10 | 2026-09-26T17:22:36.307Z_
 
 **Thought** (none):
@@ -177,7 +177,7 @@ Source sets and test dependencies:
 app/src/main/java/com/trianguloy/urlchecker/modules/
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-26T17:22:41.500Z_
 
 **Thought** (narration):
@@ -195,7 +195,7 @@ Reproduction confirms `"=".split("=")` has length zero. I’ll replace regex spl
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-26T17:22:46.294Z_
 
 **Thought** (none):
@@ -225,7 +225,7 @@ Success. Updated the following files:
 M app/src/main/java/com/trianguloy/urlchecker/modules/list/RemoveQueriesModule.java
 ```
 
-## 9. diff / repair  (exec_command)
+## 9. read / validation  (exec_command)
 _step 13 | 2026-09-26T17:22:47.442Z_
 
 **Thought** (narration):
@@ -259,7 +259,7 @@ Output:
             String q
 ```
 
-## 10. vcs / repair  (exec_command)
+## 10. vcs / validation  (exec_command)
 _step 14 | 2026-09-26T17:22:49.158Z_
 
 **Thought** (none):
@@ -282,7 +282,7 @@ HARNESS
 ls: .git: No such file or directory
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T17:22:51.028Z_
 
 **Thought** (narration):
@@ -300,7 +300,7 @@ The project has no local unit-test source set or unit-test dependency, so I kept
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-26T17:22:53.325Z_
 
 **Thought** (none):
@@ -322,7 +322,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T17:22:55.254Z_
 
 **Thought** (none):
@@ -345,7 +345,7 @@ Output:
 Extracted translators: 404potato, Aʙᴜ Sᴀʀɪᴍ, CikiMomogi, CloneWith, GMishx, Idris, Ilithy, Magdy Elgendy, Metezd, Mika, Murilogs1910, Nhman Mazuz, PabloOQ, Seviche CC, T, Tiago Carmo (ReduxFlakes), Validbit, Vitabytes, dperruso, ilotoki0804, ngocanhtve, povidl
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-26T17:23:01.984Z_
 
 **Thought** (none):
@@ -376,7 +376,7 @@ Total output lines: 182
 > Task :app:checkDebugAar
 ```
 
-## 15. read_file / validation  (exec_command)
+## 15. test / validation  (exec_command)
 _step 19 | 2026-09-26T17:23:09.051Z_
 
 **Thought** (narration):
@@ -422,7 +422,7 @@ jshell>  query ==> "token=a=b"
 jshell>  
 ```
 
-## 16. plan / validation  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-26T17:23:13.555Z_
 
 **Thought** (none):

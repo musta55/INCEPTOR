@@ -9,7 +9,7 @@
 
 Phases: localization(11: unchecked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -34,7 +34,7 @@ Explore this Android project thoroughly to find all code related to "Trip" editi
 **Result**:
 _delegated to subagent `sub-call_2b53c0bf2b134467a18d8871` -- its 0 actions follow below_
 
-## 2. wait_process / localization  (send_message)
+## 2. other / localization  (send_message)
 _step 2_
 
 **Thought** (reasoning):
@@ -52,7 +52,7 @@ Please share your findings now.
 Message queued for Explore Trip-related code
 ```
 
-## 3. wait_process / localization  (list_agents)
+## 3. other / localization  (list_agents)
 _step 3_
 
 **Thought** (reasoning):
@@ -68,7 +68,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -84,7 +84,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 5. wait_process / localization  (list_agents)
+## 5. other / localization  (list_agents)
 _step 5_
 
 **Thought** (reasoning):
@@ -100,7 +100,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 6. wait_process / localization  (list_agents)
+## 6. other / localization  (list_agents)
 _step 6_
 
 **Thought** (reasoning):
@@ -116,7 +116,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 7. wait_process / localization  (send_message)
+## 7. other / localization  (send_message)
 _step 7_
 
 **Thought** (reasoning):
@@ -134,7 +134,7 @@ Please send your completion report with all findings.
 Message queued for Explore Trip-related code
 ```
 
-## 8. wait_process / localization  (list_agents)
+## 8. other / localization  (list_agents)
 _step 8_
 
 **Thought** (reasoning):
@@ -150,7 +150,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 9. wait_process / localization  (list_agents)
+## 9. other / localization  (list_agents)
 _step 9_
 
 **Thought** (reasoning):
@@ -166,7 +166,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 10. wait_process / localization  (list_agents)
+## 10. other / localization  (list_agents)
 _step 10_
 
 **Thought** (reasoning):
@@ -182,7 +182,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 11. wait_process / localization  (list_agents)
+## 11. other / localization  (list_agents)
 _step 11_
 
 **Thought** (reasoning):

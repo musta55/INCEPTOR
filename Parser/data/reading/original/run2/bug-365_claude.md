@@ -7,9 +7,9 @@
 - steps (LLM inferences): 8 | actions: 7 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(3: succeeded) -> repair(3: succeeded) -> validation(1: unchecked)
+Phases: localization(3: succeeded) -> repair(1: succeeded) -> validation(3: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -38,7 +38,7 @@ settings.gradle
 (eval):1: no matches found: --include=*.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -55,7 +55,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/list/RemoveQueriesModule.jav
 app/src/main/java/com/trianguloy/urlchecker/modules/list/RemoveQueriesModule.java:190:        public String getQueryName(int index) {
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 3_
 
 **Thought** (none):
@@ -81,7 +81,7 @@ _(none)_
 11	import com.trianguloy.urlchecker.modules.AModuleConf
 ```
 
-## 4. edit_file / repair  (Edit)
+## 4. edit / repair  (Edit)
 _step 4_
 
 **Thought** (narration):
@@ -99,7 +99,7 @@ I found the bug. For `https://example.com?=`, the query string is `"="`, and `"=
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-365/app/src/main/java/com/trianguloy/urlchecker/modules/list/RemoveQueriesModule.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 5. build / repair  (Bash)
+## 5. test / validation  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ query=''       old-name=                               new-name=''     new-value
 query='ref=foo' old-name=ref                            ne
 ```
 
-## 6. build / repair  (Bash)
+## 6. build / validation  (Bash)
 _step 6_
 
 **Thought** (narration):
@@ -150,7 +150,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug
 ```
 
-## 7. env_setup / validation  (Bash)
+## 7. read / validation  (Bash)
 _step 7_
 
 **Thought** (narration):

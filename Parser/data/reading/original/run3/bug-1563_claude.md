@@ -7,9 +7,9 @@
 - steps (LLM inferences): 15 | actions: 14 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(6: succeeded) -> repair(7: succeeded) -> validation(1: unchecked)
+Phases: localization(6: succeeded) -> repair(6: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -43,7 +43,7 @@ settings.gradle
 ./app/build.gradle
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -87,7 +87,7 @@ wc -l app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java app/src/main/
     1764 total
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -114,7 +114,7 @@ _(none)_
 12	import android.net.Uri;
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -134,7 +134,7 @@ app/src/main/java/io/lerk/lrkFM/op/OperationUtil.java:105:        context.reload
 app/src/main/j
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (narration):
@@ -158,7 +158,7 @@ private void addRenameToMenu(FMFile f, ContextMenu menu) {
                     R.la
 ```
 
-## 7. edit_file / repair  (Edit)
+## 7. edit / repair  (Edit)
 _step 7_
 
 **Thought** (narration):
@@ -176,7 +176,7 @@ Confirmed the diagnosis: `reloadCurrentDirectory()` → `loadPath()` → `loadDi
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1563/app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -194,7 +194,7 @@ Now update `reloadCurrentDirectory()` and add the save/restore helpers:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1563/app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -212,7 +212,7 @@ Now hook the restore into the two load methods:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1563/app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1563/app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -246,7 +246,7 @@ Let me guard against a saved position leaking into a later load if the reload fa
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1563/app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (none):
@@ -262,7 +262,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1563/app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. build / repair  (Bash)
+## 13. build / validation  (Bash)
 _step 13_
 
 **Thought** (narration):
@@ -292,7 +292,7 @@ Now let's build:
 > Tas
 ```
 
-## 14. search_code / validation  (Bash)
+## 14. search / validation  (Bash)
 _step 14_
 
 **Thought** (narration):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 16 | actions: 16 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(4: succeeded) -> repair(11: succeeded) -> validation(1: unchecked)
+Phases: localization(4: succeeded) -> repair(1: succeeded) -> validation(1: unchecked) -> localization(1: failed) -> repair(4: succeeded) -> validation(2: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -56,7 +56,7 @@ scripts
 settings.gradle.kts
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2_
 
 **Thought** (none):
@@ -85,7 +85,7 @@ _(none)_
 14	i
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ grep -rn "incorrect_IP_address_message" app/src/main/res/values/strings.xml
 app/src/main/res/values/strings.xml:29:    <string name="incorrect_IP_address_message">Please enter valid IP address</string>
 ```
 
-## 5. edit_file / repair  (Edit)
+## 5. edit / repair  (Edit)
 _step 4_
 
 **Thought** (narration):
@@ -119,7 +119,7 @@ Now I understand the defect. Let me apply the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 6. search_code / repair  (Bash)
+## 6. search / validation  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ grep -rn "okhttp" app/build.gradle.kts build.gradle.kts gradle/*.toml 2>/dev/nul
 (eval):1: no matches found: gradle/*.toml
 ```
 
-## 7. search_code / repair  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ app/build.gradle.kts:101:    implementation("com.squareup.okhttp3:okhttp:4.12.0"
 wrapper
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 7_
 
 **Thought** (none):
@@ -168,7 +168,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -186,7 +186,7 @@ Now the background task itself, so any malformed address still can't crash the a
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -218,7 +218,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. build / repair  (Bash)
+## 12. build / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -243,7 +243,7 @@ Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation
 ```
 
-## 13. env_setup / repair (own phase validation)  (Bash)
+## 13. test / validation  (Bash)
 _step 12_
 
 **Thought** (narration):
@@ -280,7 +280,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 "host:abc"             -
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 13_
 
 **Thought** (narration):
@@ -298,7 +298,7 @@ One refinement — normalize a user-typed scheme so it isn't double-prefixed:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. build / repair  (Bash)
+## 15. build / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -318,7 +318,7 @@ BUILD SUCCESSFUL in 11s
 36 actionable tasks: 5 executed, 31 up-to-date
 ```
 
-## 16. read_file / validation  (Bash)
+## 16. read / validation  (Bash)
 _step 15_
 
 **Thought** (narration):

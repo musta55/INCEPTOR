@@ -7,9 +7,9 @@
 - steps (LLM inferences): 11 | actions: 11 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(3: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> repair(2: succeeded) -> validation(2: succeeded)
 
-## 1. orient / localization  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -43,7 +43,7 @@ samples
 settings.gradle
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -59,7 +59,7 @@ grep -ril "new file" /Volumes/Dumpy/Research/automated_program_repair_for_ui_bug
 (eval):1: no matches found: --include=*.kt
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -78,7 +78,7 @@ app/src/main/java/net/gsantner/markor/activity/MainActivity.java
 app/src/main/java/net/gsantner/markor/activity/DocumentShareIntoFragment.java
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 3_
 
 **Thought** (none):
@@ -105,7 +105,7 @@ _(none)_
 12	import android.annotation.Supp
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -131,7 +131,7 @@ cat app/src/main/res/layout/new_file_dialog.xml && grep -rn "new_file_types" app
     ########################################################
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ sed -n '50,95p' app/src/main/res/values/arrays.xml
         <item translatable="false">@string/select_current_line</item>
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -178,7 +178,7 @@ grep -n "NewFileDialogLastUsed" -A5 -B2 app/src/main/java/net/gsantner/markor/ut
 706:    public String getNewFileDialogLastUsedExtensio
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 7_
 
 **Thought** (narration):
@@ -196,7 +196,7 @@ Now let me implement the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-53/app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -214,7 +214,7 @@ Now let me add the helper method that maps an extension back to its spinner posi
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-53/app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. build / repair  (Bash)
+## 10. build / validation  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -238,7 +238,7 @@ _(none)_
 > Task :app:mergeFlavorGplayDebugJniLib
 ```
 
-## 11. read_file / validation  (Read)
+## 11. read / validation  (Read)
 _step 10_
 
 **Thought** (narration):

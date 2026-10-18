@@ -7,9 +7,9 @@
 - steps (LLM inferences): 6 | actions: 6 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt
 
-Phases: localization(3: succeeded) -> repair(2: succeeded) -> validation(1: unchecked)
+Phases: localization(3: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (glob)
+## 1. search / localization  (glob)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -34,7 +34,7 @@ Let me start by exploring the codebase to understand the structure and find the 
 Found 1 matching file(s)
 ```
 
-## 2. search_code / localization  (glob)
+## 2. search / localization  (glob)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -50,7 +50,7 @@ _(same inference as the previous action)_
 Found 192 matching file(s) (truncated)
 ```
 
-## 3. read_file / localization  (read_file)
+## 3. read / localization  (read_file)
 _step 2_
 
 **Thought** (reasoning):
@@ -79,7 +79,7 @@ import android.view.MenuItem;
 import android.
 ```
 
-## 4. edit_file / repair  (edit)
+## 4. edit / repair  (edit)
 _step 3_
 
 **Thought** (reasoning):
@@ -131,7 +131,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             // If the fragment is
 ```
 
-## 5. build / repair  (run_shell_command)
+## 5. build / validation  (run_shell_command)
 _step 4_
 
 **Thought** (reasoning):
@@ -152,7 +152,7 @@ Mapping new ns http://schemas.android.com/repository/android/generic/02 to old n
 Mapping new ns http://schemas.android.com/sdk/android/repo/addo
 ```
 
-## 6. read_file / validation  (read_file)
+## 6. read / validation  (read_file)
 _step 5_
 
 **Thought** (reasoning):

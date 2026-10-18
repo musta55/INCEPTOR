@@ -7,9 +7,10 @@ for most actions in this corpus -- see ``Parser/Log audit and collection spec.md
 low      : one ATIF ``tool_call``
 mid      : one of MID_LEVEL -- what the agent did; the verdict parser and ``atif.segment``
            (baseline B3) read it
-category : one of CATEGORIES -- ``mid`` refined for the phase taxonomy (``atif.phase``):
-           ``shell_edit`` and ``diff`` split out, ``mid`` itself unchanged.  See
-           ``category()``.
+kind     : one of KINDS -- ``mid`` refined: ``shell_edit`` and ``diff`` split out, ``mid``
+           itself unchanged (``kind()``).  The outcomes and flags of ``atif.phase`` and the
+           baselines read it.  The action's *category*, which decides its phase, is the
+           Final lookup table's (``atif.lookup``), not this.
 edit_role: what an edit is for (source, test, toolchain); the first edit of application
            source is the phase anchor (``first_source_edit``), so a ``build.gradle`` or
            test-script edit made to get the bug to reproduce does not end reproduction.
@@ -40,6 +41,8 @@ import re
 import shlex
 from typing import Any, Dict, List, Optional, Tuple
 
+from . import project
+
 MID_LEVEL = ("read_file", "search_code", "orient", "edit_file", "build", "run_test",
              "device_ops", "env_setup", "vcs", "plan", "delegate", "wait_process",
              "web", "run_shell", "other")
@@ -48,23 +51,23 @@ PHASES = ("orientation", "localization", "reproduction", "environment", "repair"
           "validation", "review")
 #: what an edited file is for (``file_role``)
 EDIT_ROLES = ("source", "test", "toolchain")
-#: L1 categories of the phase taxonomy (``atif.phase``; ``Parser/Phase taxonomy.md`` §3):
-#: MID_LEVEL refined by two splits taken from the V2 analysis plan.  ``shell_edit`` is a
+#: the action kinds (the L1 categories of codebook versions 3 and 4, until the Final lookup
+#: tables of ``atif.lookup`` replaced them as the categories on 2026-10-17): MID_LEVEL
+#: refined by two splits taken from the V2 analysis plan.  ``shell_edit`` is a
 #: change made by a plain shell command (``sed -i``, a redirect, a Python write, ``git
 #: apply``, ``patch``, and the git commands that change the working tree), which cannot be
 #: replayed the way an editor or ``apply_patch`` edit can; ``diff`` is ``git diff`` /
 #: ``diff``, split from the rest of ``vcs`` (status, log, show, ...), which only inspects
 #: the repository.  ``mid_level`` is unchanged, so ``atif.segment`` (baseline B3) still
 #: reads its 15 labels.
-CATEGORIES = ("read_file", "search_code", "orient", "vcs", "diff", "web",
-              "edit_file", "shell_edit",
-              "build", "run_test", "device_ops", "run_shell",
-              "env_setup",
-              "plan", "delegate", "wait_process",
-              "other")
-#: every category belongs to one family; the phase rules read the family, the file role
-#: and the verdict, so a new category never needs a new phase rule
-CATEGORY_FAMILY: Dict[str, str] = {
+KINDS = ("read_file", "search_code", "orient", "vcs", "diff", "web",
+         "edit_file", "shell_edit",
+         "build", "run_test", "device_ops", "run_shell",
+         "env_setup",
+         "plan", "delegate", "wait_process",
+         "other")
+#: every kind belongs to one family
+KIND_FAMILY: Dict[str, str] = {
     "read_file": "inspect", "search_code": "inspect", "orient": "inspect", "vcs": "inspect",
     "diff": "inspect", "web": "inspect",
     "edit_file": "modify", "shell_edit": "modify",
@@ -74,7 +77,7 @@ CATEGORY_FAMILY: Dict[str, str] = {
     "other": "other",
 }
 #: what a file an action reads, searches or edits is for (``object_role``)
-OBJECT_ROLES = ("source", "test", "toolchain", "harness", "docs")
+OBJECT_ROLES = ("source", "test", "toolchain", "harness", "docs", "output")
 
 
 # --------------------------------------------------------------------------- #
@@ -82,8 +85,10 @@ OBJECT_ROLES = ("source", "test", "toolchain", "harness", "docs")
 #
 # The only agent-specific names the rules read: the raw tool names (ATIF ``function_name``)
 # and argument keys of Claude Code (claude-opus-5), Codex CLI 0.138 (gpt-5.6-sol) and Qwen
-# Code 0.24 (qwen3.6-35b-a3b), as surveyed over all 7,900 logs of the corpus.  A tool that
-# is not listed here is ``other``.  The rules below read tool names and argument keys only
+# Code 0.24 (qwen3.6-35b-a3b), as surveyed over all 7,900 logs of the corpus, and of four
+# agents whose ATIF Harbor writes (OpenHands, Terminus-2, mini-swe-agent, Trae Agent), as
+# seen in their published trajectories (Harbor's parity experiments, 2026).  None of the
+# four names occurs in the corpus.  A tool that is not listed here is ``other``.  The rules below read tool names and argument keys only
 # through these tables, so porting them to another agent means replacing the tables (and
 # the result-text markers of ``atif.verdict``).
 
@@ -92,11 +97,16 @@ SHELL_TOOLS = {
     "Bash",                       # Claude Code
     "exec_command",               # Codex CLI
     "shell",                      # Codex CLI before exec_command (command as an argv list)
-    "run_shell_command",          # Qwen Code
+    "run_shell_command",          # Qwen Code (and Gemini CLI, which it forks)
+    "execute_bash",               # OpenHands
+    "bash",                       # Trae Agent, mini-swe-agent
+    "bash_command",               # Terminus-2 (keystrokes), mini-swe-agent in Harbor's ATIF
 }
 #: argument keys holding a shell tool's command, in lookup order: ``cmd`` (Codex),
-#: ``command`` (Claude Code, Qwen Code), ``input`` (the body of Codex's apply_patch tool)
-SHELL_COMMAND_KEYS = ("cmd", "command", "input")
+#: ``command`` (Claude Code, Qwen Code, OpenHands, Trae Agent, mini-swe-agent), ``input``
+#: (the body of Codex's apply_patch tool), ``keystrokes`` (what Terminus-2 types into its
+#: terminal)
+SHELL_COMMAND_KEYS = ("cmd", "command", "input", "keystrokes")
 #: argument key of a shell tool's working directory (Codex)
 WORKDIR_KEY = "workdir"
 #: argument keys naming the file or directory a tool acts on, in lookup order
@@ -119,6 +129,16 @@ READ_ONLY_SUBAGENTS = ("Explore",)
 #: session ID N`` and ``write_stdin(session_id=N)`` polls it
 SESSION_STARTED = re.compile(r"session ID (\d+)")
 SESSION_ID_KEY = "session_id"
+
+#: text-editor tools that take a sub-command (OpenHands ``str_replace_editor``, Trae Agent
+#: ``str_replace_based_edit_tool``): {tool: (argument key, {sub-command: mid-level})}.
+#: ``view`` reads ``path`` (``orient`` when the path names a directory: no file suffix);
+#: every other sub-command (create, str_replace, insert, undo_edit) writes it
+EDITOR_TOOLS: Dict[str, Tuple[str, Dict[str, str]]] = {
+    "str_replace_editor": ("command", {"view": "read_file"}),
+    "str_replace_based_edit_tool": ("command", {"view": "read_file"}),
+}
+_SUFFIX = re.compile(r"\.[A-Za-z0-9]{1,10}$")
 
 #: every non-shell tool of the corpus, with a short reason where the mapping is not obvious
 TOOL_MAP: Dict[str, str] = {
@@ -155,6 +175,19 @@ TOOL_MAP: Dict[str, str] = {
     # names Qwen invented: the registry rejected every call ("Tool ... not found"), so
     # nothing ran; as shell tools they would count as failed builds and test runs
     "run_shell": "other", "try_shell_command": "other", "list_files": "other",
+    # beyond the corpus: Claude Code's task list (2.1.17x), OpenHands, Terminus-2, Trae Agent
+    "TaskCreate": "plan", "TaskUpdate": "plan",
+    "task_tracker": "plan",        # OpenHands' to-do list
+    "think": "plan",               # OpenHands: records a thought, acts on nothing
+    "finish": "other", "mark_task_complete": "other", "task_done": "other",   # ends the run
+    # SWE-agent's commands (``atif.sweagent`` names each command's file ``path``; the windowed
+    # editor's ``goto`` / ``scroll_*`` / ``edit`` act on the open file), and OpenHands' others
+    "open": "read_file", "goto": "read_file", "scroll_up": "read_file",
+    "scroll_down": "read_file", "create": "edit_file", "insert": "edit_file",
+    "search_dir": "search_code", "search_file": "search_code", "find_file": "search_code",
+    "submit": "other",             # SWE-agent's end of run: submits the diff
+    "execute_ipython_cell": "run_shell", "edit_file": "edit_file",
+    "browser": "web", "web_read": "web",
 }
 
 
@@ -243,18 +276,28 @@ def _inside(path: str, cwd_inside: bool) -> bool:
     path through a ``bug-<id>`` folder is, another absolute path, ``~`` or a ``$VAR`` path is
     not, and a relative path is wherever the command's working directory is.  A hidden
     folder is not part of the project (``.gradle/``, and scratch folders such as ``.sim/``
-    and ``.verify/`` that agents create inside the checkout)."""
-    match = _CHECKOUT.search(path)
-    if match:
-        path, cwd_inside = path[match.end():], True
-    elif path.startswith(("/", "~", "$")):
-        return False
+    and ``.verify/`` that agents create inside the checkout).  In a SWE-bench project the
+    checkout is the repository root (``project.Project.roots``)."""
+    proj = project.current()
+    if proj.swebench:
+        rest = proj.below_root(path)
+        if rest is not None:
+            path, cwd_inside = rest, True
+        elif path.startswith(("/", "~", "$")):
+            return False
+    else:
+        match = _CHECKOUT.search(path)
+        if match:
+            path, cwd_inside = path[match.end():], True
+        elif path.startswith(("/", "~", "$")):
+            return False
     return cwd_inside and not any(part.startswith(".") and part not in (".", "..")
                                   for part in path.split("/"))
 
 
 def _project_file(path: str, cwd_inside: bool) -> bool:
-    return bool(PROJECT_FILE.search(path)) and _inside(path, cwd_inside)
+    pattern = project.PROJECT_FILE if project.current().swebench else PROJECT_FILE
+    return bool(pattern.search(path)) and _inside(path, cwd_inside)
 
 
 def _redirect_targets(tokens: List[str]) -> List[str]:
@@ -394,8 +437,22 @@ def segment_writes(segment: str) -> Optional[List[str]]:
     if name == "perl":
         return _perl_files(tokens[1:])
     if name in _PYTHON:
-        return _python_writes(tokens, segment)
+        tool = _edit_tool_files(tokens) if project.current().swebench else None
+        return tool if tool is not None else _python_writes(tokens, segment)
     return None
+
+
+def _edit_tool_files(tokens: List[str]) -> Optional[List[str]]:
+    """SWE-bench: the files an editing script of the agent's own is run on
+    (``python edit_file.py astropy/x.py 245 245``), or None when the script is not one: its
+    name says it edits (``project.EDIT_TOOL``) and it is the agent's (role test)."""
+    script = next((t for t in tokens[1:] if not t.startswith("-")), "")
+    stem = script.rsplit("/", 1)[-1][:-3] if script.endswith(".py") else ""
+    if not stem or not project.EDIT_TOOL.search(stem) or file_role(script) != "test":
+        return None
+    after = tokens[tokens.index(script) + 1:]
+    found = [t for t in after if project.PROJECT_FILE.search(t) and not t.startswith("-")]
+    return found or None
 
 
 def _cd(segment: str, cwd_inside: bool) -> bool:
@@ -586,7 +643,9 @@ def _program_kind(segment: str, cwd_inside: bool = True) -> str:
     if name in ("gradle", "gradlew", "mvn", "ant"):
         return "run_test" if _runs_gradle_tests(tokens[1:]) else "build"
     if name in _PYTHON:
-        return "run_test" if "pytest" in args or "unittest" in args else "run_shell"
+        if "pytest" in args or "unittest" in args:
+            return "run_test"
+        return _python_script_kind(tokens) if project.current().swebench else "run_shell"
     if name.endswith(".sh") or name.endswith(".bash"):
         return "run_test" if re.search(r"test|pipeline|script", name, re.IGNORECASE) \
             else "run_shell"
@@ -595,6 +654,17 @@ def _program_kind(segment: str, cwd_inside: bool = True) -> str:
     if name == "java":
         return "run_test" if "-cp" in args or "junit" in args.lower() else "env_setup"
     return PROGRAM_KIND.get(name, "run_shell")
+
+
+def _python_script_kind(tokens: List[str]) -> str:
+    """SWE-bench: ``python reproduce_issue.py`` or ``python tests/runtests.py`` runs a test
+    (the script's role is test, ``project.swebench_role``), ``python setup.py build_ext``
+    builds; any other script, ``-c`` code and ``-m`` modules stay ``run_shell``."""
+    script = next((t for t in tokens[1:] if not t.startswith("-")), "")
+    if not script.endswith(".py") or "-c" in tokens[1:] or "-m" in tokens[1:]:
+        return "run_shell"
+    role = file_role(script)
+    return "run_test" if role == "test" else "build" if role == "toolchain" else "run_shell"
 
 
 def _shell_kind(command: str, cwd_inside: bool = True) -> str:
@@ -655,7 +725,10 @@ def resolve_call(call: dict) -> dict:
 
 
 def shell_command(call: dict) -> str:
-    args = resolve_call(call).get("arguments") or {}
+    call = resolve_call(call)
+    if call.get("function_name") in EDITOR_TOOLS:      # its ``command`` is a sub-command
+        return ""
+    args = call.get("arguments") or {}
     for key in SHELL_COMMAND_KEYS:
         value = args.get(key)
         if isinstance(value, str) and value:
@@ -678,6 +751,13 @@ def mid_level(call: dict) -> str:
     name = call.get("function_name", "")
     if name in SHELL_TOOLS:
         return _shell_kind(shell_command(call), _workdir_inside(call))
+    if name in EDITOR_TOOLS:
+        key, kinds = EDITOR_TOOLS[name]
+        args = call.get("arguments") or {}
+        kind = kinds.get(str(args.get(key) or ""), "edit_file")
+        path = str(args.get("path") or "").rstrip("/")
+        folder = not _SUFFIX.search(path) or repo_path(path) == "."   # the checkout itself
+        return "orient" if kind == "read_file" and folder else kind
     return TOOL_MAP.get(name, "other")
 
 
@@ -720,8 +800,8 @@ def git_subcommand(tokens: List[str]) -> Tuple[str, str]:
     return sub, tokens[k + 1] if k + 1 < len(tokens) else ""
 
 
-def category(row: dict) -> Tuple[str, bool]:
-    """(L1 category from CATEGORIES, whether the action reverts changes) of an annotated
+def kind(row: dict) -> Tuple[str, bool]:
+    """(the kind from KINDS, whether the action reverts changes) of an annotated
     row.  Refines ``mid_level`` without changing it:
 
     * an ``edit_file`` made by a shell tool is ``shell_edit``, unless it runs Codex's
@@ -779,9 +859,15 @@ def repo_path(path: str) -> str:
     -> ``app/x``), so that a ``/test/`` somewhere in the checkout's own location cannot
     make a source file look like a test."""
     path = str(path).strip().strip("'\"")
-    match = _IN_REPO.search(path)
-    if match:
-        return match.group(1)
+    proj = project.current()
+    if proj.swebench:
+        rest = proj.below_root(path)
+        if rest is not None:
+            return rest or "."
+    else:
+        match = _IN_REPO.search(path)
+        if match:
+            return match.group(1)
     return path[2:] if path.startswith("./") else path
 
 
@@ -807,8 +893,12 @@ def edited_files(call: dict) -> List[str]:
 def file_role(path: str) -> str:
     """toolchain (build config, wrapper, harness), test (reproducing project,
     androidTest, unit tests) or source.  Toolchain is checked first, so the
-    reproducing project's own ``build.gradle`` is toolchain, not test."""
+    reproducing project's own ``build.gradle`` is toolchain, not test.  A SWE-bench project
+    has its own conventions (``project.swebench_role``)."""
     rel = repo_path(path)
+    proj = project.current()
+    if proj.swebench:
+        return project.swebench_role(rel, proj)
     base = rel.rsplit("/", 1)[-1]
     if base in TOOLCHAIN_FILES or base.endswith(TOOLCHAIN_SUFFIXES):
         return "toolchain"
@@ -834,11 +924,20 @@ DOC_FILE = re.compile(r"(?:^|/)(?:README|LICENSE|CHANGELOG|CONTRIBUT\w*|NOTICE|A
                       r"|\.(?:md|rst|txt|adoc)$", re.IGNORECASE)
 
 
+#: what a run produced (codebook Table 3, role output): screenshots, logs, test reports and
+#: build outputs, and the agent's own log.  Reading one follows the run that made it
+OUTPUT_FILE = re.compile(r"\.(?:png|jpe?g|webp|gif|log)$|(?:^|/)build/(?:reports|outputs|"
+                         r"test-results)/|_output\.txt$", re.IGNORECASE)
+
+
 def object_role(path: str) -> str:
-    """Role of any file an action touches: harness, docs, then ``file_role`` (toolchain,
-    test, source).  Unlike ``file_role``, which decides an edit's role and is kept as it
-    is for ``atif.segment``, it tells the harness script and documentation apart."""
+    """Role of any file an action touches (codebook Table 3): output, harness, docs, then
+    ``file_role`` (toolchain, test, source).  Unlike ``file_role``, which decides an edit's
+    role and is kept as it is for ``atif.segment``, it tells run outputs, the harness script
+    and documentation apart."""
     rel = repo_path(path)
+    if OUTPUT_FILE.search(rel):
+        return "output"
     if rel.rsplit("/", 1)[-1] in HARNESS_SCRIPTS:
         return "harness"
     if DOC_FILE.search(rel):
@@ -851,8 +950,9 @@ def action_roles(row: dict) -> str:
     or ``outside`` when it names only paths outside the checkout; empty when it names no
     path.  The file_role column of the annotation workbooks and of the viewer."""
     roles = sorted({object_role(f) for f in row.get("files") or []})
-    if not roles and [o for o in row.get("outside") or [] if not o.startswith("/dev/")]:
-        roles = ["outside"]
+    outside = [o for o in row.get("outside") or [] if not o.startswith("/dev/")]
+    if not roles and outside:
+        roles = ["output" if all(OUTPUT_FILE.search(o) for o in outside) else "outside"]
     return ", ".join(roles)
 
 
@@ -919,10 +1019,17 @@ def _failed(result: Optional[dict]) -> Optional[bool]:
 
 
 def _content(result: Optional[dict]) -> str:
+    """A result's text.  Since ATIF v1.6 ``content`` may be a list of content parts
+    (``{"type": "text", "text": ...}``, images, audio): their text, one part per line."""
     body = (result or {}).get("content")
     if body is None:
         return ""
-    return body if isinstance(body, str) else json.dumps(body, default=str)
+    if isinstance(body, str):
+        return body
+    if isinstance(body, list) and body and all(isinstance(p, dict) and "type" in p for p in body):
+        return "\n".join(str(p.get("text") or "") if p["type"] == "text" else f"[{p['type']}]"
+                         for p in body)
+    return json.dumps(body, default=str)
 
 
 def actions(trajectory: dict, scope: str = "main") -> List[dict]:
@@ -933,8 +1040,14 @@ def actions(trajectory: dict, scope: str = "main") -> List[dict]:
     """
     rows: List[dict] = []
     for step in trajectory.get("steps", []):
-        results = {r.get("source_call_id"): r
-                   for r in (step.get("observation") or {}).get("results", [])}
+        given = (step.get("observation") or {}).get("results", [])
+        results = {r.get("source_call_id"): r for r in given}
+        # results without a source_call_id (Terminus-2, mini-swe-agent in Harbor's ATIF)
+        # go to the calls that have no result of their own, in order
+        loose = [r for r in given if not r.get("source_call_id")]
+        for call in step.get("tool_calls") or []:
+            if loose and call.get("tool_call_id") not in results:
+                results[call.get("tool_call_id")] = loose.pop(0)
         thought = "reasoning" if step.get("reasoning_content") else (
             "narration" if (step.get("message") or "").strip() else "none")
         for position, call in enumerate(step.get("tool_calls") or []):
@@ -995,7 +1108,7 @@ def action_target(call: dict) -> str:
 
 
 def annotate(trajectory: dict) -> List[dict]:
-    """Actions with their mid-level label, L1 ``category`` (and ``reverts``), edited files
+    """Actions with their mid-level label, ``kind`` (and ``reverts``), edited files
     and their role, and the background session each poll waits on, in execution order."""
     rows = actions(trajectory)
     for index, row in enumerate(rows, 1):
@@ -1011,6 +1124,6 @@ def annotate(trajectory: dict) -> List[dict]:
             row["edit_role"] = edit_role(row["edit_files"])
         else:
             row["edit_files"], row["edit_role"] = [], ""
-        row["category"], row["reverts"] = category(row)
+        row["kind"], row["reverts"] = kind(row)
     resolve_waits(rows)
     return rows

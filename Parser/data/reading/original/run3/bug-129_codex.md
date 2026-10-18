@@ -7,9 +7,9 @@
 - steps (LLM inferences): 39 | actions: 34 | failed actions: 3
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(10: succeeded) -> repair(6: failed) -> localization(5: succeeded) -> repair(4: failed) -> validation(6: succeeded)
+Phases: planning(1: unchecked) -> localization(9: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> repair(1: failed) -> planning(1: unchecked) -> validation(9: unchecked) -> repair(3: failed) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:41:29.827Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace entry validation and decoding, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:41:33.118Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:41:34.241Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ app/src/androidTest/java/org/shadowice/flocke/andotp/ApplicationTest.java:57:imp
 app/src/androi
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:41:36.649Z_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ Total output lines: 696
  * in the Software without restriction, including without lim
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T16:41:39.474Z_
 
 **Thought** (none):
@@ -149,7 +149,7 @@ Total output lines: 462
    137	            tagsHashMap.put(tag, fals
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-26T16:41:43.710Z_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ Total output lines: 267
    195	                .setPositiveButton(R.string.button_save, new Dial
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T16:41:45.862Z_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ Output:
    237	        TextWatcher watcher = new TextWatcher()
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T16:41:52.175Z_
 
 **Thought** (narration):
@@ -226,7 +226,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java:195
 app/src/main/java/org/shadowice/flocke/andotp/Dialogs/TagsDialog.java:59:                .setPositiveButton(android.R.
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. other / localization  (exec_command)
 _step 13 | 2026-09-26T16:41:54.688Z_
 
 **Thought** (none):
@@ -246,7 +246,7 @@ Original token count: 0
 Output:
 ```
 
-## 10. read_file / localization  (exec_command)
+## 10. other / localization  (exec_command)
 _step 14 | 2026-09-26T16:41:57.092Z_
 
 **Thought** (none):
@@ -266,7 +266,7 @@ Original token count: 0
 Output:
 ```
 
-## 11. plan / localization  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T16:42:08.145Z_
 
 **Thought** (narration):
@@ -284,7 +284,7 @@ I’ll keep the dialog open, mark the field invalid, and centralize Base32 valid
 Plan updated
 ```
 
-## 12. read_file / localization  (exec_command)
+## 12. read / localization  (exec_command)
 _step 16 | 2026-09-26T16:42:16.946Z_
 
 **Thought** (none):
@@ -313,7 +313,7 @@ Total output lines: 220
  * in the Software with
 ```
 
-## 13. read_file / localization  (exec_command)
+## 13. read / localization  (exec_command)
 _step 17 | 2026-09-26T16:42:18.363Z_
 
 **Thought** (none):
@@ -345,7 +345,7 @@ import org.json.JSONException;
 import org.json.JSON
 ```
 
-## 14. edit_file / repair  (exec_command)
+## 14. edit / repair  (exec_command)
 _step 18 | 2026-09-26T16:42:20.945Z_
 
 **Thought** (none):
@@ -384,7 +384,7 @@ M app/src/main/res/values/strings_main.xml
 M app/src/androidTest/java/org/shadowice/flocke/andotp/ApplicationTest.java
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T16:42:38.557Z_
 
 **Thought** (narration):
@@ -402,7 +402,7 @@ Validation and dialog behavior are patched. I’m tightening edge cases, then I�
 Plan updated
 ```
 
-## 16. diff / repair  (exec_command)
+## 16. search / validation  (exec_command)
 _step 20 | 2026-09-26T16:42:41.441Z_
 
 **Thought** (none):
@@ -422,7 +422,7 @@ Original token count: 0
 Output:
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T16:42:54.764Z_
 
 **Thought** (none):
@@ -438,7 +438,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 18. diff / repair  (exec_command)
+## 18. search / validation  (exec_command)
 _step 22 | 2026-09-26T16:42:56.233Z_
 
 **Thought** (none):
@@ -460,7 +460,7 @@ Output:
 /Users/sage/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.14/3cb1181b2141a7e752f5bdc998b7ef1849f726cf/commons-codec-1.14.jar
 ```
 
-## 19. diff / repair  (exec_command)
+## 19. search / validation  (exec_command)
 _step 23 | 2026-09-26T16:42:58.792Z_
 
 **Thought** (none):
@@ -487,7 +487,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
   public boolean isInAlphabet(java.lang.String);
 ```
 
-## 20. search_code / localization  (exec_command)
+## 20. search / validation  (exec_command)
 _step 24 | 2026-09-26T16:43:03.441Z_
 
 **Thought** (none):
@@ -510,7 +510,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java:195
 app/src/main/java/org/shadowice/
 ```
 
-## 21. vcs / localization  (exec_command)
+## 21. diff / validation  (exec_command)
 _step 25 | 2026-09-26T16:43:07.330Z_
 
 **Thought** (none):
@@ -532,7 +532,7 @@ fatal: path 'app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java' 
 9a774f6 harness baseline
 ```
 
-## 22. read_file / localization  (exec_command)
+## 22. read / validation  (exec_command)
 _step 26 | 2026-09-26T16:43:10.304Z_
 
 **Thought** (none):
@@ -556,7 +556,7 @@ Output:
 cat: .git/info/exclude: No such file or directory
 ```
 
-## 23. read_file / localization  (exec_command)
+## 23. read / validation  (exec_command)
 _step 27 | 2026-09-26T16:43:12.761Z | **FAILED**_
 
 **Thought** (none):
@@ -580,7 +580,7 @@ ls: .gitignore: No such file or directory
 /var/folders/28/_9_mht7s10d5tf_cw0nmz8tc0000gn/T/uiab-read-guard/codex_original_run3/bug-129/git-stu
 ```
 
-## 24. run_shell / localization  (exec_command)
+## 24. test / validation  (exec_command)
 _step 28 | 2026-09-26T16:43:15.217Z_
 
 **Thought** (none):
@@ -611,7 +611,7 @@ jshell>  b ==> org.apache.commons.codec.binary.Base32@50040f0c
 jshell>  test alpha=true error=java.lang.IllegalArgumentException: Last enco
 ```
 
-## 25. build / repair  (exec_command)
+## 25. edit / repair  (exec_command)
 _step 29 | 2026-09-26T16:43:22.487Z_
 
 **Thought** (none):
@@ -647,7 +647,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon
 ```
 
-## 26. wait_process / repair  (write_stdin)
+## 26. other / repair  (write_stdin)
 _step 30 | 2026-09-26T16:43:29.664Z_
 
 **Thought** (none):
@@ -671,7 +671,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/a
 ```
 
-## 27. wait_process / repair  (write_stdin)
+## 27. other / repair  (write_stdin)
 _step 31 | 2026-09-26T16:43:36.889Z | **FAILED**_
 
 **Thought** (none):
@@ -701,7 +701,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Ta
 ```
 
-## 28. plan / repair  (update_plan)
+## 28. plan / planning  (update_plan)
 _step 32 | 2026-09-26T16:43:40.719Z_
 
 **Thought** (narration):
@@ -741,7 +741,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 30. wait_process / validation  (write_stdin)
+## 30. other / validation  (write_stdin)
 _step 34 | 2026-09-26T16:43:45.900Z_
 
 **Thought** (none):
@@ -765,7 +765,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/a
 ```
 
-## 31. wait_process / validation  (write_stdin)
+## 31. other / validation  (write_stdin)
 _step 35 | 2026-09-26T16:43:52.082Z_
 
 **Thought** (none):
@@ -793,7 +793,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:compile
 ```
 
-## 32. wait_process / validation  (write_stdin)
+## 32. other / validation  (write_stdin)
 _step 36 | 2026-09-26T16:43:59.061Z_
 
 **Thought** (none):
@@ -821,7 +821,7 @@ Output:
 > Task :app:dataBindingGenBaseClassesPlayDebug
 ```
 
-## 33. plan / validation  (update_plan)
+## 33. plan / planning  (update_plan)
 _step 37 | 2026-09-26T16:44:05.188Z_
 
 **Thought** (narration):
@@ -839,7 +839,7 @@ The required build passes for both debug flavors. I’m doing a final line-level
 Plan updated
 ```
 
-## 34. search_code / validation  (exec_command)
+## 34. search / validation  (exec_command)
 _step 38 | 2026-09-26T16:44:08.851Z_
 
 **Thought** (none):

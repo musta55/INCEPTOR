@@ -7,9 +7,9 @@
 - steps (LLM inferences): 25 | actions: 20 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(3: succeeded) -> understanding(2: unchecked) -> repair(4: succeeded) -> localization(2: succeeded) -> repair(5: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> repair(2: succeeded) -> validation(3: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:47:29.005Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the entry-validation path, patch the root cause, then run the requi
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:47:32.099Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:47:34.742Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ app/src/androidTest/java/org/shadowice/flocke/andotp/ApplicationTest.java:31:imp
 app/src/androidTest/java/org/shadowice/flocke/andotp/ApplicationTest.java:116:        byte secret[] = "Das System is
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-25T04:47:37.351Z_
 
 **Thought** (none):
@@ -118,7 +118,7 @@ Total output lines: 840
  * in the Software without restriction, including without limi
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:47:40.797Z_
 
 **Thought** (narration):
@@ -150,7 +150,7 @@ Total output lines: 659
                 expandButton.setCompoundDrawablesRelativeWithIntrinsicBounds(
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T04:47:45.871Z_
 
 **Thought** (none):
@@ -177,7 +177,7 @@ Total output lines: 192
     84
 ```
 
-## 7. env_setup / understanding  (exec_command)
+## 7. vcs / localization  (exec_command)
 _step 11 | 2026-09-25T04:47:48.361Z | **FAILED**_
 
 **Thought** (narration):
@@ -200,7 +200,7 @@ Output:
 fatal: unable to access 'https://github.com/andOTP/andOTP.git/': CONNECT tunnel failed, response 403
 ```
 
-## 8. plan / understanding  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-25T04:48:02.679Z_
 
 **Thought** (narration):
@@ -218,7 +218,7 @@ Diagnosis complete: strict Base32 decoding rejects malformed trailing bits, and 
 Plan updated
 ```
 
-## 9. edit_file / repair  (exec_command)
+## 9. edit / repair  (exec_command)
 _step 13 | 2026-09-25T04:48:16.116Z_
 
 **Thought** (none):
@@ -248,7 +248,7 @@ M app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java
 M app/src/main/res/values/strings_main.xml
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-25T04:48:25.458Z_
 
 **Thought** (narration):
@@ -281,7 +281,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java
 ```
 
-## 11. diff / repair  (exec_command)
+## 11. search / validation  (exec_command)
 _step 15 | 2026-09-25T04:48:32.893Z_
 
 **Thought** (none):
@@ -307,7 +307,7 @@ Output:
    193	        builder.setTitle(R
 ```
 
-## 12. diff / repair  (exec_command)
+## 12. diff / validation  (exec_command)
 _step 16 | 2026-09-25T04:48:36.695Z_
 
 **Thought** (narration):
@@ -330,7 +330,7 @@ Output:
 fatal: Unable to mark file app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java
 ```
 
-## 13. read_file / localization  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-25T04:48:42.119Z_
 
 **Thought** (none):
@@ -355,7 +355,7 @@ show:128
 cmp:1
 ```
 
-## 14. plan / localization  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-25T04:48:50.005Z_
 
 **Thought** (narration):
@@ -373,7 +373,7 @@ The focused UI fix is complete. This legacy project has only instrumentation tes
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-25T04:48:56.765Z_
 
 **Thought** (none):
@@ -395,7 +395,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T04:48:59.486Z_
 
 **Thought** (none):
@@ -419,7 +419,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T04:49:08.069Z_
 
 **Thought** (none):
@@ -447,7 +447,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T04:49:14.907Z_
 
 **Thought** (none):
@@ -475,7 +475,7 @@ Output:
 > Task :app:mer
 ```
 
-## 19. plan / repair  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-25T04:49:21.685Z_
 
 **Thought** (narration):
@@ -493,7 +493,7 @@ Both F-Droid and Play debug variants compile successfully. I’m doing a final s
 Plan updated
 ```
 
-## 20. search_code / validation  (exec_command)
+## 20. search / validation  (exec_command)
 _step 24 | 2026-09-25T04:49:24.800Z_
 
 **Thought** (none):

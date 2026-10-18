@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 30 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(14: succeeded) -> repair(3: unchecked) -> localization(10: failed) -> validation(3: unchecked)
+Phases: localization(14: succeeded) -> repair(3: unchecked) -> validation(13: unchecked)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -39,7 +39,7 @@ tools
 (eval):1: no matches found: --include=*.xml
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -55,7 +55,7 @@ grep -rn "regex" --include=*.kt --include=*.java -il | head -50
 (eval):1: no matches found: --include=*.kt
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -75,7 +75,7 @@ app/src/main/res/values-zh-rTW/strings.xml:89:    <string name="json_editor">進
 app/
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ app/src/main/res/layout/config_patterns.xml
 app/src/main/res/values-pt-rBR/strin
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -131,7 +131,7 @@ import org.json.JSONObject;
 public class PatternCatalog extends Js
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -149,7 +149,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/AutomationRules.java:63:    
 app/src/main/java/com/trianguloy/urlchecker/modules/AutomationRules.java:80:                for (String pattern : JavaUtils.getArrayOrElement(
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ sed -n 30,100p app/src/main/java/com/trianguloy/urlchecker/modules/AutomationRul
         return new GenericPref.Bool("auto_error_toast", false, cntx)
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -188,7 +188,7 @@ grep -rn "\.com\|\.ly\|\.net\|\.org" app/src/main/java/com/trianguloy/urlchecker
 (eval):1: no matches found: --include=*.java
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -205,7 +205,7 @@ app/src/main/res/values/strings.xml:172:- 'regex': string|list, required: a vali
 app/src/main/res/values/strings.xml:194:    <string name="mPttrn_desc">"This module checks the url with regex patterns that warns, suggests or applies replacements. You can modify or create your own patterns, or even
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 7 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ shortcuts
     <string name="auto_desc">With automations you can perform module actions based on triggers. You can configure the automations here, or disable all them together using the toggle below.</string>
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / localization  (Bash)
 _step 7 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -257,7 +257,7 @@ import org.json.JSONObject;
  * Catalog of hosts configuration. The whole hosts files are not included as ready-to-use
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -273,7 +273,7 @@ grep -rn "Pattern.compile\|matches(\|\\\\\\\\." app/src/main/java --include=*.ja
 (eval):1: no matches found: --include=*.java
 ```
 
-## 13. search_code / localization  (Bash)
+## 13. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -292,7 +292,7 @@ com/trianguloy/urlchecker/modules/list/ClearUrlModule.java:283:                 
 com/triangu
 ```
 
-## 14. read_file / localization  (Read)
+## 14. read / localization  (Read)
 _step 10_
 
 **Thought** (none):
@@ -314,7 +314,7 @@ _(none)_
 61
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 11 | call 1/3 of this inference_
 
 **Thought** (narration):
@@ -332,7 +332,7 @@ Now let me fix the unescaped dots in the built-in pattern regexes:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-447/app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 11 | call 2/3 of this inference_
 
 **Thought** (narration):
@@ -348,7 +348,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-447/app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 11 | call 3/3 of this inference_
 
 **Thought** (narration):
@@ -364,7 +364,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-447/app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. read_file / localization  (Bash)
+## 18. read / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -395,7 +395,7 @@ import org.json.JSONObject;
 public abstract
 ```
 
-## 19. search_code / localization  (Bash)
+## 19. search / validation  (Bash)
 _step 13 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -414,7 +414,7 @@ app/src/main/java/com/trianguloy/urlchecker/activities/JsonEditorActivity.java
 app/src/main/java/com/trianguloy/urlchecker/modules/companions/ClearUrlCatalog.java
 ```
 
-## 20. search_code / localization  (Bash)
+## 20. search / validation  (Bash)
 _step 13 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -433,7 +433,7 @@ featured.png
 PRIVACY POLICY.md
 ```
 
-## 21. search_code / localization  (Bash)
+## 21. search / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -449,7 +449,7 @@ grep -rn "example\|\.com\|\.ly" app/src/main/java/com/trianguloy/urlchecker/modu
 app/src/main/java/com/trianguloy/urlchecker/modules/companions/ClearUrlCatalog.java:1:package com.trianguloy.urlchecker.modules.companions;
 ```
 
-## 22. read_file / localization  (Bash)
+## 22. read / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -469,7 +469,7 @@ Preview (first 2KB):
 SystemMessage(subtype='init', data={'typ
 ```
 
-## 23. search_code / localization (own phase validation)  (Bash)
+## 23. search / validation  (Bash)
 _step 16 | **FAILED**_
 
 **Thought** (none):
@@ -485,7 +485,7 @@ grep -rn '"\^\|://' app/src/main/java | grep -v "http://schemas\|https://raw\|gi
 github.com is blocked: this experiment measures repair, not retrieval of the upstream fix. The network is closed — no host is reachable, not just this one. Work from the bug report and the code in this repo.
 ```
 
-## 24. search_code / localization  (Bash)
+## 24. search / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -503,7 +503,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/companions/Flags.java:146:  
 app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.java:31:
 ```
 
-## 25. read_file / localization  (Bash)
+## 25. read / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -529,7 +529,7 @@ import com.trianguloy.urlchecker.utilities.generics.GenericPref;
 import com.trian
 ```
 
-## 26. search_code / localization  (Bash)
+## 26. search / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -545,7 +545,7 @@ ls -R tools | head -40; grep -rn "regex" tools 2>/dev/null | head
 fixChangelog.kts
 ```
 
-## 27. search_code / localization  (Bash)
+## 27. search / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -584,7 +584,7 @@ Found locales: "ar","be","bn","ca","cs","de","el","en","es","fr-FR","hi","in","i
 Extracted translators: 404potato, Aʙᴜ Sᴀʀɪᴍ, CikiMomogi, CloneWith, GMishx, Idris, Ilithy, Magdy Elgendy, Me
 ```
 
-## 29. env_setup / validation  (Bash)
+## 29. test / validation  (Bash)
 _step 22_
 
 **Thought** (none):
@@ -611,7 +611,7 @@ redditXcom (should be false): false
 replace: https://teddit.net/r/x
 ```
 
-## 30. read_file / validation  (Bash)
+## 30. read / validation  (Bash)
 _step 23_
 
 **Thought** (narration):

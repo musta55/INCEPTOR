@@ -7,9 +7,9 @@
 - steps (LLM inferences): 15 | actions: 16 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt
 
-Phases: localization(5: succeeded) -> repair(2: succeeded) -> validation(2: unchecked) -> localization(3: succeeded) -> validation(2: unchecked) -> repair(1: unchecked) -> validation(1: unchecked)
+Phases: localization(5: succeeded) -> repair(1: succeeded) -> validation(10: succeeded)
 
-## 1. search_code / localization  (grep_search)
+## 1. search / localization  (grep_search)
 _step 1 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -36,7 +36,7 @@ This appears to be an AnkiDroid repository. Let me explore the structure and fin
 No matches found
 ```
 
-## 2. search_code / localization  (grep_search)
+## 2. search / localization  (grep_search)
 _step 1 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -52,7 +52,7 @@ _(same inference as the previous action)_
 Found 322 matches (truncated)
 ```
 
-## 3. search_code / localization  (grep_search)
+## 3. search / localization  (grep_search)
 _step 1 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -68,7 +68,7 @@ _(same inference as the previous action)_
 Found 1992 matches (truncated)
 ```
 
-## 4. read_file / localization  (read_file)
+## 4. read / localization  (read_file)
 _step 2_
 
 **Thought** (reasoning):
@@ -90,7 +90,7 @@ Let me look at the main CustomStudyDialog.java file to understand the code and f
  * the terms of the GNU General Public L
 ```
 
-## 5. search_code / localization  (grep_search)
+## 5. search / localization  (grep_search)
 _step 3_
 
 **Thought** (reasoning):
@@ -130,7 +130,7 @@ The issue is that when the custom study deck already exists but isn't dynamic, t
 Found 19 matches
 ```
 
-## 6. edit_file / repair  (edit)
+## 6. edit / repair  (edit)
 _step 4_
 
 **Thought** (reasoning):
@@ -177,7 +177,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
                 Timber.w("D
 ```
 
-## 7. build / repair  (run_shell_command)
+## 7. build / validation  (run_shell_command)
 _step 5_
 
 **Thought** (reasoning):
@@ -240,7 +240,7 @@ On branch master
 nothing to commit, working tree clean
 ```
 
-## 10. vcs / localization  (run_shell_command)
+## 10. vcs / validation  (run_shell_command)
 _step 8 | **FAILED**_
 
 **Thought** (reasoning):
@@ -261,7 +261,7 @@ Output: 1b3e62c (HEAD -> master) harness baseline
 fatal: path 'AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java' exist
 ```
 
-## 11. vcs / localization  (run_shell_command)
+## 11. vcs / validation  (run_shell_command)
 _step 9_
 
 **Thought** (reasoning):
@@ -285,7 +285,7 @@ Signal: (none)
 Process Group PGID: 469929
 ```
 
-## 12. vcs / localization  (run_shell_command)
+## 12. vcs / validation  (run_shell_command)
 _step 10_
 
 **Thought** (reasoning):
@@ -324,7 +324,7 @@ Directory: (root)
 Output: fatal: pathspec 'AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java' did not m
 ```
 
-## 14. env_setup / validation  (run_shell_command)
+## 14. read / validation  (run_shell_command)
 _step 12 | **FAILED**_
 
 **Thought** (reasoning):
@@ -342,7 +342,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 Command: cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run2/bug-123451 && cp AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java /tmp/CustomStudyDialog.java.fixed && sed 's/UIUtils\.showThemedToast(this\.getContext(), getString(R\.string\.custom_study_deck_exists), false);/new MaterialDialog.Builder(getActivity())\n                    .content(R.str
 ```
 
-## 15. edit_file / repair  (write_file)
+## 15. edit / validation  (write_file)
 _step 13_
 
 **Thought** (reasoning):
@@ -362,7 +362,7 @@ Let me write the patch file properly.
 Successfully created and wrote to new file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run2/bug-123451/fix.patch.
 ```
 
-## 16. read_file / validation  (read_file)
+## 16. read / validation  (read_file)
 _step 14_
 
 **Thought** (reasoning):

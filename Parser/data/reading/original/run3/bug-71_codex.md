@@ -7,9 +7,9 @@
 - steps (LLM inferences): 30 | actions: 25 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(10: succeeded) -> repair(8: succeeded) -> validation(4: succeeded)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> localization(7: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(8: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:32:17.355Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the favorites visibility logic, patch the root cause, then run the 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:32:20.274Z | **FAILED**_
 
 **Thought** (none):
@@ -65,7 +65,7 @@ utils
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:32:21.567Z_
 
 **Thought** (narration):
@@ -93,7 +93,7 @@ qa-suite.md:85:#### Minimalistic mode on for favorites
 qa-suite.md:86:* [ ] In settings, UX, enable Minim
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:32:23.753Z_
 
 **Thought** (none):
@@ -123,7 +123,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInf
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-26T17:32:25.902Z_
 
 **Thought** (narration):
@@ -141,7 +141,7 @@ I found the behavior concentrated in `ExperienceTweaks`; next I’m mapping tap 
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:32:28.816Z_
 
 **Thought** (none):
@@ -170,7 +170,7 @@ Total output lines: 364
     61	        // Lock launcher into portrait mode
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T17:32:30.307Z_
 
 **Thought** (none):
@@ -200,7 +200,7 @@ Total output lines: 405
    147
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-26T17:32:34.507Z_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ Total output lines: 353
    234	        if (!display && isKeyboardOnStart
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-26T17:32:39.219Z_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ fatal: no such path 'app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks
 fatal: no such path 'app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java' in HEAD
 ```
 
-## 11. vcs / localization  (exec_command)
+## 11. other / localization  (exec_command)
 _step 15 | 2026-09-26T17:32:53.040Z_
 
 **Thought** (narration):
@@ -302,7 +302,7 @@ Output:
 fatal: unable to access 'https://github.com/Neamar/KISS.git/': CONNECT tunnel failed, response 403
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-26T17:32:58.132Z_
 
 **Thought** (none):
@@ -329,7 +329,7 @@ Total output lines: 284
      5	    android:layout_height="fill
 ```
 
-## 13. plan / localization  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-26T17:33:06.762Z_
 
 **Thought** (narration):
@@ -347,7 +347,7 @@ I’ve confirmed the reveal path is incorrectly conditional on the history prefe
 Plan updated
 ```
 
-## 14. edit_file / repair  (exec_command)
+## 14. edit / repair  (exec_command)
 _step 18 | 2026-09-26T17:33:17.067Z_
 
 **Thought** (none):
@@ -378,7 +378,7 @@ M app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java
 M app/src/androidTest/java/fr/neamar/kiss/androidTest/FavoritesTest.java
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T17:33:19.767Z_
 
 **Thought** (narration):
@@ -396,7 +396,7 @@ The patch now reveals favorites independently while preserving history and gestu
 Plan updated
 ```
 
-## 16. build / repair  (exec_command)
+## 16. build / validation  (exec_command)
 _step 20 | 2026-09-26T17:33:21.772Z_
 
 **Thought** (none):
@@ -418,7 +418,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:33:25.351Z_
 
 **Thought** (none):
@@ -438,7 +438,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:33:32.310Z_
 
 **Thought** (none):
@@ -458,7 +458,7 @@ Original token count: 0
 Output:
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:33:38.162Z_
 
 **Thought** (none):
@@ -478,7 +478,7 @@ Original token count: 0
 Output:
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-26T17:33:44.863Z_
 
 **Thought** (none):
@@ -498,7 +498,7 @@ Original token count: 0
 Output:
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-26T17:33:57.558Z_
 
 **Thought** (narration):
@@ -552,7 +552,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 5 stopped Daemons could not be reused, use --status for details
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-26T17:34:19.129Z_
 
 **Thought** (none):
@@ -581,7 +581,7 @@ Output:
 > Task :app
 ```
 
-## 24. plan / validation  (update_plan)
+## 24. plan / planning  (update_plan)
 _step 28 | 2026-09-26T17:34:28.597Z_
 
 **Thought** (none):
@@ -597,7 +597,7 @@ _(none)_
 Plan updated
 ```
 
-## 25. read_file / validation  (exec_command)
+## 25. read / validation  (exec_command)
 _step 29 | 2026-09-26T17:34:32.202Z_
 
 **Thought** (none):

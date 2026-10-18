@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 18 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(10: succeeded) -> repair(4: succeeded) -> validation(4: unchecked)
+Phases: localization(10: succeeded) -> repair(2: succeeded) -> validation(6: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -34,7 +34,7 @@ drwxr-xr-x@  5 splash  staff    160 Sep 14 00:36 app
 -rw-r--r--@  1 splash  staff    579 Sep
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -60,7 +60,7 @@ However it features astonishing hand-drawn graphics and a smooth gameplay.
 - [Google Play Store](https://play.google.com/store/apps/details?id=ch.logixi
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -76,7 +76,7 @@ cat bug-191_output.txt; echo ====; grep -rl "credits\|Credits" app/src/main/java
 SystemMessage(subtype='init', data={'type': 'system', 'subtype': 'init', 'cwd': '/Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-191', 'session_id': '86faaf78-34d7-405a-bfdc-d58a7e72f65a', 'tools': ['Task', 'AskUserQuestion', 'Bash', 'CronCreate', 'CronDelete', 'CronList', 'DesignSync', 'Edit', 'EnterPlanMode', 'EnterWorktree', 'ExitPlanMode', 'ExitWorktr
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -92,7 +92,7 @@ grep -rl "redits" app/src/main/java --include=*.java
 (eval):1: no matches found: --include=*.java
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ app/src/main/java/ch/logixisland/anuto/business/level/WaveAttender.java
 app/src/main/java/ch/logixisland/anuto/busine
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -143,7 +143,7 @@ public class ScoreBoard {
     private final List<
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -169,7 +169,7 @@ import ch.logixisland.anuto.entity.tower.AimingTower;
 import ch.logixisland.anuto.entity.tower.Tower;
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -192,7 +192,7 @@ import ch.logixisland.anuto.util.data.TowerConfig;
 import ch.logixisland.anuto.util.dat
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (narration):
@@ -222,7 +222,7 @@ sed -n 70,110p app/src/main/java/ch/logixisland/anuto/view/game/GameView.java; e
     public boolean onDrag(View view, DragEvent eve
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 10_
 
 **Thought** (narration):
@@ -251,7 +251,7 @@ Diagnosis confirmed. `TowerControl.upgradeTower()`/`enhanceTower()` both check `
 49	        if (mInsertedTower == null && !mGam
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (none):
@@ -267,7 +267,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-191/app/src/main/java/ch/logixisland/anuto/business/control/TowerInserter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (none):
@@ -283,7 +283,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-191/app/src/main/java/ch/logixisland/anuto/business/control/TowerInserter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. read_file / repair  (Read)
+## 13. read / validation  (Read)
 _step 13_
 
 **Thought** (narration):
@@ -312,7 +312,7 @@ Now let me verify the full method and build:
 49	        if (mInsertedTower == null && !mGam
 ```
 
-## 14. build / repair  (Bash)
+## 14. build / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -373,7 +373,7 @@ git status --short; git --no-pager diff HEAD -- app/src/main/java/ch/logixisland
 (Bash completed with no output)
 ```
 
-## 17. vcs / validation  (Bash)
+## 17. diff / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -390,7 +390,7 @@ true
 no git repo -> showing manual diff
 ```
 
-## 18. vcs / validation  (Bash)
+## 18. diff / validation  (Bash)
 _step 18_
 
 **Thought** (none):

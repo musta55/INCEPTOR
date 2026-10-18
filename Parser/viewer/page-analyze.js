@@ -1,465 +1,369 @@
-/* Analyze page (analyze.html): one uploaded log, your own rules.
- * Needs the local server (python3 -m atif.cli serve): GET /api/rules gives the mandatory and
- * optional rules and the vocabularies, POST /api/analyze runs atif.upload.analyze on the log under the
- * current rule set and returns one trajview/3 trajectory plus a report per rule. Every
- * change of a rule, the bug id or the outcome re-runs the analysis on the log kept in memory.
- * The rule set is remembered in localStorage (a convenience; export it to keep it).
- * The Trajectory and Timeline views are the bug page's (view-*.js); this file gives them the
- * shell they expect: TV.traj, TV.exp, TV.state, TV.setCursor, the playhead and the details panel. */
+/* An uploaded trajectory (analyze.html#u=<id>), next to the corpus, or a comparison of uploads
+ * (analyze.html#g=<group>&m=<member>, set up on upload.html). Uploading itself is upload.html;
+ * analyze.html with nothing named goes to the corpus page.
+ *
+ *   analyze.html#g=<id>   a comparison group (uploads.js groups): a bar with its members (one
+ *                         bug's agents, or one agent's runs), the selected member shown as
+ *                         below, and the Fingerprint tab with every member side by side.
+ *
+ *   analyze.html#u=<id>   one upload (uploads.js): its file bar (bug id, harness outcome,
+ *                         previous / next, delete), its unrecognised steps with a suggested
+ *                         lookup-table row for each (review.js), how it compares with the corpus
+ *                         (the same agent's run-1 trajectories, and the same bug's runs when it
+ *                         names a corpus bug), then the bug page's Trajectory and Timeline views.
+ *
+ * Every upload is analysed with the one table file of tables.html (TV.ruleset); one analysed
+ * with other rules is analysed again when opened. The corpus side of the comparison is
+ * data/overview.js, re-run under the same rules when they are not the default ones
+ * (TV.corpus). This file gives the views the shell they expect: TV.traj, TV.exp, TV.state,
+ * TV.setCursor, the playhead and the details panel. */
 (function () {
   'use strict';
   var TV = window.TV, esc = TV.esc, $ = TV.$, $$ = TV.$$;
-  var VIEWS = ['trajectory', 'timeline'];
-  var STORE = 'tv-rules', OPEN = 'tv-rules-open';
-  var S = TV.state = { t: null, i: 0, view: 'trajectory', level: 'subphases', fp: 'agents', timeMode: false,
+  var VIEWS = ['trajectory', 'timeline', 'fingerprint'];
+  var S = TV.state = { t: null, i: 0, view: 'trajectory', level: 'categories', fp: 'agents', timeMode: false,
     expanded: {}, playing: false, speed: 4, panel: false };
-  var INFO = null;                 // GET /api/rules
-  var RULES = null;                // {schema, optional: [{id}], custom: [...]}; the
-                                   // mandatory rules are never part of it
-  var REPORT = null;               // the last analysis' rules report
-  var FILE = null;                 // {name, text}
-  var OPTS = { bug: '', outcome: null };
-  var CUR = null;                  // the prepared trajectory
-  var seq = 0;                     // request counter: only the latest answer is shown
+  var D = window.TRAJ_OVERVIEW && window.TRAJ_OVERVIEW.schema === 'trajview-overview/3' ? window.TRAJ_OVERVIEW : null;
+  var RS = TV.ruleset.get(), RKEY = TV.ruleset.key(RS);
+  TV.watchRules(RKEY);
+  var REC = null;                  // the open upload
+  var CUR = null;                  // its prepared trajectory
+  var LIST = [];                   // every upload, newest first
+  var CORPUS = null;               // D under the rules (null until known; D itself for the default rules)
+  var GROUP = null;                // the open comparison: {g (uploads.js group), byKey: {upload id: trajectory}}
+  if (D) TV.vocab = D.vocab || {};
 
-  /* ---------------------------------------------------------------- storage (best effort) */
-  function load(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
-  function save(key, v) { try { localStorage.setItem(key, v); } catch (e) { /* blocked */ } }
-
-  /* ---------------------------------------------------------------- server */
-  function api(path, body) {
-    return fetch(path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})
-      .then(function (r) {
-        return r.json().catch(function () { return { error: 'the server answered ' + r.status }; }).then(function (j) {
-          if (!r.ok || j.error) throw Object.assign(new Error(j.error || ('HTTP ' + r.status)), { server: true });
-          return j;
-        });
-      });
-  }
-  function offline() {
-    $('#offline').hidden = false;
-    $('#drop').hidden = true;
-    $('#rules').hidden = true;
-  }
-  function start() {
-    if (location.protocol === 'file:') { offline(); return; }
-    api('/api/rules').then(function (info) {
-      INFO = info;
-      RULES = restore();
-      renderRules();
-      setOpen(load(OPEN) === '1');
-    }).catch(offline);
-  }
-  function restore() {
-    var s = null;
-    try { s = JSON.parse(load(STORE) || 'null'); } catch (e) { /* a broken store: the defaults */ }
-    try { return fromFile(s || {}); } catch (e) { return JSON.parse(JSON.stringify(INFO.default)); }
-  }
-  /* a rule set as saved or imported: its optional rules (ids of INFO.optional; the mandatory
-   * ones an older file lists are always applied anyway) and its custom rules */
-  function fromFile(obj) {
-    var d = JSON.parse(JSON.stringify(INFO.default)), known = {}, fixed = {};
-    INFO.optional.forEach(function (o) { known[o.id] = o; });
-    INFO.mandatory.forEach(function (o) { fixed[o.id] = o; });
-    if (obj.settings && (obj.settings.keep_attempts === false || obj.settings.smoothing === false)) throw new Error('G4 and G7 are mandatory rules and cannot be switched off');
-    if (Array.isArray(obj.optional)) {
-      d.optional = obj.optional.map(function (o) { return typeof o === 'string' ? o : o && o.id; })
-        .filter(function (id) { return known[id]; }).map(function (id) { return { id: id }; });
-    }
-    if (Array.isArray(obj.custom)) {
-      d.custom = obj.custom.filter(function (r) { return r && r.kind && r.match && !known[r.id] && !fixed[r.id]; })
-        .map(function (r, n) { return Object.assign({ id: 'R' + (n + 1), field: 'target', enabled: true }, r); });
-    }
-    return d;
-  }
-  function persist() { save(STORE, JSON.stringify({ schema: RULES.schema, optional: RULES.optional, custom: RULES.custom })); }
-
-  /* ---------------------------------------------------------------- file in */
-  var drop = $('#drop'), input = $('#file');
-  drop.addEventListener('click', function () { input.click(); });
-  drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
-  $('#replace').addEventListener('click', function () { input.click(); });
-  input.addEventListener('change', function () { if (input.files[0]) readFile(input.files[0]); input.value = ''; });
-  ['dragenter', 'dragover'].forEach(function (k) {
-    document.addEventListener(k, function (e) { if (INFO) { e.preventDefault(); document.body.classList.add('dragging'); } });
-  });
-  ['dragleave', 'drop'].forEach(function (k) {
-    document.addEventListener(k, function (e) {
-      if (k === 'dragleave' && e.relatedTarget) return;
-      document.body.classList.remove('dragging');
-      if (k === 'drop' && INFO) {
-        e.preventDefault();
-        var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-        if (f) readFile(f);
-      }
-    });
-  });
-  function readFile(f) {
-    if (INFO && f.size > INFO.max_bytes) { showError(f.name + ' is larger than ' + Math.round(INFO.max_bytes / 1048576) + ' MB.'); return; }
-    busy('Reading ' + f.name + '…');
-    f.text().then(function (text) {
-      FILE = { name: f.name, text: text };
-      OPTS.bug = '';                                   // a new log: infer its bug again
-      $('#bug').value = '';
-      analyze(true);
-    }, function () { busy(false); showError('The file could not be read.'); });
+  function busy(text) { $('#busy').hidden = !text; if (text) $('#busyText').textContent = text; }
+  function status(kind, html) {
+    var el = $('#status');
+    el.hidden = !html;
+    el.className = 'status' + (kind ? ' ' + kind : '');
+    el.innerHTML = html || '';
   }
 
-  /* ---------------------------------------------------------------- analysis */
-  var timer = 0;
-  function reanalyze() {
-    persist();
-    renderRules();
-    if (!FILE) return;
-    clearTimeout(timer);
-    timer = setTimeout(function () { analyze(false); }, 300);
+  /* ---------------------------------------------------------------- routing */
+  function route() {
+    var q = TV.readHash();
+    stopPlay();
+    if (VIEWS.indexOf(q.v) >= 0) S.view = q.v;
+    if (q.g) openGroup(q.g, q.m);
+    else if (q.u) { GROUP = null; openUpload(q.u); }
+    else location.replace('index.html');            // uploading is upload.html
   }
-  function analyze(fresh) {
-    var my = ++seq;
-    busy(fresh ? 'Analysing ' + FILE.name + '…' : 'Applying the rules…');
-    state('analysing…', '');
-    api('/api/analyze', { name: FILE.name, text: FILE.text, rules: RULES, bug: OPTS.bug || null, outcome: OPTS.outcome })
-      .then(function (res) { if (my === seq) show(res, fresh); })
-      .catch(function (err) {
-        if (my !== seq) return;
-        busy(false);
-        if (!err.server) { offline(); return; }
-        state('not applied', 'bad');
-        showError(err.message);
-      });
+  function saveHash() {
+    if (GROUP) TV.writeHash({ g: GROUP.g.id, m: REC && REC.id, v: S.view === 'trajectory' ? '' : S.view, theme: TV.readHash().theme });
   }
-  function show(res, fresh) {
-    busy(false);
+  window.addEventListener('hashchange', route);
+  TV.steps.source = function (t) { return REC && t._src === REC.id ? TV.uploads.atif(REC) : null; };
+
+  /* ---------------------------------------------------------------- a comparison group */
+  function openGroup(gid, mid) {
     $('#err').hidden = true;
-    REPORT = res.rules;
-    TV.vocab = res.vocab || {};
-    var keepI = !fresh && CUR ? S.i : 0;
-    var t = TV.prepTraj(res.trajectory);
+    $('#trajScreen').hidden = false;
+    TV.uploads.list().then(function (xs) {
+      LIST = xs;
+      var g = TV.uploads.groups(xs).filter(function (x) { return x.id === gid; })[0];
+      if (!g) {
+        $('#trajScreen').hidden = true;
+        $('#err').innerHTML = '<b>No comparison ' + esc(gid) + ' in this browser.</b> <a href="index.html">Back to the corpus</a>';
+        $('#err').hidden = false;
+        return;
+      }
+      var stale = TV.engine.usable() ? g.members.filter(function (r) { return r.rulesKey !== RKEY; }) : [];
+      return stale.reduce(function (p, r, k) {
+        return p.then(function () {
+          busy('Applying the tables to ' + r.name + (stale.length > 1 ? ' (' + (k + 1) + ' of ' + stale.length + ')' : '') + '…');
+          return TV.uploads.reanalyze(r, RS).catch(function () { /* shown as it was analysed */ });
+        });
+      }, Promise.resolve()).then(function () {
+        busy('');
+        GROUP = { g: g, byKey: {} };
+        g.members.forEach(function (r) { GROUP.byKey[r.id] = prepUpload(r); });
+        groupData();
+        $('#fpTab').hidden = false;
+        show(g.members.filter(function (r) { return r.id === mid; })[0] || g.members[0], true);
+      });
+    });
+  }
+  /* the members as the Fingerprint view reads them (TV.bugData.group) */
+  function groupData() {
+    var g = GROUP.g;
+    TV.bugData = { agents: [], runs: [], byKey: GROUP.byKey, trajs: g.members.map(function (r) { return GROUP.byKey[r.id]; }),
+      group: { kind: g.kind, rows: g.members.map(function (r) { return { key: r.id, t: GROUP.byKey[r.id], label: TV.uploads.memberLabel(r, g.members) }; }) } };
+  }
+  function renderGroupBar() {
+    var el = $('#grpbar');
+    el.hidden = !GROUP;
+    if (!GROUP) return;
+    var g = GROUP.g;
+    el.innerHTML = '<h1>' + esc(g.name || 'Comparison') + '</h1><span class="gk">' + esc(TV.uploads.KINDS[g.kind] || '') + '</span><div class="gmembers" role="group" aria-label="Members">' +
+      TV.bugData.group.rows.map(function (x) {
+        var t = x.t, a = t.agent, extra = g.kind === 'agents' && x.label !== a ? ' <span class="muted small">' + esc(x.label.slice(a.length + 3)) + '</span>' : '';
+        return '<button type="button" class="gmem" data-mem="' + esc(x.key) + '" aria-pressed="' + (REC && x.key === REC.id) + '">' +
+          (g.kind === 'runs' ? '<b>' + esc(x.label) + '</b>' : TV.agentHTML(a, extra)) + TV.markHTML(t.outcome.pass) + '<span class="n">' + t.n + '</span></button>';
+      }).join('') + '</div><a class="btn small" href="upload.html#g=' + encodeURIComponent(g.id) + '">Edit</a>';
+  }
+  $('#grpbar').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-mem]');
+    if (b) TV.select(b.dataset.mem);
+  });
+
+  /* ---------------------------------------------------------------- one upload */
+  function openUpload(id) {
+    $('#err').hidden = true;
+    $('#trajScreen').hidden = false;
+    TV.uploads.list().then(function (xs) {
+      LIST = xs;
+      var rec = xs.filter(function (r) { return r.id === id; })[0];
+      if (!rec) {
+        $('#trajScreen').hidden = true;
+        $('#err').innerHTML = '<b>No upload ' + esc(id) + ' in this browser.</b> Uploads are kept per browser; it may have been deleted. <a href="index.html">Back to the corpus</a>';
+        $('#err').hidden = false;
+        return;
+      }
+      if (rec.rulesKey === RKEY) { show(rec, true); return; }
+      if (!TV.engine.usable()) { show(rec, true); status('warn', 'This upload was analysed with other rules; analysing it again needs the analysis engine.'); return; }
+      busy('Applying the tables to ' + rec.name + '…');
+      TV.uploads.reanalyze(rec, RS).then(function (r) { busy(''); show(r, true); }, function (err) {
+        busy('');
+        show(rec, true);
+        status('warn', 'Could not apply the current tables (' + esc(err.message) + '); this shows the tables it was analysed with.');
+      });
+    });
+  }
+  /* an upload's trajectory, prepared (TV.prepTraj), keyed by the upload's id; in a 'runs'
+   * group its run is the run number given on upload.html */
+  function prepUpload(rec) {
+    var res = rec.result, t = TV.prepTraj(res.trajectory);
+    t._src = rec.id;
+    if (rec.group && rec.group.kind === 'runs') t.run = rec.run || 1;
+    t.key = rec.id;
     var byIndex = {};
     t.actions.forEach(function (a) { a.rules = []; byIndex[a.i] = a; });
-    (REPORT.optional || []).concat(REPORT.custom || []).forEach(function (r) {
+    ((res.rules || {}).optional || []).concat((res.rules || {}).custom || []).forEach(function (r) {
       (r.matched || []).forEach(function (i) { if (byIndex[i]) byIndex[i].rules.push({ id: r.id, sentence: r.sentence }); });
     });
+    return t;
+  }
+  function show(rec, fresh) {
+    REC = rec;
+    var res = rec.result, t = prepUpload(rec), src = res.source || {}, swe = TV.uploads.project(rec) === 'swebench';
+    if (res.vocab) TV.vocab = res.vocab;
+    if (GROUP && GROUP.byKey[rec.id]) { GROUP.byKey[rec.id] = t; groupData(); }
+    renderGroupBar();
+    $('.fb-nav').hidden = $('#delUp').hidden = !!GROUP;
+    var keepI = !fresh && CUR ? S.i : 0;
     CUR = t;
     S.t = t.key;
-    S.expanded = {};
+    if (fresh) S.expanded = {};
     S.i = keepI ? TV.clamp(keepI, 1, t.n) : 0;
     if (!S.i) S.panel = false;
-    var src = res.source || {};
-    if (!OPTS.bug && src.bug) $('#bug').value = src.bug;
-    $('#bug').placeholder = src.bug ? src.bug : 'id';
-    $('#fname').textContent = src.name || FILE.name;
+    document.title = rec.name + ' · TrajecTiers';
+    document.body.classList.add('has-result', 'docked');
+    $('#fname').textContent = rec.name;
     $('#fmeta').innerHTML = TV.agentHTML(src.agent || t.agent) + (src.model ? '<span class="model mono">' + esc(src.model) + '</span>' : '') +
-      '<span class="muted">' + esc({ atif: 'ATIF file', claude_agent_sdk_repr: 'Claude Agent SDK dump', claude_code_stream_json: 'Claude Code JSON log', codex_rollout_jsonl: 'Codex CLI log', qwen_stream_json: 'Qwen Code log' }[src.format] || src.format || '') + '</span>' +
-      (src.bug ? '<span class="muted">bug-' + esc(src.bug) + (src.bug_inferred ? ' (found in the log)' : '') + '</span>' : '');
-    document.title = (src.name || 'Analyze') + ' · TrajecTiers';
-    $('#drop').hidden = true;
-    $('#filebar').hidden = false;
-    $('#result').hidden = false;
-    document.body.classList.add('has-result');
+      '<span class="muted">' + esc(TV.uploads.formatLabel(src.format)) + ' · ' + TV.uploads.sizeLabel(rec.size || 0) + '</span>' +
+      (swe ? '<span class="yours swe" data-tip="' + esc('a SWE-bench run' + (src.repo_root ? ': the repository is ' + src.repo_root : '') + '. It is analysed with Python conventions and kept apart from the Android corpus.') + '">SWE-bench</span>' : '') +
+      (src.bug ? '<span class="muted">' + esc(TV.uploads.bugLabel(src.bug, swe ? 'swebench' : 'android')) + (src.bug_inferred ? ' (found in the log)' : '') + '</span>' : '');
+    $('#bugLbl').textContent = swe ? 'Instance' : 'Bug';
+    $('#bugFld').title = swe ? 'The SWE-bench instance id; it only names the run' : 'The bug-<id> checkout the log works in; paths are read relative to it';
+    $('#bug').style.width = swe ? '190px' : '';
+    $('#bug').inputMode = swe ? 'text' : 'numeric';
+    $('#bug').value = rec.bug || '';
+    $('#bug').placeholder = src.bug || 'id';
+    $$('#outcomeSeg button').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.oc === (rec.outcome === true ? 'pass' : rec.outcome === false ? 'fail' : '') ? 'true' : 'false');
+    });
+    var k = LIST.map(function (r) { return r.id; }).indexOf(rec.id);
+    $('#prevUp').disabled = k <= 0;
+    $('#nextUp').disabled = k < 0 || k >= LIST.length - 1;
+    $('#prevUp').title = k > 0 ? 'Newer: ' + LIST[k - 1].name + ' ( [ )' : 'No newer upload';
+    $('#nextUp').title = k >= 0 && k < LIST.length - 1 ? 'Older: ' + LIST[k + 1].name + ' ( ] )' : 'No older upload';
     $('#notes').innerHTML = (res.warnings || []).map(function (w) { return '<p class="note">' + esc(w) + '</p>'; }).join('');
-    renderSummary();
-    renderRules();
-    state(appliedText(), 'ok');
-    setView(S.view, true);
+    renderReview(res);
+    var changed = ((res.rules || {}).optional || []).concat((res.rules || {}).custom || []).reduce(function (s, r) { return s + (r.matched || []).length; }, 0);
+    if (!$('#status').classList.contains('warn')) {               // only your own rows are worth a line
+      status('', TV.ruleset.isDefault(RS) ? '' : '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span><span class="rs-x">they changed ' + TV.plural(changed, 'action') + ' here</span><a class="rs-edit" href="tables.html">Edit the tables</a>');
+    }
+    renderCompare();
     syncPanel();
+    setView(S.view, true);
     updateCursorUI();
     measureSticky();
+    saveHash();
   }
-  function appliedText() {
-    var ran = (REPORT.optional || []).filter(function (r) { return r.matched; })
-      .concat((REPORT.custom || []).filter(function (r) { return r.enabled; }));
-    var changed = ran.reduce(function (s, r) { return s + r.matched.length; }, 0);
-    return ran.length ? 'applied · matching rules changed ' + TV.plural(changed, 'action') : 'applied';
-  }
-  function busy(text) {
-    var b = $('#busy');
-    if (!text) { b.hidden = true; return; }
-    $('#busyText').textContent = text;
-    b.hidden = false;
-  }
-  function showError(msg) {
-    var e = $('#err');
-    e.innerHTML = '<b>Could not analyse the log.</b> ' + esc(msg);
-    e.hidden = false;
-  }
-  function state(text, cls) {
-    var el = $('#rulesState');
-    el.textContent = text;
-    el.className = 'rules-state' + (cls ? ' ' + cls : '');
+  /* unrecognised steps: a suggested row each; adding rows analyses the upload again */
+  function renderReview(res) {
+    var el = $('#unrec');
+    el.innerHTML = TV.review.html(res.unrecognized, { goto: true });
+    var card = el.querySelector('.unrec');
+    if (!card) return;
+    TV.review.bind(card, res.unrecognized, function (rs, rows) {
+      RS = rs;
+      RKEY = TV.ruleset.key(RS);
+      TV.rulesShown(RKEY);
+      CORPUS = null; cmpPromise = null;                       // the corpus side, under the new rows too
+      busy('Analysing ' + REC.name + ' with ' + TV.plural(rows.length, 'new row') + '…');
+      TV.uploads.reanalyze(REC, RS).then(function (r) {
+        busy('');
+        if (GROUP) { route(); return; }                          // the other members get the rows too
+        show(r, false);
+        status('ok', '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span><span class="rs-x">added ' + TV.plural(rows.length, 'row') +
+          '; your other uploads and the corpus get them when you open them</span><a class="rs-edit" href="tables.html">See the tables</a>');
+      }, function (err) { busy(''); status('warn', 'The rows were added, but this upload could not be analysed again: ' + esc(err.message)); });
+    });
   }
 
-  /* bug id and harness outcome: the analysis' inputs besides the rules */
+  /* bug id and harness outcome */
   var bugTimer = 0;
   $('#bug').addEventListener('input', function () {
     clearTimeout(bugTimer);
     var v = this.value.replace(/^bug-/, '').trim();
-    bugTimer = setTimeout(function () { OPTS.bug = v; if (FILE) analyze(false); }, 600);
+    bugTimer = setTimeout(function () {
+      if (!REC || (REC.bug || '') === v) return;
+      REC.bug = v || null;
+      busy('Analysing with bug-' + (v || '?') + '…');
+      TV.uploads.reanalyze(REC, RS).then(function (r) { busy(''); show(r, false); }, function (err) { busy(''); status('warn', 'Could not analyse it again: ' + esc(err.message)); });
+    }, 700);
   });
   $('#outcomeSeg').addEventListener('click', function (e) {
     var b = e.target.closest('button[data-oc]');
-    if (!b) return;
-    OPTS.outcome = b.dataset.oc === 'pass' ? true : b.dataset.oc === 'fail' ? false : null;
-    $$('#outcomeSeg button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-    if (FILE) analyze(false);
+    if (!b || !REC) return;
+    TV.uploads.setOutcome(REC, b.dataset.oc === 'pass' ? true : b.dataset.oc === 'fail' ? false : null).then(function (r) { show(r, false); });
+  });
+  function step(d) {
+    if (GROUP) {                                      // within the comparison
+      var ms = GROUP.g.members, j = ms.indexOf(REC) + d;
+      if (ms[j]) TV.select(ms[j].id);
+      return;
+    }
+    var k = LIST.map(function (r) { return r.id; }).indexOf(REC && REC.id);
+    var next = LIST[k + d];
+    if (next) location.hash = 'u=' + encodeURIComponent(next.id);
+  }
+  $('#prevUp').addEventListener('click', function () { step(-1); });
+  $('#nextUp').addEventListener('click', function () { step(1); });
+  $('#delUp').addEventListener('click', function () {
+    if (!REC || !window.confirm('Delete ' + REC.name + ' from this browser? This cannot be undone.')) return;
+    TV.uploads.remove([REC.id]).then(function () { location.href = 'index.html'; });
   });
 
-  /* ---------------------------------------------------------------- summary */
-  function renderSummary() {
-    var t = CUR, m = t.metrics || {}, dur = t.stats.duration_s != null ? t.stats.duration_s : t.stats.reported_duration_s;
-    function tile(label, value, tip) { return '<div class="tile"' + (tip ? ' data-tip="' + esc(tip) + '"' : '') + '><b>' + value + '</b><span>' + label + '</span></div>'; }
+  /* ---------------------------------------------------------------- with the corpus */
+  function corpusReady() {
+    if (!D) return Promise.resolve(null);
+    if (TV.ruleset.isDefault(RS)) return Promise.resolve(D);
+    var copy = JSON.parse(JSON.stringify(D));
+    return TV.corpus.cached(D, RS).then(function (hit) {
+      if (hit) return TV.corpus.apply(copy, hit);
+      if (!TV.engine.usable()) return null;
+      return TV.corpus.overview(D, RS, function (done, total) {
+        var el = $('#cmpWait');
+        if (el) el.textContent = 'Applying your table rows to the corpus… ' + done + ' / ' + total + ' bugs';
+      }).then(function (res) { return TV.corpus.apply(copy, res); });
+    });
+  }
+  var cmpPromise = null;
+  function renderCompare() {
+    var el = $('#compare'), t = CUR;
+    if (!D) { el.innerHTML = ''; return; }
+    if (t.project === 'swebench') {
+      el.innerHTML = '<div class="card cmp"><div class="cmp-h"><h2>This trajectory and the corpus</h2></div><p class="note">This is a SWE-bench run on a Python repository' +
+        (((REC.result || {}).source || {}).repo_root ? ' (<code>' + esc(REC.result.source.repo_root) + '</code>)' : '') +
+        ', so it is not compared with the corpus of Android app repairs. Its paths are read relative to the repository, and Python\'s test conventions apply (<code>tests/</code>, <code>test_*.py</code>, pytest and unittest results, and the scripts the agent writes at the repository root to reproduce the issue).</p></div>';
+      return;
+    }
+    if (!CORPUS) {
+      el.innerHTML = '<div class="card cmp"><p class="muted" id="cmpWait">Loading the corpus under ' + esc(TV.ruleset.label(RS).toLowerCase()) + '…</p></div>';
+      if (!cmpPromise) cmpPromise = corpusReady().then(function (c) {
+        CORPUS = c || 'none';
+        if (CUR) renderCompare();
+      }, function (err) {
+        CORPUS = 'none';
+        el.innerHTML = '<div class="card cmp"><p class="note">The corpus could not be analysed with your table rows (' + esc(err.message) + '), so there is no comparison.</p></div>';
+      });
+      return;
+    }
+    if (CORPUS === 'none') { el.innerHTML = '<div class="card cmp"><p class="note">Comparing with the corpus under your table rows needs the analysis engine.</p></div>'; return; }
+    var C = CORPUS, agents = C.agents || TV.AGENT_ORDER, same = agents.indexOf(t.agent) >= 0;
+    var pool = [];
+    C.bugs.forEach(function (b) { (same ? [t.agent] : agents).forEach(function (a) { if (b.agents[a]) pool.push(b.agents[a]); }); });
+    var who = same ? t.agent + '\'s ' + pool.length + ' corpus runs' : 'all ' + pool.length + ' corpus runs';
+    /* a tile: this run's value, the corpus median, and where the value falls among the runs */
+    function tile(label, value, xs, fmt, tip) {
+      var a = xs.filter(function (x) { return x != null && !isNaN(x); }), med = TV.median(a), cmp = '';
+      if (med != null) {
+        cmp = 'corpus median ' + fmt(med);
+        if (value != null) {
+          var lo = a.filter(function (x) { return x < value; }).length / a.length, hi = a.filter(function (x) { return x > value; }).length / a.length;
+          cmp += lo >= 0.5 ? ' · above ' + Math.round(100 * lo) + '% of runs' : hi >= 0.5 ? ' · below ' + Math.round(100 * hi) + '% of runs' : ' · typical';
+        }
+      }
+      return '<div class="tile"' + (tip ? ' data-tip="' + esc(tip) + '"' : '') + '><span>' + label + '</span><b>' + (value == null ? '–' : fmt(value)) + '</b>' +
+        (cmp ? '<span class="tc">' + cmp + '</span>' : '') + '</div>';
+    }
+    var id = function (x) { return String(Math.round(x)); };
+    var dur = t.stats.duration_s != null ? t.stats.duration_s : t.stats.reported_duration_s;
     var failedAtt = t.attempts.filter(function (a) { return a.outcome === 'failed'; }).length;
-    var h = '<div class="tiles">' +
-      tile('actions', t.n, TV.plural(t.n_steps || 0, 'agent step') + ' (LLM turns)') +
-      tile('phases', t.phases.length, 'phase stretches; a phase may come back') +
-      tile('subphases', t.subs.length, 'stretches of one phase with one outcome') +
-      tile('repair attempts', t.attempts.length + (failedAtt ? '<small> · ' + failedAtt + ' failed</small>' : ''), 'edits of app code up to the run that checks them (G4)') +
-      tile('first fix', t.anchor ? '#' + t.anchor : '–', t.anchor ? 'the first edit of app source' : 'the log never edits app source') +
-      (dur != null ? tile('duration', TV.fmtDur(dur)) : '') + '</div>';
-    var share = TV.PHASE_ORDER.map(function (p) { return [p, m[p + '_actions'] || 0]; }).filter(function (x) { return x[1]; });
-    var tot = TV.sum(share.map(function (x) { return x[1]; })) || 1;
-    h += '<div class="sumrow"><span class="pass-wrap">' + TV.passPill(t.outcome.pass) + '</span>' +
-      '<span class="share" aria-label="actions per phase">' + share.map(function (x) {
-        return '<span class="sh" data-tip="' + esc(x[0] + ': ' + TV.plural(x[1], 'action') + ' (' + Math.round(100 * x[1] / tot) + '%)') + '">' + TV.phaseChip(x[0]).replace('</span>', ' <b class="num">' + Math.round(100 * x[1] / tot) + '%</b></span>') + '</span>';
-      }).join('') + '</span>' +
-      '<span class="badges">' + TV.badgeHTML(t.badges, t.outcome.pass) + '</span></div>';
-    $('#summary').innerHTML = h;
-  }
-
-  /* ---------------------------------------------------------------- rules card */
-  function setOpen(open) {
-    $('#rulesToggle').setAttribute('aria-expanded', open ? 'true' : 'false');
-    $('#rulesToggle .caret').textContent = open ? '▾' : '▸';
-    $('#rulesBody2').hidden = !open;
-    save(OPEN, open ? '1' : '0');
-  }
-  $('#rulesToggle').addEventListener('click', function () { setOpen(this.getAttribute('aria-expanded') !== 'true'); });
-
-  var LOCK = '<svg class="lockic" width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><rect x="1" y="5" width="9" height="6.5" rx="1.4" fill="currentColor"/><path d="M3 5V3.6a2.5 2.5 0 0 1 5 0V5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
-  function mandatoryRules() {
-    return INFO.mandatory.map(function (r) {
-      return '<li class="rule locked"><span class="rid">' + esc(r.id) + '</span><span class="rtext"><b>' + esc(r.title) + '.</b> ' + esc(r.sentence) + '</span>' +
-        '<span class="fixed" data-tip="mandatory: always applied; it cannot be switched off or removed">' + LOCK + 'required</span></li>';
-    }).join('');
-  }
-  /* the matched / skipped badges of a rule that ran (optional ready-made or custom) */
-  function hitsHTML(x) {
-    if (!x || !x.matched || !CUR) return '';
-    var h = x.matched.length ? '<button type="button" class="hits" data-jump="' + x.matched[0] + '" data-tip="' + esc('actions ' + x.matched.map(function (i) { return '#' + i; }).join(', ') + ' · click: the first one') + '">' + TV.plural(x.matched.length, 'action') + '</button>' :
-      '<span class="hits none" data-tip="no action of this log matches">no match</span>';
-    if (x.skipped && x.skipped.length) h += '<span class="hits warn" data-tip="' + esc(x.skipped.map(function (s) { return '#' + s.i + ': ' + s.why; }).join(' · ')) + '">' + x.skipped.length + ' skipped</span>';
-    return '<span class="hitrow">' + h + '</span>';
-  }
-  function added() {
-    var on = {};
-    RULES.optional.forEach(function (o) { on[o.id] = o; });
-    return on;
-  }
-  /* the optional rules: one card each, "+ Add" or "Added · Remove" */
-  function optionalRules() {
-    var on = added(), rep = {};
-    ((REPORT || {}).optional || []).forEach(function (r) { rep[r.id] = r; });
-    return INFO.optional.map(function (r) {
-      var is = !!on[r.id];
-      return '<li class="rule opt' + (is ? ' added' : '') + '"><span class="rid">' + esc(r.id) + '</span><span class="rtext"><b>' + esc(r.title) + '.</b> ' + esc(r.sentence) + (is ? hitsHTML(rep[r.id]) : '') + '</span>' +
-        '<span class="rbtns">' + (is ? '<span class="addedpill" aria-hidden="true">✓ Added</span><button type="button" class="btn ghost small" data-remove="' + r.id + '" aria-label="Remove rule ' + esc(r.id) + '">Remove</button>' :
-          '<button type="button" class="btn small" data-add="' + r.id + '" aria-label="Add rule ' + esc(r.id) + '">+ Add</button>') + '</span></li>';
-    }).join('');
-  }
-  function customRules() {
-    if (!RULES.custom.length) return '<li class="empty muted">No custom rules yet. Build one here, or open an action of the trajectory and use <b>+ Rule from this action</b>.</li>';
-    var rep = {};
-    ((REPORT || {}).custom || []).forEach(function (r) { rep[r.id] = r; });
-    return RULES.custom.map(function (r, k) {
-      var on = r.enabled !== false, hits = on ? hitsHTML(rep[r.id]) : '';
-      return '<li class="rule' + (on ? '' : ' off') + (FORM.editing === r.id ? ' editing' : '') + '" data-k="' + k + '"><span class="rid">' + esc(r.id) + '</span>' +
-        '<span class="rtext">' + esc(TV.ruleSentence(r)) + hits + '</span>' +
-        '<span class="rbtns"><label class="switch" title="' + (on ? 'Switch off' : 'Switch on') + '"><input type="checkbox" data-enable="' + k + '"' + (on ? ' checked' : '') + '><span aria-hidden="true"></span><span class="sr">enabled</span></label>' +
-        '<button type="button" class="btn ghost icon small" data-edit="' + k + '" title="Edit" aria-label="Edit rule ' + esc(r.id) + '">✎</button>' +
-        '<button type="button" class="btn ghost icon small" data-del="' + k + '" title="Delete" aria-label="Delete rule ' + esc(r.id) + '">✕</button></span></li>';
-    }).join('');
-  }
-  function renderRules() {
-    if (!INFO) return;
-    $('#mandList').innerHTML = mandatoryRules();
-    $('#optList').innerHTML = optionalRules();
-    $('#customList').innerHTML = customRules();
-    var mine = RULES.custom.filter(function (r) { return r.enabled !== false; }).length, n = RULES.optional.length;
-    $('#optCount').textContent = n + ' of ' + INFO.optional.length + ' added';
-    $('#rulesSum').innerHTML = INFO.mandatory.length + ' mandatory · ' + (n ? '<b>' + n + ' optional</b>' : 'no optional') +
-      ' · ' + (mine ? '<b>' + mine + ' custom</b>' : 'no custom');
-    $('#resetOptional').hidden = !n;
-    renderForm();
-  }
-  $('#optList').addEventListener('click', function (e) {
-    var b = e.target.closest('button');
-    if (!b) return;
-    if (b.dataset.jump) { TV.setCursor(+b.dataset.jump); scrollToCur(); return; }
-    if (b.dataset.remove) {
-      RULES.optional = RULES.optional.filter(function (o) { return o.id !== b.dataset.remove; });
-      reanalyze();
-    } else if (b.dataset.add) {
-      var order = INFO.optional.map(function (o) { return o.id; });
-      RULES.optional.push({ id: b.dataset.add });
-      RULES.optional.sort(function (x, y) { return order.indexOf(x.id) - order.indexOf(y.id); });
-      reanalyze();
+    var h = '<div class="card cmp"><div class="cmp-h"><h2>This trajectory and the corpus</h2><span class="muted small">compared with ' + esc(who) + ' (run 1) · ' + esc(TV.ruleset.label(RS)) + '</span></div>';
+    h += '<div class="tiles">' +
+      tile('Actions', t.n, pool.map(function (x) { return x.n_actions; }), id, TV.plural(t.n_steps || 0, 'agent step') + ' (LLM turns)') +
+      tile('Phase spans', t.phases.length, pool.map(function (x) { return x.stats.n_phases; }), id, 'stretches of one phase; a phase may come back') +
+      tile('Repair attempts', t.attempts.length, pool.map(function (x) { return x.stats.n_attempts; }), id, 'edits of app code, each checked by the first build or test after it' + (failedAtt ? '; ' + failedAtt + ' failed here' : '')) +
+      tile('First fix', t.anchor, pool.map(function (x) { return x.stats.anchor; }), function (x) { return '#' + Math.round(x); }, t.anchor ? 'the first edit of a source file' : 'this log never edits a source file') +
+      (dur != null ? tile('Duration', dur, pool.map(function (x) { return x.stats.duration_s != null ? x.stats.duration_s : x.stats.reported_duration_s; }), TV.fmtDur) : '') +
+      '</div>';
+    /* phase shares: this run against the pooled corpus runs */
+    function shares(list) {
+      var tot = {}, n = 0;
+      list.forEach(function (x) { TV.PHASE_ORDER.forEach(function (p) { var k = (x.metrics || {})[p + '_actions'] || 0; tot[p] = (tot[p] || 0) + k; n += k; }); });
+      return { tot: tot, n: n };
     }
-  });
-  $('#resetOptional').addEventListener('click', function () { RULES.optional = []; reanalyze(); });
-  $('#customList').addEventListener('change', function (e) {
-    var k = e.target.dataset.enable;
-    if (k == null) return;
-    RULES.custom[+k].enabled = e.target.checked;
-    reanalyze();
-  });
-  $('#customList').addEventListener('click', function (e) {
-    var b = e.target.closest('button');
-    if (!b) return;
-    if (b.dataset.jump) { TV.setCursor(+b.dataset.jump); scrollToCur(); return; }
-    if (b.dataset.del != null) {
-      var gone = RULES.custom.splice(+b.dataset.del, 1)[0];
-      if (gone && FORM.editing === gone.id) resetForm();
-      reanalyze();
-    } else if (b.dataset.edit != null) {
-      var r = RULES.custom[+b.dataset.edit];
-      FORM = { kind: r.kind, field: r.field || 'target', regex: !!r.regex, match: r.match, value: r.value, editing: r.id };
-      renderRules();
-      $('#rfMatch').focus();
+    function bar(sh, label) {
+      return '<div class="ps-l">' + label + '</div><div class="bar100">' + (sh.n ? TV.PHASE_ORDER.filter(function (p) { return sh.tot[p]; }).map(function (p) {
+        var share = sh.tot[p] / sh.n;
+        return '<i style="flex:' + sh.tot[p] + ' 1 0;background:' + TV.phaseVar(p) + ';color:' + TV.phaseTextVar(p) + '" data-tip="' + esc(p + ': ' + sh.tot[p] + ' actions (' + TV.pct(share) + ')') + '">' + (share >= 0.08 ? TV.pct(share) : '') + '</i>';
+      }).join('') : '<i class="none"></i>') + '</div>';
     }
-  });
-
-  /* the rule builder: a sentence with its blanks as fields */
-  var FORM = { kind: 'phase', field: 'target', regex: false, match: '', value: '', editing: null };
-  function options(list, cur, labels) {
-    return list.map(function (v) { return '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc((labels || {})[v] || v.replace(/_/g, ' ')) + '</option>'; }).join('');
-  }
-  function valuesFor(kind) {
-    if (kind === 'category') return INFO.categories;
-    if (kind === 'file_role') return INFO.file_roles;
-    return INFO.phases.concat([INFO.follow]);
-  }
-  function renderForm() {
-    if (!INFO) return;
-    var f = FORM, vals = valuesFor(f.kind);
-    if (vals.indexOf(f.value) < 0) f.value = vals[0];
-    $$('#ruleForm [data-kind]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.kind === f.kind ? 'true' : 'false'); });
-    var op = '<select id="rfOp" aria-label="How to match">' + options(['contains', 'regex'], f.regex ? 'regex' : 'contains', { contains: 'contains', regex: 'matches the regex' }) + '</select>';
-    var match = '<input id="rfMatch" type="text" class="rf-match" value="' + esc(f.match) + '" placeholder="' + (f.kind === 'file_role' ? 'src/sharedTest/' : f.field === 'tool' ? 'update_plan' : './gradlew lint') + '" aria-label="Text to match" spellcheck="false">';
-    var val = '<select id="rfValue" aria-label="Value">' + options(vals, f.value, { follow: 'the phase of the work around them' }) + '</select>';
-    var h;
-    if (f.kind === 'file_role') h = '<span>Files whose path</span>' + op + match + '<span>are</span>' + val + '<span>files.</span>';
-    else {
-      h = '<span>Actions whose</span><select id="rfField" aria-label="What to match">' + options(INFO.fields, f.field, { target: 'command or target', tool: 'tool name', any: 'tool, command or target' }) + '</select>' +
-        op + match + '<span>' + (f.kind === 'category' ? 'count as' : 'belong to') + '</span>' + val + '<span>.</span>';
+    h += '<div class="cmp-cols"><div><h3>Where the actions go</h3><div class="pshare">' + bar(shares([t]), '<b>This run</b>') + bar(shares(pool), same ? TV.agentHTML(t.agent) + '<span class="muted small">corpus, ' + pool.length + ' runs</span>' : '<b>Corpus</b><span class="muted small">all ' + pool.length + ' runs</span>') + '</div>' +
+      '<div class="legend lg-inline">' + TV.phaseLegend() + '</div></div>';
+    /* phase outcomes: this run's counts against the corpus shares, phase by phase (a phase whose
+     * checks changed counts each of its outcomes) */
+    var mine = {};
+    t.subs.forEach(function (s) { var r = mine[s.p.phase] || (mine[s.p.phase] = {}); r[s.outcome] = (r[s.outcome] || 0) + 1; });
+    h += '<div><h3>Phase outcomes</h3><div class="ocmp">';
+    TV.PHASE_ORDER.filter(function (p) { return mine[p]; }).forEach(function (p) {
+      var c = {}, n = 0;
+      pool.forEach(function (x) { var row = ((x.subphases || {}).by_phase || {})[p] || {}; Object.keys(row).forEach(function (o) { c[o] = (c[o] || 0) + row[o]; n += row[o]; }); });
+      h += '<span class="bl">' + TV.phaseChip(p) + '</span><span class="oc-mine">' + TV.OUTCOMES.filter(function (o) { return mine[p][o]; }).map(function (o) {
+        return '<span class="ocount o-' + o + '" data-tip="' + esc(mine[p][o] + ' here · ' + TV.outcomeDef(p, o)) + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[o] + '</b>' + mine[p][o] + '</span>';
+      }).join('') + '</span><span class="bar100 mini" data-tip="the outcomes of this phase in the corpus runs">' + (n ? TV.OUTCOMES.filter(function (o) { return c[o]; }).map(function (o) {
+        return '<i class="o-' + o + '" style="flex:' + c[o] + ' 1 0" data-tip="' + esc('corpus: ' + c[o] + ' ' + o + ' (' + TV.pct(c[o] / n) + ')') + '">' + (c[o] / n >= 0.25 ? TV.pct(c[o] / n) : '') + '</i>';
+      }).join('') : '<i class="none"></i>') + '</span>';
+    });
+    h += '</div><div class="legend lg-inline"><span class="muted small">this run (counts) · corpus (shares)</span>' + TV.outcomeLegend() + '</div></div></div>';
+    /* the same bug in the corpus */
+    var bug = t.bug && C.bugs.filter(function (b) { return String(b.bug) === String(t.bug); })[0];
+    if (bug) {
+      h += '<div class="samebug"><h3>bug-' + esc(bug.bug) + ' in the corpus <span class="muted small">run ' + (C.run || 1) + (bug.app ? ' · ' + esc(bug.app) : '') + '</span></h3>';
+      var maxN = Math.max(t.n, Math.max.apply(null, agents.map(function (a) { return (bug.agents[a] || {}).n_actions || 0; })));
+      h += '<div class="sb-row"><span class="sb-a"><b>This run</b></span>' + TV.markHTML(t.outcome.pass) + '<span class="track">' + TV.stripsHTML(t.strip, t.subStrip, t.n, maxN) + '<span class="an">' + t.n + '</span></span></div>';
+      agents.forEach(function (a) {
+        var x = bug.agents[a];
+        if (!x) return;
+        h += '<a class="sb-row" href="bug.html#bug=' + encodeURIComponent(bug.bug) + '&t=' + a + '-r' + (C.run || 1) + '"><span class="sb-a">' + TV.agentHTML(a) + '</span>' + TV.markHTML(x.pass) +
+          '<span class="track">' + TV.stripsHTML(x.strip, x.sub_strip, x.n_actions, maxN) + '<span class="an">' + x.n_actions + '</span></span></a>';
+      });
+      h += '<a class="btn small" href="bug.html#bug=' + encodeURIComponent(bug.bug) + '">Open bug-' + esc(bug.bug) + ' (3 agents × 3 runs)</a></div>';
     }
-    var focused = document.activeElement && document.activeElement.id;
-    var pos = focused === 'rfMatch' ? document.activeElement.selectionStart : null;
-    $('#rfSentence').innerHTML = h;
-    if (focused && $('#' + focused)) { $('#' + focused).focus(); if (pos != null) try { $('#rfMatch').setSelectionRange(pos, pos); } catch (e) { /* ignore */ } }
-    $('#rfAdd').textContent = f.editing ? 'Save ' + f.editing : 'Add rule';
-    $('#rfCancel').hidden = !f.editing;
+    el.innerHTML = h + '</div>';
   }
-  function resetForm() { FORM = { kind: FORM.kind, field: 'target', regex: false, match: '', value: '', editing: null }; $('#rfErr').textContent = ''; }
-  $('#ruleForm').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-kind]');
-    if (b) { FORM.kind = b.dataset.kind; FORM.value = ''; renderForm(); }
-  });
-  $('#ruleForm').addEventListener('input', function (e) {
-    var id = e.target.id;
-    if (id === 'rfMatch') FORM.match = e.target.value;
-    $('#rfErr').textContent = '';
-  });
-  $('#ruleForm').addEventListener('change', function (e) {
-    var id = e.target.id, v = e.target.value;
-    if (id === 'rfField') FORM.field = v;
-    else if (id === 'rfOp') FORM.regex = v === 'regex';
-    else if (id === 'rfValue') FORM.value = v;
-    else return;
-    renderForm();
-  });
-  $('#rfCancel').addEventListener('click', function () { resetForm(); renderRules(); });
-  $('#ruleForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var f = FORM, m = (f.match || '').trim();
-    if (!m) { $('#rfErr').textContent = 'Type the text to match.'; $('#rfMatch').focus(); return; }
-    if (f.regex) { try { new RegExp(m); } catch (err) { $('#rfErr').textContent = 'Not a valid regular expression.'; return; } }
-    var rule = { kind: f.kind, field: f.kind === 'file_role' ? 'path' : f.field, match: m, regex: f.regex, value: f.value, enabled: true };
-    if (f.editing) {
-      var k = RULES.custom.map(function (r) { return r.id; }).indexOf(f.editing);
-      rule.id = f.editing;
-      rule.enabled = k >= 0 ? RULES.custom[k].enabled !== false : true;
-      if (k >= 0) RULES.custom[k] = rule; else RULES.custom.push(rule);
-    } else {
-      rule.id = nextId();
-      RULES.custom.push(rule);
-    }
-    resetForm();
-    reanalyze();
-  });
-  function nextId() {
-    var used = {};
-    RULES.custom.forEach(function (r) { used[r.id] = 1; });
-    for (var n = 1; ; n++) if (!used['R' + n]) return 'R' + n;
-  }
-
-  /* start a rule from an action: its command head (or file name, or tool) and its phase */
-  function suggest(a) {
-    var tgt = (a.cmd || a.target || '').trim();
-    if (!tgt) return { field: 'tool', match: a.tool };
-    if (/^[^\s]+\.[A-Za-z0-9]{1,6}$/.test(tgt)) return { field: 'target', match: tgt.split('/').pop() };
-    var parts = tgt.split(/\s*(?:&&|\|\||;|\|)\s*/).filter(function (p) { return p && !/^(cd|export|set|source)\b/.test(p); });
-    var words = (parts[0] || tgt).split(/\s+/).filter(function (w) { return w && !/^\d+>/.test(w); });
-    return { field: 'target', match: words.slice(0, words[0] && /^(\.\/)?(gradlew|git|adb|python3?|npm|mvn)$/.test(words[0].split('/').pop()) ? 2 : 1).join(' ') };
-  }
-  TV.ruleFromAction = function (i) {
-    var a = CUR && CUR.actions[i - 1];
-    if (!a) return;
-    var s = suggest(a);
-    FORM = { kind: 'phase', field: s.field, regex: false, match: s.match, value: a.phase, editing: null };
-    setOpen(true);
-    renderRules();
-    $('#rules').scrollIntoView({ block: 'start', behavior: 'smooth' });
-    setTimeout(function () { var m = $('#rfMatch'); if (m) { m.focus(); m.select(); } }, 250);
-  };
-
-  /* export / import (the same JSON the CLI's --rules reads) */
-  $('#exportRules').addEventListener('click', function () {
-    var blob = new Blob([JSON.stringify({ schema: RULES.schema, optional: RULES.optional, custom: RULES.custom }, null, 2) + '\n'], { type: 'application/json' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'rules.json';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-  });
-  $('#importRules').addEventListener('click', function () { $('#importFile').click(); });
-  $('#importFile').addEventListener('change', function () {
-    var f = this.files[0];
-    this.value = '';
-    if (!f) return;
-    f.text().then(function (text) {
-      var obj = JSON.parse(text);
-      if (!obj || typeof obj !== 'object' || (!obj.optional && !obj.settings && !obj.custom)) throw new Error('not a rules file');
-      RULES = fromFile(obj);
-      resetForm();
-      setOpen(true);
-      reanalyze();
-    }).catch(function (err) { state('import failed: ' + err.message, 'bad'); });
-  });
 
   /* ---------------------------------------------------------------- the views' shell */
   TV.traj = function () { return CUR; };
-  TV.applyLevel = function (t, level) {
-    var e = S.expanded[t.id] || (S.expanded[t.id] = { p: {}, s: {} });
-    e.p = {}; e.s = {};
-    if (level === 'subphases' || level === 'steps') t.phases.forEach(function (p) { e.p[p.id] = 1; });
-    if (level === 'steps') t.subs.forEach(function (s) { e.s[s.id] = 1; });
-  };
+  TV.applyLevel = function (t, level) { S.expanded[t.id] = TV.levelExpansion(t, level); };
   TV.exp = function (t) {
     t = t || CUR;
-    var e = S.expanded[t.id];
-    if (!e) { e = S.expanded[t.id] = { p: {}, s: {} }; TV.applyLevel(t, S.level); }
-    return e;
+    return S.expanded[t.id] || (S.expanded[t.id] = TV.levelExpansion(t, S.level));
   };
   TV.setCursor = function (i, opts) {
     opts = opts || {};
@@ -472,23 +376,29 @@
     syncPanel();
     updateCursorUI();
   };
-  TV.select = function () { /* one trajectory only */ };
-  function scrollToCur() {
-    setTimeout(function () { var n = $('#view .cur'); if (n) n.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, 30);
-  }
+  /* a comparison's member (the Fingerprint view and the group bar select one) */
+  TV.select = function (key, opts) {
+    if (!GROUP || !GROUP.byKey[key]) return;
+    var rec = GROUP.g.members.filter(function (r) { return r.id === key; })[0];
+    if (!rec) return;
+    stopPlay();
+    if (rec !== REC) show(rec, true);
+    if (opts && opts.i) TV.setCursor(opts.i);
+  };
   function setView(v, force) {
-    if (VIEWS.indexOf(v) < 0) v = 'trajectory';
+    if (VIEWS.indexOf(v) < 0 || (v === 'fingerprint' && !GROUP)) v = 'trajectory';
     var changed = v !== S.view;
     S.view = v;
     $$('.tabs [data-view]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.view === v ? 'true' : 'false'); });
     if (changed || force) render();
+    saveHash();
   }
   function tabCtl() {
     var h = '';
-    if (S.view === 'trajectory') {
-      h = '<span class="seg small" role="group" aria-label="Level">' + [['phases', 'Phases'], ['subphases', '+ Subphases'], ['steps', '+ Steps']].map(function (x) {
-        return '<button type="button" data-level="' + x[0] + '" aria-pressed="' + (S.level === x[0]) + '">' + x[1] + '</button>';
-      }).join('') + '</span>';
+    if (S.view === 'fingerprint') {
+      h = '';
+    } else if (S.view === 'trajectory') {
+      h = TV.levelCtlHTML(S.level);
     } else if (CUR.hasTs) {
       h = '<span class="seg small" role="group" aria-label="x axis"><button type="button" data-x="index" aria-pressed="' + !S.timeMode + '">action #</button>' +
         '<button type="button" data-x="time" aria-pressed="' + S.timeMode + '">wall-clock</button></span>';
@@ -519,8 +429,30 @@
   var resizeTimer = 0;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () { measureSticky(); relayout(); }, 120);
+    resizeTimer = setTimeout(function () { measureSticky(); if (!RO) relayout(); }, 120);
   });
+  /* the view follows its own width: a ResizeObserver redraws it in the frame where the width
+   * changed (the details panel opened or closed, the window resized), so no frame with the old
+   * layout is ever painted (a delayed redraw made the view flicker) */
+  var viewW = 0, RO = window.ResizeObserver;
+  if (RO) {
+    new RO(function (entries) {
+      var w = Math.round(entries[0].contentRect.width);
+      if (!w || w === viewW) return;
+      var first = !viewW;
+      viewW = w;
+      if (!first) relayout();
+    }).observe(widthProbe($('#view')));
+  }
+  /* a zero-height box as wide as the view: its size never follows the view's content, so a
+   * redraw cannot notify the observer again */
+  function widthProbe(view) {
+    var probe = document.createElement('div');
+    probe.className = 'wprobe';
+    probe.setAttribute('aria-hidden', 'true');
+    view.parentNode.insertBefore(probe, view);
+    return probe;
+  }
   function relayout() {
     if (!CUR) return;
     var v = TV.views[S.view];
@@ -579,7 +511,7 @@
     $('#playBtn').disabled = !t.n;
     $('#cursorLabel').innerHTML = a ? '<b>#' + a.i + '</b><span class="muted">/' + t.n + '</span> <span class="cl-mid">' + esc(a.category) + '</span>' +
         (a.verdict !== 'none' ? ' <span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + '</span>' : '') +
-        (a.sub ? ' <span class="opill mini o-' + a.sub.outcome + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[a.sub.outcome] + '</b><span class="ell">' + esc(a.sub.p.phase) + '</span></span>' : '')
+        (a.sub ? ' <span class="opill mini o-' + a.sub.outcome + '" data-tip="' + esc(a.sub.p.phase + ' outcome: ' + TV.outcomeDef(a.sub.p.phase, a.sub.outcome)) + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[a.sub.outcome] + '</b><span class="ell">' + esc(a.sub.p.phase) + '</span></span>' : '')
       : '<b>#–</b><span class="muted">/' + t.n + ' · press ▶ or j</span>';
   }
 
@@ -588,8 +520,15 @@
     var want = !!(CUR && S.i && S.panel);
     var was = document.body.classList.contains('panel-open');
     document.body.classList.toggle('panel-open', want);
-    if (want) renderPanel();
-    if (want !== was) setTimeout(relayout, 180);
+    if (want) renderPanel(); else emptyPanel();
+    if (want !== was && !RO) setTimeout(relayout, 180);                   // no ResizeObserver: redraw after the slide
+  }
+  /* no action picked: the docked column says how to fill it */
+  function emptyPanel() {
+    $('#dtI').textContent = '#–';
+    $('#dtOf').textContent = '';
+    $('#dtPrev').disabled = $('#dtNext').disabled = true;
+    $('#dtBody').innerHTML = '<p class="dt-empty">Click an action, or press <kbd>j</kbd>.</p>';
   }
   function closePanel() { S.panel = false; syncPanel(); }
   TV.closePanel = closePanel;
@@ -600,11 +539,10 @@
     $('#dtOf').textContent = 'of ' + t.n + ' · ' + t.agent;
     $('#dtPrev').disabled = a.i <= 1;
     $('#dtNext').disabled = a.i >= t.n;
-    $('#dtBody').innerHTML = '<div class="dt-acts"><button type="button" class="btn small" id="dtRule" title="Start a rule that matches actions like this one">+ Rule from this action</button></div>' +
-      TV.actionDetailsHTML(t, a);
+    $('#dtBody').innerHTML = TV.detailsActsHTML(a) + TV.actionDetailsHTML(t, a);
+    if (TV.steps) TV.steps.fill($('#dtBody'), t, a);
     $('#dtBody').scrollTop = 0;
   }
-  $('#dtBody').addEventListener('click', function (e) { if (e.target.closest('#dtRule')) TV.ruleFromAction(S.i); });
   $('#dtPrev').addEventListener('click', function () { TV.setCursor(S.i - 1); });
   $('#dtNext').addEventListener('click', function () { TV.setCursor(S.i + 1); });
   $('#dtClose').addEventListener('click', closePanel);
@@ -620,9 +558,11 @@
     if (k === 'j') { TV.setCursor((S.i || 0) + 1); e.preventDefault(); }
     else if (k === 'k') { TV.setCursor((S.i || 2) - 1); e.preventDefault(); }
     else if (k === ' ' && tag !== 'button') { togglePlay(); e.preventDefault(); }
-    else if (k === '1' || k === '2') setView(VIEWS[+k - 1]);
+    else if (k === '1' || k === '2' || (k === '3' && GROUP)) setView(VIEWS[+k - 1]);
+    else if (k === '[') step(-1);
+    else if (k === ']') step(1);
   });
 
   setTimeout(function () { document.body.classList.remove('preload'); }, 400);
-  start();
+  route();
 })();

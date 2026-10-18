@@ -7,9 +7,9 @@
 - steps (LLM inferences): 52 | actions: 47 | failed actions: 6
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(9: succeeded) -> repair(8: failed) -> validation(26: failed, blocked, failed, succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(8: succeeded) -> planning(1: unchecked) -> repair(1: failed) -> planning(1: unchecked) -> validation(31: failed, blocked, failed, succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:31:59.155Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the custom-study rename flow, patch the UI behavior, then run the r
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:32:02.799Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:32:04.337Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ api/src/main/java/com/ichi2/anki/api/Basic2Model.java
 api/src/main/java
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T08:32:07.660Z_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T08:32:09.768Z_
 
 **Thought** (narration):
@@ -127,7 +127,7 @@ AnkiDroid/src/main/res/values-zu/03-dialogs.xml:101:    <string name="custom_stu
 AnkiDroid
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T08:32:12.333Z_
 
 **Thought** (none):
@@ -149,7 +149,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java:433:      
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java:440:                    .content(R.string.custom_study_deck_
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T08:32:15.282Z_
 
 **Thought** (narration):
@@ -176,7 +176,7 @@ Total output lines: 491
  *                                                                                      *
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T08:32:19.048Z_
 
 **Thought** (none):
@@ -203,7 +203,7 @@ Output:
             case CUSTOM
 ```
 
-## 9. search_code / localization (own phase understanding)  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T08:32:24.834Z_
 
 **Thought** (none):
@@ -236,7 +236,7 @@ import androidx.core.content.ContextCompat;
 import android.vi
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T08:32:27.991Z | **FAILED**_
 
 **Thought** (none):
@@ -258,7 +258,7 @@ AnkiDroid/src/test/java/com/ichi2/anki/RobolectricTest.java:312:        return g
 fatal: no such path 'AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java' in HEAD
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-23T08:32:32.291Z_
 
 **Thought** (narration):
@@ -288,7 +288,7 @@ HARNESS
             throw new IllegalArgumentException(String.format("Could not find m
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-23T08:32:41.814Z_
 
 **Thought** (none):
@@ -313,7 +313,7 @@ Total output lines: 207
  *                                                                                      *
 ```
 
-## 13. plan / localization  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-23T08:32:47.447Z_
 
 **Thought** (none):
@@ -329,7 +329,7 @@ _(none)_
 Plan updated
 ```
 
-## 14. edit_file / repair  (exec_command)
+## 14. edit / repair  (exec_command)
 _step 18 | 2026-09-23T08:32:51.656Z_
 
 **Thought** (narration):
@@ -362,7 +362,7 @@ M AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java
 M AnkiDroid/src/test/java/com/ichi2/anki/dialogs/CustomStudyDialogTest.java
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-23T08:32:59.390Z_
 
 **Thought** (narration):
@@ -380,7 +380,7 @@ The code and regression test are patched. I’m running the focused test first, 
 Plan updated
 ```
 
-## 16. run_test / repair  (exec_command)
+## 16. test / validation  (exec_command)
 _step 20 | 2026-09-23T08:33:02.835Z_
 
 **Thought** (none):
@@ -402,7 +402,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-23T08:33:05.452Z_
 
 **Thought** (none):
@@ -429,7 +429,7 @@ Watching the file system is not supported on this operating system.
 > Task :api:packageDebu
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T08:33:11.932Z_
 
 **Thought** (none):
@@ -454,7 +454,7 @@ Output:
 > Task :AnkiDroid:processDebugManifestForPackage FROM-CACHE
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-23T08:33:20.297Z_
 
 **Thought** (none):
@@ -482,7 +482,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :AnkiDroid:bund
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-23T08:33:27.137Z_
 
 **Thought** (none):
@@ -502,7 +502,7 @@ Original token count: 0
 Output:
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-23T08:33:34.798Z | **FAILED**_
 
 **Thought** (none):
@@ -526,7 +526,7 @@ Output:
         String customStudyDeckName = getString(R.string.cust
 ```
 
-## 22. run_test / validation  (exec_command)
+## 22. edit / validation  (exec_command)
 _step 26 | 2026-09-23T08:33:41.510Z_
 
 **Thought** (narration):
@@ -566,7 +566,7 @@ Output:
         return Applica
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-23T08:33:47.054Z_
 
 **Thought** (none):
@@ -593,7 +593,7 @@ Watching the file system is not supported on this operating system.
 > Task :api:packageDeb
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-23T08:33:53.979Z_
 
 **Thought** (none):
@@ -613,7 +613,7 @@ Original token count: 0
 Output:
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-23T08:34:00.475Z_
 
 **Thought** (none):
@@ -633,7 +633,7 @@ Original token count: 0
 Output:
 ```
 
-## 26. wait_process / validation  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-23T08:34:08.091Z | **FAILED**_
 
 **Thought** (none):
@@ -663,7 +663,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 > Ta
 ```
 
-## 27. search_code / validation  (exec_command)
+## 27. search / validation  (exec_command)
 _step 31 | 2026-09-23T08:34:16.442Z_
 
 **Thought** (narration):
@@ -694,7 +694,7 @@ import java.nio.file.Files
 // The general idea of this was borrowed from https://gist.github.com/xi
 ```
 
-## 28. run_test / validation  (exec_command)
+## 28. edit / validation  (exec_command)
 _step 32 | 2026-09-23T08:34:21.870Z | **FAILED**_
 
 **Thought** (none):
@@ -718,7 +718,7 @@ Downloading https://services.gradle.org/distributions/gradle-6.7-bin.zip
 Exception in thread "main" java.net.ConnectException: Opera
 ```
 
-## 29. env_setup / validation  (exec_command)
+## 29. edit / validation  (exec_command)
 _step 33 | 2026-09-23T08:34:29.087Z_
 
 **Thought** (narration):
@@ -743,7 +743,7 @@ Output:
 -- robolectric SDK jars --
 ```
 
-## 30. wait_process / validation  (write_stdin)
+## 30. other / validation  (write_stdin)
 _step 34 | 2026-09-23T08:34:43.208Z_
 
 **Thought** (none):
@@ -763,7 +763,7 @@ Original token count: 0
 Output:
 ```
 
-## 31. wait_process / validation  (write_stdin)
+## 31. other / validation  (write_stdin)
 _step 35 | 2026-09-23T08:34:49.976Z_
 
 **Thought** (none):
@@ -779,7 +779,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 32. wait_process / validation  (write_stdin)
+## 32. other / validation  (write_stdin)
 _step 36 | 2026-09-23T08:34:52.404Z_
 
 **Thought** (none):
@@ -799,7 +799,7 @@ Original token count: 0
 Output:
 ```
 
-## 33. wait_process / validation  (exec_command)
+## 33. other / validation  (exec_command)
 _step 37 | 2026-09-23T08:34:58.890Z_
 
 **Thought** (none):
@@ -819,7 +819,7 @@ Original token count: 0
 Output:
 ```
 
-## 34. search_code / validation  (exec_command)
+## 34. search / validation  (exec_command)
 _step 38 | 2026-09-23T08:35:01.716Z_
 
 **Thought** (none):
@@ -844,7 +844,7 @@ total 236224
 -rw-r--r-
 ```
 
-## 35. run_test / validation  (exec_command)
+## 35. edit / validation  (exec_command)
 _step 39 | 2026-09-23T08:35:06.229Z_
 
 **Thought** (none):
@@ -866,7 +866,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true -Duser.home=/Users/
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 36. wait_process / validation  (write_stdin)
+## 36. other / validation  (write_stdin)
 _step 40 | 2026-09-23T08:35:10.488Z_
 
 **Thought** (none):
@@ -893,7 +893,7 @@ Watching the file system is not supported on this operating system.
 > Task :api:packageDeb
 ```
 
-## 37. wait_process / validation  (write_stdin)
+## 37. other / validation  (write_stdin)
 _step 41 | 2026-09-23T08:35:17.078Z_
 
 **Thought** (none):
@@ -913,7 +913,7 @@ Original token count: 0
 Output:
 ```
 
-## 38. wait_process / validation  (write_stdin)
+## 38. other / validation  (write_stdin)
 _step 42 | 2026-09-23T08:35:23.191Z_
 
 **Thought** (none):
@@ -933,7 +933,7 @@ Original token count: 0
 Output:
 ```
 
-## 39. wait_process / validation  (write_stdin)
+## 39. other / validation  (write_stdin)
 _step 43 | 2026-09-23T08:35:29.828Z_
 
 **Thought** (none):
@@ -961,7 +961,7 @@ Total output lines: 101
 >
 ```
 
-## 40. wait_process / validation  (write_stdin)
+## 40. other / validation  (write_stdin)
 _step 44 | 2026-09-23T08:35:37.517Z | **FAILED**_
 
 **Thought** (none):
@@ -1010,7 +1010,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 42. wait_process / validation  (write_stdin)
+## 42. other / validation  (write_stdin)
 _step 46 | 2026-09-23T08:35:42.749Z_
 
 **Thought** (none):
@@ -1038,7 +1038,7 @@ Watching the file system is not supported on this operating system.
 >
 ```
 
-## 43. wait_process / validation  (write_stdin)
+## 43. other / validation  (write_stdin)
 _step 47 | 2026-09-23T08:35:49.223Z_
 
 **Thought** (none):
@@ -1064,7 +1064,7 @@ Output:
 > Task :AnkiDroid:gener
 ```
 
-## 44. wait_process / validation  (write_stdin)
+## 44. other / validation  (write_stdin)
 _step 48 | 2026-09-23T08:35:55.521Z_
 
 **Thought** (none):
@@ -1092,7 +1092,7 @@ Deprecated Gradle features were used in this build, making it incompatible with 
 Use '--warning-mode
 ```
 
-## 45. wait_process / validation  (write_stdin)
+## 45. other / validation  (write_stdin)
 _step 49 | 2026-09-23T08:36:02.006Z_
 
 **Thought** (none):
@@ -1112,7 +1112,7 @@ Original token count: 0
 Output:
 ```
 
-## 46. read_file / validation  (exec_command)
+## 46. read / validation  (exec_command)
 _step 50 | 2026-09-23T08:36:06.871Z_
 
 **Thought** (narration):
@@ -1140,7 +1140,7 @@ Output:
    432	        String deckToStudyName =
 ```
 
-## 47. plan / validation  (update_plan)
+## 47. plan / planning  (update_plan)
 _step 51 | 2026-09-23T08:36:12.841Z_
 
 **Thought** (none):

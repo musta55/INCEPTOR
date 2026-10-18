@@ -17,7 +17,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 
-from atif import codebook, corpus, detect, outcomes, phase, taxonomy, view  # noqa: E402
+from atif import codebook, corpus, detect, lookup, outcomes, phase, taxonomy, view  # noqa: E402
 
 DATASET = HERE.parent.parent / "Dataset"
 DATA = HERE.parent / "data"
@@ -98,6 +98,32 @@ class ContractTests(unittest.TestCase):
                     self.assertEqual(at["outcome"], "unchecked", obj["id"])
                 last = at["end"]
 
+    def test_step_outcomes_and_files_agree_with_the_phases(self):
+        """A step's own outcome never contradicts its stretch: a Localization step succeeds
+        only by touching a target file, and its stretch then succeeded; an edit of a judged
+        attempt carries the attempt's outcome. Files are repository paths, never folders."""
+        for obj in _run1_views():
+            sub = {}
+            for s in obj["phases"]:
+                for sp in s["subphases"]:
+                    for i in range(sp["start"], sp["end"] + 1):
+                        sub[i] = sp
+            edit_of = {i: at for at in obj["attempts"] if at["judge"] is not None for i in at["edits"]}
+            for a in obj["actions"]:
+                o = a.get("step_outcome")
+                self.assertIn(o, (None, "succeeded", "failed", "blocked"), obj["id"])
+                if o and a["phase"] == "localization":
+                    self.assertEqual((o, a["step_evidence"]), ("succeeded", "target_file"), obj["id"])
+                    self.assertEqual(sub[a["i"]]["outcome"], "succeeded", (obj["id"], a["i"]))
+                if a["i"] in edit_of:
+                    self.assertEqual(o, edit_of[a["i"]]["outcome"], (obj["id"], a["i"]))
+                for f in a.get("files", []) + a.get("found", []):
+                    self.assertNotIn(f.rsplit("/", 1)[-1], ("", ".", ".."), obj["id"])
+                    self.assertFalse(f.startswith("/"), (obj["id"], f))
+                if "found" in a:
+                    self.assertEqual(a["category"], "search", obj["id"])
+            self.assertIn(obj["targets"]["source"], ("developer_fix", "final_patch", "none"))
+
     def test_check_view_rejects_a_broken_view(self):
         obj = next(v for v in _run1_views() if len(v["phases"]) > 1)
         gap = copy.deepcopy(obj)
@@ -122,13 +148,17 @@ class VocabTests(unittest.TestCase):
         self.assertEqual(v["phases"], list(phase.PHASES))
         self.assertEqual(v["outcomes"], list(phase.OUTCOMES))
         self.assertEqual(v["flags"], list(phase.FLAGS))
-        self.assertEqual(v["categories"], list(taxonomy.CATEGORIES))
-        self.assertEqual(set(v["category_family"]), set(taxonomy.CATEGORIES))
+        self.assertEqual(v["categories"], list(lookup.CATEGORIES))
+        self.assertEqual(set(v["category_family"]), set(lookup.CATEGORIES))
+        self.assertEqual(v["file_roles"], list(lookup.TARGETS))
 
     def test_text_quotes_every_table_row_of_the_codebook(self):
         text = view.vocab()["text"]
         self.assertEqual(set(text["phases"]), set(phase.PHASES))
-        self.assertEqual(set(text["categories"]), set(taxonomy.CATEGORIES))
+        self.assertEqual(set(text["categories"]), set(lookup.CATEGORIES))
+        for cat, shell, native in lookup.ACTION_TABLE:      # the table's two columns, verbatim
+            self.assertEqual(text["categories"][cat]["tools"],
+                             "; ".join(x for x in (shell, native) if x))
         self.assertEqual(set(text["flags"]), set(phase.FLAGS))
         self.assertEqual(set(text["outcomes"]), set(phase.PHASES))
         for row in codebook.OUTCOME_ROWS:

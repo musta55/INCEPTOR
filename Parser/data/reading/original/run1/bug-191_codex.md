@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 19 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(9: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(1: failed) -> planning(1: unchecked) -> localization(8: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:20:01.828Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace tower placement and credit accounting, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:20:06.753Z_
 
 **Thought** (none):
@@ -57,7 +57,7 @@ drwxr-xr-x@ 54 sage  staff   1728 Sep 23 03:15 ..
 -rw-r--r--@  1 sage  staff
 ```
 
-## 3. plan / understanding  (update_plan)
+## 3. plan / planning  (update_plan)
 _step 7 | 2026-09-23T09:20:07.793Z_
 
 **Thought** (narration):
@@ -75,7 +75,7 @@ Project is clean with no extra guidance. I’m locating drag/drop purchase paths
 Plan updated
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:20:10.977Z_
 
 **Thought** (none):
@@ -102,7 +102,7 @@ app/src/main/java/ch/logixisland/anuto/engine/sound/Sound.java
 app/src/main/java/ch/logixisland/anuto/engine/t
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:20:12.008Z | **FAILED**_
 
 **Thought** (none):
@@ -134,7 +134,7 @@ import android.util.AttributeSet;
 impo
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:20:16.103Z_
 
 **Thought** (none):
@@ -164,7 +164,7 @@ import ch.logixisland.anuto.business.score.ScoreBoard;
 import ch.logixisland.anut
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:20:20.237Z | **FAILED**_
 
 **Thought** (narration):
@@ -194,7 +194,7 @@ Output:
 fatal: no such path 'app/src/main/java/ch/logixisland/anuto/business/control/TowerInserter.java' in HEAD
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T09:20:25.424Z_
 
 **Thought** (none):
@@ -229,7 +229,7 @@ import java.util.Map;
 import ch.logixisland.anuto.engine.render.Drawable;
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. other / localization  (exec_command)
 _step 13 | 2026-09-23T09:20:30.783Z_
 
 **Thought** (none):
@@ -249,7 +249,7 @@ Original token count: 0
 Output:
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. other / localization  (exec_command)
 _step 14 | 2026-09-23T09:20:33.856Z_
 
 **Thought** (none):
@@ -269,7 +269,7 @@ Original token count: 0
 Output:
 ```
 
-## 11. read_file / localization  (exec_command)
+## 11. other / localization  (exec_command)
 _step 15 | 2026-09-23T09:20:36.007Z_
 
 **Thought** (none):
@@ -292,7 +292,7 @@ Output:
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-23T09:20:46.963Z_
 
 **Thought** (narration):
@@ -310,7 +310,7 @@ The purchase runs on the game thread, so the affordability check belongs at comm
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-23T09:20:51.643Z_
 
 **Thought** (none):
@@ -352,7 +352,7 @@ M app/src/main/java/ch/logixisland/anuto/business/control/TowerInserter.java
                 @Override
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T09:20:53.815Z_
 
 **Thought** (narration):
@@ -370,7 +370,7 @@ Affordability is now enforced before occupancy or debit. Next I’m running the 
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-23T09:20:57.242Z_
 
 **Thought** (none):
@@ -392,7 +392,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T09:20:59.255Z_
 
 **Thought** (none):
@@ -418,7 +418,7 @@ WARNING: Configuration 'compile' is obsolete and has been replaced with 'impleme
 It will be removed at the end of 2018. For more information see: http://d.android.com/r/tools/update-dependency-configurations.html
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-23T09:21:05.906Z_
 
 **Thought** (none):
@@ -446,7 +446,7 @@ Output:
 > Task :app
 ```
 
-## 18. read_file / validation  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-23T09:21:14.610Z_
 
 **Thought** (narration):
@@ -477,7 +477,7 @@ Output:
    101
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-23T09:21:18.400Z_
 
 **Thought** (none):

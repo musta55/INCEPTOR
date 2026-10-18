@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 68 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(56: succeeded) -> repair(7: succeeded) -> validation(3: unchecked) -> localization(1: succeeded)
+Phases: planning(1: unchecked) -> localization(56: succeeded) -> repair(1: succeeded) -> validation(1: unchecked) -> repair(4: succeeded) -> validation(5: succeeded)
 
-## 1. orient / understanding  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -58,7 +58,7 @@ spa
 view
 ```
 
-## 2. delegate / localization  (Agent)
+## 2. sub-agent / localization  (Agent)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -74,7 +74,7 @@ In this AntennaPod Android project, find (very thorough):
 **Result**:
 _delegated to subagent `sub-toolu_01Jke5NmXtoHLjJB4KWRnUda` -- its 40 actions follow below_
 
-## 3. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 3. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 2_
 
 **Thought** (none):
@@ -92,7 +92,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original
 ```
 
-## 4. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 4. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 3_
 
 **Thought** (none):
@@ -108,7 +108,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 (Bash completed with no output)
 ```
 
-## 5. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 5. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 4_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ grep -r "EmptyViewHandler" /Volumes/Dumpy/Research/automated_program_repair_for_
 (Bash completed with no output)
 ```
 
-## 6. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 6. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 5_
 
 **Thought** (none):
@@ -140,7 +140,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/QueueFragment.java
 ```
 
-## 7. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 7. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 6_
 
 **Thought** (none):
@@ -157,7 +157,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/NewEpisodesFragment.java
 ```
 
-## 8. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 8. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 7_
 
 **Thought** (none):
@@ -173,7 +173,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 (Bash completed with no output)
 ```
 
-## 9. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 9. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 8_
 
 **Thought** (none):
@@ -189,7 +189,7 @@ grep -r "class.*EmptyView" /Volumes/Dumpy/Research/automated_program_repair_for_
 (Bash completed with no output)
 ```
 
-## 10. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 10. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 9_
 
 **Thought** (none):
@@ -206,7 +206,7 @@ grep -r "empty.*view\|emptyView" /Volumes/Dumpy/Research/automated_program_repai
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/ItunesSearchFragment.
 ```
 
-## 11. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 11. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 10_
 
 **Thought** (none):
@@ -223,7 +223,7 @@ grep -r "Snackbar.*undo\|Undo.*Snackbar\|setAction.*Undo" /Volumes/Dumpy/Researc
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/activity/Mediaplayer
 ```
 
-## 12. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 12. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 11_
 
 **Thought** (none):
@@ -240,7 +240,7 @@ grep -r "swipe\|ItemTouchHelper\|swipeActionCallback" /Volumes/Dumpy/Research/au
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecycleAdapter.
 ```
 
-## 13. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 13. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 12_
 
 **Thought** (none):
@@ -266,7 +266,7 @@ _(none)_
 11	import a
 ```
 
-## 14. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 14. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 13_
 
 **Thought** (none):
@@ -295,7 +295,7 @@ _(none)_
 14	import
 ```
 
-## 15. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 15. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 14_
 
 **Thought** (none):
@@ -324,7 +324,7 @@ _(none)_
 14	import de.danoeh.antenn
 ```
 
-## 16. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 16. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 15_
 
 **Thought** (none):
@@ -340,7 +340,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/AllEpisodesFragment.java
 ```
 
-## 17. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 17. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 16_
 
 **Thought** (none):
@@ -366,7 +366,7 @@ _(none)_
 11	import android.support.v7.widget.Li
 ```
 
-## 18. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 18. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 17_
 
 **Thought** (none):
@@ -382,7 +382,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/adapter/QueueRecyclerAdapter.java
 ```
 
-## 19. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 19. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 18_
 
 **Thought** (none):
@@ -408,7 +408,7 @@ _(none)_
 11	import
 ```
 
-## 20. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 20. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 19_
 
 **Thought** (none):
@@ -430,7 +430,7 @@ _(none)_
 156	                    itemTouchHelper.startDrag(ViewHolde
 ```
 
-## 21. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 21. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 20_
 
 **Thought** (none):
@@ -451,7 +451,7 @@ grep -n "ItemTouchHelperViewHolder\|onItemSelected\|onItemClear" /Volumes/Dumpy/
 341:        void onItemClear();
 ```
 
-## 22. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 22. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 21_
 
 **Thought** (none):
@@ -478,7 +478,7 @@ _(none)_
 331	         * Implementations should update the item view to
 ```
 
-## 23. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 23. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 22_
 
 **Thought** (none):
@@ -494,7 +494,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecycleAdapter.java
 ```
 
-## 24. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 24. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 23_
 
 **Thought** (none):
@@ -521,7 +521,7 @@ _(none)_
 12
 ```
 
-## 25. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 25. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 24_
 
 **Thought** (none):
@@ -543,7 +543,7 @@ grep -n "ItemTouchHelperViewHolder\|onItemSelected\|onItemClear\|class Holder" /
 339:        void onItemClear();
 ```
 
-## 26. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 26. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 25_
 
 **Thought** (none):
@@ -569,7 +569,7 @@ _(none)_
 240	        TextView pubDate
 ```
 
-## 27. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 27. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 26_
 
 **Thought** (none):
@@ -585,7 +585,7 @@ grep -rn "registerAdapterDataObserver\|RecyclerView.AdapterDataObserver\|onItemR
 (Bash completed with no output)
 ```
 
-## 28. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 28. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 27_
 
 **Thought** (none):
@@ -602,7 +602,7 @@ grep -rn "setEmptyView\|setVisibility.*View.VISIBLE\|setVisibility.*View.GONE" /
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/QueueFragment.java:500:        progLoading.se
 ```
 
-## 29. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 29. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 28_
 
 **Thought** (none):
@@ -619,7 +619,7 @@ grep -rn "setEmptyView\|setVisibility.*View.VISIBLE\|setVisibility.*View.GONE" /
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/AllEpisodesFragment.java:473:
 ```
 
-## 30. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 30. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 29_
 
 **Thought** (none):
@@ -637,7 +637,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/r
 ```
 
-## 31. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 31. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 30_
 
 **Thought** (none):
@@ -655,7 +655,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/a
 ```
 
-## 32. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 32. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 31_
 
 **Thought** (none):
@@ -672,7 +672,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/res/layout/all_episodes_fragment.xml
 ```
 
-## 33. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 33. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 32_
 
 **Thought** (none):
@@ -698,7 +698,7 @@ _(none)_
 11	        android:layout_alignParentTop="t
 ```
 
-## 34. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 34. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 33_
 
 **Thought** (none):
@@ -723,7 +723,7 @@ _(none)_
 10	        android:id
 ```
 
-## 35. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 35. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 34_
 
 **Thought** (none):
@@ -739,7 +739,7 @@ grep -rn "AdapterDataObserver\|registerAdapter" /Volumes/Dumpy/Research/automate
 (Bash completed with no output)
 ```
 
-## 36. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 36. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 35_
 
 **Thought** (none):
@@ -756,7 +756,7 @@ grep -rn "addView\|removeView\|attachToRecyclerView" /Volumes/Dumpy/Research/aut
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/NewEpisodesFragment
 ```
 
-## 37. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 37. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 36_
 
 **Thought** (none):
@@ -773,7 +773,7 @@ grep -rn "DBWriter.add\|DBWriter.remove" /Volumes/Dumpy/Research/automated_progr
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1130/app/src/main/java/de/danoeh/antennapod/fragment/FavoriteEpisodesFragment
 ```
 
-## 38. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 38. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 37_
 
 **Thought** (none):
@@ -796,7 +796,7 @@ _(none)_
 4
 ```
 
-## 39. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 39. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 38_
 
 **Thought** (none):
@@ -820,7 +820,7 @@ _(none)_
 67
 ```
 
-## 40. read_file / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 40. read / localization  (Read)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 39_
 
 **Thought** (none):
@@ -846,7 +846,7 @@ _(none)_
 506	        // but
 ```
 
-## 41. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 41. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 40_
 
 **Thought** (none):
@@ -864,7 +864,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_
 ```
 
-## 42. search_code / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
+## 42. search / localization  (Bash)  [subagent sub-toolu_01Jke5NmXtoHLjJB4KWRnUda]
 _step 41_
 
 **Thought** (none):
@@ -880,7 +880,7 @@ grep -r "EmptyViewHandler\|class.*Empty.*Handler" /Volumes/Dumpy/Research/automa
 (Bash completed with no output)
 ```
 
-## 43. search_code / localization  (Bash)
+## 43. search / localization  (Bash)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -933,7 +933,7 @@ itunes
 NavListAdapter.jav
 ```
 
-## 45. search_code / localization  (Bash)
+## 45. search / localization  (Bash)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -956,7 +956,7 @@ grep -n "txtvEmpty\|setVisibility\|onFragmentLoaded\|recyclerView\|Snackbar\|onS
 279:
 ```
 
-## 46. search_code / localization  (Bash)
+## 46. search / localization  (Bash)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -974,7 +974,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/NewEpisodesFragment.java:70:    
 app/src/main/java/de/danoeh/ante
 ```
 
-## 47. read_file / localization  (Read)
+## 47. read / localization  (Read)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1000,7 +1000,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/AllEpisodesFragment.java
 31
 ```
 
-## 48. read_file / localization  (Bash)
+## 48. read / localization  (Bash)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1025,7 +1025,7 @@ cat app/src/main/res/layout/all_episodes_fragment.xml; echo "=== QUEUE ==="; cat
         android:id="@android:id/list"
 ```
 
-## 49. read_file / localization  (Read)
+## 49. read / localization  (Read)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1047,7 +1047,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/AllEpisodesFragment.java
 446
 ```
 
-## 50. read_file / localization  (Read)
+## 50. read / localization  (Read)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1069,7 +1069,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/QueueFragment.java
 386
 ```
 
-## 51. read_file / localization  (Read)
+## 51. read / localization  (Read)
 _step 6 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1098,7 +1098,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/NewEpisodesFragment.java
 14	import de.danoeh.antenn
 ```
 
-## 52. read_file / localization  (Read)
+## 52. read / localization  (Read)
 _step 6 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1127,7 +1127,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/FavoriteEpisodesFragment.java
 14	import
 ```
 
-## 53. read_file / localization  (Bash)
+## 53. read / localization  (Bash)
 _step 7 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1154,7 +1154,7 @@ import android.view.MenuInflater;
 import android.view.MenuIte
 ```
 
-## 54. read_file / localization  (Bash)
+## 54. read / localization  (Bash)
 _step 7 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1181,7 +1181,7 @@ import android.util.Log;
 impor
 ```
 
-## 55. read_file / localization  (Read)
+## 55. read / localization  (Read)
 _step 8 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1207,7 +1207,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/QueueFragment.java
 625	        Log
 ```
 
-## 56. read_file / localization  (Bash)
+## 56. read / localization  (Bash)
 _step 8 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1233,7 +1233,7 @@ private final ProgressBar progressBar;
             cover = v.findV
 ```
 
-## 57. read_file / localization  (Bash)
+## 57. read / localization  (Bash)
 _step 9_
 
 **Thought** (narration):
@@ -1261,7 +1261,7 @@ sed -n '225,310p' app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecy
                        ItemTo
 ```
 
-## 58. edit_file / repair  (Edit)
+## 58. edit / repair  (Edit)
 _step 10_
 
 **Thought** (narration):
@@ -1279,7 +1279,7 @@ app/src/main/java/de/danoeh/antennapod/fragment/QueueFragment.java
 The file app/src/main/java/de/danoeh/antennapod/fragment/QueueFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 59. search_code / repair (own phase localization)  (Bash)
+## 59. search / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -1297,7 +1297,7 @@ grep -n "queue = \|queue=" app/src/main/java/de/danoeh/antennapod/fragment/Queue
 643:                        queue = items;
 ```
 
-## 60. edit_file / repair  (Edit)
+## 60. edit / repair  (Edit)
 _step 12 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -1315,7 +1315,7 @@ app/src/main/java/de/danoeh/antennapod/adapter/QueueRecyclerAdapter.java
 The file app/src/main/java/de/danoeh/antennapod/adapter/QueueRecyclerAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 61. edit_file / repair  (Edit)
+## 61. edit / repair  (Edit)
 _step 12 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -1331,7 +1331,7 @@ app/src/main/java/de/danoeh/antennapod/adapter/QueueRecyclerAdapter.java
 The file app/src/main/java/de/danoeh/antennapod/adapter/QueueRecyclerAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 62. edit_file / repair  (Edit)
+## 62. edit / repair  (Edit)
 _step 13 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1347,7 +1347,7 @@ app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecycleAdapter.java
 The file app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecycleAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 63. edit_file / repair  (Edit)
+## 63. edit / repair  (Edit)
 _step 13 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1363,7 +1363,7 @@ app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecycleAdapter.java
 The file app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecycleAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 64. build / repair  (Bash)
+## 64. build / validation  (Bash)
 _step 14_
 
 **Thought** (narration):
@@ -1422,7 +1422,7 @@ git --no-pager diff -- app/src/main/java 2>&1 | cat; echo "EXIT:$?"; git status 
 EXIT:0
 ```
 
-## 67. search_code / validation  (Bash)
+## 67. search / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -1442,7 +1442,7 @@ app/src/main/java/de/danoeh/antennapod/adapter/AllEpisodesRecycleAdapter.java:11
 app/src/main/java/de/danoeh/antennapod/a
 ```
 
-## 68. search_code / localization  (Bash)
+## 68. search / validation  (Bash)
 _step 18_
 
 **Thought** (narration):

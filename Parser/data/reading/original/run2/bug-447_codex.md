@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 19 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(6: succeeded) -> repair(6: succeeded) -> validation(4: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(1: failed) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(7: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:43:59.701Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the JSON editor defaults, patch escaping at the source, then run th
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:44:02.021Z | **FAILED**_
 
 **Thought** (none):
@@ -61,7 +61,7 @@ tools
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:44:02.823Z_
 
 **Thought** (narration):
@@ -93,7 +93,7 @@ app/src/main/play/release-notes/en-US/default.txt
 app/src/main/play/release-notes/es-
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:44:04.721Z_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ app/src/main/res/values-sr/strings.xml
 app/src/main/r
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-25T05:44:07.013Z_
 
 **Thought** (none):
@@ -154,7 +154,7 @@ import android.view.ViewGroup;
 import android.widget.T
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:44:09.148Z_
 
 **Thought** (none):
@@ -186,7 +186,7 @@ import org.json.JSONArray;
 import org.json.JSONExce
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:44:13.446Z_
 
 **Thought** (none):
@@ -215,7 +215,7 @@ Output:
     /* ------------------- actions
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-25T05:44:18.236Z_
 
 **Thought** (narration):
@@ -233,7 +233,7 @@ Located the defect in PatternCatalog: optional subdomain dots are escaped, but f
 Plan updated
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T05:44:21.055Z_
 
 **Thought** (none):
@@ -265,7 +265,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.8.1'
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-25T05:44:22.219Z_
 
 **Thought** (narration):
@@ -298,7 +298,7 @@ M app/src/main/java/com/trianguloy/urlchecker/modules/companions/PatternCatalog.
 -- remaining hostname regex dots --
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-25T05:44:26.120Z_
 
 **Thought** (none):
@@ -314,7 +314,7 @@ Patched all three affected Pattern Checker examples. The repository has no exist
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-25T05:44:27.767Z_
 
 **Thought** (narration):
@@ -338,7 +338,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T05:44:29.953Z_
 
 **Thought** (none):
@@ -358,7 +358,7 @@ Original token count: 0
 Output:
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T05:44:35.909Z_
 
 **Thought** (none):
@@ -383,7 +383,7 @@ Found locales: "ar","be","bn","ca","cs","de","el","en","es","fr-FR","hi","in","i
 Extracted translators: 404pot
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T05:44:42.693Z_
 
 **Thought** (none):
@@ -414,7 +414,7 @@ BUILD SUCCESSFUL in 14s
 31 actionable tasks: 29 executed, 2 up-to-
 ```
 
-## 16. diff / validation  (exec_command)
+## 16. search / validation  (exec_command)
 _step 20 | 2026-09-25T05:44:44.303Z_
 
 **Thought** (narration):
@@ -447,7 +447,7 @@ Output:
     56	                // privacy redirections samples (see https://github.com/TrianguloY/URL
 ```
 
-## 17. vcs / validation  (exec_command)
+## 17. diff / validation  (exec_command)
 _step 21 | 2026-09-25T05:44:47.033Z | **FAILED**_
 
 **Thought** (narration):
@@ -475,7 +475,7 @@ dd996c6848c925aab20ea44e7fd6e9cb417b2399
 HEAD:app/src/main/java/com/trianguloy/urlchecker/modules/companions/Patt
 ```
 
-## 18. read_file / validation  (exec_command)
+## 18. vcs / validation  (exec_command)
 _step 22 | 2026-09-25T05:44:51.086Z_
 
 **Thought** (none):
@@ -505,7 +505,7 @@ HARNESS
 ls: .git: No such file or directory
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-25T05:44:55.550Z_
 
 **Thought** (none):

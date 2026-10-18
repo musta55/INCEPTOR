@@ -7,9 +7,9 @@
 - steps (LLM inferences): 25 | actions: 20 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(5: succeeded) -> repair(2: unchecked) -> validation(10: unchecked)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: unchecked) -> planning(1: unchecked) -> validation(9: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:15:25.554Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the fragment/dialog ownership first, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:15:28.361Z | **FAILED**_
 
 **Thought** (none):
@@ -65,7 +65,7 @@ settings.gradle
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:15:30.120Z_
 
 **Thought** (narration):
@@ -93,7 +93,7 @@ Calendula/src/androidTest/java/es/usc/citius/servando/calendula/activities/Stock
 Calendula/src/test/java/es/u
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:15:33.499Z_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ Calendula/src/main/java/es/usc/citius/servando/calendula/fragments/MedicineCreat
 Calendula/src/main/java/es/usc/citius/servando/calendula/fragments/MedicineCreateOrEdi
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-25T05:15:36.777Z_
 
 **Thought** (narration):
@@ -137,7 +137,7 @@ The crash matches a direct ownership mismatch: the dialog uses the child manager
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:15:42.408Z | **FAILED**_
 
 **Thought** (none):
@@ -166,7 +166,7 @@ Total output lines: 242
         ((ImageView) root.findViewById(R.id.ic_med_name)).setImageDrawable(ic1);
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:15:45.539Z_
 
 **Thought** (none):
@@ -189,7 +189,7 @@ include ':Calendula'Calendula/build.gradle:299:    implementation 'com.code-troo
 Calendula/src/main/java/es/usc/citius/servando/calendula/fragme
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-25T05:15:50.275Z_
 
 **Thought** (narration):
@@ -207,7 +207,7 @@ Diagnosis is confirmed: `MedicineCreateOrEditFragment` belongs to its parent man
 Plan updated
 ```
 
-## 9. edit_file / repair  (exec_command)
+## 9. edit / repair  (exec_command)
 _step 13 | 2026-09-25T05:15:53.693Z_
 
 **Thought** (none):
@@ -236,7 +236,7 @@ Success. Updated the following files:
 M Calendula/src/main/java/es/usc/citius/servando/calendula/fragments/MedicineCreateOrEditFragment.java
 ```
 
-## 10. plan / repair  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-25T05:15:55.402Z_
 
 **Thought** (none):
@@ -276,7 +276,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 5 stopped Daemons could not be reused, use --status for details
 ```
 
-## 12. wait_process / validation  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-25T05:16:00.489Z_
 
 **Thought** (none):
@@ -300,7 +300,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository
 ```
 
-## 13. wait_process / validation  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T05:16:07.420Z_
 
 **Thought** (none):
@@ -323,7 +323,7 @@ Output:
 :Calendula:kaptCiDebugKotlin
 ```
 
-## 14. wait_process / validation  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T05:16:14.270Z_
 
 **Thought** (none):
@@ -349,7 +349,7 @@ Output:
 :Calendula:compileCiDebugJavaWithJavac
 ```
 
-## 15. wait_process / validation  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T05:16:21.149Z_
 
 **Thought** (none):
@@ -376,7 +376,7 @@ Note: Recompile with -Xlint:unchecked for details.
 :Calendula:compileC
 ```
 
-## 16. wait_process / validation  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T05:16:27.900Z_
 
 **Thought** (none):
@@ -404,7 +404,7 @@ Output:
 :Calendula:assembleCiDeb
 ```
 
-## 17. wait_process / validation  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T05:16:34.633Z_
 
 **Thought** (narration):
@@ -433,7 +433,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: Some
 ```
 
-## 18. wait_process / validation  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T05:16:43.359Z_
 
 **Thought** (none):
@@ -460,7 +460,7 @@ Output:
 :Calendula:packageDevelopD
 ```
 
-## 19. wait_process / validation  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T05:16:50.315Z_
 
 **Thought** (none):
@@ -487,7 +487,7 @@ Note: Recompile with -Xlint:unchecked for details.
 :Calendula:com
 ```
 
-## 20. plan / validation  (update_plan)
+## 20. plan / planning  (update_plan)
 _step 24 | 2026-09-25T05:16:57.160Z_
 
 **Thought** (none):

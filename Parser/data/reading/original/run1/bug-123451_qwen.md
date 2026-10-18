@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 19 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(3: succeeded) -> repair(2: succeeded) -> validation(5: unchecked) -> localization(8: succeeded) -> repair(1: unchecked)
+Phases: localization(3: succeeded) -> repair(1: succeeded) -> validation(15: succeeded)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -39,7 +39,7 @@ Search thoroughly for:
 **Result**:
 _delegated to subagent `sub-call_0b5b87f6a21f48268858eab8` -- its 0 actions follow below_
 
-## 2. read_file / localization  (read_file)
+## 2. read / localization  (read_file)
 _step 4_
 
 **Thought** (reasoning):
@@ -57,7 +57,7 @@ The exploration agent found the exact location of the bug. Now I need to read th
 Read lines 421-470 of 524 from AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java
 ```
 
-## 3. read_file / localization  (read_file)
+## 3. read / localization  (read_file)
 _step 5_
 
 **Thought** (reasoning):
@@ -75,7 +75,7 @@ I can see the exact code. Now I need to check if `UIUtils` is already imported i
 Read lines 1-60 of 524 from AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java
 ```
 
-## 4. edit_file / repair  (edit)
+## 4. edit / repair  (edit)
 _step 6_
 
 **Thought** (reasoning):
@@ -100,7 +100,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
                 Timber.w("D
 ```
 
-## 5. build / repair  (run_shell_command)
+## 5. build / validation  (run_shell_command)
 _step 7_
 
 **Thought** (reasoning):
@@ -194,7 +194,7 @@ nothing to commit, working tree clean
 ---
 ```
 
-## 9. read_file / validation (own phase localization)  (read_file)
+## 9. read / validation  (read_file)
 _step 11_
 
 **Thought** (reasoning):
@@ -232,7 +232,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 exit: 0
 ```
 
-## 11. vcs / localization  (run_shell_command)
+## 11. vcs / validation  (run_shell_command)
 _step 13_
 
 **Thought** (reasoning):
@@ -252,7 +252,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 fatal: path 'AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java' exists on disk, but not in 'HEAD'
 ```
 
-## 12. vcs / localization  (run_shell_command)
+## 12. vcs / validation  (run_shell_command)
 _step 14_
 
 **Thought** (reasoning):
@@ -272,7 +272,7 @@ HARNESS
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java
 ```
 
-## 13. diff / localization (own phase validation)  (run_shell_command)
+## 13. diff / validation  (run_shell_command)
 _step 15 | **FAILED**_
 
 **Thought** (reasoning):
@@ -294,7 +294,7 @@ Directory: (root)
 Output: fatal: pathspec 'AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java' did not matc
 ```
 
-## 14. read_file / localization  (run_shell_command)
+## 14. read / validation  (run_shell_command)
 _step 16_
 
 **Thought** (reasoning):
@@ -316,7 +316,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java: Java sour
  * This program is free software; y
 ```
 
-## 15. vcs / localization  (run_shell_command)
+## 15. vcs / validation  (run_shell_command)
 _step 17 | **FAILED**_
 
 **Thought** (reasoning):
@@ -340,7 +340,7 @@ Signal: (none)
 Process Group PGID: 1945517
 ```
 
-## 16. read_file / localization  (run_shell_command)
+## 16. read / validation  (run_shell_command)
 _step 18 | **FAILED**_
 
 **Thought** (reasoning):
@@ -365,7 +365,7 @@ Signal: (none)
 Process Group PGID: 1945541
 ```
 
-## 17. read_file / localization  (run_shell_command)
+## 17. vcs / validation  (run_shell_command)
 _step 19_
 
 **Thought** (reasoning):
@@ -397,7 +397,7 @@ api/lint-baseline.xml linguist-generated=true
 /tmp/uiab-read-guard/qwen_original_run1/bug-123451/git-stub.git
 ```
 
-## 18. vcs / localization  (run_shell_command)
+## 18. vcs / validation  (run_shell_command)
 _step 20_
 
 **Thought** (reasoning):
@@ -420,7 +420,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 100644 blob ef37ed15e16c9c65e686263e607390566312bb2e    HARNESS
 ```
 
-## 19. edit_file / repair  (write_file)
+## 19. edit / validation  (write_file)
 _step 21_
 
 **Thought** (reasoning):

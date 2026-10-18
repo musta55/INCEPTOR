@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 26 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(11: succeeded) -> repair(9: succeeded, blocked) -> localization(2: failed) -> validation(2: succeeded) -> localization(1: succeeded)
+Phases: localization(12: succeeded) -> repair(2: succeeded) -> validation(5: succeeded) -> repair(1: blocked) -> validation(3: blocked) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. read_file / understanding  (Bash)
+## 1. read / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -40,7 +40,7 @@ settings.gradle
 include ':app'
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -62,7 +62,7 @@ find . -path ./build -prune -o -name "*.kt" -print -o -name "*.java" -print | he
 ./app/thirdparty/java/o
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -90,7 +90,7 @@ _(none)_
 13	im
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -118,7 +118,7 @@ _(same inference as the previous action)_
 13	import
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 3_
 
 **Thought** (none):
@@ -146,7 +146,7 @@ _(none)_
 13	impor
 ```
 
-## 6. read_file / localization  (Read)
+## 6. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -174,7 +174,7 @@ _(none)_
 13	im
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ grep -n "renameFile\|writeFile" -A 25 app/src/main/java/net/gsantner/opoc/util/F
 169-                if (
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -219,7 +219,7 @@ Preview (first 2KB):
 SystemMessage(subtype='init', data={'type'
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ app/src/main/java/net/gsantner/markor/util/AppSettings.java-309-}
 app/src/main/res
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -264,7 +264,7 @@ grep -n "readTextFileFast" -A 18 app/src/main/java/net/gsantner/opoc/util/FileUt
 52-    public static String readTextFile(final File fil
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 8_
 
 **Thought** (narration):
@@ -282,7 +282,7 @@ grep -rn "isEditorHistoryEnabled\|forceAddNextChangeToHistory" app/src/main/java
 (eval):1: no matches found: --include=*.java
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -300,7 +300,7 @@ app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java:151:   
 app/src/main/java/net/gsantner/markor/activity/DocumentEditFragmen
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 10_
 
 **Thought** (narration):
@@ -322,7 +322,7 @@ For a new note, undo/redo history is disabled by default, so `DocumentEditFragme
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-54/app/src/main/java/net/gsantner/markor/util/DocumentIO.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -340,7 +340,7 @@ Now the second half of the defect — after a save, the fragment's arguments sti
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-54/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. build / repair  (Bash)
+## 15. build / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -365,7 +365,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeFlavorTest
 ```
 
-## 16. search_code / repair  (Bash)
+## 16. search / validation  (Bash)
 _step 13_
 
 **Thought** (narration):
@@ -383,7 +383,7 @@ ls app/src/test/java/net/gsantner/markor/model/ && grep -n "testOptions\|unitTes
 DocumentTest.java
 ```
 
-## 17. edit_file / repair  (Write)
+## 17. edit / validation  (Write)
 _step 14_
 
 **Thought** (none):
@@ -399,7 +399,7 @@ _(none)_
 File created successfully at: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-54/app/src/test/java/net/gsantner/markor/util/DocumentIoSaveRepoTest.java (file state is current in your context — no need to Read it back)
 ```
 
-## 18. run_test / repair  (Bash)
+## 18. test / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -422,7 +422,7 @@ _(none)_
 > Task :app:createF
 ```
 
-## 19. env_setup / repair (own phase validation)  (Bash)
+## 19. other / validation  (Bash)
 _step 16_
 
 **Thought** (narration):
@@ -440,7 +440,7 @@ cp app/src/main/java/net/gsantner/markor/util/DocumentIO.java /tmp/DocumentIO.fi
 (Bash completed with no output)
 ```
 
-## 20. edit_file / repair  (Edit)
+## 20. edit / repair  (Edit)
 _step 17_
 
 **Thought** (none):
@@ -456,7 +456,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-54/app/src/main/java/net/gsantner/markor/util/DocumentIO.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 21. run_test / repair  (Bash)
+## 21. test / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -475,7 +475,7 @@ net.gsantner.markor.util.DocumentIoSaveRepoTest > pressingSaveThenBackCreatesThe
 BUILD FAILED in 4s
 ```
 
-## 22. search_code / localization  (Bash)
+## 22. search / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -495,7 +495,7 @@ binary
 TEST-net.gsantner.markor.util.DocumentIoSaveRepoTest.xml
 ```
 
-## 23. search_code / localization  (Bash)
+## 23. search / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -511,7 +511,7 @@ grep -o "\[note file created on save\][^<]*" app/build/test-results/testFlavorDe
 [note file created on save] expected:&lt;[tru]e&gt; but was:&lt;[fals]e&gt;" type="org.junit.ComparisonFailure">org.junit.ComparisonFailure: [note file created on save] expected:&lt;[tru]e&gt; but was:&lt;[fals]e&gt;
 ```
 
-## 24. run_test / validation  (Bash)
+## 24. edit / repair  (Bash)
 _step 21_
 
 **Thought** (narration):
@@ -549,7 +549,7 @@ BUILD SUCCESSFUL in 15s
 82 actionable tasks: 79 executed, 3 up-to-date
 ```
 
-## 26. read_file / localization  (Bash)
+## 26. read / validation  (Bash)
 _step 23_
 
 **Thought** (none):

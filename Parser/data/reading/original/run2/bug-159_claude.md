@@ -7,9 +7,9 @@
 - steps (LLM inferences): 107 | actions: 107 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(38: succeeded) -> understanding(2: unchecked) -> localization(8: failed) -> reproduction(3: blocked, succeeded) -> understanding(3: unchecked) -> reproduction(3: failed) -> localization(5: succeeded) -> reproduction(2: unchecked) -> localization(2: failed) -> reproduction(5: succeeded) -> localization(2: succeeded) -> repair(7: succeeded) -> localization(2: succeeded) -> repair(7: succeeded) -> localization(2: failed) -> repair(1: succeeded) -> localization(2: failed) -> repair(4: succeeded) -> localization(2: succeeded) -> repair(6: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(38: succeeded) -> planning(1: unchecked) -> localization(8: failed) -> reproduction(5: blocked, succeeded) -> localization(3: failed) -> reproduction(1: failed) -> localization(5: succeeded) -> reproduction(2: unchecked) -> localization(2: failed) -> reproduction(5: succeeded) -> localization(2: succeeded) -> repair(1: succeeded) -> validation(1: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> repair(2: succeeded) -> validation(1: unchecked) -> repair(1: succeeded) -> localization(1: succeeded) -> repair(1: succeeded) -> validation(10: unchecked) -> localization(1: failed) -> validation(1: unchecked) -> repair(3: succeeded) -> validation(4: succeeded)
 
-## 1. orient / localization  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ settings.gradle
 tools
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -57,7 +57,7 @@ grep -ril "changedeck\|ChangeModel\|change_note_type\|ChangeNoteType" /Volumes/D
 (eval):1: no matches found: --include=*.kt
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -73,7 +73,7 @@ grep -ril "changeNoteType\|change_note_type\|ChangeModel" --include="*.kt" --inc
 AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -95,7 +95,7 @@ grep -n "changeNoteType\|ChangeModel\|mSelectedTags\|multi\|Multi" AnkiDroid/src
 67:import co
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java:671:        startActivit
 AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java:1150:    protected void onActivityResult(int requestCode, int resultCode, Intent
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -137,7 +137,7 @@ onCheck(position, view);
         mCardsListView.setOnItemLongClickListener(new ListView.OnItemLongCli
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ sed -n 720,900p AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
             mSelectedT
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -191,7 +191,7 @@ grep -n "mUpdateCardHandler\|UpdateCardHandler\|updateCardInList\|class .*Handle
 1442:            updateCardInList(values[0].getCard(),
 ```
 
-## 9. read_file / localization  (Bash)
+## 9. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -216,7 +216,7 @@ private Map<Long, Integer> getPositionMap(List<Map<String, String>> list) {
     private boolean selectDec
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -232,7 +232,7 @@ grep -n "doInBackgroundUpdateNote" -A 60 AnkiDroid/src/main/java/com/ichi2/anki/
 ugrep: warning: AnkiDroid/src/main/java/com/ichi2/anki/CollectionTask.java: No such file or directory
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -248,7 +248,7 @@ find . -name CollectionTask.java;
 ./AnkiDroid/src/main/java/com/ichi2/async/CollectionTask.java
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -275,7 +275,7 @@ grep -n "doInBackgroundUpdateNote" -A 55 AnkiDroid/src/main/java/com/ichi2/async
 270-
 ```
 
-## 13. read_file / localization  (Bash)
+## 13. read / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -295,7 +295,7 @@ Preview (first 2KB):
 SystemMessage(subtype='init', data={'type':
 ```
 
-## 14. search_code / localization  (Bash)
+## 14. search / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -311,7 +311,7 @@ grep -n "versionName\|versionCode" AnkiDroid/build.gradle | head
 (Bash completed with no output)
 ```
 
-## 15. search_code / localization  (Bash)
+## 15. search / localization  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -327,7 +327,7 @@ grep -rn "versionName" build.gradle AnkiDroid/build.gradle | head
 (Bash completed with no output)
 ```
 
-## 16. search_code / localization  (Bash)
+## 16. search / localization  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -347,7 +347,7 @@ proguard-rules.pro
 src
 ```
 
-## 17. search_code / localization  (Bash)
+## 17. search / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -365,7 +365,7 @@ grep -n "version" AnkiDroid/build.gradle | head -20
 181:    // May need a resolution strategy for support libs to our versions
 ```
 
-## 18. read_file / localization  (Bash)
+## 18. read / localization  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -401,7 +401,7 @@ android {
         applicationId "com.i
 ```
 
-## 19. search_code / localization  (Bash)
+## 19. search / localization  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -425,7 +425,7 @@ grep -n "closeNoteEditor\|mReloadRequired\|mChanged\|RESULT_" AnkiDroid/src/main
 770:                mReloadR
 ```
 
-## 20. read_file / localization  (Bash)
+## 20. read / localization  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -459,7 +459,7 @@ sed -n 970,1010p AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
                 intent = ne
 ```
 
-## 21. search_code / localization  (Bash)
+## 21. search / localization  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -480,7 +480,7 @@ grep -n "mCheckedCard\|onCheck\|getSelectedCardIds\|endMultiSelectMode\|loadMult
 402:        long[] id
 ```
 
-## 22. read_file / localization  (Bash)
+## 22. read / localization  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -505,7 +505,7 @@ mSearchTerms = mSearchView.getQuery().toString();
         Integer[] checkedPositions = mCheckedCardPositions.toArray(ne
 ```
 
-## 23. read_file / localization  (Bash)
+## 23. read / localization  (Bash)
 _step 22_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ return true;
                 endMulti
 ```
 
-## 24. search_code / localization  (Bash)
+## 24. search / localization  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -553,7 +553,7 @@ grep -n "mModelChangeCardMap\|mModelChangeFieldMap\|mNoteTypeSpinner\|onItemSele
 510:
 ```
 
-## 25. read_file / localization  (Bash)
+## 25. read / localization  (Bash)
 _step 24_
 
 **Thought** (none):
@@ -576,7 +576,7 @@ private boolean allowFieldRemapping() {
     // -----------------------------------------------------------------------
 ```
 
-## 26. read_file / localization  (Bash)
+## 26. read / localization  (Bash)
 _step 25_
 
 **Thought** (none):
@@ -599,7 +599,7 @@ if (!mAddNote && tmpls.length() < mEditorNote.model().getJSONArray("tmpls").leng
     private boolean updateField(FieldEditText field) {
 ```
 
-## 27. read_file / localization  (Bash)
+## 27. read / localization  (Bash)
 _step 26_
 
 **Thought** (none):
@@ -655,7 +655,7 @@ dialogs
 IntentHandle
 ```
 
-## 29. search_code / localization  (Bash)
+## 29. search / localization  (Bash)
 _step 28_
 
 **Thought** (none):
@@ -684,7 +684,7 @@ grep -n "" AnkiDroid/src/test/java/com/ichi2/anki/NoteEditorTest.java | head -80
 14:imp
 ```
 
-## 30. search_code / localization  (Bash)
+## 30. search / localization  (Bash)
 _step 29_
 
 **Thought** (none):
@@ -706,7 +706,7 @@ grep -n "public void change\|_changeNotes\|_changeCards" -A 45 AnkiDroid/src/mai
 846-
 ```
 
-## 31. read_file / localization  (Bash)
+## 31. read / localization  (Bash)
 _step 30_
 
 **Thought** (none):
@@ -732,7 +732,7 @@ sed -n 380,470p AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
         Timber.d("NoteEditor() onCollectionLoaded: calle
 ```
 
-## 32. read_file / localization  (Bash)
+## 32. read / localization  (Bash)
 _step 31_
 
 **Thought** (none):
@@ -759,7 +759,7 @@ private Bundle mSavedFields;
                     .show(NoteEditor.this,
 ```
 
-## 33. read_file / localization  (Bash)
+## 33. read / localization  (Bash)
 _step 32_
 
 **Thought** (none):
@@ -790,7 +790,7 @@ protected void onDestroy() {
         } e
 ```
 
-## 34. search_code / localization  (Bash)
+## 34. search / localization  (Bash)
 _step 33_
 
 **Thought** (none):
@@ -819,7 +819,7 @@ grep -n "CheckCardSelection" -A 30 AnkiDroid/src/main/java/com/ichi2/async/Colle
 366-
 ```
 
-## 35. read_file / localization (own phase understanding)  (Bash)
+## 35. other / localization  (Bash)
 _step 34 | **FAILED**_
 
 **Thought** (none):
@@ -835,7 +835,7 @@ timeout 10 curl -sI https://github.com | head -3
 github.com is blocked: this experiment measures repair, not retrieval of the upstream fix. The network is closed — no host is reachable, not just this one. Work from the bug report and the code in this repo.
 ```
 
-## 36. search_code / localization  (Bash)
+## 36. search / localization  (Bash)
 _step 35_
 
 **Thought** (none):
@@ -862,7 +862,7 @@ grep -n "public void \|@Test" AnkiDroid/src/test/java/com/ichi2/anki/CardBrowser
 81:
 ```
 
-## 37. read_file / localization  (Bash)
+## 37. read / localization  (Bash)
 _step 36_
 
 **Thought** (none):
@@ -887,7 +887,7 @@ assertThat(browser.isInMultiSelectMode(), is(false));
         AnkiAssert.assertDoesNotThr
 ```
 
-## 38. read_file / localization  (Bash)
+## 38. read / localization  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -915,7 +915,7 @@ sed -n 80,200p AnkiDroid/src/test/java/com/ichi2/anki/NoteEditorTest.java
     public voi
 ```
 
-## 39. env_setup / understanding  (Bash)
+## 39. orient / localization  (Bash)
 _step 38_
 
 **Thought** (none):
@@ -942,7 +942,7 @@ openjdk version "1.8.0_452"
 OpenJDK Runtime Environment (Temurin)(build 1.8.0_452-b09)
 ```
 
-## 40. build / understanding  (Bash)
+## 40. build / planning  (Bash)
 _step 39_
 
 **Thought** (none):
@@ -959,7 +959,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig for variant 'release'.
 ```
 
-## 41. read_file / localization  (Bash)
+## 41. read / localization  (Bash)
 _step 40_
 
 **Thought** (none):
@@ -979,7 +979,7 @@ sed -n 1,140p AnkiDroid/src/test/java/com/ichi2/anki/RobolectricTest.java
  * the terms of the GNU General Public L
 ```
 
-## 42. read_file / localization  (Bash)
+## 42. read / localization  (Bash)
 _step 41_
 
 **Thought** (none):
@@ -1003,7 +1003,7 @@ private <T extends NoteEditor> T getNoteEditorAddingNote(FromScreen from, Class<
         return super.startActivityNormallyOpenCollectionWith
 ```
 
-## 43. search_code / localization  (Bash)
+## 43. search / localization  (Bash)
 _step 42_
 
 **Thought** (none):
@@ -1021,7 +1021,7 @@ grep -n "public .*copy\|public .*byName\|public .* add(" AnkiDroid/src/main/java
 413:    public JSONObject copy(JSONObject m) {
 ```
 
-## 44. read_file / localization  (Bash)
+## 44. read / localization  (Bash)
 _step 43_
 
 **Thought** (none):
@@ -1046,7 +1046,7 @@ return mCol.getDb().queryScalar("select count() from cards, notes where cards.ni
         JSO
 ```
 
-## 45. search_code / localization  (Bash)
+## 45. search / localization  (Bash)
 _step 44_
 
 **Thought** (narration):
@@ -1068,7 +1068,7 @@ grep -n "setFieldValueFromUi\|VisibleForTesting" AnkiDroid/src/main/java/com/ich
 1776:    void setFieldValueFromUi(int i, String newText) {
 ```
 
-## 46. read_file / localization  (Bash)
+## 46. read / localization  (Bash)
 _step 45_
 
 **Thought** (none):
@@ -1093,7 +1093,7 @@ for (FieldEditText e : mEditFields) {
         return getCurrentlySelectedModel().getInt("type") == Consts.MODEL_CLOZE;
 ```
 
-## 47. read_file / localization  (Bash)
+## 47. read / localization  (Bash)
 _step 46_
 
 **Thought** (none):
@@ -1120,7 +1120,7 @@ mAddNote = true;
         ArrayList<JSONObject> models = getCol().getModels().all();
 ```
 
-## 48. read_file / localization  (Bash)
+## 48. read / localization  (Bash)
 _step 47_
 
 **Thought** (narration):
@@ -1153,7 +1153,7 @@ import com.ichi2.utils.JSONObject;
 import org.juni
 ```
 
-## 49. edit_file / reproduction  (Write)
+## 49. edit / reproduction  (Write)
 _step 48_
 
 **Thought** (none):
@@ -1169,7 +1169,7 @@ _(none)_
 File created successfully at: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/test/java/com/ichi2/anki/RepoNoteTypeChangeTest.java (file state is current in your context — no need to Read it back)
 ```
 
-## 50. run_test / reproduction  (Bash)
+## 50. test / reproduction  (Bash)
 _step 49_
 
 **Thought** (none):
@@ -1192,7 +1192,7 @@ _(none)_
 > Task :api:processDebugUnitTestManife
 ```
 
-## 51. run_test / reproduction  (Bash)
+## 51. test / reproduction  (Bash)
 _step 50_
 
 **Thought** (none):
@@ -1210,7 +1210,7 @@ at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.j
         at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
 ```
 
-## 52. read_file / understanding  (Bash)
+## 52. orient / reproduction  (Bash)
 _step 51_
 
 **Thought** (none):
@@ -1231,7 +1231,7 @@ ls ~/.m2/repository/org/robolectric/android-all 2>/dev/null | head; ls ~/.robole
 (eval):1: no matches found: /Users/splash/.robolectric*
 ```
 
-## 53. orient / understanding  (Bash)
+## 53. orient / reproduction  (Bash)
 _step 52_
 
 **Thought** (none):
@@ -1250,7 +1250,7 @@ android-all-9-robolectric-4913185-2.pom
 android-all-9-robolectric-4913185-2.pom.sha1
 ```
 
-## 54. search_code / understanding  (Bash)
+## 54. search / localization  (Bash)
 _step 53_
 
 **Thought** (none):
@@ -1277,7 +1277,7 @@ grep -n "unitTests\|test {" -A 12 AnkiDroid/build.gradle | head -40
 85-        targetCompatibility JavaVersion.V
 ```
 
-## 55. env_setup / reproduction  (Bash)
+## 55. orient / localization  (Bash)
 _step 54_
 
 **Thought** (none):
@@ -1297,7 +1297,7 @@ android-all-8.0.0_r4-robolectric-r1.jar
 android-all-9-robolectric-4913185-2.jar
 ```
 
-## 56. edit_file / reproduction  (Edit)
+## 56. edit / localization  (Edit)
 _step 55_
 
 **Thought** (none):
@@ -1313,7 +1313,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/build.gradle has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 57. run_test / reproduction  (Bash)
+## 57. test / reproduction  (Bash)
 _step 56_
 
 **Thought** (none):
@@ -1336,7 +1336,7 @@ _(none)_
 > Task :AnkiDroid:createDebugCompatibleScreenManifests UP-TO-DA
 ```
 
-## 58. search_code / localization  (Bash)
+## 58. search / localization  (Bash)
 _step 57_
 
 **Thought** (none):
@@ -1354,7 +1354,7 @@ TEST-com.ichi2.anki.RepoNoteTypeChangeTest.xml
 126
 ```
 
-## 59. search_code / localization  (Bash)
+## 59. search / localization  (Bash)
 _step 58_
 
 **Thought** (none):
@@ -1376,7 +1376,7 @@ grep -n "item \|target \|cards for n1\|note mid\|basic " AnkiDroid/build/test-re
 71:I/RepoNoteTypeChangeTest: item 5 = C
 ```
 
-## 60. search_code / localization  (Bash)
+## 60. search / localization  (Bash)
 _step 59_
 
 **Thought** (none):
@@ -1402,7 +1402,7 @@ grep -n "VisibleForTesting" -A 4 AnkiDroid/src/main/java/com/ichi2/anki/CardBrow
 404-        JSONObject selectedDeck = getValidDecksForChangeDeck
 ```
 
-## 61. search_code / localization  (Bash)
+## 61. search / localization  (Bash)
 _step 60_
 
 **Thought** (none):
@@ -1425,7 +1425,7 @@ grep -n "private void searchCards\|void updateList\|mRenderQAHandler" -A 30 Anki
 1250-        }
 ```
 
-## 62. read_file / localization  (Bash)
+## 62. read / localization  (Bash)
 _step 61_
 
 **Thought** (none):
@@ -1446,7 +1446,7 @@ public void startupFromCardBrowserActionItemShouldEndActivityIfNoPermissions() {
         Intent inputIntent = new Int
 ```
 
-## 63. edit_file / reproduction  (Write)
+## 63. edit / reproduction  (Write)
 _step 62_
 
 **Thought** (narration):
@@ -1464,7 +1464,7 @@ Now let me write a reproduction test for the browser flow.
 File created successfully at: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/test/java/com/ichi2/anki/RepoBrowserCrashTest.java (file state is current in your context — no need to Read it back)
 ```
 
-## 64. run_test / reproduction  (Bash)
+## 64. test / reproduction  (Bash)
 _step 63_
 
 **Thought** (none):
@@ -1491,7 +1491,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Deprecated Gradle features were used in this build, making it incompatible wi
 ```
 
-## 65. search_code / localization  (Bash)
+## 65. search / localization  (Bash)
 _step 64_
 
 **Thought** (none):
@@ -1509,7 +1509,7 @@ grep -n "card count\|checked \|survived" AnkiDroid/build/test-results/testDebugU
 230:I/RepoBrowserCrashTest: survived, card count 2
 ```
 
-## 66. read_file / localization  (Bash)
+## 66. read / localization  (Bash)
 _step 65_
 
 **Thought** (none):
@@ -1536,7 +1536,7 @@ cat AnkiDroid/src/main/res/menu/card_browser_multiselect.xml
         android:id="@
 ```
 
-## 67. edit_file / reproduction  (Write)
+## 67. edit / reproduction  (Write)
 _step 66_
 
 **Thought** (none):
@@ -1552,7 +1552,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/test/java/com/ichi2/anki/RepoBrowserCrashTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 68. run_test / reproduction  (Bash)
+## 68. test / reproduction  (Bash)
 _step 67_
 
 **Thought** (none):
@@ -1574,7 +1574,7 @@ at java.util.concurrent.FutureTask.run(FutureTask.java:266)
         java.lang.IllegalStateException: Could not add note: {Hello, World}
 ```
 
-## 69. edit_file / reproduction  (Edit)
+## 69. edit / reproduction  (Edit)
 _step 68_
 
 **Thought** (none):
@@ -1590,7 +1590,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/test/java/com/ichi2/anki/RepoBrowserCrashTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 70. run_test / reproduction  (Bash)
+## 70. test / reproduction  (Bash)
 _step 69_
 
 **Thought** (none):
@@ -1610,7 +1610,7 @@ at com.ichi2.anki.CardBrowser.access$500(CardBrowser.java:106)
                 at com.ichi2.async.Collecti
 ```
 
-## 71. run_test / reproduction  (Bash)
+## 71. test / reproduction  (Bash)
 _step 70_
 
 **Thought** (none):
@@ -1630,7 +1630,7 @@ com.ichi2.anki.RepoBrowserCrashTest > browserDoesNotCrashAfterNoteTypeChangeInMu
         at org.robolectric.android.internal.AndroidTestEnvironment.che
 ```
 
-## 72. read_file / localization  (Read)
+## 72. read / localization  (Read)
 _step 71 | **FAILED**_
 
 **Thought** (none):
@@ -1647,7 +1647,7 @@ _(none)_
 The parameter `offset` type is expected as `number` but provided as `unknown`</tool_use_error>
 ```
 
-## 73. read_file / localization  (Read)
+## 73. read / localization  (Read)
 _step 72_
 
 **Thought** (none):
@@ -1676,7 +1676,7 @@ _(none)_
 199	    private boolean mReloadRequired = false
 ```
 
-## 74. edit_file / repair  (Edit)
+## 74. edit / repair  (Edit)
 _step 73_
 
 **Thought** (narration):
@@ -1694,7 +1694,7 @@ Now let me implement the fix in `CardBrowser`.
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 75. read_file / repair (own phase localization)  (Read)
+## 75. read / validation  (Read)
 _step 74_
 
 **Thought** (narration):
@@ -1722,7 +1722,7 @@ Now update the selection accessors to be robust against stale positions:
 384
 ```
 
-## 76. edit_file / repair  (Edit)
+## 76. edit / repair  (Edit)
 _step 75_
 
 **Thought** (none):
@@ -1738,7 +1738,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 77. read_file / repair (own phase localization)  (Read)
+## 77. read / validation  (Read)
 _step 76_
 
 **Thought** (none):
@@ -1762,7 +1762,7 @@ _(none)_
 1274
 ```
 
-## 78. edit_file / repair  (Edit)
+## 78. edit / repair  (Edit)
 _step 77_
 
 **Thought** (none):
@@ -1778,7 +1778,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 79. read_file / repair (own phase localization)  (Read)
+## 79. read / validation  (Read)
 _step 78_
 
 **Thought** (none):
@@ -1807,7 +1807,7 @@ _(none)_
 20
 ```
 
-## 80. edit_file / repair  (Edit)
+## 80. edit / repair  (Edit)
 _step 79_
 
 **Thought** (none):
@@ -1823,7 +1823,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 81. read_file / localization  (Read)
+## 81. read / validation  (Read)
 _step 80_
 
 **Thought** (none):
@@ -1850,7 +1850,7 @@ _(none)_
 2196	        // show tit
 ```
 
-## 82. read_file / localization  (Read)
+## 82. read / validation  (Read)
 _step 81_
 
 **Thought** (narration):
@@ -1876,7 +1876,7 @@ Now add the restore method and hook it into the search handler.
 1698	            updatePre
 ```
 
-## 83. edit_file / repair  (Edit)
+## 83. edit / repair  (Edit)
 _step 82_
 
 **Thought** (none):
@@ -1892,7 +1892,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 84. edit_file / repair  (Edit)
+## 84. edit / repair  (Edit)
 _step 83_
 
 **Thought** (none):
@@ -1908,7 +1908,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 85. read_file / repair (own phase localization)  (Read)
+## 85. read / validation  (Read)
 _step 84_
 
 **Thought** (none):
@@ -1934,7 +1934,7 @@ _(none)_
 2340	    public List<Long> getCheckedCardIds()
 ```
 
-## 86. edit_file / repair  (Edit)
+## 86. edit / repair  (Edit)
 _step 85_
 
 **Thought** (none):
@@ -1950,7 +1950,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 87. read_file / repair (own phase localization)  (Read)
+## 87. read / localization  (Read)
 _step 86_
 
 **Thought** (none):
@@ -1972,7 +1972,7 @@ _(none)_
 1566
 ```
 
-## 88. edit_file / repair  (Edit)
+## 88. edit / repair  (Edit)
 _step 87_
 
 **Thought** (none):
@@ -1988,7 +1988,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/async/CollectionTask.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 89. run_test / repair  (Bash)
+## 89. test / validation  (Bash)
 _step 88_
 
 **Thought** (none):
@@ -2015,7 +2015,7 @@ Note: Recompile with -Xlint:unchecked for details.
 Note: /Volumes/Dumpy/Research
 ```
 
-## 90. search_code / localization  (Bash)
+## 90. search / validation  (Bash)
 _step 89_
 
 **Thought** (none):
@@ -2033,7 +2033,7 @@ grep -n "survived\|cards after change\|checked " AnkiDroid/build/test-results/te
 245:I/RepoBrowserCrashTest: survived, card count 1 checked 1
 ```
 
-## 91. read_file / localization  (Read)
+## 91. read / validation  (Read)
 _step 90_
 
 **Thought** (none):
@@ -2061,7 +2061,7 @@ _(none)_
 237	        b.executeChangeCollectionTa
 ```
 
-## 92. edit_file / repair  (Edit)
+## 92. edit / validation  (Edit)
 _step 91_
 
 **Thought** (none):
@@ -2077,7 +2077,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/test/java/com/ichi2/anki/CardBrowserTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 93. search_code / localization  (Bash)
+## 93. search / validation  (Bash)
 _step 92_
 
 **Thought** (none):
@@ -2101,7 +2101,7 @@ grep -n "assertDoesNotThrow" -A 12 AnkiDroid/src/test/java/com/ichi2/testutils/A
 20-}
 ```
 
-## 94. search_code / localization  (Bash)
+## 94. search / validation  (Bash)
 _step 93_
 
 **Thought** (none):
@@ -2117,7 +2117,7 @@ grep -n "import.*ConfirmModSchemaException" AnkiDroid/src/main/java/com/ichi2/li
 26:import com.ichi2.anki.exception.ConfirmModSchemaException;
 ```
 
-## 95. edit_file / repair  (Edit)
+## 95. edit / validation  (Edit)
 _step 94_
 
 **Thought** (none):
@@ -2133,7 +2133,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/test/java/com/ichi2/anki/CardBrowserTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 96. edit_file / repair  (Edit)
+## 96. edit / validation  (Edit)
 _step 95_
 
 **Thought** (none):
@@ -2149,7 +2149,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/test/java/com/ichi2/anki/CardBrowserTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 97. run_test / repair  (Bash)
+## 97. edit / validation  (Bash)
 _step 96_
 
 **Thought** (none):
@@ -2176,7 +2176,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 com.ichi2.anki.CardBrowserTest > selectionsAreCorrectWhenNonExistingCardIsRem
 ```
 
-## 98. run_test / repair  (Bash)
+## 98. test / validation  (Bash)
 _step 97_
 
 **Thought** (none):
@@ -2201,7 +2201,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Picked up JAVA_TOOL
 ```
 
-## 99. search_code / localization  (Bash)
+## 99. search / localization  (Bash)
 _step 98_
 
 **Thought** (none):
@@ -2217,7 +2217,7 @@ grep -rn "confirm_map_cards_to_nothing" AnkiDroid/src/main/res/values/*.xml
 AnkiDroid/src/main/res/values/02-strings.xml:111:    <string name="confirm_map_cards_to_nothing">Any cards mapped to nothing will be deleted. If a note has no remaining cards, it will be lost. Are you sure you want to continue?</string>
 ```
 
-## 100. read_file / localization  (Read)
+## 100. read / validation  (Read)
 _step 99_
 
 **Thought** (none):
@@ -2240,7 +2240,7 @@ _(none)_
 1308	     * the browser will either operate on the wr
 ```
 
-## 101. edit_file / repair  (Edit)
+## 101. edit / repair  (Edit)
 _step 100_
 
 **Thought** (none):
@@ -2256,7 +2256,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 102. edit_file / repair  (Edit)
+## 102. edit / repair  (Edit)
 _step 101_
 
 **Thought** (narration):
@@ -2274,7 +2274,7 @@ Now clear the remembered ids when the selection is explicitly cleared:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 103. edit_file / repair  (Edit)
+## 103. edit / repair  (Edit)
 _step 102_
 
 **Thought** (none):
@@ -2290,7 +2290,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 104. run_test / repair  (Bash)
+## 104. test / validation  (Bash)
 _step 103_
 
 **Thought** (none):
@@ -2307,7 +2307,7 @@ Deprecated Gradle features were used in this build, making it incompatible with 
 BUILD SUCCESSFUL in 1m 35s
 ```
 
-## 105. edit_file / repair  (Edit)
+## 105. edit / validation  (Edit)
 _step 104_
 
 **Thought** (narration):
@@ -2325,7 +2325,7 @@ Now revert the temporary Robolectric build config and run the required build com
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-159/AnkiDroid/build.gradle has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 106. build / repair  (Bash)
+## 106. build / validation  (Bash)
 _step 105_
 
 **Thought** (none):
@@ -2351,7 +2351,7 @@ Deprecated Gradle features were used in this build, making it incompatible with 
 Use '--war
 ```
 
-## 107. search_code / validation  (Bash)
+## 107. search / validation  (Bash)
 _step 106_
 
 **Thought** (none):

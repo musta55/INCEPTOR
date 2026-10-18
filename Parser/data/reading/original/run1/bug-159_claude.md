@@ -7,9 +7,9 @@
 - steps (LLM inferences): 51 | actions: 98 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(2: unchecked) -> localization(71: succeeded) -> repair(11: succeeded) -> localization(3: succeeded) -> repair(3: blocked) -> localization(1: failed) -> validation(7: succeeded)
+Phases: planning(2: unchecked) -> localization(71: succeeded) -> repair(4: succeeded) -> localization(1: succeeded) -> repair(1: succeeded) -> validation(1: succeeded) -> repair(2: succeeded) -> validation(5: succeeded) -> repair(1: blocked) -> validation(3: blocked) -> repair(1: succeeded) -> validation(6: succeeded)
 
-## 1. orient / understanding  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -42,7 +42,7 @@ var
 Volumes
 ```
 
-## 2. orient / understanding  (Bash)
+## 2. orient / planning  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -73,7 +73,7 @@ settings.gradle
 tools
 ```
 
-## 3. delegate / localization  (Agent)
+## 3. sub-agent / localization  (Agent)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -87,7 +87,7 @@ In this AnkiDroid repo (root is the current directory), find the code involved i
 **Result**:
 _delegated to subagent `sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq` -- its 42 actions follow below_
 
-## 4. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 4. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 2_
 
 **Thought** (none):
@@ -105,7 +105,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/
 ```
 
-## 5. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 5. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 3_
 
 **Thought** (none):
@@ -121,7 +121,7 @@ grep -r "changeNoteType\|changeModel\|change note type\|Change Note Type" /Volum
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
 ```
 
-## 6. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 6. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 4_
 
 **Thought** (none):
@@ -138,7 +138,7 @@ grep -r "Edit\|changeModel\|ChangeModel\|CHANGE_" /Volumes/Dumpy/Research/automa
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java:624:
 ```
 
-## 7. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 7. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 5_
 
 **Thought** (none):
@@ -156,7 +156,7 @@ grep -r "CHANGE_DECK_MULTI\|CHANGE_\|multiSelectOperation\|performSelectedCardsA
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-159
 ```
 
-## 8. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 8. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 6_
 
 **Thought** (none):
@@ -176,7 +176,7 @@ _(none)_
 5	 *
 ```
 
-## 9. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 9. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 7_
 
 **Thought** (none):
@@ -198,7 +198,7 @@ grep -n "onContextItemSelected\|performSelectedCardsAction\|ChangeDeck\|ChangeMo
 1451:    private CollectionTask.Task
 ```
 
-## 10. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 10. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 8_
 
 **Thought** (none):
@@ -214,7 +214,7 @@ grep -n "registerForContextMenu\|onContextItemSelected" /Volumes/Dumpy/Research/
 (Bash completed with no output)
 ```
 
-## 11. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 11. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 9_
 
 **Thought** (none):
@@ -238,7 +238,7 @@ _(none)_
 9	 This program is distributed in the hope that it will be useful, but
 ```
 
-## 12. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 12. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 10_
 
 **Thought** (none):
@@ -254,7 +254,7 @@ grep -n "menu\|Menu\|EDIT\|Edit" /Volumes/Dumpy/Research/automated_program_repai
 898:    public boolean onOptionsItemSelected(MenuItem item) {
 ```
 
-## 13. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 13. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 11_
 
 **Thought** (none):
@@ -277,7 +277,7 @@ _(none)_
 905	        if (mUndoSnackbar != null && mUndoSna
 ```
 
-## 14. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 14. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 12_
 
 **Thought** (none):
@@ -296,7 +296,7 @@ grep -n "changeDeck\|changeNoteType\|CHANGE_MODEL" /Volumes/Dumpy/Research/autom
 2286:    @VisibleForTesting(otherwise = VisibleForTesting.NONE) //should only be called from changeDeck()
 ```
 
-## 15. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 15. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 13_
 
 **Thought** (none):
@@ -321,7 +321,7 @@ _(none)_
 4
 ```
 
-## 16. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 16. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 14_
 
 **Thought** (none):
@@ -338,7 +338,7 @@ grep -n "executeChangeCollectionTask" /Volumes/Dumpy/Research/automated_program_
 2287:    void executeChangeCollectionTask(long[] ids, long newDid) {
 ```
 
-## 17. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 17. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 15_
 
 **Thought** (none):
@@ -358,7 +358,7 @@ _(none)_
 2291	    }
 ```
 
-## 18. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 18. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 16_
 
 **Thought** (none):
@@ -379,7 +379,7 @@ grep -n "changeNoteType\|changeModel\|CHANGE_MODEL" /Volumes/Dumpy/Research/auto
 852:    private void
 ```
 
-## 19. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 19. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 17_
 
 **Thought** (none):
@@ -401,7 +401,7 @@ _(none)_
 831	            ConfirmationDialog dialog =
 ```
 
-## 20. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 20. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 18_
 
 **Thought** (none):
@@ -421,7 +421,7 @@ _(none)_
 774
 ```
 
-## 21. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 21. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 19_
 
 **Thought** (none):
@@ -443,7 +443,7 @@ grep -n "mModelChangeFieldMap\|mModelChangeCardMap\|mModelSpinner\|oldModel\|new
 768:
 ```
 
-## 22. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 22. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 20_
 
 **Thought** (none):
@@ -459,7 +459,7 @@ grep -n "mModelSpinner\|onItemSelectedListener\|new OnItemSelectedListener" /Vol
 507:        mNoteDeckSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 ```
 
-## 23. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 23. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 21_
 
 **Thought** (none):
@@ -482,7 +482,7 @@ grep -n "Spinner\|ModelSpinner\|modelSpinner" /Volumes/Dumpy/Research/automated_
 507:        mNoteDeckSpinner
 ```
 
-## 24. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 24. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 22_
 
 **Thought** (none):
@@ -499,7 +499,7 @@ grep -n "class SetNoteTypeListener\|class EditNoteTypeListener" /Volumes/Dumpy/R
 1630:    private class EditNoteTypeListener implements OnItemSelectedListener {
 ```
 
-## 25. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 25. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 23_
 
 **Thought** (none):
@@ -519,7 +519,7 @@ _(none)_
 1595	            //Timber.i("NoteEditor:: onItemSelected() fired on mNoteTypeSpinner");
 ```
 
-## 26. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 26. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 24_
 
 **Thought** (none):
@@ -535,7 +535,7 @@ grep -n "public.*change\|def change" /Volumes/Dumpy/Research/automated_program_r
 840:    public void change(JSONObject m, long[] nids, JSONObject newModel, Map<Integer, Integer> fmap, Map<Integer, Integer> cmap) throws ConfirmModSchemaException {
 ```
 
-## 27. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 27. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 25_
 
 **Thought** (none):
@@ -557,7 +557,7 @@ _(none)_
 846
 ```
 
-## 28. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 28. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 26_
 
 **Thought** (none):
@@ -579,7 +579,7 @@ grep -n "TASK_TYPE\|CHANGE_MODEL\|CHANGE_DECK_MULTI" /Volumes/Dumpy/Research/aut
 81:    public static final int TASK_TYPE_DISMISS =
 ```
 
-## 29. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 29. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 27_
 
 **Thought** (none):
@@ -596,7 +596,7 @@ grep -n "TASK_TYPE_DISMISS_MULTI\|case TASK_TYPE_DISMISS_MULTI" /Volumes/Dumpy/R
 273:            case TASK_TYPE_DISMISS_MULTI:
 ```
 
-## 30. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 30. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 28_
 
 **Thought** (none):
@@ -621,7 +621,7 @@ _(none)_
 282	            case TASK_TYPE_UPDATE_VALUES_FROM_DECK:
 ```
 
-## 31. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 31. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 29_
 
 **Thought** (none):
@@ -638,7 +638,7 @@ grep -n "doInBackgroundDismissNotes" /Volumes/Dumpy/Research/automated_program_r
 630:    private TaskData doInBackgroundDismissNotes(TaskData... params) {
 ```
 
-## 32. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 32. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 30_
 
 **Thought** (none):
@@ -661,7 +661,7 @@ _(none)_
 637	        for (i
 ```
 
-## 33. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 33. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 31_
 
 **Thought** (none):
@@ -683,7 +683,7 @@ grep -n "enum DismissType\|CHANGE_DECK_MULTI\|DELETE_NOTE_MULTI" /Volumes/Dumpy/
 1430:            case CHANGE_DECK_MULTI:
 ```
 
-## 34. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 34. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 32_
 
 **Thought** (none):
@@ -706,7 +706,7 @@ _(none)_
 138
 ```
 
-## 35. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 35. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 33_
 
 **Thought** (none):
@@ -722,7 +722,7 @@ grep -n "changeModel\|CHANGE_MODEL" /Volumes/Dumpy/Research/automated_program_re
 (Bash completed with no output)
 ```
 
-## 36. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 36. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 34_
 
 **Thought** (none):
@@ -739,7 +739,7 @@ grep -r "changeNoteType\|changeModel" /Volumes/Dumpy/Research/automated_program_
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-159/AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java:783:
 ```
 
-## 37. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 37. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 35_
 
 **Thought** (none):
@@ -762,7 +762,7 @@ grep -n "Edit\|EDIT\|action_edit" /Volumes/Dumpy/Research/automated_program_repa
 669:
 ```
 
-## 38. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 38. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 36_
 
 **Thought** (none):
@@ -785,7 +785,7 @@ grep -n "EXTRA_CALLER\|CALLER_\|CALLER_CARDBROWSER" /Volumes/Dumpy/Research/auto
 143
 ```
 
-## 39. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 39. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 37_
 
 **Thought** (none):
@@ -804,7 +804,7 @@ grep -n "mChangeDeckHandler\|mDeleteNoteHandler\|mUpdateCardHandler" /Volumes/Du
 1451:    private CollectionTask.TaskListener mChangeDeckHandler = new Listene
 ```
 
-## 40. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 40. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 38_
 
 **Thought** (none):
@@ -827,7 +827,7 @@ _(none)_
 1458	            mCards
 ```
 
-## 41. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 41. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 39_
 
 **Thought** (none):
@@ -848,7 +848,7 @@ grep -n "getSelectedCardIds\|mCheckedCardPositions" /Volumes/Dumpy/Research/auto
 677:            openNoteEd
 ```
 
-## 42. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 42. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 40_
 
 **Thought** (none):
@@ -870,7 +870,7 @@ _(none)_
 378	            ids[count++] = Long.valueOf(mCards.get(cardPosit
 ```
 
-## 43. search_code / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 43. search / localization  (Bash)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 41_
 
 **Thought** (none):
@@ -886,7 +886,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 (Bash completed with no output)
 ```
 
-## 44. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 44. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 42_
 
 **Thought** (none):
@@ -909,7 +909,7 @@ _(none)_
 859	                "select id, flds f
 ```
 
-## 45. read_file / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
+## 45. read / localization  (Read)  [subagent sub-toolu_01BMvNnQwu5Jtp3EnBeFuAvq]
 _step 43_
 
 **Thought** (none):
@@ -938,7 +938,7 @@ _(none)_
 713	            if (!
 ```
 
-## 46. vcs / localization  (Bash)
+## 46. diff / localization  (Bash)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -958,7 +958,7 @@ b3c2aca8 create network guard for both codex and claude
 90447cb4 Updated bug list for the main branch.
 ```
 
-## 47. search_code / localization  (Bash)
+## 47. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -983,7 +983,7 @@ grep -n "openNoteEditorForCurrentlySelectedNote\|action_edit_note\|onActivityRes
 671:        startActivityForResultWithAnimatio
 ```
 
-## 48. read_file / localization  (Read)
+## 48. read / localization  (Read)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1012,7 +1012,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 1153
 ```
 
-## 49. read_file / localization  (Read)
+## 49. read / localization  (Read)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1037,7 +1037,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 649
 ```
 
-## 50. read_file / localization  (Read)
+## 50. read / localization  (Read)
 _step 5_
 
 **Thought** (none):
@@ -1065,7 +1065,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
 742
 ```
 
-## 51. search_code / localization  (Bash)
+## 51. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -1089,7 +1089,7 @@ grep -n "closeNoteEditor\|mChanged\|mReloadRequired\|reloadRequired" AnkiDroid/s
 770:                mReloadR
 ```
 
-## 52. read_file / localization  (Read)
+## 52. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -1119,7 +1119,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
 988
 ```
 
-## 53. read_file / localization  (Read)
+## 53. read / localization  (Read)
 _step 8_
 
 **Thought** (none):
@@ -1142,7 +1142,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 1250	        }
 ```
 
-## 54. read_file / localization  (Read)
+## 54. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -1174,7 +1174,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 196	    private DeckDropDownAd
 ```
 
-## 55. search_code / localization  (Bash)
+## 55. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -1195,7 +1195,7 @@ grep -n "onSelectionChanged\|mSearchCardsHandler\|hasSelectedSingleNoteId\|getSe
 389:        Integer[] checkedPositions = mCheckedCardPositions.toA
 ```
 
-## 56. read_file / localization  (Read)
+## 56. read / localization  (Read)
 _step 11 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1217,7 +1217,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 378	            ids[count++] = Long.valueOf(mCards.get(cardPosit
 ```
 
-## 57. read_file / localization  (Read)
+## 57. read / localization  (Read)
 _step 11 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1244,7 +1244,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 2051	        CheckBox checkBox = (CheckBox) cell.findViewById(R.id.ca
 ```
 
-## 58. read_file / localization  (Read)
+## 58. read / localization  (Read)
 _step 12 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1271,7 +1271,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 866	            re
 ```
 
-## 59. read_file / localization  (Read)
+## 59. read / localization  (Read)
 _step 12 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1295,7 +1295,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 1681	            updatePreviewMenuI
 ```
 
-## 60. read_file / localization  (Read)
+## 60. read / localization  (Read)
 _step 13_
 
 **Thought** (none):
@@ -1318,7 +1318,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/NoteEditor.java
 1587	    // -------------------------------
 ```
 
-## 61. read_file / localization  (Bash)
+## 61. read / localization  (Bash)
 _step 14 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1345,7 +1345,7 @@ sed -n '1,200p' AnkiDroid/src/main/res/menu/card_browser_multiselect.xml 2>/dev/
         android:id="@
 ```
 
-## 62. read_file / localization  (Read)
+## 62. read / localization  (Read)
 _step 14 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1371,7 +1371,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 2166	        // show title and
 ```
 
-## 63. read_file / localization  (Read)
+## 63. read / localization  (Read)
 _step 15_
 
 **Thought** (none):
@@ -1397,7 +1397,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 719	                // Add reload flag
 ```
 
-## 64. search_code / localization  (Bash)
+## 64. search / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -1428,7 +1428,7 @@ NullCollectionNoteEditor.java
 NullCollectionReview
 ```
 
-## 65. read_file / localization  (Read)
+## 65. read / localization  (Read)
 _step 17_
 
 **Thought** (none):
@@ -1457,7 +1457,7 @@ AnkiDroid/src/test/java/com/ichi2/anki/CardBrowserTest.java
 14	import com.ichi2.u
 ```
 
-## 66. search_code / localization  (Bash)
+## 66. search / localization  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -1476,7 +1476,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java:183:        NOTE,
 AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java:915:                startActivityForResultWithAnimation(inten
 ```
 
-## 67. read_file / localization  (Read)
+## 67. read / localization  (Read)
 _step 19_
 
 **Thought** (none):
@@ -1498,7 +1498,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 1486	            if ("".eq
 ```
 
-## 68. search_code / localization  (Bash)
+## 68. search / localization  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -1524,7 +1524,7 @@ grep -n "doInBackgroundSearchCards\|doInBackgroundCheckCardSelection" -A 40 Anki
 2
 ```
 
-## 69. search_code / localization  (Bash)
+## 69. search / localization  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -1548,7 +1548,7 @@ grep -n "doInBackgroundCheckCardSelection" -A 40 AnkiDroid/src/main/java/com/ich
 1567-        List<Map<String, String>> cards = (List<Map<String, String>
 ```
 
-## 70. read_file / localization  (Read)
+## 70. read / localization  (Read)
 _step 22_
 
 **Thought** (none):
@@ -1574,7 +1574,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 110	    // Would be even faster as an array given these are all co
 ```
 
-## 71. search_code / localization  (Bash)
+## 71. search / localization  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -1596,7 +1596,7 @@ grep -n "public int queryScalar\|public.*queryScalar\|public.*queryColumn" AnkiD
 365:    public static String ids2st
 ```
 
-## 72. read_file / localization  (Read)
+## 72. read / localization  (Read)
 _step 24_
 
 **Thought** (none):
@@ -1624,7 +1624,7 @@ AnkiDroid/src/main/java/com/ichi2/libanki/DB.java
 177	    public int queryScalar(String query, Object[] selecti
 ```
 
-## 73. search_code / localization  (Bash)
+## 73. read / localization  (Bash)
 _step 25_
 
 **Thought** (narration):
@@ -1652,7 +1652,7 @@ sed -n '1,100p' AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java | grep -
 31:import android.os.System
 ```
 
-## 74. edit_file / repair  (Edit)
+## 74. edit / repair  (Edit)
 _step 26_
 
 **Thought** (none):
@@ -1668,7 +1668,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 The file AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 75. edit_file / repair  (Edit)
+## 75. edit / repair  (Edit)
 _step 27_
 
 **Thought** (none):
@@ -1684,7 +1684,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 The file AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 76. edit_file / repair  (Edit)
+## 76. edit / repair  (Edit)
 _step 28_
 
 **Thought** (narration):
@@ -1702,7 +1702,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 The file AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 77. edit_file / repair  (Edit)
+## 77. edit / repair  (Edit)
 _step 29_
 
 **Thought** (narration):
@@ -1720,7 +1720,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 The file AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 78. read_file / repair (own phase localization)  (Read)
+## 78. read / localization  (Read)
 _step 30_
 
 **Thought** (none):
@@ -1742,7 +1742,7 @@ AnkiDroid/src/main/java/com/ichi2/async/CollectionTask.java
 1569	        bo
 ```
 
-## 79. edit_file / repair  (Edit)
+## 79. edit / repair  (Edit)
 _step 31_
 
 **Thought** (none):
@@ -1758,7 +1758,7 @@ AnkiDroid/src/main/java/com/ichi2/async/CollectionTask.java
 The file AnkiDroid/src/main/java/com/ichi2/async/CollectionTask.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 80. build / repair  (Bash)
+## 80. build / validation  (Bash)
 _step 32_
 
 **Thought** (none):
@@ -1783,7 +1783,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :AnkiDroid
 ```
 
-## 81. edit_file / repair  (Edit)
+## 81. edit / repair  (Edit)
 _step 33_
 
 **Thought** (narration):
@@ -1801,7 +1801,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 The file AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 82. edit_file / repair  (Edit)
+## 82. edit / repair  (Edit)
 _step 34_
 
 **Thought** (none):
@@ -1817,7 +1817,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 The file AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 83. edit_file / repair  (Edit)
+## 83. edit / validation  (Edit)
 _step 35_
 
 **Thought** (none):
@@ -1833,7 +1833,7 @@ AnkiDroid/src/test/java/com/ichi2/anki/CardBrowserTest.java
 The file AnkiDroid/src/test/java/com/ichi2/anki/CardBrowserTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 84. run_test / repair  (Bash)
+## 84. test / validation  (Bash)
 _step 36_
 
 **Thought** (none):
@@ -1857,7 +1857,7 @@ _(none)_
 > Task :api:bundleLibResDebug NO-SOURCE
 ```
 
-## 85. search_code / localization  (Bash)
+## 85. search / validation  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -1879,7 +1879,7 @@ testcase name="selectionIsRemovedWhenTheCardListIsReloaded"
 testcase name="browserIsNotInitiallyInMultiSelectModeWit
 ```
 
-## 86. env_setup / localization (own phase validation)  (Bash)
+## 86. diff / validation  (Bash)
 _step 38_
 
 **Thought** (none):
@@ -1895,7 +1895,7 @@ cp AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java /tmp/CardBrowser.fixe
 (Bash completed with no output)
 ```
 
-## 87. vcs / localization  (Bash)
+## 87. diff / validation  (Bash)
 _step 39_
 
 **Thought** (none):
@@ -1911,7 +1911,7 @@ git status --short | head; git check-ignore -v AnkiDroid/src/main/java/com/ichi2
 .gitignore:40:runs/	AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java
 ```
 
-## 88. shell_edit / repair  (Bash)
+## 88. edit / repair  (Bash)
 _step 40_
 
 **Thought** (none):
@@ -1935,7 +1935,7 @@ buggy='''    private boolean hasSelectedSingleNoteI
 2106:        Timber.d("invalidateSelection() - the card list was reloaded, clearing the selection");
 ```
 
-## 89. run_test / repair  (Bash)
+## 89. test / validation  (Bash)
 _step 41_
 
 **Thought** (none):
@@ -1954,7 +1954,7 @@ com.ichi2.anki.CardBrowserTest > editNoteIsNotAvailableWhenCardsOfMultipleNotesA
 BUILD FAILED in 56s
 ```
 
-## 90. run_shell / repair  (Bash)
+## 90. other / validation  (Bash)
 _step 42_
 
 **Thought** (none):
@@ -1979,7 +1979,7 @@ Expected: is &lt;0&gt;
      bu
 ```
 
-## 91. read_file / localization  (Bash)
+## 91. read / validation  (Bash)
 _step 43_
 
 **Thought** (none):
@@ -1999,7 +1999,7 @@ sed -n '1,140p' AnkiDroid/src/test/java/com/ichi2/anki/RobolectricTest.java
  * the terms of the GNU General Public L
 ```
 
-## 92. env_setup / validation  (Bash)
+## 92. edit / repair  (Bash)
 _step 44_
 
 **Thought** (none):
@@ -2015,7 +2015,7 @@ cp /tmp/CardBrowser.fixed.java AnkiDroid/src/main/java/com/ichi2/anki/CardBrowse
 1298:            invalidateSelection();
 ```
 
-## 93. run_test / validation  (Bash)
+## 93. test / validation  (Bash)
 _step 45_
 
 **Thought** (none):
@@ -2054,7 +2054,7 @@ BUILD SUCCESSFUL in 15s
 52 actionable tasks: 10 executed, 39 from cache, 3 up-to-date
 ```
 
-## 95. run_test / validation  (Bash)
+## 95. test / validation  (Bash)
 _step 47_
 
 **Thought** (none):
@@ -2099,7 +2099,7 @@ ok
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-159
 ```
 
-## 97. read_file / validation  (Read)
+## 97. read / validation  (Read)
 _step 49 | **FAILED**_
 
 **Thought** (none):
@@ -2115,7 +2115,7 @@ _(none)_
 Access outside repo directory is not allowed: /tmp/fix.patch
 ```
 
-## 98. read_file / validation  (Bash)
+## 98. read / validation  (Bash)
 _step 50_
 
 **Thought** (none):

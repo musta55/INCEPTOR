@@ -7,9 +7,9 @@
 - steps (LLM inferences): 7 | actions: 12 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt
 
-Phases: understanding(1: unchecked) -> localization(8: succeeded) -> repair(2: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(8: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. read_file / understanding  (read_file)
+## 1. read / planning  (read_file)
 _step 1 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -30,7 +30,7 @@ Let me first read the README and understand the project, then search for relevan
 Open Source App to Store your trainings schedule.
 ```
 
-## 2. search_code / localization  (glob)
+## 2. search / localization  (glob)
 _step 1 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -46,7 +46,7 @@ app/src/main/**/*.kt
 No files found
 ```
 
-## 3. search_code / localization  (grep_search)
+## 3. search / localization  (grep_search)
 _step 1 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -62,7 +62,7 @@ Angle
 No matches found
 ```
 
-## 4. search_code / localization  (glob)
+## 4. search / localization  (glob)
 _step 2 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -80,7 +80,7 @@ app/src/main/**/*.java
 Found 19 matching file(s)
 ```
 
-## 5. search_code / localization  (grep_search)
+## 5. search / localization  (grep_search)
 _step 2 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -96,7 +96,7 @@ Angle
 Found 19 matches
 ```
 
-## 6. search_code / localization  (glob)
+## 6. search / localization  (glob)
 _step 2 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -112,7 +112,7 @@ app/src/main/**/res/**/*.xml
 Found 47 matching file(s)
 ```
 
-## 7. read_file / localization  (read_file)
+## 7. read / localization  (read_file)
 _step 3 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -152,7 +152,7 @@ import com.german_software_engineers.trainerapp.Model.Exercise;
 import com.german_software_engineers.trainerapp.
 ```
 
-## 8. read_file / localization  (read_file)
+## 8. read / localization  (read_file)
 _step 3 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -181,7 +181,7 @@ public class Exercise {
     private boolean IsWei
 ```
 
-## 9. read_file / localization  (read_file)
+## 9. read / localization  (read_file)
 _step 3 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -206,7 +206,7 @@ _(same inference as the previous action)_
         android:layout_height="
 ```
 
-## 10. edit_file / repair  (edit)
+## 10. edit / repair  (edit)
 _step 4_
 
 **Thought** (reasoning):
@@ -258,7 +258,7 @@ import android.support.v4.app.DialogFragment;
 import andr
 ```
 
-## 11. build / repair  (run_shell_command)
+## 11. build / validation  (run_shell_command)
 _step 5_
 
 **Thought** (reasoning):
@@ -281,7 +281,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http
 ```
 
-## 12. read_file / validation  (read_file)
+## 12. read / validation  (read_file)
 _step 6_
 
 **Thought** (reasoning):

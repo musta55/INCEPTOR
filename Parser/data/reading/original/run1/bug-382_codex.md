@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(4: succeeded) -> repair(11: succeeded)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(5: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:38:53.415Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace URI parameter parsing, patch the decoding order, then build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:38:58.889Z_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  8 sage  staff   256 Sep  9 11:55 .github
 -rw-r--r--@  1 sage  s
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:39:01.522Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ app/src/main/play/listings/ar
 app/src/main/play
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:39:06.622Z_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ import android.widget.TextView;
 import com.trianguloy.urlchecker.R
 ```
 
-## 5. vcs / localization  (exec_command)
+## 5. diff / localization  (exec_command)
 _step 9 | 2026-09-23T09:39:19.343Z_
 
 **Thought** (none):
@@ -146,7 +146,7 @@ false
 a599acd5e0a142b4db0bfcb8bf3874c3f6cd3d0d 2026-09-23 05:38:49 -0400 harness baseline
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-23T09:39:26.411Z_
 
 **Thought** (narration):
@@ -164,7 +164,7 @@ The reproduction maps directly to Uri.getQuery() decoding reserved delimiters be
 Plan updated
 ```
 
-## 7. edit_file / repair  (exec_command)
+## 7. edit / repair  (exec_command)
 _step 11 | 2026-09-23T09:39:32.687Z_
 
 **Thought** (none):
@@ -194,7 +194,7 @@ Success. Updated the following files:
 M app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java
 ```
 
-## 8. diff / repair  (exec_command)
+## 8. read / validation  (exec_command)
 _step 12 | 2026-09-23T09:39:34.793Z_
 
 **Thought** (none):
@@ -225,7 +225,7 @@ Output:
         i
 ```
 
-## 9. vcs / repair  (exec_command)
+## 9. vcs / validation  (exec_command)
 _step 13 | 2026-09-23T09:39:38.571Z_
 
 **Thought** (none):
@@ -249,7 +249,7 @@ HEAD:app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.jav
 fatal: path 'app/src/main/java/com/trianguloy/url
 ```
 
-## 10. search_code / repair (own phase localization)  (exec_command)
+## 10. search / validation  (exec_command)
 _step 14 | 2026-09-23T09:39:42.175Z_
 
 **Thought** (none):
@@ -270,7 +270,7 @@ Output:
 HARNESS
 ```
 
-## 11. read_file / repair  (exec_command)
+## 11. diff / validation  (exec_command)
 _step 15 | 2026-09-23T09:39:45.964Z | **FAILED**_
 
 **Thought** (none):
@@ -291,7 +291,7 @@ Output:
 cat: HARNESS: No such file or directory
 ```
 
-## 12. vcs / repair  (exec_command)
+## 12. diff / validation  (exec_command)
 _step 16 | 2026-09-23T09:39:51.597Z_
 
 **Thought** (none):
@@ -317,7 +317,7 @@ ls: .git: No such file or directory
 file:/Library/Developer/CommandLineT
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-23T09:39:55.589Z_
 
 **Thought** (narration):
@@ -335,7 +335,7 @@ This project has no local unit tests; keep the fix surgical and validate through
 Plan updated
 ```
 
-## 14. build / repair  (exec_command)
+## 14. build / validation  (exec_command)
 _step 18 | 2026-09-23T09:39:59.206Z_
 
 **Thought** (none):
@@ -357,7 +357,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-23T09:40:01.543Z_
 
 **Thought** (none):
@@ -382,7 +382,7 @@ Found locales: "ar","be","bn","cs","de","el","en","es","fr-FR","hi","in","it","i
 Extracted translators: 404potato,
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T09:40:08.064Z_
 
 **Thought** (narration):
@@ -414,7 +414,7 @@ Output:
 > Task :app:gener
 ```
 
-## 17. plan / repair  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-23T09:40:14.414Z_
 
 **Thought** (none):

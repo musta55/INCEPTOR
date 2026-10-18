@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 20 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(8: succeeded) -> repair(3: succeeded) -> localization(2: failed) -> repair(4: succeeded) -> validation(3: unchecked)
+Phases: localization(8: succeeded) -> repair(3: succeeded) -> validation(9: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -29,7 +29,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-92/app/src/main/res/layout/vend
 ```
 
-## 2. read_file / localization  (Bash)
+## 2. read / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ cd /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_orig
  * This program is distributed in the
 ```
 
-## 3. read_file / localization  (Bash)
+## 3. read / localization  (Bash)
 _step 3 | **FAILED**_
 
 **Thought** (none):
@@ -71,7 +71,7 @@ Exit code 1
 head: app/src/main/res/raw/data: No such file or directory
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -104,7 +104,7 @@ gpl.txt
  * Copyright (C) 2018  VREM Software De
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -129,7 +129,7 @@ cat app/src/main/java/com/vrem/util/TextUtils.java && cat app/src/test/java/com/
  * This program is distributed in the
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ grep -c '[a-z]' app/src/main/res/raw/data.txt; grep -m5 '[a-z]' app/src/main/res
 0
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -165,7 +165,7 @@ app/src/main/java/com/vrem/util/LocaleUtils.java:41:    static final Locale POLI
 app/src/main/java/com/vrem/util/Local
 ```
 
-## 8. read_file / localization  (Read)
+## 8. read / localization  (Read)
 _step 8_
 
 **Thought** (narration):
@@ -198,7 +198,7 @@ Now let me make the search case-insensitive. I'll normalize in `VendorUtils` and
 34	    st
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -214,7 +214,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-92/app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorUtils.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -230,7 +230,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-92/app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorUtils.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (none):
@@ -246,7 +246,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-92/app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorDB.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -262,7 +262,7 @@ grep -rn "findVendors\|VendorUtils.clean\|toUpperCase" app/src --include=*.java
 (eval):1: no matches found: --include=*.java
 ```
 
-## 13. search_code / localization  (Bash)
+## 13. search / validation  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -280,7 +280,7 @@ app/src/test/java/com/vrem/wifianalyzer/vendor/VendorFragmentTest.java:70:      
 app/src/test/java/com/vrem/wifianalyzer/vendor/model/VendorDBTest.java:109:        List<String> actual = fixture.findVendors();
 ```
 
-## 14. build / repair  (Bash)
+## 14. build / validation  (Bash)
 _step 14_
 
 **Thought** (narration):
@@ -305,7 +305,7 @@ Note: Recompile with -Xlint:unchecked for details.
 :app:compile
 ```
 
-## 15. read_file / repair  (Read)
+## 15. read / validation  (Read)
 _step 15_
 
 **Thought** (narration):
@@ -335,7 +335,7 @@ Build succeeds. Let me verify the fix behavior by adding test cases for lowercas
 124
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / validation  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -351,7 +351,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-92/app/src/test/java/com/vrem/wifianalyzer/vendor/model/VendorDBTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. run_test / repair  (Bash)
+## 17. test / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -373,7 +373,7 @@ com.vrem.wifianalyzer.vendor.model.VendorDBTest > testGetVendors PASSED
 com.vrem.wifianalyzer.ve
 ```
 
-## 18. run_test / validation  (Bash)
+## 18. test / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -393,7 +393,7 @@ _(none)_
    1 com.vrem.wifianalyzer.vendor.model.VendorD
 ```
 
-## 19. run_test / validation  (Bash)
+## 19. test / validation  (Bash)
 _step 19_
 
 **Thought** (narration):
@@ -411,7 +411,7 @@ All vendor tests pass. Let me run the full unit test suite to confirm nothing el
 BUILD SUCCESSFUL in 58s
 ```
 
-## 20. read_file / validation  (Bash)
+## 20. read / validation  (Bash)
 _step 20_
 
 **Thought** (narration):

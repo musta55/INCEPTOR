@@ -7,9 +7,9 @@
 - steps (LLM inferences): 31 | actions: 26 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(10: succeeded) -> repair(7: blocked) -> validation(5: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(10: succeeded) -> repair(1: blocked) -> planning(1: unchecked) -> validation(9: blocked, succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:48:14.582Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace note creation and save handling, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:48:17.570Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep  9 11:55 .github
 -rw-r--r--@  1
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:48:19.142Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/flavorTest/res/drawable-xxhdpi/ic_launcher.png
 app/src/flavorTest/
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T09:48:22.577Z_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T09:48:25.956Z_
 
 **Thought** (narration):
@@ -134,7 +134,7 @@ Total output lines: 1205
  *
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:48:30.768Z_
 
 **Thought** (none):
@@ -163,7 +163,7 @@ Total output lines: 813
     86	    private TextFormat _textFormat;
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:48:35.131Z_
 
 **Thought** (none):
@@ -192,7 +192,7 @@ Total output lines: 748
    181	        switch (item.getIte
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-23T09:48:41.160Z_
 
 **Thought** (none):
@@ -225,7 +225,7 @@ Total output lines: 565
    2
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-23T09:48:46.242Z_
 
 **Thought** (narration):
@@ -259,7 +259,7 @@ Total output lines: 654
 #
 ```
 
-## 10. read_file / localization  (exec_command)
+## 10. read / localization  (exec_command)
 _step 14 | 2026-09-23T09:48:50.175Z_
 
 **Thought** (none):
@@ -310,7 +310,7 @@ Output:
 * main
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. other / localization  (exec_command)
 _step 16 | 2026-09-23T09:49:07.940Z_
 
 **Thought** (none):
@@ -334,7 +334,7 @@ curl: (56) CONNECT tunnel failed, response 403
 curl: (56) CONNECT tunnel failed, response 403
 ```
 
-## 13. search_code / localization  (exec_command)
+## 13. search / localization  (exec_command)
 _step 17 | 2026-09-23T09:49:20.535Z_
 
 **Thought** (none):
@@ -363,7 +363,7 @@ Total output lines: 432
      7	 *  https://github.com/gsantner/opoc/#licensing
 ```
 
-## 14. search_code / localization  (exec_command)
+## 14. search / localization  (exec_command)
 _step 18 | 2026-09-23T09:49:37.432Z_
 
 **Thought** (none):
@@ -392,7 +392,7 @@ Output:
    138	    public static byte[] readCloseBinaryStream(final InputStream stream)
 ```
 
-## 15. edit_file / repair  (exec_command)
+## 15. edit / repair  (exec_command)
 _step 19 | 2026-09-23T09:49:52.996Z_
 
 **Thought** (narration):
@@ -425,7 +425,7 @@ Success. Updated the following files:
 M app/src/test/java/net/gsantner/markor/model/DocumentTest.java
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:50:19.055Z_
 
 **Thought** (none):
@@ -441,7 +441,7 @@ _(none)_
 Plan updated
 ```
 
-## 17. search_code / repair  (exec_command)
+## 17. search / validation  (exec_command)
 _step 21 | 2026-09-23T09:50:21.830Z_
 
 **Thought** (narration):
@@ -469,7 +469,7 @@ Output:
 228-        Document document = DocumentIO.loadDocument(getActivit
 ```
 
-## 18. read_file / repair (own phase localization)  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-23T09:50:26.070Z_
 
 **Thought** (none):
@@ -491,7 +491,7 @@ Output:
 HARNESS
 ```
 
-## 19. run_test / repair  (exec_command)
+## 19. test / validation  (exec_command)
 _step 23 | 2026-09-23T09:50:29.015Z_
 
 **Thought** (none):
@@ -513,7 +513,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-23T09:50:31.796Z_
 
 **Thought** (narration):
@@ -541,7 +541,7 @@ Parallel execution with configuration on demand is an incubating feature.
 WARNING: The specified Android SDK Build Tools version (27.0.3) is ignored, as it is below the minimum supported version (28.0.3) for Android Gradle Plugin 3
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-23T09:50:38.973Z | **FAILED**_
 
 **Thought** (none):
@@ -593,7 +593,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-23T09:50:45.951Z_
 
 **Thought** (none):
@@ -619,7 +619,7 @@ Parallel execution with configuration on demand is an incubating feature.
 WARNING: The specified Android SDK Build Tools version (27.0.3) is ignored, as it is below the minimum supported version (28.0.3) for Android Gradle Plugin 3
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-23T09:50:53.455Z_
 
 **Thought** (none):
@@ -647,7 +647,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeFlavorDef
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-23T09:50:59.892Z_
 
 **Thought** (none):
@@ -676,7 +676,7 @@ Note: Recompile with -Xlint:deprecation for details.
 >
 ```
 
-## 26. plan / validation  (update_plan)
+## 26. plan / planning  (update_plan)
 _step 30 | 2026-09-23T09:51:06.724Z_
 
 **Thought** (none):

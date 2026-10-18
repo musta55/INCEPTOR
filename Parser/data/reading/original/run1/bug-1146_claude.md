@@ -7,9 +7,9 @@
 - steps (LLM inferences): 25 | actions: 24 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(13: succeeded) -> repair(4: succeeded) -> validation(6: unchecked)
+Phases: planning(1: unchecked) -> localization(13: succeeded) -> repair(2: succeeded) -> validation(8: succeeded)
 
-## 1. orient / understanding  (Bash)
+## 1. orient / planning  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -47,7 +47,7 @@ tools
 TRANSLATIONS.md
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -63,7 +63,7 @@ grep -rn "filter" --include=*.java --include=*.kt --include=*.xml GPSTest/src/ma
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -82,7 +82,7 @@ GPSTest/src/main/res/values/strings.xml:119:    <string name="filter_text">Showi
 GPSTest/src/main/res/values/strings.xml:120:    <string name="filter_show
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -102,7 +102,7 @@ res/values-it/strings.xml:118:    <string name="filter_showall">(Mostra tutti)</
 res/values-in/strings.
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5 | **FAILED**_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ Exit code 1
 (eval):cd:1: no such file or directory: GPSTest/src/main/java/com/android/gpstest
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ grep -n "onStop\|Stopped\|Started\|filterGroup\|updateFilterView\|Listener" GPST
 ugrep: warning: GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java: No such file or directory
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ find . -name "GpsStatusFragment.java" -o -name "GpsSkyFragment.java" | head
 ./java/com/android/gpstest/GpsStatusFragment.java
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -174,7 +174,7 @@ cd /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_orig
 236:        filterTextView =
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -200,7 +200,7 @@ _(none)_
 2
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 10_
 
 **Thought** (none):
@@ -222,7 +222,7 @@ _(none)_
 7
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -242,7 +242,7 @@ grep -n "filter\|setStarted\|Stopped" GPSTest/src/main/java/com/android/gpstest/
 159:                mSkyView.setStopped();
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -265,7 +265,7 @@ grep -n "updateFilterView\|mSatelliteMetadataObserver\|svVisibleCount\|svCount" 
 639:        svVisibleCou
 ```
 
-## 13. read_file / localization  (Read)
+## 13. read / localization  (Read)
 _step 13_
 
 **Thought** (none):
@@ -284,7 +284,7 @@ _(none)_
 153	    private static final String KILOMETERS_PER_HOUR = Application.get().getResources().getStringArray(R.arr
 ```
 
-## 14. read_file / localization  (Read)
+## 14. read / localization  (Read)
 _step 14_
 
 **Thought** (none):
@@ -310,7 +310,7 @@ _(none)_
 220	             android:id="@+id/st
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 15_
 
 **Thought** (narration):
@@ -328,7 +328,7 @@ Now I'll apply the fix — clear the filter text/group when GNSS stops:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1146/GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -344,7 +344,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1146/GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. read_file / repair  (Read)
+## 17. read / validation  (Read)
 _step 17_
 
 **Thought** (none):
@@ -369,7 +369,7 @@ _(none)_
 629	        mUseLegacy
 ```
 
-## 18. build / repair  (Bash)
+## 18. build / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -454,7 +454,7 @@ AndroidStyle.xml
 BETA_TESTING.md
 ```
 
-## 22. vcs / validation  (Bash)
+## 22. diff / validation  (Bash)
 _step 22_
 
 **Thought** (none):
@@ -491,7 +491,7 @@ git check-ignore -v GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.
 .gitignore:40:runs/	GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java
 ```
 
-## 24. read_file / validation  (Read)
+## 24. read / validation  (Read)
 _step 24_
 
 **Thought** (narration):

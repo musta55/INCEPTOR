@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 0
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(2: succeeded) -> localization(2: failed) -> repair(3: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(1: failed) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> localization(1: failed) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:59:44.283Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the Info page’s license source, patch it, then run the required d
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:59:46.416Z_
 
 **Thought** (none):
@@ -64,7 +64,7 @@ LICENSE
 ap
 ```
 
-## 3. plan / understanding  (update_plan)
+## 3. plan / planning  (update_plan)
 _step 7 | 2026-09-26T16:59:47.495Z_
 
 **Thought** (narration):
@@ -82,7 +82,7 @@ The tree is small and clean. I’m now comparing the displayed Info text with th
 Plan updated
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:59:50.173Z_
 
 **Thought** (none):
@@ -112,7 +112,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.sup
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-26T16:59:51.622Z_
 
 **Thought** (none):
@@ -144,7 +144,7 @@ Total output lines: 141
     <string name="menu_edit
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-26T16:59:57.519Z_
 
 **Thought** (narration):
@@ -162,7 +162,7 @@ The defect is the literal `"..."` ending `large_text`; only the preamble and one
 Plan updated
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T16:59:59.581Z_
 
 **Thought** (none):
@@ -193,7 +193,7 @@ android {
         testInstrumentati
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-26T17:00:03.971Z_
 
 **Thought** (none):
@@ -235,7 +235,7 @@ A app/src/main/res/raw/gpl_3_0.txt
 license_cmp=0
 ```
 
-## 9. diff / repair  (exec_command)
+## 9. search / validation  (exec_command)
 _step 13 | 2026-09-26T17:00:14.109Z_
 
 **Thought** (narration):
@@ -267,7 +267,7 @@ app/src/main/java/com/german_software_engineers/trainerapp/InfoActivity.java:32:
 app/src/main/java/com/german_software_engineers/
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / validation  (exec_command)
 _step 14 | 2026-09-26T17:00:17.092Z_
 
 **Thought** (none):
@@ -292,7 +292,7 @@ c412762 harness baseline
  1 file changed, 2 insertions(+)
 ```
 
-## 11. plan / localization  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T17:00:19.334Z_
 
 **Thought** (none):
@@ -308,7 +308,7 @@ _(none)_
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-26T17:00:21.413Z_
 
 **Thought** (narration):
@@ -332,7 +332,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T17:00:23.536Z_
 
 **Thought** (none):
@@ -356,7 +356,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-26T17:00:29.674Z_
 
 **Thought** (none):
@@ -386,7 +386,7 @@ Output:
 :app:transformDexArchiveWithDexMergerForDe
 ```
 
-## 15. env_setup / validation  (exec_command)
+## 15. search / validation  (exec_command)
 _step 19 | 2026-09-26T17:00:33.667Z_
 
 **Thought** (narration):
@@ -425,7 +425,7 @@ packaged_license_cmp=0
      4	imp
 ```
 
-## 16. plan / validation  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-26T17:00:36.433Z_
 
 **Thought** (none):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 13 | actions: 20 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(9: succeeded) -> repair(7: unchecked) -> validation(3: unchecked)
+Phases: planning(1: unchecked) -> localization(9: succeeded) -> repair(7: unchecked) -> validation(3: unchecked)
 
-## 1. read_file / understanding  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ settings.gradle
 include ':app'
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -61,7 +61,7 @@ find . -name "*.kt" -o -name "*.java" | grep -v build/ | head -100
 ./app/src/test/java/net/gsantner/mark
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -89,7 +89,7 @@ _(none)_
 13	im
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -109,7 +109,7 @@ Preview (first 2KB):
 SystemMessage(subtype='init', data={'type
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -130,7 +130,7 @@ _(none)_
 6	 * sue me if something goes wrong. No attribution required.    - Greg
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -151,7 +151,7 @@ cat app/src/main/java/net/gsantner/markor/model/Document.java
  * sue me if something goes wrong. No attribution required.    - Gregor Santner
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -169,7 +169,7 @@ app/src/main/java/net/gsantner/markor/activity/DocumentActivity.java:180:       
 app/src/main/java/net/gsantner/markor/activity/DocumentActivity.java:240:    public BaseFragment showTextEditor(@Nullable Document document,
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -185,7 +185,7 @@ grep -rn "setSelection\|getSelectionStart\|lastEdit\|Position" app/src/main/java
 (Bash completed with no output)
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 5_
 
 **Thought** (none):
@@ -212,7 +212,7 @@ _(none)_
 12	import android.support.v7.widget.AppCo
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ setSupportActionBar(_toolbar);
         Intent rece
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 7 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -257,7 +257,7 @@ Now let me apply the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 7 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -273,7 +273,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 8 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -289,7 +289,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 8 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -305,7 +305,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 9 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -323,7 +323,7 @@ Now the cursor-preserving helper plus `loadDocumentIntoUi`, `onPause` and `onSav
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 9 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -339,7 +339,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 10 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -381,7 +381,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.pr
 ```
 
-## 19. search_code / validation (own phase localization)  (Bash)
+## 19. search / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -399,7 +399,7 @@ app/build/outputs/apk/flavorGplay/debug/app-flavorGplay-debug.apk
 app/build/outputs/apk/flavorTest/debug/app-flavorTest-debug.apk
 ```
 
-## 20. search_code / validation  (Bash)
+## 20. search / validation  (Bash)
 _step 12_
 
 **Thought** (none):

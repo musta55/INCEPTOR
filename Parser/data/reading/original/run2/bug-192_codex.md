@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(5: succeeded) -> repair(8: succeeded) -> validation(4: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(5: succeeded) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(9: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:19:33.090Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the editor lifecycle and cursor state, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:19:35.311Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  4 sage  staff   128 Sep  9 11:54 .github
 -rw-r--r--@  1 sage
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:19:36.093Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/main/java/net/gsantner/markor/format/highlighter/SpanCreatorP.java
 app/src/main/java/net/gsantner
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T05:19:38.662Z_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:19:39.857Z_
 
 **Thought** (narration):
@@ -127,7 +127,7 @@ app/src/main/java/net/gsantner/markor/model/Document.java:27:    private String 
 app/src/main/java/net/gsantner/markor/model/Document.java:45:    public synchronized Document loadFromDocument(Docume
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-25T05:19:42.266Z_
 
 **Thought** (none):
@@ -157,7 +157,7 @@ Total output lines: 505
      8	import android.app.
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-25T05:19:45.682Z_
 
 **Thought** (none):
@@ -186,7 +186,7 @@ Output:
    116	    public void onCreateOptionsMenu(Menu menu, MenuInflater infl
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T05:19:49.883Z_
 
 **Thought** (narration):
@@ -242,7 +242,7 @@ Output:
 fatal: unable to access 'https://github.com/gsantner/markor.git/': CONNECT tunnel failed, response 403
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-25T05:19:54.929Z_
 
 **Thought** (narration):
@@ -276,7 +276,7 @@ Success. Updated the following files:
 M app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-25T05:19:56.770Z_
 
 **Thought** (none):
@@ -292,7 +292,7 @@ The fix is a one-line lifecycle correction. This legacy project has no Android l
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-25T05:19:58.593Z_
 
 **Thought** (narration):
@@ -316,7 +316,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T05:20:01.378Z_
 
 **Thought** (none):
@@ -341,7 +341,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/rep
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T05:20:07.196Z_
 
 **Thought** (narration):
@@ -371,7 +371,7 @@ Note: Recompile with -Xlint:deprecation for details.
 :app:generateFlavo
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T05:20:13.337Z_
 
 **Thought** (none):
@@ -398,7 +398,7 @@ Output:
 :a
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T05:20:19.206Z_
 
 **Thought** (none):
@@ -427,7 +427,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Picked up JAVA_TOOL_OPTIONS: -Djava.n
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T05:20:24.918Z_
 
 **Thought** (none):
@@ -456,7 +456,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIP
 ```
 
-## 18. diff / validation  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-25T05:20:29.072Z_
 
 **Thought** (narration):
@@ -489,7 +489,7 @@ Output:
    114	    @Override
 ```
 
-## 19. vcs / validation  (exec_command)
+## 19. diff / validation  (exec_command)
 _step 23 | 2026-09-25T05:20:31.587Z_
 
 **Thought** (narration):
@@ -519,7 +519,7 @@ HEAD:app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java
 fatal: path 'app/src/main/java/ne
 ```
 
-## 20. search_code / validation  (exec_command)
+## 20. search / validation  (exec_command)
 _step 24 | 2026-09-25T05:20:34.248Z_
 
 **Thought** (none):
@@ -546,7 +546,7 @@ drwxr-xr-x@  6 sage  staff   192 Sep 25 01:20 build
 drwxr-xr-x@  4
 ```
 
-## 21. plan / validation  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-25T05:20:37.014Z_
 
 **Thought** (none):

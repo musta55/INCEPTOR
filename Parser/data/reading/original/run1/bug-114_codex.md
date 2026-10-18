@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(5: succeeded) -> repair(8: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:10:21.929Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace URL gesture handling, patch the event flow, then build the app.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:10:25.536Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r-
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:10:26.667Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ app/src/main/assets/pdf/vendor/pdf.js/1.9.658/pdf.worker.js
 app/src/main/assets/pdf/vendor/pdf.js/1.9.658/images/shadow.
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T08:10:31.053Z_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T08:10:33.433Z_
 
 **Thought** (narration):
@@ -133,7 +133,7 @@ import android.text.Spanned;
 import android
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T08:10:37.872Z_
 
 **Thought** (none):
@@ -157,7 +157,7 @@ app/src/main/java/org/sufficientlysecure/htmltextview/HtmlFormatterBuilder.java:
 app/src/main/java/com/simon/harmonichackernews/CommentsRecyclerViewAdapter.java:60:    private CommentCli
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T08:10:41.924Z_
 
 **Thought** (none):
@@ -192,7 +192,7 @@ Total output lines: 463
             return shouldShow(comments.
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-23T08:10:45.453Z_
 
 **Thought** (none):
@@ -221,7 +221,7 @@ Total output lines: 331
      7	 *
 ```
 
-## 9. plan / localization  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-23T08:11:01.731Z_
 
 **Thought** (narration):
@@ -239,7 +239,7 @@ The defect is in `LocalLinkMovementMethod`: every `ACTION_UP` activates the span
 Plan updated
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-23T08:11:11.666Z_
 
 **Thought** (none):
@@ -272,7 +272,7 @@ Success. Updated the following files:
 M app/src/main/java/org/sufficientlysecure/htmltextview/LocalLinkMovementMethod.java
 ```
 
-## 11. read_file / repair  (exec_command)
+## 11. read / validation  (exec_command)
 _step 15 | 2026-09-23T08:11:18.234Z_
 
 **Thought** (narration):
@@ -303,7 +303,7 @@ Working tree excerpt:
     25	import andr
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-23T08:11:20.879Z_
 
 **Thought** (none):
@@ -319,7 +319,7 @@ No existing local or instrumentation tests cover the bundled movement method, an
 Plan updated
 ```
 
-## 13. build / repair  (exec_command)
+## 13. build / validation  (exec_command)
 _step 17 | 2026-09-23T08:11:24.634Z_
 
 **Thought** (narration):
@@ -344,7 +344,7 @@ Starting a Gradle Daemon (subsequent builds will be faster)
 Configuration cache is an incubating feature.
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-23T08:11:27.943Z_
 
 **Thought** (narration):
@@ -367,7 +367,7 @@ Output:
 Calculating task graph as no configuration cache is available for tasks: clean assembleDebug
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-23T08:11:36.986Z_
 
 **Thought** (none):
@@ -395,7 +395,7 @@ Output:
 > Task :app:generateDebugBuildCon
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T08:11:43.156Z_
 
 **Thought** (none):
@@ -424,7 +424,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :
 ```
 
-## 17. plan / repair  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-23T08:11:50.480Z_
 
 **Thought** (none):

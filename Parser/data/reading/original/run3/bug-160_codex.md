@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 19 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(9: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(10: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:58:30.344Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the whiteboard/eraser state flow, patch the root cause, then run th
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:58:33.307Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:58:36.335Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ AnkiDroid/src/main/assets/changelog.html:825:<p>Improve handling of multi-touch 
 AnkiDroid/src/main/assets/changelog.html:1062:<p>Reviewer undo button now removes last stroke when whiteboard in use</p>
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:58:39.219Z_
 
 **Thought** (none):
@@ -115,7 +115,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/Preferences.java:270:                    
 AnkiDroid/src/main/
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T16:58:42.052Z_
 
 **Thought** (narration):
@@ -142,7 +142,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/Whiteboard.java:195:        mUndo.clear()
 AnkiDroid/src/main/java/com/ichi2/anki/Whiteboard.java:198:            mCardViewer.get().supportInvalid
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T16:58:45.989Z | **FAILED**_
 
 **Thought** (none):
@@ -167,7 +167,7 @@ Total output lines: 585
  * Copyright (c) 2009 Nicolas Raoul <nicolas.raoul@gmail.com>                           *
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T16:58:48.810Z_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ Output:
     97
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T16:58:54.953Z_
 
 **Thought** (narration):
@@ -225,7 +225,7 @@ AnkiDroid/src/androidTest/assets/text-update.txt
 A
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-26T16:59:03.041Z_
 
 **Thought** (none):
@@ -254,7 +254,7 @@ import org.junit.Test;
 import org
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-26T16:59:06.869Z_
 
 **Thought** (none):
@@ -286,7 +286,7 @@ import androidx.annotation.Nullable;
 import timber.log.Timber;
 ```
 
-## 11. read_file / localization  (exec_command)
+## 11. other / localization  (exec_command)
 _step 15 | 2026-09-26T16:59:12.975Z_
 
 **Thought** (none):
@@ -306,7 +306,7 @@ Original token count: 0
 Output:
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-26T16:59:15.539Z_
 
 **Thought** (narration):
@@ -324,7 +324,7 @@ The whiteboard invalidates the options menu after the first new stroke, but the 
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-26T16:59:19.722Z_
 
 **Thought** (none):
@@ -353,7 +353,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-26T16:59:20.974Z_
 
 **Thought** (narration):
@@ -371,7 +371,7 @@ The fix is in place. I’m now running the required clean debug assembly to catc
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-26T16:59:22.905Z_
 
 **Thought** (none):
@@ -393,7 +393,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T16:59:25.120Z_
 
 **Thought** (none):
@@ -422,7 +422,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 > Task
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T16:59:31.199Z_
 
 **Thought** (none):
@@ -449,7 +449,7 @@ Output:
 WARNING: Compatible side by side NDK version
 ```
 
-## 18. search_code / validation  (exec_command)
+## 18. search / validation  (exec_command)
 _step 22 | 2026-09-26T16:59:34.275Z_
 
 **Thought** (narration):
@@ -478,7 +478,7 @@ Output:
    434	            menu
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-26T16:59:37.270Z_
 
 **Thought** (none):

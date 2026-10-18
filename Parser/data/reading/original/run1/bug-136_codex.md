@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 18 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(7: succeeded) -> validation(4: unchecked)
+Phases: planning(1: unchecked) -> localization(3: failed) -> planning(1: unchecked) -> localization(1: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(3: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:51:04.049Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace dialog button construction across the app, patch ordering consisten
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:51:09.139Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r-
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:51:10.810Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/main/assets/pdf/vendor/pdf.js/1.9.658/pdf.worker.js
 app/src/main/assets/pdf/vendor/pdf.js/1.9.658/images/shadow.
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T08:51:15.731Z_
 
 **Thought** (none):
@@ -110,7 +110,7 @@ app/src/main/java/com/simon/harmonichackernews/LoginDialogFragment.java-15-impor
 app/src/main/java/com/simon/harmonichack
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-23T08:51:19.438Z_
 
 **Thought** (narration):
@@ -128,7 +128,7 @@ I found the reported reversal: `Discard` is assigned the negative slot while `Ca
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T08:51:25.273Z_
 
 **Thought** (none):
@@ -153,7 +153,7 @@ app/src/main/java/com/simon/harmonichackernews/MainActivity.java:242:           
 app/src/main/java/com/simon/harmonichackernews/MainActivity.java:251:
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-23T08:51:30.785Z_
 
 **Thought** (narration):
@@ -171,7 +171,7 @@ The audit shows only one destructive confirmation dialog; the other dialogs have
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-23T08:51:36.550Z_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ Success. Updated the following files:
 M app/src/main/java/com/simon/harmonichackernews/ComposeActivity.java
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-23T08:51:38.363Z_
 
 **Thought** (narration):
@@ -217,7 +217,7 @@ Button ordering is corrected. Next I’m running the required clean debug assemb
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-23T08:51:42.345Z_
 
 **Thought** (none):
@@ -240,7 +240,7 @@ Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status fo
 Configuration cache is an incubating feature.
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-23T08:51:45.931Z_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ Output:
 Calculating task graph as no configuration cache is available for tasks: clean assembleDebug
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-23T08:51:52.783Z_
 
 **Thought** (none):
@@ -289,7 +289,7 @@ Output:
 > Task :app:generateDebugBuildCon
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-23T08:51:59.501Z_
 
 **Thought** (none):
@@ -317,7 +317,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T08:52:04.585Z_
 
 **Thought** (narration):
@@ -335,7 +335,7 @@ The required build passes. I’m doing a final scope check to ensure the patch c
 Plan updated
 ```
 
-## 15. diff / validation  (exec_command)
+## 15. search / validation  (exec_command)
 _step 19 | 2026-09-23T08:52:08.782Z_
 
 **Thought** (none):
@@ -395,7 +395,7 @@ HEAD commit:
 4c69ca5 (HEAD -> main) harne
 ```
 
-## 17. read_file / validation  (exec_command)
+## 17. read / validation  (exec_command)
 _step 21 | 2026-09-23T08:52:19.173Z | **FAILED**_
 
 **Thought** (none):
@@ -424,7 +424,7 @@ HARNESS:
 cat: HARNESS: No such file or directory
 ```
 
-## 18. plan / validation  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-23T08:52:30.283Z_
 
 **Thought** (none):

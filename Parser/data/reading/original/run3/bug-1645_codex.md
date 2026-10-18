@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(3: succeeded) -> repair(6: succeeded) -> validation(4: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(3: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:02:19.809Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the add-exercise dialog data flow, patch the crash, then run the re
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:02:23.046Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:02:24.620Z_
 
 **Thought** (narration):
@@ -81,7 +81,7 @@ drwxr-xr-x@ 54 sage  staff   1728 Sep 25 14:57 ..
 -rw-r--r--@  1 sage  staff     64 Sep  9 11:
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T17:02:28.050Z_
 
 **Thought** (none):
@@ -97,7 +97,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:02:29.722Z_
 
 **Thought** (narration):
@@ -132,7 +132,7 @@ import android.widget.CheckBox;
 im
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-26T17:02:33.072Z_
 
 **Thought** (narration):
@@ -166,7 +166,7 @@ public class Exercise {
     private boolean IsFootActiv
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-26T17:02:39.352Z_
 
 **Thought** (none):
@@ -182,7 +182,7 @@ The defect is a one-line checkbox mix-up in `ExerciseDialog`: Back parsing is gu
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-26T17:02:41.681Z_
 
 **Thought** (narration):
@@ -214,7 +214,7 @@ Success. Updated the following files:
 M app/src/main/java/com/german_software_engineers/trainerapp/ExerciseDialog.java
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-26T17:02:45.685Z_
 
 **Thought** (none):
@@ -230,7 +230,7 @@ _(none)_
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-26T17:02:47.335Z_
 
 **Thought** (narration):
@@ -254,7 +254,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-26T17:02:50.062Z_
 
 **Thought** (none):
@@ -278,7 +278,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-26T17:02:56.782Z_
 
 **Thought** (none):
@@ -306,7 +306,7 @@ Output:
 :app:validateSigningDeb
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-26T17:02:59.287Z_
 
 **Thought** (none):
@@ -322,7 +322,7 @@ _(none)_
 Plan updated
 ```
 
-## 14. diff / validation  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-26T17:03:00.816Z_
 
 **Thought** (narration):
@@ -379,7 +379,7 @@ fatal: path 'app/src/main/java/com/german_software_engineers/trainerapp/Exercise
 -- hashes -
 ```
 
-## 16. vcs / validation  (exec_command)
+## 16. diff / validation  (exec_command)
 _step 20 | 2026-09-26T17:03:09.420Z_
 
 **Thought** (none):
@@ -400,7 +400,7 @@ Output:
 /private/var/folders/28/_9_mht7s10d5tf_cw0nmz8tc0000gn/T/uiab-read-guard/codex_original_run3/bug-1645/git-stub-worktree
 ```
 
-## 17. plan / validation  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-26T17:03:14.736Z_
 
 **Thought** (none):

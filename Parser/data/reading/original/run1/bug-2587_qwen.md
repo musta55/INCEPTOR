@@ -7,9 +7,9 @@
 - steps (LLM inferences): 7 | actions: 8 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt
 
-Phases: localization(5: succeeded) -> repair(2: succeeded) -> validation(1: unchecked)
+Phases: localization(5: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (glob)
+## 1. search / localization  (glob)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -34,7 +34,7 @@ Let me start by exploring the codebase to find the relevant file.
 Found 1 matching file(s)
 ```
 
-## 2. search_code / localization  (glob)
+## 2. search / localization  (glob)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -50,7 +50,7 @@ _(same inference as the previous action)_
 Found 1 matching file(s)
 ```
 
-## 3. read_file / localization  (read_file)
+## 3. read / localization  (read_file)
 _step 2_
 
 **Thought** (reasoning):
@@ -81,7 +81,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 ```
 
-## 4. search_code / localization  (grep_search)
+## 4. search / localization  (grep_search)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -111,7 +111,7 @@ Let me check if there's a specific error message resource for this case.
 Found 7 matches
 ```
 
-## 5. search_code / localization  (glob)
+## 5. search / localization  (glob)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -127,7 +127,7 @@ _(same inference as the previous action)_
 Found 4 matching file(s)
 ```
 
-## 6. edit_file / repair  (edit)
+## 6. edit / repair  (edit)
 _step 4_
 
 **Thought** (reasoning):
@@ -180,7 +180,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
                 result = res
 ```
 
-## 7. build / repair  (run_shell_command)
+## 7. build / validation  (run_shell_command)
 _step 5_
 
 **Thought** (reasoning):
@@ -208,7 +208,7 @@ Note: Processing class OscilloscopeData
 Note: Processing clas
 ```
 
-## 8. read_file / validation  (read_file)
+## 8. read / validation  (read_file)
 _step 6_
 
 **Thought** (reasoning):

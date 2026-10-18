@@ -7,9 +7,9 @@
 - steps (LLM inferences): 14 | actions: 14 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(10: succeeded) -> repair(3: blocked) -> validation(1: unchecked)
+Phases: localization(10: succeeded) -> repair(1: blocked) -> validation(3: blocked)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -44,7 +44,7 @@ tools
 (eval):1: no matches found: --include=*.xml
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -60,7 +60,7 @@ grep -rn "Custom study session\|custom_study" --include=*.java --include=*.kt -i
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -81,7 +81,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/dialogs/DeckPickerContextMenu.java
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ res/values/02-strings.xml:243:    <string name="decks_rename_exists">That deck a
 res/values/02-strings.xml:244:    <string name="decks_rename_filtered_nosubdecks">A
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ AnkiDroid/src/main/res/values/02-strings.xml:87:    <string name="custom_study_i
 A
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ cd /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_orig
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java:440:                    .content(R.string.custom_study_deck_exists)
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 6 | **FAILED**_
 
 **Thought** (none):
@@ -156,7 +156,7 @@ Exit code 1
  * the terms of the GNU Gene
 ```
 
-## 8. read_file / localization  (Read)
+## 8. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -177,7 +177,7 @@ _(none)_
 185	        View v = getActivity().getLayoutInflater().inflate(R.layout.styled_custom_study_details_dialog,
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ AnkiDroid/src/test/java/com/ichi2/anki/dialogs/CustomStudyDialogTest.java:43:pub
 AnkiDroid/src/test/java/com/ichi2/anki/dialogs/CustomStudyDialogTest.java:48:        CustomStudyDialog args = Custom
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -219,7 +219,7 @@ _(none)_
 9	 This program is distributed in the hope that it will be useful, but
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 10_
 
 **Thought** (narration):
@@ -237,7 +237,7 @@ Found it — line 439 shows a `MaterialDialog` from within a `DialogFragment`'s 
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-123451/AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. build / repair  (Bash)
+## 12. build / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -256,7 +256,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 ```
 
-## 13. run_test / repair  (Bash)
+## 13. test / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -277,7 +277,7 @@ _(none)_
          > Could not get re
 ```
 
-## 14. read_file / validation  (Bash)
+## 14. read / validation  (Bash)
 _step 13_
 
 **Thought** (narration):

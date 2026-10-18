@@ -7,9 +7,9 @@
 - steps (LLM inferences): 29 | actions: 28 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(11: succeeded) -> repair(8: succeeded) -> validation(4: unchecked) -> localization(2: succeeded) -> validation(1: unchecked) -> repair(2: succeeded)
+Phases: localization(11: succeeded) -> repair(5: succeeded) -> validation(10: succeeded) -> repair(1: succeeded) -> validation(1: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ find . -name "ESPFragment.java" -o -name "*ESP*" | head -50
 ./app/src/main/java/io/pslab/fragment/ESPFragment.java
 ```
 
-## 2. read_file / localization  (Read)
+## 2. read / localization  (Read)
 _step 2 | **FAILED**_
 
 **Thought** (none):
@@ -59,7 +59,7 @@ pwd
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2587
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -88,7 +88,7 @@ _(none)_
 14	i
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (narration):
@@ -106,7 +106,7 @@ grep -rn "espBaseIP\|EspBaseIP\|Request.Builder" --include=*.java app/src/main/j
 (eval):1: no matches found: --include=*.java
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -125,7 +125,7 @@ app/src/main/java/io/pslab/others/ScienceLabCommon.java:45:    public static voi
 app/src/main/java/io/pslab/others/ScienceLabCommon.java:46:        ScienceLabCommon.espBaseIP = esp
 ```
 
-## 7. read_file / localization  (Read)
+## 7. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -158,7 +158,7 @@ _(none)_
 18	public class HttpHandler {
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (narration):
@@ -178,7 +178,7 @@ grep -rn "incorrect_IP_address_message" app/src/main/res/values/strings.xml
 app/src/main/res/values/strings.xml:29:    <string name="incorrect_IP_address_message">Please enter valid IP address</string>
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9 | **FAILED**_
 
 **Thought** (none):
@@ -194,7 +194,7 @@ grep -rn "okhttp" app/build.gradle build.gradle 2>/dev/null
 Exit code 2
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -223,7 +223,7 @@ scripts
 settings.gradle.kts
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ grep -rn "okhttp" app/build.gradle.kts build.gradle.kts gradle/ 2>/dev/null | he
 app/build.gradle.kts:101:    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -257,7 +257,7 @@ Now I'll apply the fix. Two layers: validate the host up front (instant feedback
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (narration):
@@ -275,7 +275,7 @@ Now the click handler — validate before launching the task:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 14_
 
 **Thought** (narration):
@@ -293,7 +293,7 @@ Now add the helper methods and harden the background task:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 15_
 
 **Thought** (none):
@@ -309,7 +309,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 16_
 
 **Thought** (narration):
@@ -327,7 +327,7 @@ Now let me update `onPostExecute` to reuse the shared helper:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2587/app/src/main/java/io/pslab/fragment/ESPFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. read_file / repair (own phase localization)  (Read)
+## 17. read / validation  (Read)
 _step 17_
 
 **Thought** (narration):
@@ -358,7 +358,7 @@ Now let me verify the complete file and build:
 14	i
 ```
 
-## 18. build / repair  (Bash)
+## 18. build / validation  (Bash)
 _step 18_
 
 **Thought** (narration):
@@ -386,7 +386,7 @@ Note: Processing class CompassData
 Note: Processi
 ```
 
-## 19. run_shell / repair  (Bash)
+## 19. search / validation  (Bash)
 _step 19_
 
 **Thought** (narration):
@@ -409,7 +409,7 @@ kotlin=/Users/splash/.gradle/caches/jars-9/b3f33f095c9ffe4e1704cf3f3f6046a8/kotl
 okio=/Users/splash/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.2.0/332d1c5dc82b0241cb1d35bb0901d28470cc89ca/okio-jvm-3.2.0.jar
 ```
 
-## 20. run_test / validation  (Bash)
+## 20. test / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -440,7 +440,7 @@ public class Verify {
 "esp.local"    valid=true  old=ok
 ```
 
-## 21. env_setup / validation  (Bash)
+## 21. diff / validation  (Bash)
 _step 21_
 
 **Thought** (narration):
@@ -474,7 +474,7 @@ git --no-pager diff --stat; echo "---"; git --no-pager diff -- app/src/main/java
 ---
 ```
 
-## 23. vcs / validation  (Bash)
+## 23. diff / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -493,7 +493,7 @@ Your branch is up to date with 'origin/main'.
 nothing to commit, working tree clean
 ```
 
-## 24. search_code / localization  (Bash)
+## 24. search / validation  (Bash)
 _step 24_
 
 **Thought** (narration):
@@ -519,7 +519,7 @@ Did you forget to 'git add'?
 85:    private static boolean isValidHost(String host)
 ```
 
-## 25. vcs / localization  (Bash)
+## 25. vcs / validation  (Bash)
 _step 25_
 
 **Thought** (none):
@@ -537,7 +537,7 @@ git check-ignore -v app/src/main/java/io/pslab/fragment/ESPFragment.java 2>&1; e
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs
 ```
 
-## 26. env_setup / validation  (Bash)
+## 26. diff / validation  (Bash)
 _step 26_
 
 **Thought** (narration):
@@ -579,7 +579,7 @@ import android.wid
  public class ESPFragme
 ```
 
-## 27. shell_edit / repair  (Bash)
+## 27. edit / repair  (Bash)
 _step 27_
 
 **Thought** (narration):
@@ -598,7 +598,7 @@ printf '\n' >> app/src/main/java/io/pslab/fragment/ESPFragment.java && tail -c 2
 00000010: 7d0a 7d0a                                }.}.
 ```
 
-## 28. build / repair  (Bash)
+## 28. build / validation  (Bash)
 _step 28_
 
 **Thought** (none):

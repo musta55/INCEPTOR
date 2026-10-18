@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 23 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(11: succeeded) -> repair(11: succeeded) -> validation(1: unchecked)
+Phases: localization(11: succeeded) -> repair(7: succeeded) -> validation(5: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -34,7 +34,7 @@ drwxr-xr-x@  4 splash  staff   128 Sep 14 00:36 .github
 -rw-r--r--@  1 splash  staff     4 Sep 14 00:36 .java-ver
 ```
 
-## 2. read_file / localization  (Bash)
+## 2. read / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -52,7 +52,7 @@ cat README.md | head -40 && echo "---" && cat bug-192_output.txt
 [![Translate - with Stringlate](https://img.shields.io/badge/stringlate-translate-green.svg)](https://lonamiwebs.github.io/stringlate/translate?git=https%3A%2F%2Fgith
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (narration):
@@ -75,7 +75,7 @@ app/src/main/java/net/gsantner/markor/activity/DocumentPreviewFragment.java
 app/src/main/java/net/gsantner/markor/activity/Docum
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -103,7 +103,7 @@ _(none)_
 13	im
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (narration):
@@ -126,7 +126,7 @@ sed -n '1,200p' app/src/main/java/net/gsantner/markor/util/DocumentIO.java
  * sue me if something goes wrong. No attribution required.    - Gregor Santner
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (narration):
@@ -170,7 +170,7 @@ b3c2aca8 create network guard for both codex and claude
 === blame ===
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -191,7 +191,7 @@ sed -n '1,200p' app/src/main/java/net/gsantner/markor/model/Document.java
  * sue me if something goes wrong. No attribution required.    - Gregor Santner
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (narration):
@@ -215,7 +215,7 @@ grep -n "showEdit\|showPreview\|setDocument\|DocumentEditFragment\|onResume\|get
 202:                    shu.sh
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -244,7 +244,7 @@ sed -n '230,320p;360,395p' app/src/main/java/net/gsantner/markor/activity/Docume
             fr
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 11_
 
 **Thought** (narration):
@@ -265,7 +265,7 @@ app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java:155:   
 app/src/main/java/net/gsantner/markor/activity/DocumentEdi
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -283,7 +283,7 @@ Diagnosis confirmed. Now applying the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -299,7 +299,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 14_
 
 **Thought** (narration):
@@ -317,7 +317,7 @@ Now the core fix — the unconditional `setText` in `onResume()`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 15_
 
 **Thought** (narration):
@@ -335,7 +335,7 @@ Now make the selection restore in `loadDocumentIntoUi()` robust (it also has an 
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -351,7 +351,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 17_
 
 **Thought** (narration):
@@ -369,7 +369,7 @@ Now persist/restore the cursor across actual view recreation (the low-memory var
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. edit_file / repair  (Edit)
+## 18. edit / repair  (Edit)
 _step 18_
 
 **Thought** (none):
@@ -385,7 +385,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 19. diff / repair  (Bash)
+## 19. diff / validation  (Bash)
 _step 19_
 
 **Thought** (narration):
@@ -403,7 +403,7 @@ git diff
 (Bash completed with no output)
 ```
 
-## 20. read_file / repair  (Bash)
+## 20. read / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -446,7 +446,7 @@ app/pom.xml
 app/proguar
 ```
 
-## 21. read_file / repair  (Read)
+## 21. read / validation  (Read)
 _step 21_
 
 **Thought** (narration):
@@ -472,7 +472,7 @@ The repo is inside an ignored `runs/` dir in an outer git repo, so `git diff` is
 92	        View view = inflater.inflate(R.layout.document__fragment__edit, contain
 ```
 
-## 22. build / repair  (Bash)
+## 22. build / validation  (Bash)
 _step 22_
 
 **Thought** (narration):
@@ -500,7 +500,7 @@ The changes look correct. Now let me build:
 :app:splitsDiscoveryTaskFl
 ```
 
-## 23. run_test / validation  (Bash)
+## 23. test / validation  (Bash)
 _step 23_
 
 **Thought** (narration):

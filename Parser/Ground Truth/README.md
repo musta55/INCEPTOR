@@ -1,11 +1,13 @@
-# Ground Truth: phase annotation kit (codebook v3.0)
+# Ground Truth: phase annotation kit (codebook v4.0)
 
-Built on 2026-10-10 by `python3 make_ground_truth.py` (run from `Parser/`). The procedure,
-lookup tables and grouping rules are in [Annotation Codebook.docx](../Annotation%20Codebook.docx).
+Built on 2026-10-10 by `python3 make_ground_truth.py` (run from `Parser/`); the workbook was
+rewritten for codebook version 4 on 2026-10-14 with `make_ground_truth.py --workbook-only`.
+The procedure and the lookup tables are in [Annotation Codebook.docx](../Annotation%20Codebook.docx).
 
 | File | What it is |
 |---|---|
-| `annotator_1.xlsx`, `annotator_2.xlsx` | One workbook per annotator. Each holds the same tabs: Start here, the reference tabs (Phases, Action categories, Grouping rules, Outcomes and flags), one tab per trajectory (T01–T15) and Codebook changes. The annotator fills `phase`, `category_fix` and `notes`. The workbooks are blind: no automatic phase, subphase or outcome, and no pass/fail |
+| `annotation_workbook.xlsx` | The one workbook. Tabs: Start here; Annotation (all 15 trajectories, one row per action, with the columns `A1 phase`, `A1 category_fix`, `A1 notes` for annotator 1 and the same `A2 …` columns for annotator 2, then the given columns); the reference tabs Phases, Action lookup and Phase lookup; Codebook changes. Each annotator works in a copy and fills only their own columns. The workbook is blind: no automatic phase, subphase or outcome, and no pass/fail. The A1 columns of T01–T05 carry the round-1 labels annotator 1 made with version 3 |
+| `annotator_1_Mustahid.xlsx` | Annotator 1's version 3 workbook (one tab per trajectory), whose labels were copied into the A1 columns |
 | `atif/T<nn>_bug-<id>_<agent>.atif.json` | The full trajectory behind each tab |
 | `tracker.xlsx` | One row per tab: round, agent, bug, actions, and a done column per annotator |
 
@@ -32,8 +34,8 @@ outcomes, is `../ground_truth_sample.csv`, kept outside this folder.
 - **Round 2** is T07–T15 (375 actions), annotated after the codebook is frozen.
 
 **Do not run `make_ground_truth.py --overwrite` after annotation has started.** It replaces
-the workbooks. After the round-1 meeting, update the reference tabs of the filled workbooks
-by hand, or rebuild and then copy the round-1 labels across.
+the workbook (never an annotator's own copy). After the round-1 meeting, rebuild the reference
+tabs with `--workbook-only --labels FILLED.xlsx:K`, or update them by hand.
 
 **On Google Drive** this kit lives in Trajectory Annotation Kit / Ground Truth. There, the
 Tracker is a Google Sheet, which replaces `tracker.xlsx`; annotators keep their copies in the

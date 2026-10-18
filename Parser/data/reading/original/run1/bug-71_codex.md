@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 19 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(8: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:51:17.089Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the favorites visibility and tap-handling paths, then patch and bui
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:51:21.746Z | **FAILED**_
 
 **Thought** (none):
@@ -65,7 +65,7 @@ utils
 find: ..: Operation not permitted
 ```
 
-## 3. run_shell / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:51:23.702Z_
 
 **Thought** (narration):
@@ -92,7 +92,7 @@ docs/_posts/2018-02-11-beautiful-minimalist-launcher.md:35:* Transparent favorit
 docs/_posts/2018-02-11-beautiful-minimalist-launcher.md:39:* Minimalistic UI: dis
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:51:27.589Z_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInf
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:51:32.427Z_
 
 **Thought** (none):
@@ -151,7 +151,7 @@ Total output lines: 545
    126	                return super.onDoubleTap(e);
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:51:38.165Z_
 
 **Thought** (none):
@@ -181,7 +181,7 @@ Total output lines: 315
    221
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-23T09:51:45.021Z_
 
 **Thought** (none):
@@ -211,7 +211,7 @@ Output:
     10
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-23T09:51:51.090Z_
 
 **Thought** (narration):
@@ -229,7 +229,7 @@ The defect is localized: tap handling only invokes the action when history-on-ta
 Plan updated
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:51:57.101Z_
 
 **Thought** (none):
@@ -256,7 +256,7 @@ Output:
    151	        an
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:52:08.370Z_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java:78:            
 app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java:89:
 ```
 
-## 11. plan / localization  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-23T09:52:12.798Z_
 
 **Thought** (narration):
@@ -297,7 +297,7 @@ Preference semantics confirm favorites and history are independently tap-reveale
 Plan updated
 ```
 
-## 12. edit_file / repair  (exec_command)
+## 12. edit / repair  (exec_command)
 _step 16 | 2026-09-23T09:52:18.483Z_
 
 **Thought** (none):
@@ -328,7 +328,7 @@ Success. Updated the following files:
 M app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java
 ```
 
-## 13. diff / repair  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-23T09:52:23.012Z_
 
 **Thought** (none):
@@ -354,7 +354,7 @@ Output:
                 if(!prefs.getBoolean("double-tap", fals
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T09:52:28.461Z_
 
 **Thought** (narration):
@@ -372,7 +372,7 @@ The source tree is intentionally excluded from Git in this harness, but the file
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-23T09:52:33.451Z_
 
 **Thought** (none):
@@ -394,7 +394,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 5 stopped Daemons could not be reused, use --status for details
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T09:52:36.369Z_
 
 **Thought** (none):
@@ -422,7 +422,7 @@ Output:
 > Task :app:generateDebu
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-23T09:52:43.964Z_
 
 **Thought** (none):
@@ -446,7 +446,7 @@ Note: /Users/sage/APR_with_high_quality_bug_reports/runs/original_run1/bug-71/ap
 Note: Recompile
 ```
 
-## 18. read_file / validation  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-23T09:52:58.340Z_
 
 **Thought** (narration):
@@ -474,7 +474,7 @@ Output:
     77
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-23T09:53:03.359Z_
 
 **Thought** (none):

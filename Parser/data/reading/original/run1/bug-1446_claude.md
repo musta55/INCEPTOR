@@ -7,9 +7,9 @@
 - steps (LLM inferences): 18 | actions: 17 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(10: succeeded) -> repair(4: succeeded) -> validation(3: unchecked)
+Phases: localization(10: succeeded) -> repair(2: succeeded) -> validation(5: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -38,7 +38,7 @@ settings.gradle
 ./app/src/main/java/com/cohenadair/anglerslog/database/cursors/Fishing
 ```
 
-## 2. read_file / localization  (Read)
+## 2. read / localization  (Read)
 _step 2 | **FAILED**_
 
 **Thought** (none):
@@ -70,7 +70,7 @@ pwd
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1446
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -98,7 +98,7 @@ _(none)_
 13	import com.cohenadair.anglerslog.R;
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ ManageLocationFragment.java
 SystemMessage
 ```
 
-## 6. read_file / localization  (Read)
+## 6. read / localization  (Read)
 _step 6_
 
 **Thought** (none):
@@ -149,7 +149,7 @@ _(none)_
 12	import com.cohenadair.ang
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -174,7 +174,7 @@ import com.cohenadair.anglerslog.model.Logbook;
 import com.cohenadair.anglerslog.model.ba
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ import com.cohenadair.anglerslog.model.Logbook;
 import com.cohenadair.anglerslog.model.b
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -221,7 +221,7 @@ grep -n "onEdit\|onAdd\|isEditing\|mIsEditing\|initObject" app/src/main/java/com
 173:                UUID id = isEditing() ? getEditingId()
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 10_
 
 **Thought** (none):
@@ -246,7 +246,7 @@ _(none)_
 199
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -264,7 +264,7 @@ Now I understand the bug. Let me apply the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1446/app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (none):
@@ -280,7 +280,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1446/app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. diff / repair  (Bash)
+## 13. diff / validation  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -300,7 +300,7 @@ b3c2aca8 create network guard for both codex and claude
 90447cb4 Updated bug list for the main branch.
 ```
 
-## 14. build / repair  (Bash)
+## 14. build / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -359,7 +359,7 @@ git diff -- app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocation
 (Bash completed with no output)
 ```
 
-## 17. diff / validation  (Bash)
+## 17. read / validation  (Bash)
 _step 17_
 
 **Thought** (none):

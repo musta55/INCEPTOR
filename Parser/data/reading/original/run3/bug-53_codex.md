@@ -7,9 +7,9 @@
 - steps (LLM inferences): 35 | actions: 30 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(8: succeeded) -> repair(11: succeeded) -> validation(8: succeeded)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(14: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:28:21.270Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the new-file dialog state flow, patch the mismatch, then run the re
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:28:23.820Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep  9 11:55 .github
 -rw-r--r--@  1 sag
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:28:26.082Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ app/src/test/java/net/gsantner
 app/src/te
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:28:28.700Z_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ app/src/main/res/values/strings.xml:279:    <string name="folder_is_created_with
 app/src/main/res/values/strings.xml:310:    <string name="todo_is_the_easiest_way_">Manage your tasks with ToDo. It is a file in todo.txt format with
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:28:30.691Z_
 
 **Thought** (none):
@@ -137,7 +137,7 @@ app/src/main/java/net/gsantner/markor/format/markdown/MarkdownTextConverter.java
 app/src/main/java/net/gsantner/markor/form
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:28:32.975Z_
 
 **Thought** (none):
@@ -168,7 +168,7 @@ Total output lines: 284
 ####################
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T17:28:35.355Z_
 
 **Thought** (none):
@@ -198,7 +198,7 @@ Total output lines: 228
     private AlertDialog.Builder makeDialog
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-26T17:28:40.379Z_
 
 **Thought** (narration):
@@ -216,7 +216,7 @@ The defect is localized: the extension preference is restored, but the type spin
 Plan updated
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-26T17:28:43.753Z_
 
 **Thought** (none):
@@ -247,7 +247,7 @@ Gradle config/tests:
 #######################
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-26T17:28:51.673Z_
 
 **Thought** (none):
@@ -269,7 +269,7 @@ app/src/main/java/net/gsantner/markor/format/todotxt/TodoTxtTextConverter.java:5
 app/src/main/java/net/gsantner/markor/format/markdown/MarkdownTextConverter.java:247:        fi
 ```
 
-## 11. plan / localization  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T17:28:54.549Z_
 
 **Thought** (narration):
@@ -287,7 +287,7 @@ The correct initialization is to derive the spinner selection from the saved ext
 Plan updated
 ```
 
-## 12. edit_file / repair  (exec_command)
+## 12. edit / repair  (exec_command)
 _step 16 | 2026-09-26T17:29:00.520Z_
 
 **Thought** (none):
@@ -314,7 +314,7 @@ apply_patch verification failed: Failed to find expected lines in /Users/sage/AP
     private byte[] getTemplateContent(Spinner spinner, File basedir, boolean encrypt) {
 ```
 
-## 13. search_code / repair (own phase localization)  (exec_command)
+## 13. search / validation  (exec_command)
 _step 17 | 2026-09-26T17:29:01.380Z_
 
 **Thought** (none):
@@ -338,7 +338,7 @@ Output:
         file
 ```
 
-## 14. edit_file / repair  (exec_command)
+## 14. edit / repair  (exec_command)
 _step 18 | 2026-09-26T17:29:03.766Z_
 
 **Thought** (none):
@@ -368,7 +368,7 @@ A app/src/test/java/net/gsantner/markor/ui/NewFileDialogTest.java
 M app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T17:29:09.294Z_
 
 **Thought** (narration):
@@ -386,7 +386,7 @@ The patch now synchronizes the visible type with the persisted extension and pre
 Plan updated
 ```
 
-## 16. run_test / repair  (exec_command)
+## 16. test / validation  (exec_command)
 _step 20 | 2026-09-26T17:29:11.556Z_
 
 **Thought** (none):
@@ -408,7 +408,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:29:13.431Z_
 
 **Thought** (none):
@@ -434,7 +434,7 @@ Configuration on demand is an incubating feature.
 > Task :app:generateFlavorDefaultDebugBuil
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:29:19.633Z_
 
 **Thought** (none):
@@ -460,7 +460,7 @@ Output:
 > Task :app:process
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:29:25.553Z_
 
 **Thought** (none):
@@ -480,7 +480,7 @@ Original token count: 0
 Output:
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-26T17:29:31.448Z_
 
 **Thought** (none):
@@ -500,7 +500,7 @@ Original token count: 0
 Output:
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-26T17:29:37.418Z_
 
 **Thought** (none):
@@ -520,7 +520,7 @@ Original token count: 0
 Output:
 ```
 
-## 22. wait_process / repair  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-26T17:29:43.530Z_
 
 **Thought** (none):
@@ -573,7 +573,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 3 stopped Daemons could not be reused, use --status for details
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-26T17:29:52.067Z_
 
 **Thought** (none):
@@ -601,7 +601,7 @@ Configuration on demand is an incubating feature.
 > Task :app:compileFlavorAtes
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-26T17:29:58.251Z_
 
 **Thought** (none):
@@ -627,7 +627,7 @@ Output:
 > Task :app:mergeFlavorAtestDebugS
 ```
 
-## 26. wait_process / validation  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-26T17:30:04.610Z_
 
 **Thought** (none):
@@ -651,7 +651,7 @@ Gradle may disable incremental compilation as the following annotation processor
 Consider setting the experimental feature flag android.
 ```
 
-## 27. wait_process / validation  (write_stdin)
+## 27. other / validation  (write_stdin)
 _step 31 | 2026-09-26T17:30:10.585Z_
 
 **Thought** (none):
@@ -678,7 +678,7 @@ Output:
 Gradle may disable incremental compilation as the following annotation process
 ```
 
-## 28. diff / validation  (exec_command)
+## 28. read / validation  (exec_command)
 _step 32 | 2026-09-26T17:30:17.189Z_
 
 **Thought** (narration):
@@ -728,7 +728,7 @@ fatal: path 'app/src/test/java/net/gsantner/markor/ui/NewFileDialogTest.java' ex
 test-in-head:128
 ```
 
-## 30. plan / validation  (update_plan)
+## 30. plan / planning  (update_plan)
 _step 34 | 2026-09-26T17:30:24.969Z_
 
 **Thought** (none):

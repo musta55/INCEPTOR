@@ -7,9 +7,9 @@
 - steps (LLM inferences): 16 | actions: 20 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(6: succeeded) -> understanding(2: unchecked) -> localization(3: failed) -> repair(7: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(10: succeeded) -> repair(3: succeeded) -> validation(6: succeeded)
 
-## 1. orient / localization  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ settings.gradle
 sonar-project.properties
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -57,7 +57,7 @@ grep -ril "tag" /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/run
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -75,7 +75,7 @@ find . -iname "*Tag*" -not -path "./.git/*" | head -30
 ./omniNotes/src/main/java/it/feio/android/omninotes/models/Tag.java
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 9	 * This program is distributed in the hope that it will b
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -123,7 +123,7 @@ _(same inference as the previous action)_
 9	 * This program is distributed in the hope that it will b
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -139,7 +139,7 @@ find . -name "RegexPatternsConstants.java" -o -name "*.jar" -path "*pixlui*" | h
 (Bash completed with no output)
 ```
 
-## 7. search_code / understanding  (Bash)
+## 7. search / localization  (Bash)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -155,7 +155,7 @@ grep -rn "removeTag\|addTagToNote" --include=*.java . | grep -v "/test/"
 (eval):1: no matches found: --include=*.java
 ```
 
-## 8. search_code / understanding  (Bash)
+## 8. search / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -173,7 +173,7 @@ omniNotes/src/main/java/it/feio/android/omninotes/DetailFragment.java:2143:			Pa
 omniNotes/src/main/java/it/feio/android/omninotes/ListFragme
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -189,7 +189,7 @@ grep -rn "HASH_TAG" --include="*.java" . ; find ~ -name "pixlui*" -maxdepth 6 2>
 omniNotes/src/main/java/it/feio/android/omninotes/utils/TagsHelper.java:44:			if (RegexPatternsConstants.HASH_TAG.matcher(token).matches()) {
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 6 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -214,7 +214,7 @@ currentNote.setTitle(getNoteTitle());
 				.itemsCallbackMultiCh
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / localization  (Bash)
 _step 6 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -245,7 +245,7 @@ sed -n 1550,1600p omniNotes/src/main/java/it/feio/android/omninotes/ListFragment
     private void tagNote(L
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 7_
 
 **Thought** (narration):
@@ -263,7 +263,7 @@ Found it. Let me examine `removeTag` — it uses `replaceAll` with the raw tag t
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-44/omniNotes/src/main/java/it/feio/android/omninotes/utils/TagsHelper.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 8_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-44/omniNotes/src/main/java/it/feio/android/omninotes/utils/TagsHelper.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -295,7 +295,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-44/omniNotes/src/main/java/it/feio/android/omninotes/utils/TagsHelper.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. build / repair  (Bash)
+## 15. test / validation  (Bash)
 _step 10_
 
 **Thought** (narration):
@@ -329,7 +329,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-44
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / validation  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -347,7 +347,7 @@ The logic works correctly. Let me add a regression test covering the reported sc
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-44/omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperTest.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. build / repair  (Bash)
+## 17. build / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -369,7 +369,7 @@ D8: InnerClass annotations are missing corresponding EnclosingMember annotations
 D8: InnerClass annotations are missing corresponding EnclosingMember annotations. Such InnerCla
 ```
 
-## 18. run_test / repair  (Bash)
+## 18. test / validation  (Bash)
 _step 13_
 
 **Thought** (narration):
@@ -393,7 +393,7 @@ Build succeeds. Let me run the unit tests to confirm the fix and that existing b
 > Task :omniNotes:generatePlayDebugSources UP-TO-DATE
 ```
 
-## 19. search_code / validation  (Bash)
+## 19. search / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -411,7 +411,7 @@ TEST-it.feio.android.omninotes.utils.TagsHelperTest.xml
 tests="5" skipped="0" failures="0" errors="0"
 ```
 
-## 20. read_file / validation  (Read)
+## 20. read / validation  (Read)
 _step 15_
 
 **Thought** (narration):

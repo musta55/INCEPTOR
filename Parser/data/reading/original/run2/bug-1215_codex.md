@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(6: succeeded) -> validation(3: unchecked)
+Phases: planning(1: unchecked) -> localization(5: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:43:25.189Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the manual-entry validation paths, patch numeric parsing safely, th
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:43:27.320Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:43:28.899Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java:150:          
 app/src/main/
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T04:43:31.822Z_
 
 **Thought** (none):
@@ -118,7 +118,7 @@ Total output lines: 428
  * in the Software without restriction, including without limi
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:43:34.041Z_
 
 **Thought** (none):
@@ -144,7 +144,7 @@ Total output lines: 267
     93	        counterInput.setText(String.format(Lo
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-25T04:43:37.378Z_
 
 **Thought** (none):
@@ -171,7 +171,7 @@ Output:
    184	                expandButton.setCompoundDrawablesRelativeWithIntrin
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-25T04:43:45.160Z_
 
 **Thought** (narration):
@@ -189,7 +189,7 @@ The crash comes from unchecked parsing in the shared `TextWatcher`; HOTP additio
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-25T04:43:51.487Z_
 
 **Thought** (none):
@@ -223,7 +223,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-25T04:43:53.146Z_
 
 **Thought** (narration):
@@ -241,7 +241,7 @@ Validation now rejects integer/long overflow without exceptions. Next I’m runn
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-25T04:43:55.864Z_
 
 **Thought** (none):
@@ -263,7 +263,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-25T04:43:57.715Z_
 
 **Thought** (none):
@@ -291,7 +291,7 @@ Output:
 > Task :app:pre
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-25T04:44:03.582Z_
 
 **Thought** (none):
@@ -319,7 +319,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:compile
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T04:44:09.453Z_
 
 **Thought** (none):
@@ -347,7 +347,7 @@ Output:
 > Task :app:javaPreCompilePlayDebug
 ```
 
-## 14. diff / validation  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-25T04:44:16.545Z_
 
 **Thought** (narration):
@@ -378,7 +378,7 @@ Output:
     58	    private static boolean isPosi
 ```
 
-## 15. vcs / validation  (exec_command)
+## 15. diff / validation  (exec_command)
 _step 19 | 2026-09-25T04:44:19.682Z_
 
 **Thought** (none):
@@ -405,7 +405,7 @@ drwxr-xr-x@  5 sage  staff    160 Sep 25 00:43 .gradle
 -rw-r--r--@  1 s
 ```
 
-## 16. plan / validation  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-25T04:44:22.125Z_
 
 **Thought** (none):

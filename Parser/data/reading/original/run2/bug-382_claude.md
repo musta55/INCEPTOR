@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 21 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(11: succeeded) -> repair(9: succeeded) -> validation(1: unchecked)
+Phases: localization(11: succeeded) -> repair(6: succeeded) -> validation(4: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -38,7 +38,7 @@ settings.gradle
 (eval):1: no matches found: --include=*.kt
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -54,7 +54,7 @@ grep -ril "uri" --include=*.kt . | head -50
 (eval):1: no matches found: --include=*.kt
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -77,7 +77,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java
 ./app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPar
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -105,7 +105,7 @@ import com.trianguloy.urlchecker.dialogs.MainDialog;
 import com.tri
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -123,7 +123,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/list/RemoveQueriesModule.jav
 app/src/main/java/com/trianguloy/urlchecker/modules/list/RemoveQueriesModule.java:191:        public String getQuery
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -150,7 +150,7 @@ info.setOnClickListener(v -> {
         // initialize
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -178,7 +178,7 @@ sed -n 230,280p app/src/main/java/com/trianguloy/urlchecker/modules/list/RemoveQ
      * Note: regex must not match
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -200,7 +200,7 @@ grep -n "static" /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/ru
 98:
 ```
 
-## 9. read_file / localization  (Bash)
+## 9. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -230,7 +230,7 @@ android {
         v
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -246,7 +246,7 @@ find app/src -path "*test*" -o -path "*Test*" | head -30
 (Bash completed with no output)
 ```
 
-## 11. read_file / localization  (Read)
+## 11. read / localization  (Read)
 _step 10_
 
 **Thought** (none):
@@ -273,7 +273,7 @@ _(none)_
 79	            urlQuerySanitizer.setAllowU
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -291,7 +291,7 @@ Now let me apply the fix — parse the *encoded* query manually instead of relyi
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-382/app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 12_
 
 **Thought** (none):
@@ -307,7 +307,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-382/app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 13_
 
 **Thought** (narration):
@@ -325,7 +325,7 @@ Now add the `splitQuery` helper and constants, and drop the unused import:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-382/app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 14_
 
 **Thought** (none):
@@ -341,7 +341,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-382/app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 15_
 
 **Thought** (none):
@@ -357,7 +357,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-382/app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -373,7 +373,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-382/app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. build / repair  (Bash)
+## 18. test / validation  (Bash)
 _step 17_
 
 **Thought** (narration):
@@ -410,7 +410,7 @@ query: [flag&x=2]
    name=[x] value=[2] raw=[x=
 ```
 
-## 19. read_file / repair  (Read)
+## 19. read / validation  (Read)
 _step 18_
 
 **Thought** (none):
@@ -444,7 +444,7 @@ _(none)_
 78
 ```
 
-## 20. build / repair  (Bash)
+## 20. build / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -471,7 +471,7 @@ _(none)_
 > Task :app:compi
 ```
 
-## 21. read_file / validation  (Bash)
+## 21. read / validation  (Bash)
 _step 20_
 
 **Thought** (narration):

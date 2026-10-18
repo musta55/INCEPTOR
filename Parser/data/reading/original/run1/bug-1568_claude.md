@@ -7,9 +7,9 @@
 - steps (LLM inferences): 16 | actions: 15 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(4: succeeded) -> validation(4: unchecked)
+Phases: localization(7: succeeded) -> repair(3: succeeded) -> validation(5: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -28,7 +28,7 @@ find . -name "FileArrayAdapter.java" -o -name "BaseArrayAdapter.java" | head
 ./app/src/main/java/io/lerk/lrkFM/adapter/BaseArrayAdapter.java
 ```
 
-## 2. read_file / localization  (Read)
+## 2. read / localization  (Read)
 _step 2 | **FAILED**_
 
 **Thought** (none):
@@ -60,7 +60,7 @@ pwd
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1568
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -88,7 +88,7 @@ _(none)_
 13	impo
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 5_
 
 **Thought** (none):
@@ -114,7 +114,7 @@ _(none)_
 11	import android.util
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -130,7 +130,7 @@ grep -rn "getFileOpContext\|fileOpContext" app/src/main/java --include=*.java | 
 (eval):1: no matches found: --include=*.java
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -148,7 +148,7 @@ app/src/main/java/io/lerk/lrkFM/activities/file/ContextMenuUtil.java:259:       
 app/src/main/java/io/lerk/lrkFM/activitie
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -166,7 +166,7 @@ Now I understand the bug. Let me fix both defects:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1568/app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -184,7 +184,7 @@ Now fix the `removeFromContext` iteration bug (the direct CME source in the stac
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1568/app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -200,7 +200,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1568/app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. build / repair  (Bash)
+## 11. build / validation  (Bash)
 _step 11_
 
 **Thought** (narration):
@@ -263,7 +263,7 @@ git --no-pager diff HEAD -- app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAda
 (Bash completed with no output)
 ```
 
-## 14. vcs / validation  (Bash)
+## 14. diff / validation  (Bash)
 _step 14_
 
 **Thought** (none):

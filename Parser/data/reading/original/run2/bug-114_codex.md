@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 16 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(3: succeeded) -> repair(9: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:27:09.949Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace URL touch handling and long-press listeners, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:27:12.733Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r-
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:27:14.327Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ app/src/main/assets/pdf/vendor/pdf.js/1.9.658/pdf.worker.js
 app/src/main/assets/pdf/vendor/pdf.js/1.9.658/images/shadow
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T04:27:17.798Z_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:27:20.993Z_
 
 **Thought** (none):
@@ -130,7 +130,7 @@ Total output lines: 481
  *      http://www.apache.org/licenses/LICENSE-2.0
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T04:27:22.514Z_
 
 **Thought** (none):
@@ -156,7 +156,7 @@ Total output lines: 268
             itemViewHolder.commentBody.setVisibility( (!itemViewHolder.comment.expanded && collapseParent) ? View.GONE
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-25T04:27:33.554Z_
 
 **Thought** (narration):
@@ -174,7 +174,7 @@ The defect is in `LocalLinkMovementMethod`: every `ACTION_UP` activates the span
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-25T04:27:41.413Z_
 
 **Thought** (none):
@@ -205,7 +205,7 @@ Success. Updated the following files:
 M app/src/main/java/org/sufficientlysecure/htmltextview/LocalLinkMovementMethod.java
 ```
 
-## 9. diff / repair  (exec_command)
+## 9. search / validation  (exec_command)
 _step 13 | 2026-09-25T04:27:43.590Z_
 
 **Thought** (narration):
@@ -229,7 +229,7 @@ Output:
 66:                            < ViewConfiguration.getLongPressTimeout()) {
 ```
 
-## 10. read_file / repair  (exec_command)
+## 10. read / validation  (exec_command)
 _step 14 | 2026-09-25T04:27:46.348Z_
 
 **Thought** (none):
@@ -253,7 +253,7 @@ ls: .git: No such file or directory
 exit:1
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-25T04:27:49.528Z_
 
 **Thought** (none):
@@ -269,7 +269,7 @@ No local unit-test source set or test dependencies exist; the fix is isolated to
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-25T04:27:52.400Z_
 
 **Thought** (narration):
@@ -298,7 +298,7 @@ Starting a Gradle Daemon (subsequent builds will be faster)
 [2A[1m<[0;1m-------------> 0% IN
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T04:27:54.886Z_
 
 **Thought** (none):
@@ -322,7 +322,7 @@ Output:
 [2A[1m<[0;1m-------------> 0% INITIALIZING
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T04:28:01.328Z_
 
 **Thought** (none):
@@ -343,7 +343,7 @@ Output:
 [2A[1m<[0;1m-------------> 0% CONFIGURING [7s][m[35D[2B[2A[1m<[0;32;1m======[0;39;1m-------> 50% CONFIGURING [7s][m[36D[1B[1m> :app[m[0K[6D[1B[2A[1m<[0;32;1m======[0;39;1m-------> 50% CONFIGURING [8s][m[36D[2B[2A[1m<[0;32;1m=============[0;39;1m> 100% CONF
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T04:28:07.637Z_
 
 **Thought** (none):
@@ -364,7 +364,7 @@ Output:
 [9A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [13s][m[35D[1B[1m> :app:processDebugResources[m[28D[8B[9A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [14s][m[35D[9B[9A[1m<[0;32;1m==========[0;39;1m---> 83% EXECUTING [14s][m[35D[1B[1m> :app:compileDebugJavaWithJa
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-25T04:28:14.434Z_
 
 **Thought** (none):

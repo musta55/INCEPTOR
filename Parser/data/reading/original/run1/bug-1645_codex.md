@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 14 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(3: succeeded) -> repair(5: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:12:55.407Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the add-exercise dialog data flow, patch the crash, then run the re
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:12:59.502Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:13:00.898Z_
 
 **Thought** (narration):
@@ -86,7 +86,7 @@ app/src/main/java/com/german_software_engineers/trainerapp/ExerciseViewActivity.
 app/src/main/java/com/ge
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T09:13:03.803Z_
 
 **Thought** (none):
@@ -102,7 +102,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:13:07.473Z_
 
 **Thought** (none):
@@ -134,7 +134,7 @@ import android.widget.CheckBox;
 import android.
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-23T09:13:09.743Z | **FAILED**_
 
 **Thought** (narration):
@@ -164,7 +164,7 @@ Output:
         and
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-23T09:13:14.278Z_
 
 **Thought** (none):
@@ -180,7 +180,7 @@ _(none)_
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-23T09:13:16.926Z_
 
 **Thought** (narration):
@@ -217,7 +217,7 @@ M app/src/main/java/com/german_software_engineers/trainerapp/ExerciseDialog.java
         boo
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-23T09:13:21.279Z_
 
 **Thought** (none):
@@ -233,7 +233,7 @@ _(none)_
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-23T09:13:23.556Z_
 
 **Thought** (narration):
@@ -257,7 +257,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-23T09:13:26.489Z_
 
 **Thought** (none):
@@ -281,7 +281,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-23T09:13:33.094Z_
 
 **Thought** (none):
@@ -312,7 +312,7 @@ Output:
 BUILD SUCCESSFU
 ```
 
-## 13. read_file / validation  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-23T09:13:38.751Z_
 
 **Thought** (narration):
@@ -339,7 +339,7 @@ Output:
     61	        boole
 ```
 
-## 14. plan / validation  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T09:13:42.101Z_
 
 **Thought** (none):

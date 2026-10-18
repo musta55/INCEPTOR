@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 25 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt
 
-Phases: localization(9: succeeded) -> repair(2: blocked) -> validation(14: blocked)
+Phases: localization(9: succeeded) -> repair(1: blocked) -> validation(15: blocked)
 
-## 1. search_code / localization  (grep_search)
+## 1. search / localization  (grep_search)
 _step 1 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -29,7 +29,7 @@ show.*password|password.*visibility|passwordConfirmation|confirm.*password
 No matches found
 ```
 
-## 2. search_code / localization  (grep_search)
+## 2. search / localization  (grep_search)
 _step 1 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -45,7 +45,7 @@ first.*setup|onboarding|initial.*setup
 No matches found
 ```
 
-## 3. search_code / localization  (grep_search)
+## 3. search / localization  (grep_search)
 _step 1 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -61,7 +61,7 @@ password.*edit|editText.*password
 No matches found
 ```
 
-## 4. search_code / localization  (glob)
+## 4. search / localization  (glob)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -79,7 +79,7 @@ app/src/**/*.{java,kt,res}
 Found 116 matching file(s) (truncated)
 ```
 
-## 5. search_code / localization  (glob)
+## 5. search / localization  (glob)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -95,7 +95,7 @@ _(same inference as the previous action)_
 Found 116 matching file(s) (truncated)
 ```
 
-## 6. read_file / localization  (read_file)
+## 6. read / localization  (read_file)
 _step 3 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -127,7 +127,7 @@ import com.beemdevelopment.aegis.vault.VaultFile;
 import com.beemdevelopment.aegis.vault.VaultFileCr
 ```
 
-## 7. read_file / localization  (read_file)
+## 7. read / localization  (read_file)
 _step 3 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -156,7 +156,7 @@ import androidx.annotation.NonNull;
 import androidx.b
 ```
 
-## 8. read_file / localization  (read_file)
+## 8. read / localization  (read_file)
 _step 3 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -186,7 +186,7 @@ import com.beemdevelopment.aegis.R;
 import com.beemdevelopment
 ```
 
-## 9. read_file / localization  (read_file)
+## 9. read / localization  (read_file)
 _step 4_
 
 **Thought** (reasoning):
@@ -238,7 +238,7 @@ public class EditTextHelper {
         return getEditTextChars(text, false);
 ```
 
-## 10. edit_file / repair  (edit)
+## 10. edit / repair  (edit)
 _step 5_
 
 **Thought** (reasoning):
@@ -287,7 +287,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             case CustomAuthenticationSlide.CRYPT_
 ```
 
-## 11. build / repair  (run_shell_command)
+## 11. build / validation  (run_shell_command)
 _step 6_
 
 **Thought** (reasoning):
@@ -345,7 +345,7 @@ A problem occurred configuring root project 'bug-275'.
       > No cached version of com.android.tools.build:gradl
 ```
 
-## 13. read_file / validation  (read_file)
+## 13. read / validation  (read_file)
 _step 8 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -379,7 +379,7 @@ buildscript {
         // in the i
 ```
 
-## 14. read_file / validation  (read_file)
+## 14. read / validation  (read_file)
 _step 8 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -395,7 +395,7 @@ _(same inference as the previous action)_
 include ':app'
 ```
 
-## 15. read_file / validation  (read_file)
+## 15. read / validation  (read_file)
 _step 8 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -423,7 +423,7 @@ def getGitHash = { -> return getCmdOutput(["git", "rev-parse", "--short", "HEAD"
 def getGitBranch = { -> return getCmdOutput(["git", "rev-parse", "--abbrev-ref", "HEAD"])
 ```
 
-## 16. edit_file / validation  (edit)
+## 16. edit / validation  (edit)
 _step 9_
 
 **Thought** (reasoning):
@@ -484,7 +484,7 @@ A problem occurred configuring root project 'bug-275'.
       > Could not resolve com.android.tools.build:gradle:3
 ```
 
-## 18. search_code / validation  (run_shell_command)
+## 18. search / validation  (run_shell_command)
 _step 11_
 
 **Thought** (reasoning):
@@ -503,7 +503,7 @@ No gradle cache found
 No local build
 ```
 
-## 19. search_code / validation  (run_shell_command)
+## 19. search / validation  (run_shell_command)
 _step 12_
 
 **Thought** (reasoning):
@@ -526,7 +526,7 @@ find /home/antu_shared/automated_program_repair_for_ui_bugs/runs/ -name "gradle-
 /usr/bin/gradle
 ```
 
-## 20. build / validation  (run_shell_command)
+## 20. orient / validation  (run_shell_command)
 _step 13_
 
 **Thought** (reasoning):
@@ -552,7 +552,7 @@ Gradle 4.4.1
 ------------------------------------------------------------
 ```
 
-## 21. read_file / validation  (run_shell_command)
+## 21. orient / validation  (run_shell_command)
 _step 14_
 
 **Thought** (reasoning):
@@ -587,7 +587,7 @@ emulator
 licenses
 ```
 
-## 22. search_code / validation  (run_shell_command)
+## 22. search / validation  (run_shell_command)
 _step 15_
 
 **Thought** (reasoning):
@@ -608,7 +608,7 @@ find /home/antu_shared/Android/Sdk -name "gradle*" -type f 2>/dev/null | head -1
 /home/antu_shared/Android/Sdk/ndk/21.1.6352462/sysroot/usr/include/linux/ag
 ```
 
-## 23. search_code / validation  (run_shell_command)
+## 23. search / validation  (run_shell_command)
 _step 16_
 
 **Thought** (reasoning):
@@ -635,7 +635,7 @@ dx.jar
 shrinkedAndroid.jar
 ```
 
-## 24. build / validation  (run_shell_command)
+## 24. orient / validation  (run_shell_command)
 _step 17_
 
 **Thought** (reasoning):
@@ -667,7 +667,7 @@ openjdk version "1.8.0_504"
 OpenJDK Runtime Environment (build 1.8.0_504-8u504-ga-1ubuntu1~24.04.3-b01)
 ```
 
-## 25. read_file / validation  (read_file)
+## 25. read / validation  (read_file)
 _step 18_
 
 **Thought** (reasoning):

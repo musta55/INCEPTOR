@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 46 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(32: succeeded) -> repair(8: succeeded, blocked) -> validation(5: succeeded)
+Phases: planning(1: unchecked) -> localization(32: succeeded) -> repair(2: blocked) -> validation(11: blocked, succeeded)
 
-## 1. orient / understanding  (Bash)
+## 1. orient / planning  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -59,7 +59,7 @@ PyCharmMiscProject
 Pycharm
 ```
 
-## 2. delegate / localization  (Agent)
+## 2. sub-agent / localization  (Agent)
 _step 2_
 
 **Thought** (none):
@@ -73,7 +73,7 @@ In the Android project at /Volumes/Dumpy/Research/automated_program_repair_for_u
 **Result**:
 _delegated to subagent `sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd` -- its 18 actions follow below_
 
-## 3. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 3. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 2_
 
 **Thought** (none):
@@ -91,7 +91,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude
 ```
 
-## 4. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 4. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 3_
 
 **Thought** (none):
@@ -109,7 +109,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude
 ```
 
-## 5. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 5. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 4_
 
 **Thought** (none):
@@ -126,7 +126,7 @@ grep -r "onBackPressed\|onNavigateUp\|saveNote\|saveDraft" /Volumes/Dumpy/Resear
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-54/app/src/main/java/net/gsantner/markor/activity/DocumentShareIntoFragment.java:    public boolean onBackPressed
 ```
 
-## 6. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 6. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 5_
 
 **Thought** (none):
@@ -144,7 +144,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 ```
 
-## 7. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 7. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 6_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ _(none)_
 13	im
 ```
 
-## 8. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 8. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 7_
 
 **Thought** (none):
@@ -200,7 +200,7 @@ _(none)_
 13	im
 ```
 
-## 9. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 9. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 8_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ _(none)_
 13	import
 ```
 
-## 10. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 10. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 9_
 
 **Thought** (none):
@@ -256,7 +256,7 @@ _(none)_
 13	impor
 ```
 
-## 11. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 11. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 10_
 
 **Thought** (none):
@@ -274,7 +274,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-54/app/src/main/res/menu/do
 ```
 
-## 12. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 12. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 11_
 
 **Thought** (none):
@@ -300,7 +300,7 @@ _(none)_
 11	    ################################
 ```
 
-## 13. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 13. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 12_
 
 **Thought** (none):
@@ -318,7 +318,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-54/app/
 ```
 
-## 14. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 14. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 13_
 
 **Thought** (none):
@@ -344,7 +344,7 @@ _(none)_
 11	    ################################
 ```
 
-## 15. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 15. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 14_
 
 **Thought** (none):
@@ -370,7 +370,7 @@ _(none)_
 11	    ################################
 ```
 
-## 16. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 16. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 15_
 
 **Thought** (none):
@@ -386,7 +386,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 (Bash completed with no output)
 ```
 
-## 17. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 17. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 16_
 
 **Thought** (none):
@@ -414,7 +414,7 @@ _(none)_
 13	im
 ```
 
-## 18. read_file / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 18. read / localization  (Read)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 17_
 
 **Thought** (none):
@@ -442,7 +442,7 @@ _(none)_
 13	impo
 ```
 
-## 19. search_code / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
+## 19. search / localization  (Bash)  [subagent sub-toolu_01Q8rUVUEVU3NB1EiqwKD4nd]
 _step 18_
 
 **Thought** (none):
@@ -484,7 +484,7 @@ c3783c71 Added files to set up the server.
 d523
 ```
 
-## 21. read_file / localization  (Read)
+## 21. read / localization  (Read)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -512,7 +512,7 @@ _(none)_
 13	import
 ```
 
-## 22. read_file / localization  (Read)
+## 22. read / localization  (Read)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -540,7 +540,7 @@ _(same inference as the previous action)_
 13	im
 ```
 
-## 23. read_file / localization  (Read)
+## 23. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -568,7 +568,7 @@ _(none)_
 13	impor
 ```
 
-## 24. read_file / localization  (Read)
+## 24. read / localization  (Read)
 _step 5_
 
 **Thought** (none):
@@ -596,7 +596,7 @@ _(none)_
 13	im
 ```
 
-## 25. vcs / localization  (Bash)
+## 25. diff / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -616,7 +616,7 @@ b3c2aca8 create network guard for both codex and claude
 90447cb4 Updated bug list for the main branch.
 ```
 
-## 26. search_code / localization  (Bash)
+## 26. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -649,7 +649,7 @@ head -60 CHANGELOG.md; grep -n "versionName\|versionCode" app/build.gradle
   - More checks for storage acc
 ```
 
-## 27. search_code / localization  (Bash)
+## 27. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -665,7 +665,7 @@ grep -rn "EXTRA_PATH_IS_FOLDER\|showTextEditor\|DocumentActivity.launch\|EXTRA_A
 (eval):1: no matches found: --include=*.java
 ```
 
-## 28. search_code / localization  (Bash)
+## 28. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -683,7 +683,7 @@ app/src/main/java/net/gsantner/markor/util/DocumentIO.java:36:    public static 
 app/src/main/java/net/gsantner/markor/util/DocumentIO.java:50:            bundle.putBoolean(EXTRA_ALLOW_RENAME, a
 ```
 
-## 29. read_file / localization  (Read)
+## 29. read / localization  (Read)
 _step 10_
 
 **Thought** (none):
@@ -710,7 +710,7 @@ _(none)_
 271
 ```
 
-## 30. search_code / localization  (Bash)
+## 30. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -740,7 +740,7 @@ import java.io.BufferedInputStream;
 i
 ```
 
-## 31. search_code / localization  (Bash)
+## 31. search / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -758,7 +758,7 @@ app/src/main/java/net/gsantner/markor/util/AppSettings.java:307:        return g
 app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java:150:        menu.findItem(R.id.action_undo).setVisible(appSettings.isEditorHist
 ```
 
-## 32. read_file / localization  (Bash)
+## 32. read / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -787,7 +787,7 @@ totalBytesRead = totalBytesRead + bytesRead;
         }
 ```
 
-## 33. search_code / localization  (Bash)
+## 33. search / localization  (Bash)
 _step 14_
 
 **Thought** (narration):
@@ -811,7 +811,7 @@ grep -n "pref_key__editor_history_enabled" -A 6 app/src/main/res/xml/preferences
 159-                android:key="
 ```
 
-## 34. edit_file / repair  (Edit)
+## 34. edit / repair  (Edit)
 _step 15_
 
 **Thought** (narration):
@@ -838,7 +838,7 @@ If back is pressed within 5 s, `_document`'s content is still `""` when the snap
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-54/app/src/main/java/net/gsantner/markor/util/DocumentIO.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 35. edit_file / repair  (Edit)
+## 35. edit / repair  (Edit)
 _step 16_
 
 **Thought** (narration):
@@ -856,7 +856,7 @@ Now the secondary defect — the initial-version snapshot is silently skipped wh
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-54/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 36. build / repair  (Bash)
+## 36. build / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -882,7 +882,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:comp
 ```
 
-## 37. env_setup / repair (own phase validation)  (Bash)
+## 37. search / validation  (Bash)
 _step 18_
 
 **Thought** (narration):
@@ -902,7 +902,7 @@ sed -e 's|^package .*||' -e 's|^import net.gsantner.markor.format.TextFormat;||'
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-54
 ```
 
-## 38. edit_file / repair  (Write)
+## 38. other / validation  (Write)
 _step 19 | **FAILED**_
 
 **Thought** (none):
@@ -918,7 +918,7 @@ _(none)_
 Access outside repo directory is not allowed: /tmp/sim/Sim.java
 ```
 
-## 39. search_code / repair (own phase localization)  (Bash)
+## 39. search / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -934,7 +934,7 @@ mkdir -p .apr-sim && sed -e 's|^package .*||' -e 's|^import net.gsantner.markor.
 228
 ```
 
-## 40. edit_file / repair  (Write)
+## 40. edit / validation  (Write)
 _step 21_
 
 **Thought** (none):
@@ -950,7 +950,7 @@ _(none)_
 File created successfully at: /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-54/.apr-sim/Sim.java (file state is current in your context — no need to Read it back)
 ```
 
-## 41. run_test / repair  (Bash)
+## 41. test / validation  (Bash)
 _step 22 | **FAILED**_
 
 **Thought** (none):
@@ -970,7 +970,7 @@ use -help for a list of possible options
 Error: Could not find or load main class Sim
 ```
 
-## 42. run_test / validation  (Bash)
+## 42. test / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -994,7 +994,7 @@ mkdir -p .apr-sim/out && javac -d .apr-sim/out .apr-sim/Document.java .apr-sim/S
     back-only (worked before)   :
 ```
 
-## 43. build / validation  (Bash)
+## 43. edit / validation  (Bash)
 _step 24_
 
 **Thought** (narration):
@@ -1049,7 +1049,7 @@ git rev-parse --show-toplevel; git check-ignore -v app/src/main/java/net/gsantne
 .gitignore:40:runs/	app/src/main/java/net/gsantner/markor/util/DocumentIO.java
 ```
 
-## 46. read_file / validation  (Read)
+## 46. read / validation  (Read)
 _step 27_
 
 **Thought** (narration):

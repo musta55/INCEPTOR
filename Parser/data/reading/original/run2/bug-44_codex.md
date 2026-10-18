@@ -7,9 +7,9 @@
 - steps (LLM inferences): 40 | actions: 35 | failed actions: 3
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(2: succeeded) -> understanding(5: unchecked) -> repair(3: blocked) -> validation(19: succeeded) -> localization(3: succeeded)
+Phases: planning(1: unchecked) -> localization(8: succeeded) -> planning(1: unchecked) -> repair(2: blocked) -> planning(3: succeeded) -> validation(19: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:40:19.649Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace tag checkbox removal, patch the matching logic, then build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:40:21.809Z | **FAILED**_
 
 **Thought** (none):
@@ -64,7 +64,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:40:23.022Z_
 
 **Thought** (narration):
@@ -94,7 +94,7 @@ omniNotes/src/main/assets/sql/upgrade-451.sql:16:FROM tags_tmp;
 omniN
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-25T05:40:24.709Z_
 
 **Thought** (none):
@@ -122,7 +122,7 @@ Total output lines: 439
  * the Free Software Foundation, either version 3 of the
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:40:27.426Z_
 
 **Thought** (narration):
@@ -151,7 +151,7 @@ Output:
  * (at your o
 ```
 
-## 6. search_code / understanding  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:40:29.848Z_
 
 **Thought** (none):
@@ -171,7 +171,7 @@ Original token count: 0
 Output:
 ```
 
-## 7. wait_process / understanding  (write_stdin)
+## 7. other / localization  (write_stdin)
 _step 11 | 2026-09-25T05:40:41.554Z_
 
 **Thought** (none):
@@ -187,7 +187,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 8. search_code / understanding  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T05:40:43.062Z_
 
 **Thought** (none):
@@ -215,7 +215,7 @@ commits
 75922d8 harness baseline
 ```
 
-## 9. env_setup / understanding  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-25T05:40:45.239Z_
 
 **Thought** (none):
@@ -243,7 +243,7 @@ public class it.feio.android.pixlui.links.RegexPatternsConstants {
   publi
 ```
 
-## 10. plan / understanding  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-25T05:40:54.664Z_
 
 **Thought** (none):
@@ -259,7 +259,7 @@ Located the failure in TagsHelper.removeTag: unescaped substring regex replaceme
 Plan updated
 ```
 
-## 11. run_test / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-25T05:40:56.703Z_
 
 **Thought** (narration):
@@ -296,7 +296,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequen
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / repair  (write_stdin)
 _step 16 | 2026-09-25T05:41:02.466Z | **FAILED**_
 
 **Thought** (none):
@@ -322,7 +322,7 @@ WARNING: Configuration 'testCompile' is obsolete and has been replaced with 'tes
 It will be removed at the end of 2018. For more information see: http://d.android.com/r/tools/update-dependency-configuratio
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-25T05:41:06.226Z_
 
 **Thought** (narration):
@@ -340,7 +340,7 @@ The patch is in place; this legacy flavored build has no generic test task. I’
 Plan updated
 ```
 
-## 14. build / validation  (exec_command)
+## 14. orient / planning  (exec_command)
 _step 18 | 2026-09-25T05:41:10.470Z_
 
 **Thought** (none):
@@ -360,7 +360,7 @@ Original token count: 0
 Output:
 ```
 
-## 15. wait_process / validation  (write_stdin)
+## 15. other / planning  (write_stdin)
 _step 19 | 2026-09-25T05:41:13.242Z_
 
 **Thought** (none):
@@ -385,7 +385,7 @@ testPlayDebugUnitTest - Run unit tests for the playDebug build.
 testPlayReleaseUnitTest - Run unit tests for the playRel
 ```
 
-## 16. run_test / validation  (exec_command)
+## 16. test / validation  (exec_command)
 _step 20 | 2026-09-25T05:41:16.105Z_
 
 **Thought** (none):
@@ -407,7 +407,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 17. wait_process / validation  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T05:41:18.428Z_
 
 **Thought** (none):
@@ -433,7 +433,7 @@ WARNING: Configuration 'testCompile' is obsolete and has been replaced with 'tes
 It will be removed at the end of 2018. For more information see: http://d.android.com/r/tools/update-dependency-c
 ```
 
-## 18. wait_process / validation  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T05:41:24.563Z_
 
 **Thought** (none):
@@ -461,7 +461,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :omniNote
 ```
 
-## 19. wait_process / validation  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T05:41:30.941Z_
 
 **Thought** (none):
@@ -481,7 +481,7 @@ Original token count: 0
 Output:
 ```
 
-## 20. wait_process / validation  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-25T05:41:38.369Z_
 
 **Thought** (none):
@@ -501,7 +501,7 @@ Original token count: 0
 Output:
 ```
 
-## 21. wait_process / validation  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-25T05:41:44.165Z_
 
 **Thought** (none):
@@ -521,7 +521,7 @@ Original token count: 0
 Output:
 ```
 
-## 22. wait_process / validation  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-25T05:41:50.459Z_
 
 **Thought** (none):
@@ -542,7 +542,7 @@ Output:
 > Task :omniNotes:javaPreCompileFossDebugUnitTest
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-25T05:42:01.566Z_
 
 **Thought** (none):
@@ -566,7 +566,7 @@ Output:
 > Task :omniNotes:processFossDebugUnitTestJavaRes NO-SOURCE
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-25T05:42:13.362Z_
 
 **Thought** (none):
@@ -586,7 +586,7 @@ Original token count: 0
 Output:
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-25T05:42:26.987Z_
 
 **Thought** (none):
@@ -606,7 +606,7 @@ Original token count: 0
 Output:
 ```
 
-## 26. wait_process / validation  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-25T05:42:38.523Z_
 
 **Thought** (none):
@@ -656,7 +656,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 3 stopped Daemons could not be reused, use --status for details
 ```
 
-## 28. wait_process / validation  (write_stdin)
+## 28. other / validation  (write_stdin)
 _step 32 | 2026-09-25T05:43:04.339Z_
 
 **Thought** (none):
@@ -682,7 +682,7 @@ WARNING: Configuration 'testCompile' is obsolete and has been replaced with 'tes
 It will be removed at the end of 2018. For more information see: http://d.android.com/r/tools/update-dependency-c
 ```
 
-## 29. wait_process / validation  (write_stdin)
+## 29. other / validation  (write_stdin)
 _step 33 | 2026-09-25T05:43:11.628Z_
 
 **Thought** (none):
@@ -710,7 +710,7 @@ Output:
 > Task :omniNotes:transformCla
 ```
 
-## 30. wait_process / validation  (write_stdin)
+## 30. other / validation  (write_stdin)
 _step 34 | 2026-09-25T05:43:22.630Z_
 
 **Thought** (none):
@@ -736,7 +736,7 @@ Output:
 > Task :omniNotes:assem
 ```
 
-## 31. wait_process / validation  (write_stdin)
+## 31. other / validation  (write_stdin)
 _step 35 | 2026-09-25T05:43:34.020Z_
 
 **Thought** (none):
@@ -761,7 +761,7 @@ Output:
 > Task :omniNotes:transformNativeLibsWithMergeJniLi
 ```
 
-## 32. diff / validation  (exec_command)
+## 32. read / validation  (exec_command)
 _step 36 | 2026-09-25T05:43:39.898Z_
 
 **Thought** (narration):
@@ -795,7 +795,7 @@ Output:
     31	import ja
 ```
 
-## 33. vcs / localization  (exec_command)
+## 33. vcs / validation  (exec_command)
 _step 37 | 2026-09-25T05:43:42.928Z_
 
 **Thought** (narration):
@@ -825,7 +825,7 @@ fatal: path 'omniNotes/src/test/java/it/feio/android/omninotes/utils/TagsHelperT
 attributes:
 ```
 
-## 34. read_file / localization  (exec_command)
+## 34. read / validation  (exec_command)
 _step 38 | 2026-09-25T05:43:48.026Z | **FAILED**_
 
 **Thought** (none):
@@ -847,7 +847,7 @@ Output:
 HARNESS
 ```
 
-## 35. plan / localization  (update_plan)
+## 35. plan / planning  (update_plan)
 _step 39 | 2026-09-25T05:43:51.817Z_
 
 **Thought** (none):

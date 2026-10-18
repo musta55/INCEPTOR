@@ -9,7 +9,7 @@
 
 Phases: localization(7: unchecked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -27,7 +27,7 @@ I need to find the code related to the Card Browser's multi-select "Edit" functi
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-a11a47be498ae2c8` -- its 0 actions follow below_
 
-## 2. delegate / localization  (agent)
+## 2. sub-agent / localization  (agent)
 _step 2_
 
 **Thought** (reasoning):
@@ -46,7 +46,7 @@ Focus on finding:
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-b2301bfd25b817af` -- its 0 actions follow below_
 
-## 3. wait_process / localization  (tool_call)
+## 3. other / localization  (tool_call)
 _step 3_
 
 **Thought** (reasoning):
@@ -64,7 +64,7 @@ Please share your findings. I'm waiting for both agents' results.
 Message queued for Find card browser multi-select code
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -80,7 +80,7 @@ _(none)_
 Listed 2 background agents.
 ```
 
-## 5. wait_process / localization  (list_agents)
+## 5. other / localization  (list_agents)
 _step 5_
 
 **Thought** (reasoning):
@@ -96,7 +96,7 @@ _(none)_
 Listed 2 background agents.
 ```
 
-## 6. wait_process / localization  (list_agents)
+## 6. other / localization  (list_agents)
 _step 6_
 
 **Thought** (reasoning):
@@ -112,7 +112,7 @@ _(none)_
 Listed 2 background agents.
 ```
 
-## 7. wait_process / localization  (list_agents)
+## 7. other / localization  (list_agents)
 _step 7_
 
 **Thought** (reasoning):

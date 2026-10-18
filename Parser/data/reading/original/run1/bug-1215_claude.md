@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 19 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(5: succeeded) -> repair(4: succeeded) -> localization(4: succeeded) -> repair(2: succeeded) -> validation(4: unchecked)
+Phases: localization(5: succeeded) -> repair(4: succeeded) -> localization(4: succeeded) -> repair(1: succeeded) -> validation(5: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ find . -name "ManualEntryDialog.java" -o -name "ManualEntryDialog.kt" | head
 ./app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java
 ```
 
-## 2. read_file / localization  (Read)
+## 2. read / localization  (Read)
 _step 2 | **FAILED**_
 
 **Thought** (none):
@@ -59,7 +59,7 @@ pwd
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1215
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -82,7 +82,7 @@ _(none)_
 8	 * copies of the So
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (narration):
@@ -109,7 +109,7 @@ grep -n -A6 -E 'manual_(counter|period|digits)"' app/src/main/res/layout/dialog_
 191-                    and
 ```
 
-## 6. edit_file / repair  (Edit)
+## 6. edit / repair  (Edit)
 _step 6_
 
 **Thought** (narration):
@@ -127,7 +127,7 @@ The defect: `Integer.parseInt`/`Long.parseLong` are called on raw user input wit
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 7. edit_file / repair  (Edit)
+## 7. edit / repair  (Edit)
 _step 7_
 
 **Thought** (none):
@@ -143,7 +143,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -161,7 +161,7 @@ Now the validation watcher, which is the source of the TOTP crash (it parses on 
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -179,7 +179,7 @@ Now add the parsing helpers:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 10 | **FAILED**_
 
 **Thought** (narration):
@@ -198,7 +198,7 @@ Exit code 2
 ugrep: warning: app/src/main/res/values/strings.xml: No such file or directory
 ```
 
-## 11. search_code / localization  (Bash)
+## 11. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -222,7 +222,7 @@ app/src/main/res/values-de-rDE/strings_main.xml
 app/src/main/res
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -238,7 +238,7 @@ grep -n 'error_invalid_secret' app/src/main/res/values/strings_main.xml
 77:    <string name="error_invalid_secret">Invalid secret</string>
 ```
 
-## 13. read_file / localization  (Read)
+## 13. read / localization  (Read)
 _step 13_
 
 **Thought** (none):
@@ -259,7 +259,7 @@ _(none)_
 79	    <!-- Dialogs -->
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 14_
 
 **Thought** (none):
@@ -275,7 +275,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1215/app/src/main/res/values/strings_main.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. build / repair  (Bash)
+## 15. build / validation  (Bash)
 _step 15_
 
 **Thought** (narration):
@@ -338,7 +338,7 @@ git --no-pager diff HEAD -- app/src/main/java app/src/main/res/values/strings_ma
 (Bash completed with no output)
 ```
 
-## 18. vcs / validation  (Bash)
+## 18. diff / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -355,7 +355,7 @@ git status --short 2>&1 | head; echo "---"; git log --oneline -1 2>&1
 d2b96c29 add qwen as a model
 ```
 
-## 19. read_file / validation  (Read)
+## 19. read / validation  (Read)
 _step 19_
 
 **Thought** (narration):

@@ -1,7 +1,7 @@
 /* Bug page > Fingerprint: small multiples of the trajectories of this bug, one bubble grid
  * each. x = action index on a scale shared by all grids, y = action-category lanes (the union
  * over the grids); bubble colour = verdict (pass / fail / none); a dashed line at the first
- * fix; above each grid the phase strip and the subphase-outcome strip. Default: the 3 agents
+ * fix; above each grid the phase strip and the phase-outcome strip. Default: the 3 agents
  * of the selected run; toggle (S.fp = 'runs'): the selected agent across its runs. Click a
  * bubble (any point of its column) to select that trajectory and action; the playhead
  * highlights the current column of the selected one. */
@@ -9,10 +9,14 @@
   'use strict';
   var TV = window.TV, esc = TV.esc;
   var root = null, grids = [];
-  var ROWH = 13, PH = 8, SH = 8, Y0 = 23;     // lane height, phase / subphase strip heights, first lane
+  var ROWH = 13, PH = 8, SH = 8, Y0 = 23;     // lane height, phase / outcome strip heights, first lane
 
+  /* the trajectories shown: a comparison's members (TV.bugData.group, the Analyze page), else the
+   * bug's agents in the selected run, or the selected agent's runs */
+  function byRuns() { var g = TV.bugData.group; return g ? g.kind === 'runs' : TV.state.fp === 'runs'; }
   function rows() {
     var B = TV.bugData, cur = TV.traj();
+    if (B.group) return B.group.rows;
     if (TV.state.fp === 'runs') return B.runs.map(function (r) { return { key: cur.agent + '-r' + r, t: B.byKey[cur.agent + '-r' + r], label: 'run ' + r }; });
     return B.agents.map(function (a) { return { key: a + '-r' + cur.run, t: B.byKey[a + '-r' + cur.run], label: a }; });
   }
@@ -23,7 +27,7 @@
     var s = '<svg class="fp" width="' + W.toFixed(1) + '" height="' + H + '" data-key="' + esc(t.key) + '" role="img" aria-label="' + esc('Fingerprint of ' + t.agent + ' run ' + t.run) + '">';
     function xa(i) { return LW + (i - 1) * cw; }
     s += '<text class="rl strip-l" x="' + (LW - 6) + '" y="' + (PH / 2) + '" text-anchor="end" dominant-baseline="middle">' + (narrow ? 'p' : 'phase') + '</text>';
-    s += '<text class="rl strip-l" x="' + (LW - 6) + '" y="' + (PH + 2 + SH / 2) + '" text-anchor="end" dominant-baseline="middle">' + (narrow ? 's' : 'subphase') + '</text>';
+    s += '<text class="rl strip-l" x="' + (LW - 6) + '" y="' + (PH + 2 + SH / 2) + '" text-anchor="end" dominant-baseline="middle">' + (narrow ? 'o' : 'outcome') + '</text>';
     t.phases.forEach(function (p) {
       s += '<rect class="band" x="' + xa(p.start).toFixed(2) + '" y="0" width="' + Math.max(1, (p.end - p.start + 1) * cw - 1).toFixed(2) + '" height="' + PH + '" rx="1.5" fill="' + TV.phaseVar(p.phase) + '"/>';
     });
@@ -52,7 +56,7 @@
 
   function render(el) {
     root = el;
-    var cur = TV.traj(), byRuns = TV.state.fp === 'runs';
+    var cur = TV.traj(), runs = byRuns(), group = TV.bugData.group;
     var rs = rows(), trajs = rs.map(function (x) { return x.t; }).filter(Boolean);
     var subUsed = {}, anchors = false;
     trajs.forEach(function (t) {
@@ -67,35 +71,34 @@
     var h = '<div class="legend fp-legend">' +
       '<span class="lg-t">Bubble</span><span class="lgm"><i class="bub v-pass"></i>pass</span><span class="lgm"><i class="bub v-fail"></i>fail</span>' +
       '<span class="lgm"><i class="bub v-none"></i>no verdict</span>' + (anchors ? '<span class="lgm"><i class="anchormk"></i>first fix</span>' : '') + '</div>' +
-      '<div class="legend fp-legend"><span class="lg-t">Subphase outcome</span>' + TV.outcomeLegend(subUsed) + '</div>';
-    h += '<p class="fp-sub muted small">' + (byRuns ? esc(cur.agent) + ' in each of its runs' : 'The ' + rs.length + ' agents in run ' + cur.run) +
-      ' · x = action #, one scale for all (' + maxN + ' max) · rows = action category' +
-      (narrow ? ' (' + lanes.map(function (m) { return TV.catAbbr(m) + ' ' + m; }).join(', ') + ')' : '') +
-      ' · strips = phase, then subphase outcome</p>';
+      '<div class="legend fp-legend"><span class="lg-t">Phase outcome</span>' + TV.outcomeLegend(subUsed) + '</div>';
+    h += '<p class="fp-sub muted small">' + (runs ? esc(cur.agent) + ' · ' + rs.length + ' runs' : rs.length + ' agents' + (group ? '' : ' · run ' + cur.run)) +
+      ' · one x scale (' + maxN + ' actions max)' + (narrow ? ' · ' + lanes.map(function (m) { return TV.catAbbr(m) + ' ' + m; }).join(', ') : '') + '</p>';
     grids = [];
     rs.forEach(function (x) {
       var t = x.t;
       if (!t) {
-        h += '<div class="fpcard missing"><div class="fp-h">' + (byRuns ? '<b>' + esc(x.label) + '</b>' : TV.agentHTML(x.label)) + '<span class="muted small">not converted</span></div></div>';
+        h += '<div class="fpcard missing"><div class="fp-h">' + (runs ? '<b>' + esc(x.label) + '</b>' : TV.agentHTML(x.label)) + '<span class="muted small">not converted</span></div></div>';
         return;
       }
       var isCur = t.key === cur.key;
       h += '<div class="fpcard' + (isCur ? ' cur' : '') + '" data-key="' + esc(t.key) + '">' +
-        '<div class="fp-h">' + (byRuns ? '<b class="fp-run">run ' + t.run + '</b>' : TV.agentHTML(t.agent)) + TV.passPill(t.outcome.pass) +
-        '<span class="muted small">' + TV.plural(t.n, 'action') + ' · ' + TV.plural(t.subs.length, 'subphase') + ' · ' + TV.plural(t.attempts.length, 'attempt') +
+        '<div class="fp-h">' + (runs ? '<b class="fp-run">' + esc(group ? x.label : 'run ' + t.run) + '</b>' :
+          TV.agentHTML(t.agent, group && x.label !== t.agent ? ' <span class="muted small">' + esc(x.label.slice(t.agent.length + 3)) + '</span>' : '')) + TV.passPill(t.outcome.pass) +
+        '<span class="muted small">' + TV.plural(t.n, 'action') + ' · ' + TV.plural(t.attempts.length, 'attempt') +
         (t.stats.n_failed_actions != null ? ' · ' + t.stats.n_failed_actions + ' failed actions' : '') + '</span>' +
-        (isCur ? '<span class="tag cur-tag">selected · playhead</span>' : '<button type="button" class="btn small" data-select="' + esc(t.key) + '" title="Make this the selected trajectory">select</button>') + '</div>' +
+        (isCur ? '<span class="tag cur-tag">selected</span>' : '<button type="button" class="btn small" data-select="' + esc(t.key) + '">select</button>') + '</div>' +
         '<div class="fp-wrap">' + grid(t, lanes, cw, LW, narrow, maxN) + '</div></div>';
-      grids.push({ t: t, cw: cw, LW: LW });
+      grids.push({ t: t, cw: cw, LW: LW, label: group ? x.label : null });
     });
-    h += '<p class="hint">Click a bubble (or anywhere in its column) to select that trajectory and action · space plays the selected one.</p>';
+
     el.innerHTML = h;
     el.querySelectorAll('[data-select]').forEach(function (b) { b.addEventListener('click', function () { TV.select(b.dataset.select); }); });
     grids.forEach(function (g) {
       var svg = el.querySelector('svg.fp[data-key="' + CSS.escape(g.t.key) + '"]'), ov = svg.querySelector('.overlay');
       function idx(ev) { var rc = svg.getBoundingClientRect(); return TV.clamp(Math.floor((ev.clientX - rc.left - g.LW) / g.cw) + 1, 1, g.t.n); }
       ov.addEventListener('mousemove', function (ev) {
-        TV.tip.show('<div class="tt-m">' + esc(g.t.agent + ' · run ' + g.t.run) + '</div>' + TV.actionTip(g.t, g.t.actions[idx(ev) - 1]), ev);
+        TV.tip.show('<div class="tt-m">' + esc(g.label || g.t.agent + ' · run ' + g.t.run) + '</div>' + TV.actionTip(g.t, g.t.actions[idx(ev) - 1]), ev);
       });
       ov.addEventListener('mouseleave', function () { TV.tip.hide(); });
       ov.addEventListener('click', function (ev) {

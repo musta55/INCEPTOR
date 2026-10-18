@@ -7,9 +7,9 @@
 - steps (LLM inferences): 10 | actions: 10 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(2: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. orient / localization  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -39,7 +39,7 @@ settings.gradle
 tools
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -56,7 +56,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-273/AnkiDroid/src/main/java/com/ichi2/anki/Previewer.java
 ```
 
-## 3. read_file / localization  (Bash)
+## 3. read / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -76,7 +76,7 @@ cat /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_ori
  *
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -93,7 +93,7 @@ grep -n "onSaveInstanceState\|onRestoreInstanceState\|savedInstanceState" /Volum
 798:        super.onCreate(savedInstanceState);
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -117,7 +117,7 @@ grep -n "displayCardAnswer\|displayCardQuestion\|sDisplayAnswer" AnkiDroid/src/m
 962:	                displayCard
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -146,7 +146,7 @@ protected String cleanTypedAnswer(String answer) {
             r
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -178,7 +178,7 @@ chronometer.stop();
             displayString = getResources().getString(R.string.empt
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 7_
 
 **Thought** (narration):
@@ -196,7 +196,7 @@ Now let me implement the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-273/AnkiDroid/src/main/java/com/ichi2/anki/Previewer.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. build / repair  (Bash)
+## 9. build / validation  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -220,7 +220,7 @@ _(none)_
 > Task :AnkiDroid:s
 ```
 
-## 10. read_file / validation  (Bash)
+## 10. read / validation  (Bash)
 _step 9_
 
 **Thought** (narration):

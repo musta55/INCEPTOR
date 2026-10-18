@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 18 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(3: failed) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:47:58.210Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace dialog construction and button ordering, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:48:00.225Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r-
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:48:01.126Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ app/src/main/assets/pdf/vendor/pdf.js/1.9.658/pdf.worker.js
 app/src/main/assets/pdf/vendor/pdf.js/1.9.658/images/shadow.p
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:48:04.079Z_
 
 **Thought** (none):
@@ -106,7 +106,7 @@ app/src/main/java/com/simon/harmonichackernews/MainActivity.java-234-           
 app/src/main/java/com/simon/harmonichackernews/MainActivity.java-235-                        "- Added option for transparent sta
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-26T16:48:08.519Z_
 
 **Thought** (narration):
@@ -124,7 +124,7 @@ I found one destructive confirmation: its semantic button roles are reversed. I�
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T16:48:11.632Z_
 
 **Thought** (none):
@@ -150,7 +150,7 @@ app/src/main/java/com/simon/harmonichackernews/StoriesFragment.java-504-        
 app/src/main/java/com/simon/harmonichackernews/StoriesFragment.java-505
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T16:48:14.024Z_
 
 **Thought** (none):
@@ -207,7 +207,7 @@ Compose blame:
 fatal: no such path 'app/src/main/java/com/simon/harmonichackernews/ComposeActivity.java' in HEAD
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. diff / localization  (exec_command)
 _step 13 | 2026-09-26T16:48:20.681Z_
 
 **Thought** (none):
@@ -231,7 +231,7 @@ f58f252 harness baseline
  1 file changed, 2 insertions(+)
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-26T16:48:24.058Z_
 
 **Thought** (narration):
@@ -249,7 +249,7 @@ The audit confirms no other discard dialogs. I’ll swap the confirmation roles 
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-26T16:48:27.578Z_
 
 **Thought** (none):
@@ -282,7 +282,7 @@ M app/src/main/java/com/simon/harmonichackernews/ComposeActivity.java
                 //This thing should only be enabled w
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-26T16:48:28.892Z_
 
 **Thought** (narration):
@@ -300,7 +300,7 @@ Button ordering is corrected. Next I’m running the required clean debug build.
 Plan updated
 ```
 
-## 13. build / repair  (exec_command)
+## 13. build / validation  (exec_command)
 _step 17 | 2026-09-26T16:48:32.378Z_
 
 **Thought** (none):
@@ -323,7 +323,7 @@ Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status fo
 Configuration cache is an incubating feature.
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-26T16:48:35.731Z_
 
 **Thought** (none):
@@ -344,7 +344,7 @@ Output:
 Calculating task graph as no configuration cache is available for tasks: clean assembleDebug
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-26T16:48:41.815Z_
 
 **Thought** (none):
@@ -372,7 +372,7 @@ Output:
 > Task :app:generateDebugBuildCon
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T16:48:48.811Z_
 
 **Thought** (none):
@@ -400,7 +400,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xli
 ```
 
-## 17. read_file / validation  (exec_command)
+## 17. read / validation  (exec_command)
 _step 21 | 2026-09-26T16:48:53.039Z_
 
 **Thought** (narration):
@@ -426,7 +426,7 @@ Output:
    211	                AlertDialog dialog = new Ma
 ```
 
-## 18. plan / validation  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-26T16:48:54.915Z_
 
 **Thought** (none):

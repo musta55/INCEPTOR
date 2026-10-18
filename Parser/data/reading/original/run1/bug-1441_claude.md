@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 18 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(7: succeeded) -> validation(4: unchecked)
+Phases: localization(7: succeeded) -> repair(6: succeeded) -> validation(5: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ tools
 ./app/src/main/java/com/cohenadair/anglerslog/data
 ```
 
-## 2. read_file / localization  (Read)
+## 2. read / localization  (Read)
 _step 2 | **FAILED**_
 
 **Thought** (none):
@@ -73,7 +73,7 @@ pwd
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1441
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ _(none)_
 13	import com.cohenadair.anglerslog.R;
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (narration):
@@ -133,7 +133,7 @@ import com.cohenadair.anglerslog.R;
 public c
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ app/src/main/res/values/strings.xml:236:    <string name="error_fishing_spot_edi
 app/src/main/res/values/s
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -185,7 +185,7 @@ grep -n "getCoordinates\|setLatitude\|setLongitude" -A 6 app/src/main/java/com/c
 91-
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -203,7 +203,7 @@ Now I'll apply the fix. First, `verifyUserInput()`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1441/app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpotFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -221,7 +221,7 @@ Now replace the sentinel-based validation with a nullable parser (the old `-1` s
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1441/app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpotFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -237,7 +237,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1441/app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpotFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (narration):
@@ -255,7 +255,7 @@ _step 11_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1441/app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpotFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -273,7 +273,7 @@ Now add the `@Nullable` import and guard against coordinate loss when the map ne
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1441/app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpotFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -289,7 +289,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1441/app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpotFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. build / repair  (Bash)
+## 14. build / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -371,7 +371,7 @@ gradle.properties
 gradlew
 ```
 
-## 18. read_file / validation  (Read)
+## 18. read / validation  (Read)
 _step 18_
 
 **Thought** (narration):

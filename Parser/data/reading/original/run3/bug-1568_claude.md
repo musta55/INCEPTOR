@@ -7,9 +7,9 @@
 - steps (LLM inferences): 11 | actions: 12 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(5: succeeded) -> repair(3: succeeded) -> localization(2: failed) -> repair(1: succeeded) -> validation(1: unchecked)
+Phases: localization(5: succeeded) -> repair(3: succeeded) -> validation(4: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -28,7 +28,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1568/app/src/main/java/io/lerk/lrkFM/adapter/BaseArrayAdapter.java
 ```
 
-## 2. read_file / localization  (Read)
+## 2. read / localization  (Read)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -56,7 +56,7 @@ _(none)_
 13	impo
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -82,7 +82,7 @@ _(same inference as the previous action)_
 11	import android.util
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -98,7 +98,7 @@ grep -rn "getFileOpContext\|fileOpContext" --include=*.java | head -50
 (eval):1: no matches found: --include=*.java
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -116,7 +116,7 @@ app/src/main/java/io/lerk/lrkFM/activities/file/ContextMenuUtil.java:259:       
 app/src/main/java/io/lerk/lrkFM/activitie
 ```
 
-## 6. edit_file / repair  (Edit)
+## 6. edit / repair  (Edit)
 _step 5_
 
 **Thought** (narration):
@@ -134,7 +134,7 @@ Now let me fix the issues in `FileArrayAdapter`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1568/app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 7. edit_file / repair  (Edit)
+## 7. edit / repair  (Edit)
 _step 6 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -152,7 +152,7 @@ Now the imports:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1568/app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 6 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -168,7 +168,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1568/app/src/main/java/io/lerk/lrkFM/adapter/FileArrayAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / validation  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -187,7 +187,7 @@ FileArrayAdapter.java
 app/src/main/java/io/lerk/lrkFM/adapter/ArchiveArrayAdapter.java:104:            for (FMFile contextFile : activity.getFileOpContext().getSecond()) {
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / validation  (Read)
 _step 8_
 
 **Thought** (none):
@@ -212,7 +212,7 @@ _(none)_
 89	                    if (f.isArchiv
 ```
 
-## 11. build / repair  (Bash)
+## 11. build / validation  (Bash)
 _step 9_
 
 **Thought** (narration):
@@ -241,7 +241,7 @@ That one is read-only, so it's fine. Now let me build:
 >
 ```
 
-## 12. read_file / validation  (Read)
+## 12. read / validation  (Read)
 _step 10_
 
 **Thought** (narration):

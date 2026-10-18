@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(8: succeeded) -> repair(8: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(7: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:52:34.013Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the activity/menu flow, identify the detached reference, then patch
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:52:37.879Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ sign
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:52:40.017Z_
 
 **Thought** (narration):
@@ -89,7 +89,7 @@ app/src/main/assets/help.html:112:    <li>The <span class="appinternal">Create P
 app/src/main/res/raw/changelog.txt:104:* No d
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T05:52:43.974Z_
 
 **Thought** (none):
@@ -105,7 +105,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:52:46.070Z_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ import android.support.v7.view.ActionMode;
 import andr
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:52:47.293Z_
 
 **Thought** (none):
@@ -163,7 +163,7 @@ Total output lines: 298
     85	        final Collator collator = getApp().getMiscController().getDefaultStringCo
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-25T05:52:52.698Z_
 
 **Thought** (narration):
@@ -194,7 +194,7 @@ Total output lines: 248
    151	        public boolean onActionItemClicked(ActionMode mode, MenuItem item)
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T05:52:56.785Z_
 
 **Thought** (none):
@@ -220,7 +220,7 @@ Total output lines: 208
     38	import de.koelle.christian.trickytripper.dia
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T05:53:03.245Z_
 
 **Thought** (none):
@@ -251,7 +251,7 @@ android {
         versionCod
 ```
 
-## 10. read_file / localization  (exec_command)
+## 10. vcs / localization  (exec_command)
 _step 14 | 2026-09-25T05:53:08.640Z_
 
 **Thought** (none):
@@ -281,7 +281,7 @@ Output:
 # http://www.gradle.org/docs/
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-25T05:53:11.336Z_
 
 **Thought** (none):
@@ -310,7 +310,7 @@ import android.content.Intent;
 import android.content.res.Configu
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-25T05:53:14.920Z_
 
 **Thought** (narration):
@@ -328,7 +328,7 @@ I’ll end contextual action modes as soon as the selected page changes, prevent
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-25T05:53:17.763Z_
 
 **Thought** (none):
@@ -359,7 +359,7 @@ Success. Updated the following files:
 M app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperActivity.java
 ```
 
-## 14. diff / repair  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-25T05:53:18.906Z_
 
 **Thought** (none):
@@ -385,7 +385,7 @@ Output:
     77	        mVie
 ```
 
-## 15. vcs / repair  (exec_command)
+## 15. diff / validation  (exec_command)
 _step 19 | 2026-09-25T05:53:22.295Z_
 
 **Thought** (none):
@@ -407,7 +407,7 @@ H HARNESS
 HARNESS
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-25T05:53:27.003Z_
 
 **Thought** (narration):
@@ -425,7 +425,7 @@ The lifecycle fix is in place. Next I’m running the required clean debug build
 Plan updated
 ```
 
-## 17. build / repair  (exec_command)
+## 17. build / validation  (exec_command)
 _step 21 | 2026-09-25T05:53:30.109Z_
 
 **Thought** (none):
@@ -446,7 +446,7 @@ Output:
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T05:53:33.452Z_
 
 **Thought** (none):
@@ -470,7 +470,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T05:53:41.783Z_
 
 **Thought** (none):
@@ -500,7 +500,7 @@ Merged dex #8 (1 defs/0.7KiB)
 Merged dex #9 (15 defs/4
 ```
 
-## 20. plan / repair  (update_plan)
+## 20. plan / planning  (update_plan)
 _step 24 | 2026-09-25T05:53:52.500Z_
 
 **Thought** (narration):
@@ -518,7 +518,7 @@ The required build passes. I’m doing a final patch review and confirming the g
 Plan updated
 ```
 
-## 21. read_file / validation  (exec_command)
+## 21. read / validation  (exec_command)
 _step 25 | 2026-09-25T05:53:55.370Z_
 
 **Thought** (none):

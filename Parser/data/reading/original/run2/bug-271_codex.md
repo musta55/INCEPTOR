@@ -7,9 +7,9 @@
 - steps (LLM inferences): 33 | actions: 28 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(9: succeeded) -> repair(8: succeeded) -> validation(4: succeeded) -> repair(4: succeeded)
+Phases: planning(1: unchecked) -> localization(10: succeeded) -> planning(1: unchecked) -> repair(7: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> repair(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:25:49.631Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the refresh-period flow, reproduce the failure path, then patch and
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:25:50.847Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep  9 11:55 .github
 -rwxr-xr-x@
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:25:52.166Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ app/src/main/assets/changelog.html:67:            <li>Increase password reminder
 app/src/main/assets/chan
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:25:54.946Z_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ Changelog context:
             <li>Language override option</li
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:25:57.853Z_
 
 **Thought** (narration):
@@ -146,7 +146,7 @@ import android.widget.ImageView;
 import android.
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:26:00.810Z_
 
 **Thought** (none):
@@ -171,7 +171,7 @@ app/src/main/java/com/beemdevelopment/aegis/ui/views/TotpProgressBar.java:42:   
 app/src/main/java/com/beemdevelopment/a
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:26:04.857Z_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ import android.util.AttributeSet;
 import android.view.animation.Li
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T05:26:06.865Z_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ app/src/main/res/layout/card_entry_small.xml-148-        android:padding="0dp"
 app/src/main/res/layout/card_entry
 ```
 
-## 9. vcs / localization  (exec_command)
+## 9. other / localization  (exec_command)
 _step 13 | 2026-09-25T05:26:14.536Z_
 
 **Thought** (narration):
@@ -255,7 +255,7 @@ Upstream file candidates:
 --- master
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-25T05:26:17.422Z_
 
 **Thought** (none):
@@ -281,7 +281,7 @@ app/src/test/java/com/beemdevelopment/aegis/UUIDMapTest.java
             public void onAnimationS
 ```
 
-## 11. read_file / localization  (exec_command)
+## 11. read / localization  (exec_command)
 _step 15 | 2026-09-25T05:26:20.460Z_
 
 **Thought** (none):
@@ -310,7 +310,7 @@ Output:
     private VaultEntry parse
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-25T05:26:29.441Z_
 
 **Thought** (narration):
@@ -328,7 +328,7 @@ The crash is an ArithmeticException in TotpProgressBar when the OTP period excee
 Plan updated
 ```
 
-## 13. run_test / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-25T05:26:54.617Z_
 
 **Thought** (none):
@@ -364,7 +364,7 @@ M app/src/main/java/com/beemdevelopment/aegis/ui/views/TotpProgressBar.java
 P
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / repair  (write_stdin)
 _step 18 | 2026-09-25T05:26:56.912Z_
 
 **Thought** (narration):
@@ -386,7 +386,7 @@ Original token count: 0
 Output:
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / repair  (write_stdin)
 _step 19 | 2026-09-25T05:27:03.603Z_
 
 **Thought** (none):
@@ -406,7 +406,7 @@ Original token count: 0
 Output:
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / repair  (write_stdin)
 _step 20 | 2026-09-25T05:27:09.496Z_
 
 **Thought** (none):
@@ -426,7 +426,7 @@ Original token count: 0
 Output:
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / repair  (write_stdin)
 _step 21 | 2026-09-25T05:27:15.260Z_
 
 **Thought** (none):
@@ -446,7 +446,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / repair  (write_stdin)
 _step 22 | 2026-09-25T05:27:26.273Z_
 
 **Thought** (none):
@@ -475,7 +475,7 @@ Output:
 > Task :app:ext
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / repair  (write_stdin)
 _step 23 | 2026-09-25T05:27:57.200Z_
 
 **Thought** (none):
@@ -501,7 +501,7 @@ Output:
 	application@android:theme was tagged at Andro
 ```
 
-## 20. plan / repair  (update_plan)
+## 20. plan / planning  (update_plan)
 _step 24 | 2026-09-25T05:28:04.750Z_
 
 **Thought** (narration):
@@ -541,7 +541,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 3 stopped Daemons could not be reused, use --status for details
 ```
 
-## 22. wait_process / validation  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-25T05:28:10.343Z_
 
 **Thought** (none):
@@ -571,7 +571,7 @@ Output:
 > Task :app:compileDebugRende
 ```
 
-## 23. diff / validation  (exec_command)
+## 23. read / validation  (exec_command)
 _step 27 | 2026-09-25T05:28:32.736Z_
 
 **Thought** (narration):
@@ -640,7 +640,7 @@ HEAD helper exists?
 fatal: path 'app/sr
 ```
 
-## 25. run_test / repair  (exec_command)
+## 25. edit / repair  (exec_command)
 _step 29 | 2026-09-25T05:28:52.155Z_
 
 **Thought** (narration):
@@ -674,7 +674,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon
 ```
 
-## 26. wait_process / repair  (write_stdin)
+## 26. other / repair  (write_stdin)
 _step 30 | 2026-09-25T05:28:56.645Z_
 
 **Thought** (none):
@@ -694,7 +694,7 @@ Original token count: 0
 Output:
 ```
 
-## 27. wait_process / repair  (write_stdin)
+## 27. other / repair  (write_stdin)
 _step 31 | 2026-09-25T05:29:27.647Z_
 
 **Thought** (none):
@@ -722,7 +722,7 @@ Output:
 > Task
 ```
 
-## 28. plan / repair  (update_plan)
+## 28. plan / planning  (update_plan)
 _step 32 | 2026-09-25T05:29:58.318Z_
 
 **Thought** (none):

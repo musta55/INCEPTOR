@@ -7,9 +7,9 @@
 - steps (LLM inferences): 17 | actions: 16 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(10: succeeded) -> repair(5: succeeded) -> validation(1: unchecked)
+Phases: localization(10: succeeded) -> repair(4: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -40,7 +40,7 @@ settings.gradle
 (eval):1: no matches found: --include=*.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -64,7 +64,7 @@ app/src/main/res/values-bg-rBG/strings_main.xml
 app
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -85,7 +85,7 @@ cd app/src/main/java && grep -ril "password" . | head -50
 ./org/shadowice/flocke/andotp/Utilities/EntryThumbnail.jav
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 4_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ _(none)_
 1
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 5_
 
 **Thought** (none):
@@ -136,7 +136,7 @@ _(none)_
 8	 * copies of the So
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -157,7 +157,7 @@ cd /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_orig
 381:                    passwordConfirm.setInputType(InputType
 ```
 
-## 7. read_file / localization  (Read)
+## 7. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -182,7 +182,7 @@ _(none)_
 369
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -206,7 +206,7 @@ cat app/src/main/res/layout/component_authentication.xml
     android:paddingBottom="@dimen/activity_margin_small"
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -225,7 +225,7 @@ app/src/main/res/layout/component_password.xml:18:        app:passwordToggleEnab
 app/src/main/res/layout/component_authentication.xml:32:            app:passwordToggleEnabled="tr
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -243,7 +243,7 @@ app/build.gradle:73:    implementation "com.heinrichreimersoftware:material-intr
 app/build.gradle:76:    implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (none):
@@ -259,7 +259,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1213/app/src/main/res/layout/component_authentication.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -277,7 +277,7 @@ Now update `CredentialsPreference` to mirror the intro-screen fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -293,7 +293,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 14_
 
 **Thought** (narration):
@@ -311,7 +311,7 @@ Now add the helper methods:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. build / repair  (Bash)
+## 15. build / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -335,7 +335,7 @@ _(none)_
 > Task :app:mergePlayDebugJavaResource
 ```
 
-## 16. read_file / validation  (Bash)
+## 16. read / validation  (Bash)
 _step 16_
 
 **Thought** (narration):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 56 | actions: 57 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(7: succeeded) -> repair(7: blocked) -> localization(2: failed) -> repair(1: blocked) -> validation(20: blocked, failed) -> localization(2: failed) -> validation(12: failed) -> localization(3: failed) -> validation(3: unchecked)
+Phases: localization(7: succeeded) -> repair(5: blocked) -> validation(45: blocked, failed)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -43,7 +43,7 @@ settings.gradle
 ./app/build.gradle
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -59,7 +59,7 @@ find . -path ./build -prune -o -name "*.kt" -print | head -100
 (Bash completed with no output)
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -81,7 +81,7 @@ find . -name "*.java" | grep -v build/ | head -60; echo ---; cat bug-192_output.
 ./app/src/main/java/net/
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 3_
 
 **Thought** (none):
@@ -109,7 +109,7 @@ _(none)_
 13	im
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -137,7 +137,7 @@ import android.support.v7.widget.AppCompatEditText;
 import androi
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -160,7 +160,7 @@ sed -n '1,120p' app/src/main/java/net/gsantner/markor/util/DocumentIO.java
  * sue me if something goes wrong. No attribution required.    - Gregor Santner
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -179,7 +179,7 @@ app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java:134:   
 app/src/main/java/net/gsantner/markor/activity/Do
 ```
 
-## 8. edit_file / repair  (Edit)
+## 8. edit / repair  (Edit)
 _step 6_
 
 **Thought** (narration):
@@ -197,7 +197,7 @@ Diagnosis confirmed. The core defect is in `DocumentEditFragment.onResume()`, wh
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 7_
 
 **Thought** (none):
@@ -213,7 +213,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 8_
 
 **Thought** (narration):
@@ -231,7 +231,7 @@ Now make `loadDocumentIntoUi` preserve the cursor correctly and avoid needless `
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -247,7 +247,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 10_
 
 **Thought** (narration):
@@ -265,7 +265,7 @@ Now persist the cursor position in the saved instance state:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-192/app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. read_file / repair (own phase localization)  (Bash)
+## 13. read / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -287,7 +287,7 @@ public static synchronized boolean saveDocument(Document document, boolean argAl
         Document documentIniti
 ```
 
-## 14. read_file / repair  (Read)
+## 14. read / validation  (Read)
 _step 12_
 
 **Thought** (none):
@@ -311,7 +311,7 @@ _(none)_
 101
 ```
 
-## 15. search_code / localization  (Bash)
+## 15. search / validation  (Bash)
 _step 13 | **FAILED**_
 
 **Thought** (none):
@@ -334,7 +334,7 @@ Exit code 1
 94:                //C
 ```
 
-## 16. read_file / localization  (Bash)
+## 16. read / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -354,7 +354,7 @@ private void getAlertDialog(int action) {
         final EditText editPathUrl = view.findViewById(R.id.ui__sele
 ```
 
-## 17. build / repair  (Bash)
+## 17. build / validation  (Bash)
 _step 15_
 
 **Thought** (narration):
@@ -415,7 +415,7 @@ _(none)_
    > Could not download lint-che
 ```
 
-## 20. read_file / validation  (Bash)
+## 20. orient / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -506,7 +506,7 @@ android-36
 28.0.0-rc01
 ```
 
-## 22. read_file / validation  (Bash)
+## 22. read / validation  (Bash)
 _step 20 | **FAILED**_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ buildscript {
     // https://developer.android.com/studio/releases/gradle-plugin.htm
 ```
 
-## 23. search_code / validation (own phase localization)  (Bash)
+## 23. search / validation  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -547,7 +547,7 @@ ls app/build 2>/dev/null; ls app/build/intermediates 2>/dev/null | head; find . 
 (Bash completed with no output)
 ```
 
-## 24. build / validation  (Bash)
+## 24. orient / validation  (Bash)
 _step 22_
 
 **Thought** (narration):
@@ -565,7 +565,7 @@ cd /tmp && rm -rf pristine_check && mkdir pristine_check && cd /tmp/pristine_che
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-192
 ```
 
-## 25. build / validation  (Bash)
+## 25. orient / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -587,7 +587,7 @@ settings.gradle
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-192
 ```
 
-## 26. build / validation  (Bash)
+## 26. orient / validation  (Bash)
 _step 24_
 
 **Thought** (none):
@@ -614,7 +614,7 @@ Run with --stacktrace option to get the stack trace. Run with --info or --debug 
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_
 ```
 
-## 27. env_setup / validation  (Bash)
+## 27. read / validation  (Bash)
 _step 25_
 
 **Thought** (none):
@@ -656,7 +656,7 @@ _(none)_
 PreToolUse:Bash hook error: curl is blocked: this experiment measures repair, not retrieval of the upstream fix. The network is closed — no host is reachable, not just this one. Work from the bug report and the code in this repo.
 ```
 
-## 29. search_code / validation  (Bash)
+## 29. orient / validation  (Bash)
 _step 27_
 
 **Thought** (narration):
@@ -728,7 +728,7 @@ C=~/.gradle/caches/modules-2/files-2.1; ls $C/com.android.support/appcompat-v7 $
 /Users/splash/.gradle/caches/modules-2/files-2.1/com.android
 ```
 
-## 31. search_code / validation  (Bash)
+## 31. search / validation  (Bash)
 _step 29_
 
 **Thought** (none):
@@ -754,7 +754,7 @@ C=~/.gradle/caches/modules-2/files-2.1; ls $C/com.jakewharton/butterknife $C/com
 /Users/splash/.gradle/caches/mo
 ```
 
-## 32. env_setup / validation  (Bash)
+## 32. search / validation  (Bash)
 _step 30_
 
 **Thought** (narration):
@@ -791,7 +791,7 @@ support-fragment.jar
 support-vector-drawable.jar
 ```
 
-## 33. run_shell / validation  (Bash)
+## 33. other / validation  (Bash)
 _step 31_
 
 **Thought** (none):
@@ -838,7 +838,7 @@ public abstract class BaseFragment extends Fragment {
 app/src/main/java/net/gsantner/markor/format/highlighter/Highlighter.java:26: error: cannot find symbol
 ```
 
-## 35. search_code / validation  (Bash)
+## 35. search / validation  (Bash)
 _step 33_
 
 **Thought** (none):
@@ -862,7 +862,7 @@ runtime
 viewmodel
 ```
 
-## 36. env_setup / validation  (Bash)
+## 36. search / validation  (Bash)
 _step 34_
 
 **Thought** (none):
@@ -889,7 +889,7 @@ lifecycle-runtime.jar
 lifecycle-viewmodel.jar
 ```
 
-## 37. search_code / validation  (Bash)
+## 37. search / validation  (Bash)
 _step 35_
 
 **Thought** (narration):
@@ -907,7 +907,7 @@ grep -rn "commonmark\|netcipher\|NetCipher" app/src/main/java --include=*.java |
 (eval):1: no matches found: --include=*.java
 ```
 
-## 38. search_code / localization  (Bash)
+## 38. search / validation  (Bash)
 _step 36_
 
 **Thought** (none):
@@ -925,7 +925,7 @@ app/src/main/java/net/gsantner/markor/format/converter/MarkdownTextConverter.jav
 app/src/main/java/net/gsantner/markor/format/converter/MarkdownTextConverter.java:14:import org.commonmark.ext.front.matter.YamlFrontMatterExte
 ```
 
-## 39. search_code / localization  (Bash)
+## 39. search / validation  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -944,7 +944,7 @@ public static final Pattern MD_EXTENSION_PATTERN = Pattern.compile("((?i)\\.((md
             EXT_MARKDOWN__MKDN, EXT_MARKDOWN__TXT, EXT_MARKDOWN__MDWN, EXT_MARKDOWN__TEXT, EX
 ```
 
-## 40. env_setup / validation  (Bash)
+## 40. other / validation  (Bash)
 _step 38_
 
 **Thought** (none):
@@ -985,7 +985,7 @@ app/src/main/java/net/gsantner/markor/activity/FilesystemListFragment.java:34: e
 import com.mobsandgeeks.adapters.SimpleSectionAdap
 ```
 
-## 42. env_setup / validation  (Bash)
+## 42. other / validation  (Bash)
 _step 40_
 
 **Thought** (narration):
@@ -1064,7 +1064,7 @@ FilesystemListFragment.class
 FilesystemListFragment$1.
 ```
 
-## 45. run_shell / validation  (Bash)
+## 45. other / validation  (Bash)
 _step 43_
 
 **Thought** (none):
@@ -1191,7 +1191,7 @@ Fatal Error: Unable to find method byteValue
       14
 ```
 
-## 51. search_code / validation  (Bash)
+## 51. build / validation  (Bash)
 _step 49_
 
 **Thought** (none):
@@ -1210,7 +1210,7 @@ for f in $(find app/src/main/java -name "*.java"); do
 (Bash completed with no output)
 ```
 
-## 52. search_code / localization  (Bash)
+## 52. search / validation  (Bash)
 _step 50_
 
 **Thought** (narration):
@@ -1232,7 +1232,7 @@ grep -n "onResume\|onPause\|showTextEditor\|newInstance\|Fragment(" app/src/main
 240:    public BaseFragment showTextEditor(@Nullable Document document, @Nullable File file,
 ```
 
-## 53. read_file / localization  (Bash)
+## 53. read / validation  (Bash)
 _step 51_
 
 **Thought** (none):
@@ -1254,7 +1254,7 @@ public void onRequestPermissionsResult(int requestCode, @NonNull String[] permis
     public void onToolbarTitleTapped(View v
 ```
 
-## 54. vcs / localization  (Bash)
+## 54. diff / validation  (Bash)
 _step 52_
 
 **Thought** (none):
@@ -1298,7 +1298,7 @@ git rev-parse --show-toplevel; git diff --stat; git log --oneline -1
 c427852 harness baseline
 ```
 
-## 56. read_file / validation  (Bash)
+## 56. diff / validation  (Bash)
 _step 54_
 
 **Thought** (none):
@@ -1326,7 +1326,7 @@ reconstructed
      private static final String SAVESTATE_DOCUM
 ```
 
-## 57. env_setup / validation  (Bash)
+## 57. other / validation  (Bash)
 _step 55_
 
 **Thought** (none):

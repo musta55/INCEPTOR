@@ -7,9 +7,9 @@
 - steps (LLM inferences): 39 | actions: 40 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(17: succeeded) -> repair(14: succeeded) -> validation(2: unchecked) -> localization(4: succeeded) -> repair(3: succeeded)
+Phases: localization(17: succeeded) -> repair(11: succeeded) -> validation(8: succeeded) -> localization(1: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -57,7 +57,7 @@ settings.gradle
 sign
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 1/2 of this inference | **FAILED**_
 
 **Thought** (none):
@@ -73,7 +73,7 @@ _(none)_
 Access outside repo directory is not allowed: /app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ import android.view.MenuItem;
 import android.
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -134,7 +134,7 @@ ui
 (eval):1: no matches found: --include=*.java
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperActivity.java:3
 app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperActivity.java:77:        mViewPager = (V
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 5 | **FAILED**_
 
 **Thought** (none):
@@ -178,7 +178,7 @@ import de.koelle.christian.trickytripper.activities.ParticipantTabActivity;
 import de.koelle.christian.tric
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -204,7 +204,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -222,7 +222,7 @@ app/src/main/java/de/koelle/christian/trickytripper/controller/impl/ViewControll
 app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java:154:
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -251,7 +251,7 @@ import java.util.Currency;
 import java.util.Has
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -273,7 +273,7 @@ d2b96c29 add qwen as a model
 b3c2aca8 create network guard for both code
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -295,7 +295,7 @@ grep -n "startActivityWithParams" -A 25 app/src/main/java/de/koelle/christian/tr
 227-
 ```
 
-## 13. search_code / localization  (Bash)
+## 13. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -313,7 +313,7 @@ app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperApp.java:64:   
 app/src/main/java/de/koelle/christian/trickytripper/controller/impl/ViewControllerImpl.java:43:public class ViewCo
 ```
 
-## 14. read_file / localization  (Bash)
+## 14. read / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -338,7 +338,7 @@ cat -n app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTab
     10	import android.view.Me
 ```
 
-## 15. read_file / localization  (Bash)
+## 15. read / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -366,7 +366,7 @@ mDrawerToggle.onConfigurationChanged(newConfig);
             optionIds = new int[]{
 ```
 
-## 16. search_code / localization  (Bash)
+## 16. search / localization  (Bash)
 _step 14_
 
 **Thought** (narration):
@@ -386,7 +386,7 @@ app/src/main/java/de/koelle/christian/trickytripper/constants/Rc.java:20:    pub
 app/src/main/java/de/koelle/christian/trickytripper/constants/Rc.java:21:    public static final int TAB_ID_REPORT = 2;
 ```
 
-## 17. read_file / localization  (Read)
+## 17. read / localization  (Read)
 _step 15_
 
 **Thought** (narration):
@@ -420,7 +420,7 @@ Let me fix it:
 11	import android.view.M
 ```
 
-## 18. edit_file / repair  (Edit)
+## 18. edit / repair  (Edit)
 _step 16_
 
 **Thought** (narration):
@@ -438,7 +438,7 @@ Now applying the fix — cache the `Application` reference so it survives detach
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 19. edit_file / repair  (Edit)
+## 19. edit / repair  (Edit)
 _step 17_
 
 **Thought** (none):
@@ -454,7 +454,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 20. edit_file / repair  (Edit)
+## 20. edit / repair  (Edit)
 _step 18_
 
 **Thought** (narration):
@@ -472,7 +472,7 @@ Now the core fix — `getApp()` plus null-safe action-mode accessors:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 21. edit_file / repair  (Edit)
+## 21. edit / repair  (Edit)
 _step 19_
 
 **Thought** (none):
@@ -488,7 +488,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 22. edit_file / repair  (Edit)
+## 22. edit / repair  (Edit)
 _step 20_
 
 **Thought** (narration):
@@ -506,7 +506,7 @@ Now harden the CAB callback itself, which is what runs after detachment:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 23. edit_file / repair  (Edit)
+## 23. edit / repair  (Edit)
 _step 21_
 
 **Thought** (none):
@@ -522,7 +522,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/ParticipantTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 24. edit_file / repair  (Edit)
+## 24. edit / repair  (Edit)
 _step 22_
 
 **Thought** (narration):
@@ -540,7 +540,7 @@ Now applying the same hardening to `PaymentTabActivity`, which has the identical
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 25. edit_file / repair  (Edit)
+## 25. edit / repair  (Edit)
 _step 23_
 
 **Thought** (none):
@@ -556,7 +556,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 26. edit_file / repair  (Edit)
+## 26. edit / repair  (Edit)
 _step 24_
 
 **Thought** (none):
@@ -572,7 +572,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 27. edit_file / repair  (Edit)
+## 27. edit / repair  (Edit)
 _step 25_
 
 **Thought** (none):
@@ -588,7 +588,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 28. edit_file / repair  (Edit)
+## 28. edit / repair  (Edit)
 _step 26_
 
 **Thought** (narration):
@@ -606,7 +606,7 @@ Need the `Context` import in `PaymentTabActivity`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/activities/PaymentTabActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 29. read_file / repair  (Bash)
+## 29. read / validation  (Bash)
 _step 27_
 
 **Thought** (none):
@@ -637,7 +637,7 @@ android {
         abortOn
 ```
 
-## 30. search_code / repair  (Bash)
+## 30. search / validation  (Bash)
 _step 28_
 
 **Thought** (none):
@@ -654,7 +654,7 @@ build.gradle:22:        comAndroidSupport_supportV4Version = '25.0.1'
 build.gradle:23:        comAndroidSupport_supportV7Version = '25.0.1'
 ```
 
-## 31. build / repair  (Bash)
+## 31. build / validation  (Bash)
 _step 29_
 
 **Thought** (narration):
@@ -718,7 +718,7 @@ git status --short; echo "=== DIFF ==="; git --no-pager diff -- app/src/main/jav
 === DIFF ===
 ```
 
-## 34. read_file / localization  (Bash)
+## 34. vcs / validation  (Bash)
 _step 32_
 
 **Thought** (none):
@@ -735,7 +735,7 @@ pwd; git rev-parse --show-toplevel; cat .gitignore 2>/dev/null | head -20
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs
 ```
 
-## 35. search_code / localization  (Bash)
+## 35. search / validation  (Bash)
 _step 33_
 
 **Thought** (narration):
@@ -759,7 +759,7 @@ PaymentTabActivity.java:146:    private void resolveApp() {
 PaymentTabActivity.java:258:                m
 ```
 
-## 36. read_file / localization  (Read)
+## 36. read / validation  (Read)
 _step 34_
 
 **Thought** (none):
@@ -792,7 +792,7 @@ _(none)_
 125
 ```
 
-## 37. read_file / localization  (Read)
+## 37. read / localization  (Read)
 _step 35_
 
 **Thought** (narration):
@@ -821,7 +821,7 @@ One important follow-up: if `mode.finish()` happens while detached, the fragment
 447	}
 ```
 
-## 38. edit_file / repair  (Edit)
+## 38. edit / repair  (Edit)
 _step 36_
 
 **Thought** (none):
@@ -837,7 +837,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-8/app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 39. build / repair  (Bash)
+## 39. build / validation  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -853,7 +853,7 @@ _(none)_
 (eval):1: no such file or directory: ./gradlew
 ```
 
-## 40. build / repair  (Bash)
+## 40. build / validation  (Bash)
 _step 38_
 
 **Thought** (none):

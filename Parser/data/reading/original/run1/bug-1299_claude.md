@@ -7,9 +7,9 @@
 - steps (LLM inferences): 105 | actions: 108 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(3: succeeded) -> understanding(2: unchecked) -> localization(19: succeeded) -> repair(23: succeeded) -> validation(4: unchecked) -> localization(2: succeeded) -> repair(2: succeeded) -> validation(53: succeeded)
+Phases: localization(24: succeeded) -> repair(21: succeeded) -> validation(7: succeeded) -> localization(1: succeeded) -> repair(1: succeeded) -> validation(54: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -55,7 +55,7 @@ README.md
 settings.gradle
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 1/2 of this inference | **FAILED**_
 
 **Thought** (none):
@@ -71,7 +71,7 @@ _(none)_
 Access outside repo directory is not allowed: /home/user/app/src/main/java/com/fieldbook/tracker/traits/CounterTraitLayout.java
 ```
 
-## 4. orient / understanding  (Bash)
+## 4. orient / localization  (Bash)
 _step 2 | call 2/2 of this inference | **FAILED**_
 
 **Thought** (none):
@@ -88,7 +88,7 @@ Exit code 1
 ls: /home/user/app/src/main/java/com/fieldbook/tracker/traits/: No such file or directory
 ```
 
-## 5. orient / understanding  (Bash)
+## 5. orient / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -117,7 +117,7 @@ LocationTraitLayout.java
 MultiCatTrait
 ```
 
-## 6. read_file / localization  (Read)
+## 6. read / localization  (Read)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -148,7 +148,7 @@ _(none)_
 16	    public
 ```
 
-## 7. read_file / localization  (Read)
+## 7. read / localization  (Read)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ _(same inference as the previous action)_
 12	import com.fieldbook.tracker.objects.R
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -212,7 +212,7 @@ wc -l app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java
 1837 app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 6_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ _(none)_
 1041	        private String[] prefixTraits;
 ```
 
-## 11. read_file / localization  (Read)
+## 11. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -267,7 +267,7 @@ _(none)_
 13	import android.cont
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -301,7 +301,7 @@ dialog_list_buttonless.xml
 dialo
 ```
 
-## 13. read_file / localization  (Read)
+## 13. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -331,7 +331,7 @@ _(none)_
 15	    public LayoutCollection
 ```
 
-## 14. search_code / localization  (Bash)
+## 14. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -357,7 +357,7 @@ grep -n "include\|layout=" app/src/main/res/layout/activity_collect.xml | head -
 317:            <incl
 ```
 
-## 15. read_file / localization  (Read)
+## 15. read / localization  (Read)
 _step 11_
 
 **Thought** (none):
@@ -384,7 +384,7 @@ _(none)_
 26
 ```
 
-## 16. read_file / localization  (Read)
+## 16. read / localization  (Read)
 _step 12_
 
 **Thought** (none):
@@ -412,7 +412,7 @@ _(none)_
 432
 ```
 
-## 17. search_code / localization  (Bash)
+## 17. search / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -438,7 +438,7 @@ grep -n "getVisibleTrait\|public String\[\] getAllTraits" -A 25 app/src/main/jav
 745-
 ```
 
-## 18. search_code / localization  (Bash)
+## 18. search / localization  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -456,7 +456,7 @@ app/src/main/java/com/fieldbook/tracker/traits/BaseTraitLayout.java:49:        r
 app/src/main/java/com/fieldbook/tracker/traits/CounterTraitLayout.java:48:                if (getNewTraits().containsKey(getCurrentTrait().getTrait(
 ```
 
-## 19. search_code / localization  (Bash)
+## 19. search / localization  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -478,7 +478,7 @@ grep -n "trait" app/src/main/res/values/strings.xml | grep -i "no \|missing\|emp
 117:    <string
 ```
 
-## 20. search_code / localization  (Bash)
+## 20. search / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -499,7 +499,7 @@ app/src/main/res/values/strings.xml:405:    <string name="warning_field_missing"
 125:    <string name="trait
 ```
 
-## 21. search_code / localization  (Bash)
+## 21. search / localization  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -517,7 +517,7 @@ app/src/main/java/com/fieldbook/tracker/activities/ConfigActivity.java:295:     
 app/src/main/java/com/fiel
 ```
 
-## 22. read_file / localization  (Read)
+## 22. read / localization  (Read)
 _step 18_
 
 **Thought** (none):
@@ -540,7 +540,7 @@ _(none)_
 272
 ```
 
-## 23. read_file / localization  (Read)
+## 23. read / localization  (Read)
 _step 19_
 
 **Thought** (none):
@@ -568,7 +568,7 @@ _(none)_
 1271
 ```
 
-## 24. read_file / localization  (Read)
+## 24. read / localization  (Read)
 _step 20_
 
 **Thought** (none):
@@ -593,7 +593,7 @@ _(none)_
 1427	                public boolean onTouch(View v, Moti
 ```
 
-## 25. edit_file / repair  (Edit)
+## 25. edit / repair  (Edit)
 _step 21_
 
 **Thought** (narration):
@@ -611,7 +611,7 @@ Now I understand the root cause. Let me make the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 26. edit_file / repair  (Edit)
+## 26. edit / repair  (Edit)
 _step 22_
 
 **Thought** (none):
@@ -627,7 +627,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 27. edit_file / repair  (Edit)
+## 27. edit / repair  (Edit)
 _step 23_
 
 **Thought** (narration):
@@ -645,7 +645,7 @@ Now the toolbar button listeners:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 28. edit_file / repair  (Edit)
+## 28. edit / repair  (Edit)
 _step 24_
 
 **Thought** (none):
@@ -661,7 +661,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 29. edit_file / repair  (Edit)
+## 29. edit / repair  (Edit)
 _step 25_
 
 **Thought** (narration):
@@ -679,7 +679,7 @@ Now the `initWidgets` root-cause fix — hide all trait layouts when no traits e
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 30. edit_file / repair  (Edit)
+## 30. edit / repair  (Edit)
 _step 26_
 
 **Thought** (none):
@@ -695,7 +695,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 31. edit_file / repair  (Edit)
+## 31. edit / repair  (Edit)
 _step 27_
 
 **Thought** (none):
@@ -711,7 +711,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 32. edit_file / repair  (Edit)
+## 32. edit / repair  (Edit)
 _step 28_
 
 **Thought** (none):
@@ -727,7 +727,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 33. edit_file / repair  (Edit)
+## 33. edit / repair  (Edit)
 _step 29_
 
 **Thought** (narration):
@@ -745,7 +745,7 @@ Now guard the remaining `currentTrait` dereferences in CollectActivity and add `
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 34. edit_file / repair  (Edit)
+## 34. edit / repair  (Edit)
 _step 30_
 
 **Thought** (none):
@@ -761,7 +761,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 35. edit_file / repair  (Edit)
+## 35. edit / repair  (Edit)
 _step 31_
 
 **Thought** (none):
@@ -777,7 +777,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 36. edit_file / repair  (Edit)
+## 36. edit / repair  (Edit)
 _step 32_
 
 **Thought** (none):
@@ -793,7 +793,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 37. edit_file / repair  (Edit)
+## 37. edit / repair  (Edit)
 _step 33_
 
 **Thought** (narration):
@@ -811,7 +811,7 @@ Now the TraitBox changes (`clear()`, null-safe getters, `moveTrait` guard):
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 38. edit_file / repair  (Edit)
+## 38. edit / repair  (Edit)
 _step 34_
 
 **Thought** (none):
@@ -827,7 +827,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 39. edit_file / repair  (Edit)
+## 39. edit / repair  (Edit)
 _step 35_
 
 **Thought** (none):
@@ -843,7 +843,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/traits/BaseTraitLayout.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 40. edit_file / repair  (Edit)
+## 40. edit / repair  (Edit)
 _step 36_
 
 **Thought** (none):
@@ -859,7 +859,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/traits/CounterTraitLayout.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 41. edit_file / repair  (Edit)
+## 41. edit / repair  (Edit)
 _step 37_
 
 **Thought** (none):
@@ -875,7 +875,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/traits/CounterTraitLayout.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 42. edit_file / repair  (Edit)
+## 42. edit / repair  (Edit)
 _step 38_
 
 **Thought** (none):
@@ -891,7 +891,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/traits/CounterTraitLayout.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 43. edit_file / repair  (Edit)
+## 43. edit / repair  (Edit)
 _step 39_
 
 **Thought** (none):
@@ -907,7 +907,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/traits/CounterTraitLayout.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 44. edit_file / repair  (Edit)
+## 44. edit / repair  (Edit)
 _step 40_
 
 **Thought** (none):
@@ -923,7 +923,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 45. edit_file / repair  (Edit)
+## 45. edit / repair  (Edit)
 _step 41_
 
 **Thought** (none):
@@ -939,7 +939,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 46. search_code / repair (own phase localization)  (Bash)
+## 46. search / validation  (Bash)
 _step 42_
 
 **Thought** (none):
@@ -963,7 +963,7 @@ grep -n "getDropDownRange" -A 8 app/src/main/java/com/fieldbook/tracker/database
 1373-                    null, n
 ```
 
-## 47. build / repair  (Bash)
+## 47. build / validation  (Bash)
 _step 43_
 
 **Thought** (narration):
@@ -1068,7 +1068,7 @@ d2b96c29 add qwen as a model
 exit:0
 ```
 
-## 52. read_file / localization  (Read)
+## 52. read / validation  (Read)
 _step 48_
 
 **Thought** (narration):
@@ -1093,7 +1093,7 @@ Git doesn't track the app sources here (harness repo), so let me verify the chan
 387
 ```
 
-## 53. search_code / localization  (Bash)
+## 53. search / localization  (Bash)
 _step 49_
 
 **Thought** (none):
@@ -1112,7 +1112,7 @@ app/src/main/java/com/fieldbook/tracker/adapters/FieldAdapter.java:203:         
 app/src/main/java/com/fieldbook/tracker/ad
 ```
 
-## 54. edit_file / repair  (Edit)
+## 54. edit / repair  (Edit)
 _step 50_
 
 **Thought** (none):
@@ -1128,7 +1128,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1299/app/src/main/java/com/fieldbook/tracker/activities/CollectActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 55. build / repair  (Bash)
+## 55. build / validation  (Bash)
 _step 51_
 
 **Thought** (none):
@@ -1151,7 +1151,7 @@ BUILD SUCCESSFUL in 11s
 26 actionable tasks: 6 executed, 20 up-to-date
 ```
 
-## 56. read_file / validation  (Read)
+## 56. read / validation  (Read)
 _step 52_
 
 **Thought** (none):
@@ -1173,7 +1173,7 @@ _(none)_
 422	                    .setDropDownViewResource(R.layout.
 ```
 
-## 57. device_ops / validation  (Bash)
+## 57. test / validation  (Bash)
 _step 53_
 
 **Thought** (none):
@@ -1191,7 +1191,7 @@ List of devices attached
 emulator-5554	device
 ```
 
-## 58. device_ops / validation  (Bash)
+## 58. test / validation  (Bash)
 _step 54_
 
 **Thought** (none):
@@ -1209,7 +1209,7 @@ debug-4.3.3.apk
 output.json
 ```
 
-## 59. device_ops / validation  (Bash)
+## 59. test / validation  (Bash)
 _step 55_
 
 **Thought** (none):
@@ -1227,7 +1227,7 @@ Success
 package:com.fieldbook.tracker
 ```
 
-## 60. device_ops / validation  (Bash)
+## 60. test / validation  (Bash)
 _step 56_
 
 **Thought** (none):
@@ -1248,7 +1248,7 @@ java.lang.SecurityException: Permission android.permission.VIBRATE requested by 
 	at com.android.server.permission.access.permission.PermissionService.access$
 ```
 
-## 61. device_ops / validation  (Bash)
+## 61. test / validation  (Bash)
 _step 57_
 
 **Thought** (none):
@@ -1265,7 +1265,7 @@ adb shell screencap -p /sdcard/s1.png && adb pull /sdcard/s1.png /tmp/s1.png >/d
 ok
 ```
 
-## 62. read_file / validation  (Read)
+## 62. read / validation  (Read)
 _step 58 | **FAILED**_
 
 **Thought** (none):
@@ -1281,7 +1281,7 @@ _(none)_
 Access outside repo directory is not allowed: /tmp/s1.png
 ```
 
-## 63. device_ops / validation  (Bash)
+## 63. test / validation  (Bash)
 _step 59_
 
 **Thought** (none):
@@ -1298,7 +1298,7 @@ mkdir -p .verify && adb pull /sdcard/s1.png .verify/s1.png >/dev/null && echo ok
 ok
 ```
 
-## 64. read_file / validation  (Read)
+## 64. read / validation  (Read)
 _step 60_
 
 **Thought** (none):
@@ -1314,7 +1314,7 @@ _(none)_
 [image: image/png, 107,248 base64 chars omitted]
 ```
 
-## 65. device_ops / validation  (Bash)
+## 65. test / validation  (Bash)
 _step 61_
 
 **Thought** (none):
@@ -1331,7 +1331,7 @@ adb shell input tap 540 1040; sleep 2; adb shell screencap -p /sdcard/s2.png; ad
 ok
 ```
 
-## 66. read_file / validation  (Read)
+## 66. read / validation  (Read)
 _step 62_
 
 **Thought** (none):
@@ -1347,7 +1347,7 @@ _(none)_
 [image: image/png, 89,772 base64 chars omitted]
 ```
 
-## 67. device_ops / validation  (Bash)
+## 67. test / validation  (Bash)
 _step 63_
 
 **Thought** (none):
@@ -1364,7 +1364,7 @@ adb shell input tap 727 1063; sleep 2; adb shell screencap -p /sdcard/s3.png; ad
 ok
 ```
 
-## 68. read_file / validation  (Read)
+## 68. read / validation  (Read)
 _step 64_
 
 **Thought** (none):
@@ -1380,7 +1380,7 @@ _(none)_
 [image: image/png, 98,824 base64 chars omitted]
 ```
 
-## 69. device_ops / validation  (Bash)
+## 69. test / validation  (Bash)
 _step 65_
 
 **Thought** (none):
@@ -1397,7 +1397,7 @@ adb shell input tap 727 1063; sleep 2; adb shell input tap 255 287; sleep 3; adb
 ok
 ```
 
-## 70. read_file / validation  (Read)
+## 70. read / validation  (Read)
 _step 66_
 
 **Thought** (none):
@@ -1413,7 +1413,7 @@ _(none)_
 [image: image/png, 36,720 base64 chars omitted]
 ```
 
-## 71. device_ops / validation  (Bash)
+## 71. test / validation  (Bash)
 _step 67_
 
 **Thought** (none):
@@ -1457,7 +1457,7 @@ field_sample
 /sdcard/fieldB
 ```
 
-## 72. device_ops / validation  (Bash)
+## 72. test / validation  (Bash)
 _step 68_
 
 **Thought** (none):
@@ -1474,7 +1474,7 @@ adb shell input tap 1016 135; sleep 2; adb shell screencap -p /sdcard/s5.png; ad
 ok
 ```
 
-## 73. read_file / validation  (Read)
+## 73. read / validation  (Read)
 _step 69_
 
 **Thought** (none):
@@ -1490,7 +1490,7 @@ _(none)_
 [image: image/png, 79,704 base64 chars omitted]
 ```
 
-## 74. device_ops / validation  (Bash)
+## 74. test / validation  (Bash)
 _step 70_
 
 **Thought** (none):
@@ -1507,7 +1507,7 @@ adb shell input tap 268 751; sleep 3; adb shell screencap -p /sdcard/s6.png; adb
 ok
 ```
 
-## 75. read_file / validation  (Read)
+## 75. read / validation  (Read)
 _step 71_
 
 **Thought** (none):
@@ -1523,7 +1523,7 @@ _(none)_
 [image: image/png, 91,408 base64 chars omitted]
 ```
 
-## 76. device_ops / validation  (Bash)
+## 76. test / validation  (Bash)
 _step 72_
 
 **Thought** (none):
@@ -1540,7 +1540,7 @@ adb shell input tap 489 822; sleep 3; adb shell screencap -p /sdcard/s7.png; adb
 ok
 ```
 
-## 77. read_file / validation  (Read)
+## 77. read / validation  (Read)
 _step 73_
 
 **Thought** (none):
@@ -1556,7 +1556,7 @@ _(none)_
 [image: image/png, 87,508 base64 chars omitted]
 ```
 
-## 78. device_ops / validation  (Bash)
+## 78. test / validation  (Bash)
 _step 74_
 
 **Thought** (none):
@@ -1573,7 +1573,7 @@ adb shell input tap 881 1147; sleep 4; adb shell screencap -p /sdcard/s8.png; ad
 ok
 ```
 
-## 79. read_file / validation  (Read)
+## 79. read / validation  (Read)
 _step 75_
 
 **Thought** (none):
@@ -1589,7 +1589,7 @@ _(none)_
 [image: image/png, 48,472 base64 chars omitted]
 ```
 
-## 80. device_ops / validation  (Bash)
+## 80. test / validation  (Bash)
 _step 76_
 
 **Thought** (none):
@@ -1606,7 +1606,7 @@ adb shell input tap 1016 135; sleep 2; adb shell input tap 268 751; sleep 3; adb
 ok
 ```
 
-## 81. read_file / validation  (Read)
+## 81. read / validation  (Read)
 _step 77_
 
 **Thought** (none):
@@ -1622,7 +1622,7 @@ _(none)_
 [image: image/png, 126,944 base64 chars omitted]
 ```
 
-## 82. device_ops / validation  (Bash)
+## 82. test / validation  (Bash)
 _step 78_
 
 **Thought** (none):
@@ -1639,7 +1639,7 @@ adb shell input tap 687 987; sleep 2; adb shell input tap 768 1012; sleep 2; adb
 ok
 ```
 
-## 83. read_file / validation  (Read)
+## 83. read / validation  (Read)
 _step 79_
 
 **Thought** (none):
@@ -1655,7 +1655,7 @@ _(none)_
 [image: image/png, 130,060 base64 chars omitted]
 ```
 
-## 84. device_ops / validation  (Bash)
+## 84. test / validation  (Bash)
 _step 80_
 
 **Thought** (none):
@@ -1672,7 +1672,7 @@ adb shell input tap 687 1155; sleep 2; adb shell input tap 881 1147; sleep 5; ad
 ok
 ```
 
-## 85. read_file / validation  (Read)
+## 85. read / validation  (Read)
 _step 81_
 
 **Thought** (none):
@@ -1688,7 +1688,7 @@ _(none)_
 [image: image/png, 58,460 base64 chars omitted]
 ```
 
-## 86. device_ops / validation  (Bash)
+## 86. test / validation  (Bash)
 _step 82_
 
 **Thought** (none):
@@ -1705,7 +1705,7 @@ adb logcat -c; adb shell input keyevent KEYCODE_BACK; sleep 2; adb shell input t
 ok
 ```
 
-## 87. read_file / validation  (Read)
+## 87. read / validation  (Read)
 _step 83_
 
 **Thought** (none):
@@ -1721,7 +1721,7 @@ _(none)_
 [image: image/png, 100,480 base64 chars omitted]
 ```
 
-## 88. device_ops / validation  (Bash)
+## 88. test / validation  (Bash)
 _step 84_
 
 **Thought** (none):
@@ -1738,7 +1738,7 @@ for c in "63 435" "1016 435" "865 435" "120 660" "975 660" "345 1721" "771 1721"
 ---done---
 ```
 
-## 89. read_file / validation  (Read)
+## 89. read / validation  (Read)
 _step 85_
 
 **Thought** (none):
@@ -1754,7 +1754,7 @@ _(none)_
 [image: image/png, 100,404 base64 chars omitted]
 ```
 
-## 90. device_ops / validation  (Bash)
+## 90. test / validation  (Bash)
 _step 86_
 
 **Thought** (none):
@@ -1773,7 +1773,7 @@ severity.txt
 trait_sample.trt
 ```
 
-## 91. device_ops / validation  (Bash)
+## 91. test / validation  (Bash)
 _step 87_
 
 **Thought** (none):
@@ -1791,7 +1791,7 @@ adb logcat -d | grep -iE "Exception|Error" | head -10; echo "==="; adb shell inp
 09-18 01:36:06.091   560  1284 E TaskPersister: File error accessing
 ```
 
-## 92. read_file / validation  (Read)
+## 92. read / validation  (Read)
 _step 88_
 
 **Thought** (none):
@@ -1807,7 +1807,7 @@ _(none)_
 [image: image/png, 49,252 base64 chars omitted]
 ```
 
-## 93. device_ops / validation  (Bash)
+## 93. test / validation  (Bash)
 _step 89_
 
 **Thought** (none):
@@ -1824,7 +1824,7 @@ adb shell input tap 909 135; sleep 2; adb shell screencap -p /sdcard/t2.png; adb
 ok
 ```
 
-## 94. read_file / validation  (Read)
+## 94. read / validation  (Read)
 _step 90_
 
 **Thought** (none):
@@ -1840,7 +1840,7 @@ _(none)_
 [image: image/png, 112,968 base64 chars omitted]
 ```
 
-## 95. device_ops / validation  (Bash)
+## 95. test / validation  (Bash)
 _step 91_
 
 **Thought** (none):
@@ -1857,7 +1857,7 @@ adb shell input tap 540 515; sleep 2; adb shell screencap -p /sdcard/t3.png; adb
 ok
 ```
 
-## 96. read_file / validation  (Read)
+## 96. read / validation  (Read)
 _step 92_
 
 **Thought** (none):
@@ -1873,7 +1873,7 @@ _(none)_
 [image: image/png, 151,580 base64 chars omitted]
 ```
 
-## 97. device_ops / validation  (Bash)
+## 97. test / validation  (Bash)
 _step 93_
 
 **Thought** (none):
@@ -1890,7 +1890,7 @@ adb shell input tap 477 1083; sleep 2; adb shell screencap -p /sdcard/t4.png; ad
 ok
 ```
 
-## 98. read_file / validation  (Read)
+## 98. read / validation  (Read)
 _step 94_
 
 **Thought** (none):
@@ -1906,7 +1906,7 @@ _(none)_
 [image: image/png, 87,408 base64 chars omitted]
 ```
 
-## 99. device_ops / validation  (Bash)
+## 99. test / validation  (Bash)
 _step 95_
 
 **Thought** (none):
@@ -1923,7 +1923,7 @@ adb shell input tap 540 940; sleep 1; adb shell input text "cnt"; sleep 1; adb s
 ok
 ```
 
-## 100. read_file / validation  (Read)
+## 100. read / validation  (Read)
 _step 96_
 
 **Thought** (none):
@@ -1939,7 +1939,7 @@ _(none)_
 [image: image/png, 55,684 base64 chars omitted]
 ```
 
-## 101. device_ops / validation  (Bash)
+## 101. test / validation  (Bash)
 _step 97_
 
 **Thought** (none):
@@ -1956,7 +1956,7 @@ adb shell input keyevent KEYCODE_BACK; sleep 2; adb shell input tap 267 600; sle
 ok
 ```
 
-## 102. read_file / validation  (Read)
+## 102. read / validation  (Read)
 _step 98_
 
 **Thought** (none):
@@ -1972,7 +1972,7 @@ _(none)_
 [image: image/png, 125,440 base64 chars omitted]
 ```
 
-## 103. device_ops / validation  (Bash)
+## 103. test / validation  (Bash)
 _step 99_
 
 **Thought** (none):
@@ -1989,7 +1989,7 @@ adb logcat -c; for i in 1 2 3; do adb shell input tap 663 1125; sleep 1; done; a
 ---
 ```
 
-## 104. read_file / validation  (Read)
+## 104. read / validation  (Read)
 _step 100_
 
 **Thought** (none):
@@ -2005,7 +2005,7 @@ _(none)_
 [image: image/png, 125,212 base64 chars omitted]
 ```
 
-## 105. device_ops / validation  (Bash)
+## 105. test / validation  (Bash)
 _step 101_
 
 **Thought** (none):
@@ -2023,7 +2023,7 @@ adb shell input tap 345 1721; sleep 2; adb shell input tap 771 1721; sleep 2; ad
 18639
 ```
 
-## 106. read_file / validation  (Read)
+## 106. read / validation  (Read)
 _step 102_
 
 **Thought** (none):
@@ -2039,7 +2039,7 @@ _(none)_
 [image: image/png, 128,584 base64 chars omitted]
 ```
 
-## 107. device_ops / validation  (Bash)
+## 107. edit / validation  (Bash)
 _step 103_
 
 **Thought** (none):

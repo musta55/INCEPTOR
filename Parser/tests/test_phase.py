@@ -1,8 +1,9 @@
-"""Phase taxonomy v3 tests (``atif.phase``, ``taxonomy.category``, ``taxonomy.object_role``).
+"""Phase lookup tests (``atif.phase``, ``atif.lookup``, ``taxonomy.kind``).
 
-Each rule of ``Parser/Phase taxonomy.md`` is pinned on a small synthetic trajectory built
-with the helpers of ``test_segment``; the invariant test phases every trajectory of
-``Dataset/`` original/run1, parsed from the raw logs.
+Each row of the Final lookup tables' phase table (``Parser/Phase taxonomy.md``) is pinned on a
+small synthetic trajectory built with the helpers of ``test_segment``; the action and target
+tables on single calls and paths; the invariant test phases every trajectory of ``Dataset/``
+original/run1, parsed from the raw logs.
 
 Run from ``Parser/``: ``python3 -m unittest discover -s tests -t .``
 """
@@ -10,7 +11,7 @@ from __future__ import annotations
 
 import unittest
 
-from atif import phase, taxonomy
+from atif import baselines, lookup, phase, project, rules, segment, taxonomy
 from tests.test_segment import (ENV_FAILS, HAVE_DATASET, PATCH, SRC, TEST, TEST_FAILS,
                                 TEST_PASSES, _call, _run1, _sh, _traj)
 
@@ -59,22 +60,34 @@ class CorpusPhaseTests(unittest.TestCase):
             self.assertEqual(sum(m[f"{p}_actions"] for p in phase.PHASES), m["tool_actions"],
                              key)
 
-    def test_registry_leaves_at_most_one_percent_other(self):
+    def test_the_tables_leave_at_most_one_percent_to_their_catch_alls(self):
+        # other is a category of the table (write_stdin, sleep, curl); what must stay rare is
+        # a step no entry names: "any other tool" or "any other program"
         for agent in ("claude", "codex", "qwen"):
-            cats = [a["category"] for key, r in self.results if key.agent == agent
-                    for a in r["actions"]]
-            self.assertLessEqual(cats.count("other") / len(cats), 0.01, agent)
+            items = [a["lookup_item"] for key, r in self.results if key.agent == agent
+                     for a in r["actions"]]
+            rest = sum(i in ("any other tool", "any other program") for i in items)
+            self.assertLessEqual(rest / len(items), 0.01, agent)
+
+    def test_every_action_gets_a_category_and_a_phase_table_row(self):
+        for key, r in self.results:
+            self.assertTrue({a["category"] for a in r["actions"]} <= set(lookup.CATEGORIES), key)
+            self.assertTrue(set(r["table_row"]) <= rules.BUILTIN_IDS, key)
 
 
 class PhaseRuleTests(unittest.TestCase):
-    def test_reproduction_then_repair(self):
+    """The phase table, one row or behaviour per test."""
+
+    def test_reproduction_repair_and_validation(self):
         r = _phased([_call("Bash", {"command": f"sed -n 1,40p {OTHER}"}, "x"),
                      _call("Bash", {"command": TEST}, TEST_FAILS),
                      _edit(), _call("Bash", {"command": TEST}, TEST_PASSES)])
         self.assertEqual(_outline(r), [
             ("localization", [("failed", "target_file", 1, 1, 1)]),
             ("reproduction", [("succeeded", "test", 2, 2, 1)]),
-            ("repair", [("succeeded", "test", 3, 4, 1)])])
+            ("repair", [("succeeded", "test", 3, 3, 1)]),
+            ("validation", [("succeeded", "test", 4, 4, 1)])])
+        self.assertEqual(r["table_row"], ["L5", "L6", "L8", "L12"])
         self.assertTrue(r["metrics"]["reproduced_before_fix"])
 
     def test_the_same_failing_test_succeeds_before_the_fix_and_fails_after(self):
@@ -82,15 +95,23 @@ class PhaseRuleTests(unittest.TestCase):
                      _edit(), _call("Bash", {"command": TEST}, TEST_FAILS)])
         self.assertEqual([(s["phase"], sp[0]) for s, (_, sps) in zip(r["phases"], _outline(r))
                           for sp in sps],
-                         [("reproduction", "succeeded"), ("repair", "failed")])
+                         [("reproduction", "succeeded"), ("repair", "failed"),
+                          ("validation", "failed")])
 
-    def test_a_fix_verify_loop_is_one_repair_phase_with_outcome_runs(self):
+    def test_a_fix_verify_loop_alternates_repair_and_validation(self):
+        # every run after the first fix is validation; the run decides its attempt too
         r = _phased([_edit(), _call("Bash", {"command": TEST}, TEST_FAILS),
                      _read(OTHER), _edit(), _call("Bash", {"command": TEST}, TEST_FAILS),
                      _edit(), _call("Bash", {"command": TEST}, TEST_PASSES)])
-        self.assertEqual(_outline(r), [("repair", [("failed", "test", 1, 5, 2),
-                                                   ("succeeded", "test", 6, 7, 1)])])
-        self.assertEqual(r["phases"][0]["subphases"][0]["n_attempts"], 2)
+        self.assertEqual(_outline(r), [
+            ("repair", [("failed", "test", 1, 1, 1)]),
+            ("validation", [("failed", "test", 2, 2, 1)]),
+            ("localization", [("failed", "target_file", 3, 3, 1)]),
+            ("repair", [("failed", "test", 4, 4, 1)]),
+            ("validation", [("failed", "test", 5, 5, 1)]),
+            ("repair", [("succeeded", "test", 6, 6, 1)]),
+            ("validation", [("succeeded", "test", 7, 7, 1)])])
+        self.assertEqual(r["phases"][0]["subphases"][0]["n_attempts"], 1)
         self.assertEqual((r["metrics"]["n_attempts"], r["metrics"]["n_failed_attempts"],
                           r["metrics"]["attempts_to_first_pass"]), (3, 2, 3))
 
@@ -100,43 +121,51 @@ class PhaseRuleTests(unittest.TestCase):
                          "':app:compileDebugJavaWithJavac'.\n> Compilation failed\n"
                          "BUILD FAILED in 2s\nProcess exited with code 1")
         r = _phased([_edit(), _call("Bash", {"command": BUILD}, compile_error)])
-        self.assertEqual(_outline(r), [("repair", [("failed", "build", 1, 2, 1)])])
+        self.assertEqual(_outline(r), [("repair", [("failed", "build", 1, 1, 1)]),
+                                       ("validation", [("failed", "build", 2, 2, 1)])])
 
-    def test_an_unchanged_rerun_of_the_same_failure_is_flagged_across_phases(self):
+    def test_an_unchanged_rerun_of_the_same_failure_is_flagged(self):
         r = _phased([_edit(), _call("Bash", {"command": TEST}, TEST_FAILS),
                      _call("Bash", {"command": TEST}, TEST_FAILS)])
-        self.assertEqual(_outline(r), [("repair", [("failed", "test", 1, 2, 1)]),
-                                       ("validation", [("failed", "test", 3, 3, 1)])])
+        self.assertEqual(_outline(r), [("repair", [("failed", "test", 1, 1, 1)]),
+                                       ("validation", [("failed", "test", 2, 3, 2)])])
         self.assertEqual(_flags(r), ["repeated_failure"])
         self.assertEqual(_flags(r, 0), [])
 
     def test_a_changed_rerun_after_an_environment_failure_is_a_workaround(self):
         r = _phased([_edit(), _call("Bash", {"command": TEST}, ENV_FAILS),
                      _call("Bash", {"command": "JAVA_HOME=/opt/jdk17 " + TEST}, ENV_FAILS)])
-        self.assertEqual(_outline(r), [("repair", [("blocked", "test", 1, 2, 1)]),
-                                       ("validation", [("blocked", "test", 3, 3, 1)])])
+        self.assertEqual(_outline(r), [("repair", [("blocked", "test", 1, 1, 1)]),
+                                       ("validation", [("blocked", "test", 2, 3, 2)])])
         self.assertNotIn("repeated_failure", _flags(r))
         self.assertIn("environment_workaround", _flags(r))
         self.assertEqual(r["metrics"]["n_blocked_attempts"], 1)
 
-    def test_a_build_file_edit_serves_the_run_it_enables(self):
-        # environment work is not a phase: it goes with the failing test it gets running
+    def test_a_build_file_edit_before_the_fix_takes_the_previous_phase(self):
+        # no row has an edit of a build file before the first fix: the general rule gives the
+        # previous step's phase, and the very first step's is planning
         r = _phased([_edit("app/build.gradle"), _call("Bash", {"command": TEST}, TEST_FAILS)])
-        self.assertEqual(_outline(r), [("reproduction", [("succeeded", "test", 1, 2, 1)])])
-        self.assertIn("environment_workaround", _flags(r))
+        self.assertEqual(_outline(r), [("planning", [("unchecked", "none", 1, 1, 0)]),
+                                       ("reproduction", [("succeeded", "test", 2, 2, 1)])])
+        self.assertEqual(r["table_row"], ["LG", "L6"])
+        self.assertIn("environment_workaround", _flags(r, 0))
         self.assertIsNone(r["anchor"])
 
-    def test_a_prefix_build_check_without_a_test_is_understanding(self):
+    def test_a_build_before_the_fix_is_planning(self):
         r = _phased([_call("Bash", {"command": BUILD}, ENV_FAILS), _read()], targets=[SRC])
-        self.assertEqual(_outline(r), [("understanding", [("blocked", "build", 1, 1, 1)]),
+        self.assertEqual(r["table_row"], ["L4", "L5"])
+        self.assertEqual(_outline(r), [("planning", [("blocked", "build", 1, 1, 1)]),
                                        ("localization", [("succeeded", "target_file", 2, 2, 1)])])
 
-    def test_opening_neutral_actions_are_understanding_and_later_ones_follow_lookups(self):
+    def test_a_plan_is_planning_anywhere_and_the_opening_steps_are_planning(self):
         plan = _call("update_plan", {"plan": [{"step": "x", "status": "in_progress"}]}, "ok")
-        r = _phased([plan, _call("Bash", {"command": "git status --short"}, ""),
-                     _read(OTHER), plan, _read(OTHER), plan, _read()], targets=[SRC])
+        r = _phased([_call("Bash", {"command": "git status --short"}, ""), plan,
+                     _read(OTHER), plan, _read(OTHER), _call("Bash", {"command": "ls app"}, ""),
+                     _read()], targets=[SRC])
         self.assertEqual([(s["phase"], s["start"], s["end"]) for s in r["phases"]],
-                         [("understanding", 1, 2), ("localization", 3, 7)])
+                         [("planning", 1, 2), ("localization", 3, 3), ("planning", 4, 4),
+                          ("localization", 5, 7)])
+        self.assertEqual(r["table_row"], ["L2", "L1", "L5", "L1", "L5", "L14", "L5"])
         self.assertEqual(r["metrics"]["actions_to_first_found"], 6)
 
     def test_localization_is_unchecked_without_any_target(self):
@@ -144,45 +173,92 @@ class PhaseRuleTests(unittest.TestCase):
         self.assertEqual(_outline(r), [("localization", [("unchecked", "none", 1, 1, 1)])])
         self.assertEqual(r["metrics"]["target_source"], "none")
 
-    def test_docs_and_build_files_are_not_localization(self):
-        self.assertEqual(phase.UNDERSTANDING, _phased([_read("README.md"), _read()])
-                         ["phases"][0]["phase"])
-        self.assertEqual(_outline(_phased([_read("app/build.gradle")])),
-                         [("understanding", [("unchecked", "none", 1, 1, 0)])])
+    def test_reading_only_docs_before_the_fix_is_planning(self):
+        r = _phased([_read("README.md"), _read()])
+        self.assertEqual(r["phase"], [phase.PLANNING, phase.LOCALIZATION])
+        self.assertEqual(r["table_row"], ["L3", "L5"])
+        # a build file is not docs: reading it before the fix is localization
+        mid = _phased([_read(OTHER), _read("app/build.gradle"), _read("README.md")])
+        self.assertEqual(mid["phase"], ["localization", "localization", "planning"])
+        self.assertEqual(mid["table_row"], ["L5", "L5", "L3"])
+        both = _phased([_call("Bash", {"command": f"cat README.md {SRC}"}, "x")])
+        self.assertEqual(both["table_row"], ["L5"])           # docs and code: not docs only
+
+    def test_reading_an_output_of_a_run_follows_it(self):
+        shot = _call("Read", {"file_path": ".verify/s1.png"}, "[image]")
+        r = _phased([_edit(), _call("Bash", {"command": "adb shell screencap -p /sdcard/s1.png"}, ""),
+                     shot])
+        self.assertEqual(lookup.target(".verify/s1.png"), "other")
+        self.assertEqual(r["phase"], ["repair", "validation", "validation"])
+        self.assertEqual(r["table_row"], ["L8", "L12", "L11"])
 
     def test_a_dev_null_redirect_is_not_a_toolchain_probe(self):
         r = _phased([_call("Bash", {"command": "rg -n Foo app/src 2>/dev/null"}, "x")])
         self.assertEqual(r["phase"], ["localization"])
 
-    def test_a_look_into_the_gradle_cache_is_toolchain_work(self):
+    def test_a_search_of_the_gradle_cache_before_the_fix_is_localization(self):
         r = _phased([_read(OTHER), _call("Bash", {"command": 'find ~/.gradle ~/.m2 -iname "*x*"'}, ""),
                      _read()], targets=[SRC])
-        self.assertEqual(r["own_phase"], ["localization", "understanding", "localization"])
-        self.assertEqual(r["phase"], ["localization"] * 3)       # G7 joins the one-row detour
+        self.assertEqual(r["phase"], ["localization"] * 3)
+        self.assertEqual(r["table_row"], ["L5", "L5", "L5"])
+        self.assertEqual(r["actions"][1]["target_kinds"], ["outside"])
 
-    def test_reading_back_the_diff_is_validation_without_a_check(self):
+    def test_git_before_the_fix_takes_the_previous_phase_and_after_it_validates(self):
+        r = _phased([_read(OTHER), _call("Bash", {"command": f"git log -p -- {SRC}"}, "commit"),
+                     _call("Bash", {"command": "git status --short"}, ""), _edit(),
+                     _call("Bash", {"command": "git status --short"}, "")])
+        self.assertEqual(r["table_row"], ["L5", "L15", "L15", "L8", "L12"])
+        self.assertEqual(r["phase"], ["localization"] * 3 + ["repair", "validation"])
+
+    def test_reading_back_the_patch_is_validation(self):
         r = _phased([_edit(), _call("Bash", {"command": TEST}, TEST_PASSES),
                      _call("Bash", {"command": "git diff"}, "diff"), _read()])
-        self.assertEqual(_outline(r), [("repair", [("succeeded", "test", 1, 2, 1)]),
-                                       ("validation", [("unchecked", "none", 3, 4, 0)])])
+        self.assertEqual(_outline(r), [("repair", [("succeeded", "test", 1, 1, 1)]),
+                                       ("validation", [("succeeded", "test", 2, 4, 1)])])
+        self.assertEqual(r["table_row"][2:], ["L12", "L11"])
+        self.assertTrue(r["actions"][3]["own_patch"])
         self.assertEqual(r["metrics"]["self_reviews"], 2)
+
+    def test_reading_back_a_changed_file_is_validation(self):
+        r = _phased([_edit(), _read(), _read(OTHER), _edit(OTHER),
+                     _call("Bash", {"command": TEST}, TEST_PASSES)])
+        self.assertEqual(r["phase"], ["repair", "validation", "localization", "repair",
+                                      "validation"])
+        self.assertEqual(r["table_row"], ["L8", "L11", "L9", "L8", "L12"])
+        self.assertEqual([a["own_patch"] for a in r["actions"]], [False, True, False, False,
+                                                                  False])
+
+    def test_reading_unchanged_code_after_the_fix_looks_ahead(self):
+        # rows 9 and 10: the next decisive step after the read says what it was for
+        def rows(calls):
+            return _phased(calls)["table_row"]
+        self.assertEqual(rows([_edit(), _read(OTHER), _edit(OTHER)]), ["L8", "L9", "L8"])
+        self.assertEqual(rows([_edit(), _read(OTHER), _call("Bash", {"command": BUILD},
+                                                            BUILD_PASSES), _edit(OTHER)]),
+                         ["L8", "L10", "L12", "L8"])
+        self.assertEqual(rows([_edit(), _read(OTHER)]), ["L8", "L10"])   # the end decides
+        self.assertEqual(rows([_edit(), _read(OTHER), _call("Bash", {"command": "ls"}, ""),
+                               _edit(OTHER)]), ["L8", "L9", "L14", "L8"])
 
     def test_a_passing_build_decides_only_when_nothing_after_it_does(self):
         only = _phased([_edit(), _call("Bash", {"command": BUILD}, BUILD_PASSES)])
-        self.assertEqual(_outline(only), [("repair", [("succeeded", "build", 1, 2, 1)])])
+        self.assertEqual(_outline(only), [("repair", [("succeeded", "build", 1, 1, 1)]),
+                                          ("validation", [("succeeded", "build", 2, 2, 1)])])
         both = _phased([_edit(), _call("Bash", {"command": TEST}, TEST_PASSES),
                         _call("Bash", {"command": BUILD}, BUILD_PASSES),
                         _call("Bash", {"command": TEST}, TEST_PASSES)])
-        self.assertEqual(_outline(both), [("repair", [("succeeded", "test", 1, 2, 1)]),
-                                          ("validation", [("succeeded", "test", 3, 4, 1)])])
+        self.assertEqual(_outline(both), [("repair", [("succeeded", "test", 1, 1, 1)]),
+                                          ("validation", [("succeeded", "test", 2, 4, 2)])])
 
     def test_an_edit_after_a_passing_build_starts_a_new_attempt(self):
         build = _call("Bash", {"command": BUILD}, BUILD_PASSES)
         cycles = _phased([_edit(), build, _edit(OTHER), build])
-        self.assertEqual(_outline(cycles), [("repair", [("succeeded", "build", 1, 4, 2)])])
+        self.assertEqual([s["phase"] for s in cycles["phases"]],
+                         ["repair", "validation", "repair", "validation"])
         self.assertEqual(cycles["metrics"]["n_attempts"], 2)
         tested = _phased([_edit(), build, _call("Bash", {"command": TEST}, TEST_PASSES)])
-        self.assertEqual(_outline(tested), [("repair", [("succeeded", "test", 1, 3, 1)])])
+        self.assertEqual(_outline(tested), [("repair", [("succeeded", "test", 1, 1, 1)]),
+                                            ("validation", [("succeeded", "test", 2, 3, 1)])])
 
     def test_a_search_without_matches_is_not_a_tool_error(self):
         miss = _call("Bash", {"command": "rg -n Nothing app/src"}, "Process exited with code 1",
@@ -206,7 +282,7 @@ class PhaseRuleTests(unittest.TestCase):
         r = _phased([_read(), _edit()])
         self.assertEqual(_outline(r)[-1], ("repair", [("unchecked", "none", 2, 2, 1)]))
 
-    def test_a_poll_takes_the_phase_and_verdict_of_its_run(self):
+    def test_a_poll_follows_its_run(self):
         r = _phased([_sh(TEST, "Process running with session ID 7"),
                      _call("write_stdin", {"session_id": 7, "chars": ""}, TEST_FAILS)])
         self.assertEqual(_outline(r), [("reproduction", [("succeeded", "test", 1, 2, 1)])])
@@ -216,76 +292,82 @@ class PhaseRuleTests(unittest.TestCase):
         r = _phased([_sh(f"{PATCH}\n{TEST}", TEST_PASSES)])
         self.assertEqual(_outline(r), [("repair", [("succeeded", "test", 1, 1, 1)])])
 
-    def test_an_edit_delegation_is_repair_and_moves_the_anchor(self):
+    def test_a_sub_agent_is_localization_and_its_own_edit_is_the_first_fix(self):
+        # the sub-agent call before the fix is row 5; the edit its sub-agent makes is row 8
         sub = _traj([_edit()], prefix="sub_", trajectory_id="sub-1")
         r = phase.phases(_traj([_read(OTHER),
                                 _call("Agent", {"prompt": "Fix the bug in Foo.java",
                                                 "subagent_type": "general-purpose"},
-                                      "done", ref="sub-1")], subagents=(sub,)), "1")
+                                      "done", ref="sub-1"),
+                                _call("Agent", {"prompt": "Check the fix"}, "ok")],
+                               subagents=(sub,)), "1")
         self.assertEqual([(s["phase"], s["start"], s["end"]) for s in r["phases"]],
-                         [("localization", 1, 1), ("repair", 2, 3)])
-        self.assertEqual(r["anchor"], 2)
+                         [("localization", 1, 2), ("repair", 3, 4)])
+        self.assertEqual(r["table_row"], ["L5", "L5", "L8", "LG"])
+        self.assertEqual(r["anchor"], 3)
+
+    def test_every_action_names_its_table_row(self):
+        r = _phased([_read(), _edit(), _call("Bash", {"command": TEST}, TEST_PASSES)])
+        self.assertTrue(set(r["table_row"]) <= {row[0] for row in lookup.PHASE_TABLE})
 
 
-class KeepAndSmoothingTests(unittest.TestCase):
+class NoGroupingTests(unittest.TestCase):
+    """Nothing moves an action after the phase table: the grouping rules of codebook version
+    3 are baseline B4 (``baselines.grouping_rules``) and its Table 4 baseline B5."""
     LONG = [_edit()] + [_read(OTHER)] * 5 + [_call("Bash", {"command": TEST}, TEST_FAILS)]
+    SHORT = [_edit(), _read(OTHER), _call("Bash", {"command": TEST}, TEST_PASSES)]
 
-    def test_a_short_lookup_inside_the_attempt_is_nested_in_repair(self):
-        r = _phased([_edit(), _read(OTHER), _call("Bash", {"command": TEST}, TEST_PASSES)])
-        self.assertEqual(r["phase"], ["repair"] * 3)
-        self.assertEqual(r["own_phase"], ["repair", "localization", "repair"])
-        self.assertEqual(_outline(r), [("repair", [("succeeded", "test", 1, 3, 1)])])
+    def test_a_single_lookup_between_an_edit_and_its_run_validates(self):
+        r = _phased(self.SHORT)
+        self.assertEqual(r["phase"], ["repair", "validation", "validation"])
+        self.assertEqual(r["phase"], r["own_phase"])
 
-    def test_a_long_lookup_inside_an_attempt_is_its_own_localization_span(self):
+    def test_a_long_lookup_before_a_run_is_validation(self):
         r = _phased(self.LONG)
         self.assertEqual(_outline(r), [("repair", [("failed", "test", 1, 1, 1)]),
-                                       ("localization", [("failed", "target_file", 2, 6, 1)]),
-                                       ("repair", [("failed", "test", 7, 7, 1)])])
-        self.assertEqual(r["own_phase"][1:6], ["localization"] * 5)
+                                       ("validation", [("failed", "test", 2, 7, 1)])])
 
-    def test_a1_absorbs_a_single_interruption_without_a_decisive_run(self):
+    def test_a_long_lookup_before_the_next_edit_is_localization(self):
+        r = _phased(self.LONG[:-1] + [_edit(OTHER)])
+        self.assertEqual([(s["phase"], s["start"], s["end"]) for s in r["phases"]],
+                         [("repair", 1, 1), ("localization", 2, 6), ("repair", 7, 7)])
+
+    def test_a_single_build_between_two_reads_keeps_its_phase(self):
         r = _phased([_read(OTHER), _call("Bash", {"command": BUILD}, BUILD_PASSES), _read()])
-        self.assertEqual([s["phase"] for s in r["phases"]], ["localization"])
-        self.assertEqual(r["own_phase"], ["localization", "understanding", "localization"])
-        kept = _phased([_read(OTHER), _call("Bash", {"command": BUILD}, ENV_FAILS), _read()])
-        self.assertEqual([s["phase"] for s in kept["phases"]],
-                         ["localization", "understanding", "localization"])
+        self.assertEqual([s["phase"] for s in r["phases"]],
+                         ["localization", "planning", "localization"])
 
-    def test_two_actions_between_spans_of_one_phase_keep_their_phase(self):
-        r = _phased([_read(OTHER), _call("Bash", {"command": BUILD}, BUILD_PASSES),
-                     _call("Bash", {"command": BUILD}, BUILD_PASSES), _read()])
-        self.assertEqual([(s["phase"], s["start"], s["end"]) for s in r["phases"]],
-                         [("localization", 1, 1), ("understanding", 2, 3), ("localization", 4, 4)])
-
-    def test_validation_between_two_attempts_stays_validation(self):
-        # bug-2587 claude: after the first attempt is judged, the agent reviews its diff and
-        # checks git status before a second edit; the old repair-gap rule (A2) made it repair
-        r = _phased([_edit(), _call("Bash", {"command": BUILD}, BUILD_PASSES),
-                     _call("Bash", {"command": "git diff"}, "diff --git a/x b/x"),
-                     _call("Bash", {"command": "git diff --stat"}, "1 file changed"),
-                     _edit(), _call("Bash", {"command": BUILD}, BUILD_PASSES)])
-        self.assertEqual([(s["phase"], s["start"], s["end"]) for s in r["phases"]],
-                         [("repair", 1, 2), ("validation", 3, 4), ("repair", 5, 6)])
-
-    def test_a_single_review_action_between_two_attempts_joins_repair(self):
+    def test_a_review_between_two_attempts_is_validation(self):
         r = _phased([_edit(), _call("Bash", {"command": BUILD}, BUILD_PASSES),
                      _call("Bash", {"command": "git diff"}, "diff --git a/x b/x"),
                      _edit(), _call("Bash", {"command": BUILD}, BUILD_PASSES)])
-        self.assertEqual([s["phase"] for s in r["phases"]], ["repair"])
-        self.assertEqual(r["own_phase"][2], "validation")
+        self.assertEqual([(s["phase"], s["start"], s["end"]) for s in r["phases"]],
+                         [("repair", 1, 1), ("validation", 2, 3), ("repair", 4, 4),
+                          ("validation", 5, 5)])
 
-    def test_b2_switches_keep_rules_and_smoothing_off(self):
-        r = _phased(self.LONG, keep_rules=False, smoothing=False)
-        self.assertEqual(r["phase"], ["repair"] + ["localization"] * 5 + ["validation"])
+    def test_b4_applies_the_version_3_grouping_rules(self):
+        def b4(calls):
+            return baselines.grouping_rules(segment.prepare(_traj(calls), "1"))
+        self.assertEqual(b4(self.SHORT), ["repair"] * 3)
+        self.assertEqual(b4(self.LONG), ["repair"] + ["localization"] * 5 + ["repair"])
+
+    def test_b5_applies_the_version_4_phase_lookup(self):
+        def b5(calls):
+            return baselines.table_v4(segment.prepare(_traj(calls), "1"))
+        self.assertEqual(b5(self.SHORT), ["repair", "localization", "validation"])
+        self.assertEqual(b5([_edit("app/build.gradle"), _read("README.md"), _read()]),
+                         ["planning", "planning", "localization"])
 
 
-class CategoryTests(unittest.TestCase):
+class KindTests(unittest.TestCase):
+    """The taxonomy's action kinds, which the verdicts, outcomes, flags and baselines read."""
+
     def _cat(self, command: str, tool: str = "exec_command") -> tuple:
         key = "cmd" if tool == "exec_command" else "command"
         row = {"tool": tool, "arguments": {key: command}}
         row["mid_level"] = taxonomy.mid_level({"function_name": tool,
                                                "arguments": row["arguments"]})
-        return taxonomy.category(row)
+        return taxonomy.kind(row)
 
     def test_git_diff_and_reverts_are_split_from_vcs(self):
         self.assertEqual(self._cat("git status --short && git diff"), ("diff", False))
@@ -309,17 +391,108 @@ class CategoryTests(unittest.TestCase):
 
     def test_editor_tools_keep_their_mid_level(self):
         row = {"tool": "Edit", "arguments": {"file_path": SRC}, "mid_level": "edit_file"}
-        self.assertEqual(taxonomy.category(row), ("edit_file", False))
+        self.assertEqual(taxonomy.kind(row), ("edit_file", False))
 
-    def test_every_category_has_a_family(self):
-        self.assertEqual(set(taxonomy.CATEGORIES), set(taxonomy.CATEGORY_FAMILY))
-        self.assertTrue(set(taxonomy.MID_LEVEL) <= set(taxonomy.CATEGORIES))
+    def test_every_kind_has_a_family_and_a_category(self):
+        self.assertEqual(set(taxonomy.KINDS), set(taxonomy.KIND_FAMILY))
+        self.assertTrue(set(taxonomy.MID_LEVEL) <= set(taxonomy.KINDS))
+        self.assertEqual(set(lookup.KIND_CATEGORY), set(taxonomy.KINDS))
+        self.assertTrue(set(lookup.KIND_CATEGORY.values()) <= set(lookup.CATEGORIES))
 
     def test_object_roles(self):
         self.assertEqual([taxonomy.object_role(p) for p in (
             SRC, "app/src/androidTest/java/x/FooTest.java", "app/build.gradle",
             "run_pipeline.sh", "README.md", "/v/runs/c_run1/bug-1/CHANGELOG")],
             ["source", "test", "toolchain", "harness", "docs", "docs"])
+
+
+class ActionTableTests(unittest.TestCase):
+    """The action table (``lookup.classify``) on single calls: (category, entry)."""
+
+    def _sh(self, command: str, tool: str = "Bash") -> tuple:
+        found = lookup.classify(tool, {"command": command})
+        return found["category"], found["item"]
+
+    def _cat(self, command: str) -> str:
+        return self._sh(command)[0]
+
+    def test_native_tools(self):
+        self.assertEqual(lookup.classify("Read", {"file_path": SRC})["category"], "read")
+        self.assertEqual(lookup.classify("glob", {"pattern": "**/*.kt"})["category"], "search")
+        self.assertEqual(lookup.classify("update_plan", {})["category"], "plan")
+        self.assertEqual(lookup.classify("agent", {"prompt": "find x"})["category"], "sub-agent")
+        self.assertEqual(lookup.classify("write_stdin", {"session_id": 1})["category"], "other")
+        self.assertEqual(lookup.classify("Write", {"file_path": "/tmp/Sim.java"})["category"],
+                         "other")                       # an edit outside the repository
+        self.assertEqual(lookup.classify("update_goal", {"status": "x"})["item"], "any other tool")
+
+    def test_tools_of_other_agents_count_as_what_they_do(self):
+        self.assertEqual(lookup.classify("Grep", {"pattern": "x"})["category"], "search")
+        self.assertEqual(lookup.classify("TodoWrite", {"todos": []})["category"], "plan")
+        self.assertEqual(lookup.classify("str_replace_editor",
+                                         {"command": "str_replace", "path": SRC})["category"],
+                         "edit")
+        self.assertEqual(lookup.classify("made_up_tool", {})["item"], "any other tool")
+
+    def test_shell_programs(self):
+        self.assertEqual(self._cat(f"sed -n '1,40p' {SRC}"), "read")
+        self.assertEqual(self._cat(f"tail -40 {SRC}"), "read")
+        self.assertEqual(self._cat("git log --oneline | tail -5"), "vcs")   # tail filters
+        self.assertEqual(self._cat("./gradlew testDebugUnitTest"), "test")
+        self.assertEqual(self._cat("./gradlew checkstyle"), "test")
+        self.assertEqual(self._cat("./gradlew assembleDebug"), "build")
+        self.assertEqual(self._cat("./gradlew tasks"), "orient")
+        self.assertEqual(self._cat("javac -d out Foo.java"), "build")
+        self.assertEqual(self._cat("javac -d out Foo.java && java -cp out Foo"), "test")
+        self.assertEqual(self._cat("java -version"), "orient")
+        self.assertEqual(self._cat("adb shell input tap 1 2"), "test")
+        self.assertEqual(self._cat("ADB=$HOME/sdk/platform-tools/adb; $ADB devices"), "test")
+        self.assertEqual(self._cat("git apply --check fix.patch"), "test")
+        self.assertEqual(self._cat("git status --short"), "diff")
+        self.assertEqual(self._cat("cmp a.txt b.txt"), "diff")
+        self.assertEqual(self._cat("git blame -L 1,9 " + SRC), "vcs")
+        self.assertEqual(self._cat("git ls-remote https://x/y.git"), "other")
+        self.assertEqual(self._cat("sleep 30"), "other")
+        self.assertEqual(self._cat("python3 -c 'print(1)'"), "other")
+        self.assertEqual(self._sh("cd /tmp && echo hi"), ("other", "a line made only of ignored programs"))
+        self.assertEqual(self._sh("whoami"), ("other", "any other program"))
+
+    def test_edits_from_the_shell(self):
+        self.assertEqual(self._cat(f"sed -i 's/a/b/' {SRC}"), "edit")
+        self.assertEqual(self._cat("sed -i 's/a/b/' /tmp/x.java"), "other")     # ignored
+        self.assertEqual(self._cat(PATCH), "edit")
+        self.assertEqual(self._cat("git checkout -- ."), "edit")
+        self.assertEqual(self._cat("git stash list"), "vcs")
+        self.assertEqual(self._cat(f"cp /tmp/Foo.java {SRC}"), "edit")
+        self.assertEqual(self._cat(f"rm {SRC}"), "edit")
+        self.assertEqual(self._cat("rm -rf /tmp/build"), "other")
+        self.assertEqual(self._cat(f"python3 - <<'EOF'\nopen('{SRC}', 'w').write('x')\nEOF"),
+                         "edit")
+
+    def test_the_highest_category_of_a_line_wins(self):
+        self.assertEqual(self._cat(f"{PATCH}\n./gradlew testDebugUnitTest"), "edit")
+        self.assertEqual(self._cat("./gradlew assembleDebug && adb install x.apk"), "build")
+        self.assertEqual(self._cat(f"rg -n Foo app/src; git status"), "search")
+        self.assertEqual(self._cat(f"git diff; sed -n 1,9p {SRC}"), "read")
+        self.assertEqual(self._cat("ls; pwd; sleep 1"), "orient")
+
+    def test_targets(self):
+        self.assertEqual([lookup.target(p) for p in (
+            SRC, "app/src/main/res/layout/a.xml", "app/src/main/AndroidManifest.xml",
+            "app/src/test/java/x/FooTest.java", "app/build.gradle", "gradle.properties",
+            "README.md", "AGENTS.md", "fix.patch", ".verify/s1.png", "Sim.java",
+            "/tmp/Foo.java", "~/.gradle/caches/x.jar", "/home/u/app/src/main/java/x/A.java")],
+            ["source", "source", "source", "test", "build", "build", "docs", "docs", "other",
+             "other", "other", "outside", "outside", "source"])
+
+    def test_the_checkout_is_the_folder_the_run_was_started_in(self):
+        inside = "/w/runs/qwen_original_run3/bug-273/app/src/main/java/A.java"
+        typo = "/w/runs-copy/qwen-original-run3/bug-273/fix.patch"
+        with project.use({"extra": {"cwd": "/w/runs/qwen_original_run3/bug-273"}}):
+            self.assertEqual((lookup.target(inside), lookup.target(typo)), ("source", "outside"))
+        with project.use(None):                            # no cwd: any bug-<id> folder
+            self.assertEqual((lookup.target(inside), lookup.target(typo)), ("source", "other"))
+            self.assertEqual(lookup.target("/tmp/x/bug-273/app/src/main/A.java"), "outside")
 
 
 class VocabularyTests(unittest.TestCase):

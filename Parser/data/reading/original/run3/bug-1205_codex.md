@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 18 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(5: succeeded) -> repair(7: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:31:52.297Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the slider and back-navigation flow, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:31:54.906Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:31:56.531Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r--@  1 sage
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T16:31:58.490Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T16:31:59.756Z_
 
 **Thought** (narration):
@@ -126,7 +126,7 @@ app/src/main/res/layout/fragment_remove_duplicate_pages.xml:67:    <include layo
 app/src/main/res/layout/bottom_sheet.xml:4:    android:id="@+id/
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T16:32:01.851Z_
 
 **Thought** (none):
@@ -158,7 +158,7 @@ import android.os.Bundle;
 import android.
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T16:32:05.305Z_
 
 **Thought** (none):
@@ -190,7 +190,7 @@ Total output lines: 478
 29-import swat
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-26T16:32:14.117Z_
 
 **Thought** (narration):
@@ -224,7 +224,7 @@ android {
         vectorDrawables.useSupportLibrary
 ```
 
-## 9. plan / localization  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-26T16:32:18.827Z_
 
 **Thought** (narration):
@@ -242,7 +242,7 @@ I found a single shared fix: consume back when the current fragment’s selector
 Plan updated
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-26T16:32:24.181Z_
 
 **Thought** (none):
@@ -273,7 +273,7 @@ Success. Updated the following files:
 M app/src/main/java/swati4star/createpdf/activity/MainActivity.java
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-26T16:32:25.589Z_
 
 **Thought** (narration):
@@ -291,7 +291,7 @@ Back handling is patched centrally. I’m running the required clean debug build
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-26T16:32:27.323Z_
 
 **Thought** (none):
@@ -313,7 +313,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T16:32:29.183Z_
 
 **Thought** (none):
@@ -337,7 +337,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-26T16:32:35.326Z_
 
 **Thought** (narration):
@@ -367,7 +367,7 @@ warn: removing resource swati4star.createpdf:plurals/error_over_count without re
 :app:javaPreCompileDebug
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-26T16:32:42.137Z_
 
 **Thought** (none):
@@ -392,7 +392,7 @@ Output:
 :app:transformNativeLibsWithMergeJniLibsForDebug
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T16:32:48.817Z_
 
 **Thought** (none):
@@ -422,7 +422,7 @@ BUILD SUCCESSFUL in 22s
 30 actionable tasks: 28 executed, 2 up-to-date
 ```
 
-## 17. diff / validation  (exec_command)
+## 17. read / validation  (exec_command)
 _step 21 | 2026-09-26T16:32:51.804Z_
 
 **Thought** (narration):
@@ -450,7 +450,7 @@ Output:
     13	import android.support.design.widget.NavigationView;
 ```
 
-## 18. plan / validation  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-26T16:32:54.671Z_
 
 **Thought** (none):

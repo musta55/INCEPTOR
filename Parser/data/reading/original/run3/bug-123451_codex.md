@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 15 | failed actions: 0
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(3: succeeded) -> repair(9: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:38:05.558Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the custom-study rename flow, patch the UI behavior, then run the r
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:38:07.638Z_
 
 **Thought** (none):
@@ -70,7 +70,7 @@ find: ..: Operation not permitted
 ./AnkiD
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:38:08.643Z_
 
 **Thought** (narration):
@@ -99,7 +99,7 @@ Total output lines: 368
 252:
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:38:12.894Z_
 
 **Thought** (none):
@@ -123,7 +123,7 @@ Output:
  * This program is free s
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-26T16:38:16.002Z_
 
 **Thought** (narration):
@@ -141,7 +141,7 @@ The defect is the nested `MaterialDialog`: the parent custom-study dialog closes
 Plan updated
 ```
 
-## 6. edit_file / repair  (exec_command)
+## 6. edit / repair  (exec_command)
 _step 10 | 2026-09-26T16:38:18.901Z_
 
 **Thought** (none):
@@ -171,7 +171,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java
 ```
 
-## 7. diff / repair  (exec_command)
+## 7. search / validation  (exec_command)
 _step 11 | 2026-09-26T16:38:20.507Z_
 
 **Thought** (narration):
@@ -197,7 +197,7 @@ Output:
         String customStudyDeck = getResources().getString(R.string.custom_study_deck_name);
 ```
 
-## 8. vcs / repair  (exec_command)
+## 8. diff / validation  (exec_command)
 _step 12 | 2026-09-26T16:38:23.479Z_
 
 **Thought** (none):
@@ -220,7 +220,7 @@ HARNESS
 ls: .git: No such file or directory
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-26T16:38:26.164Z_
 
 **Thought** (none):
@@ -236,7 +236,7 @@ _(none)_
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-26T16:38:27.587Z_
 
 **Thought** (narration):
@@ -260,7 +260,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-26T16:38:29.724Z_
 
 **Thought** (none):
@@ -287,7 +287,7 @@ Watching the file system is not supported on this operating system.
 > Task :AnkiDroid:preDebugBuild UP-TO-DATE
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-26T16:38:35.587Z_
 
 **Thought** (none):
@@ -312,7 +312,7 @@ Output:
 > Task :AnkiDroid:processDebugManifestForPackage FROM-CACHE
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T16:38:41.386Z_
 
 **Thought** (none):
@@ -339,7 +339,7 @@ Output:
 > Task :AnkiDroid:m
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-26T16:38:46.721Z_
 
 **Thought** (narration):
@@ -357,7 +357,7 @@ The full clean debug build passes. I’m recording the final location and comple
 Plan updated
 ```
 
-## 15. read_file / validation  (exec_command)
+## 15. read / validation  (exec_command)
 _step 19 | 2026-09-26T16:38:48.519Z_
 
 **Thought** (none):

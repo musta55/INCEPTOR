@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(7: succeeded) -> repair(8: succeeded)
+Phases: planning(1: unchecked) -> localization(7: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:53:12.782Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the activity/fragment menu flow, patch the lifecycle misuse, then r
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:53:17.032Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  5 sage  staff    160 Sep  9 11:55 app
 -rw-r--r--@  1 sage
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:53:18.008Z_
 
 **Thought** (narration):
@@ -82,7 +82,7 @@ app/src/main/java/de/koelle/christian/trickytripper/export/impl/model/ReportAsci
 app/src/main/java/de/koelle/christian/trickytrippe
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-23T09:53:21.773Z_
 
 **Thought** (none):
@@ -112,7 +112,7 @@ import android.support.v7.view.ActionMode;
 import andr
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:53:25.168Z_
 
 **Thought** (none):
@@ -141,7 +141,7 @@ Total output lines: 260
      7	impor
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:53:28.754Z_
 
 **Thought** (none):
@@ -171,7 +171,7 @@ Total output lines: 495
    122	    private class MyActionModeCallback implements ActionMode.Cal
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:53:34.285Z_
 
 **Thought** (narration):
@@ -203,7 +203,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import de.koelle.christian.tricky
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-23T09:53:48.210Z_
 
 **Thought** (none):
@@ -233,7 +233,7 @@ Total output lines: 291
     97	        mViewPa
 ```
 
-## 9. plan / localization  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-23T09:53:56.995Z_
 
 **Thought** (narration):
@@ -251,7 +251,7 @@ The participant contextual action mode is owned by the activity and survives Vie
 Plan updated
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-23T09:54:05.193Z_
 
 **Thought** (none):
@@ -282,7 +282,7 @@ Success. Updated the following files:
 M app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperActivity.java
 ```
 
-## 11. diff / repair  (exec_command)
+## 11. read / validation  (exec_command)
 _step 15 | 2026-09-23T09:54:07.155Z_
 
 **Thought** (narration):
@@ -312,7 +312,7 @@ Output:
     95	            index = s
 ```
 
-## 12. vcs / repair  (exec_command)
+## 12. diff / validation  (exec_command)
 _step 16 | 2026-09-23T09:54:11.218Z_
 
 **Thought** (none):
@@ -334,7 +334,7 @@ Output:
 HARNESS
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-23T09:54:14.526Z_
 
 **Thought** (none):
@@ -350,7 +350,7 @@ _(none)_
 Plan updated
 ```
 
-## 14. build / repair  (exec_command)
+## 14. build / validation  (exec_command)
 _step 18 | 2026-09-23T09:54:18.820Z_
 
 **Thought** (narration):
@@ -373,7 +373,7 @@ Output:
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-23T09:54:23.364Z_
 
 **Thought** (none):
@@ -397,7 +397,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T09:54:30.400Z_
 
 **Thought** (none):
@@ -417,7 +417,7 @@ Original token count: 0
 Output:
 ```
 
-## 17. plan / repair  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-23T09:54:37.773Z_
 
 **Thought** (none):

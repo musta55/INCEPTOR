@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 15 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(4: succeeded) -> repair(7: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> localization(1: succeeded) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:19:20.264Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the first-run password flow, patch the validation, then build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:19:22.968Z_
 
 **Thought** (none):
@@ -55,7 +55,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:55 .github
 -rwxr-xr-x@  1 sage  staff    514 Sep  9 11:
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:19:24.050Z | **FAILED**_
 
 **Thought** (narration):
@@ -88,7 +88,7 @@ import android.view.ViewGroup;
 import android.wi
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:19:27.462Z_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ import android.view.ViewGroup;
 import android.wi
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-26T17:19:30.678Z_
 
 **Thought** (narration):
@@ -137,7 +137,7 @@ Located the bypass in CustomAuthenticatedSlide: checking show-password disables 
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:19:34.157Z_
 
 **Thought** (none):
@@ -163,7 +163,7 @@ app/src/test/java/com/beemdevelopment/aegis/UUIDMapTest.java
 --- app/src/test/java/com/beemdevelopment/ae
 ```
 
-## 7. edit_file / repair  (exec_command)
+## 7. edit / repair  (exec_command)
 _step 11 | 2026-09-26T17:19:37.998Z_
 
 **Thought** (narration):
@@ -196,7 +196,7 @@ Success. Updated the following files:
 M app/src/main/java/com/beemdevelopment/aegis/ui/slides/CustomAuthenticatedSlide.java
 ```
 
-## 8. diff / repair  (exec_command)
+## 8. read / validation  (exec_command)
 _step 12 | 2026-09-26T17:19:41.690Z_
 
 **Thought** (narration):
@@ -226,7 +226,7 @@ Output:
         _textP
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-26T17:19:45.817Z_
 
 **Thought** (none):
@@ -242,7 +242,7 @@ Patched the setup slide so password confirmation remains enabled and equality is
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-26T17:19:47.402Z_
 
 **Thought** (narration):
@@ -266,7 +266,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-26T17:19:50.163Z_
 
 **Thought** (none):
@@ -290,7 +290,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/a
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-26T17:19:56.327Z_
 
 **Thought** (none):
@@ -317,7 +317,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-26T17:20:02.268Z_
 
 **Thought** (none):
@@ -342,7 +342,7 @@ BUILD SUCCESSFUL in 13s
 27 actionable tasks: 25 executed, 2 up-to-date
 ```
 
-## 14. search_code / validation  (exec_command)
+## 14. search / validation  (exec_command)
 _step 18 | 2026-09-26T17:20:06.669Z_
 
 **Thought** (narration):
@@ -368,7 +368,7 @@ Output:
     41	        _textPassword = view.findViewById(R.id.te
 ```
 
-## 15. plan / validation  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T17:20:09.656Z_
 
 **Thought** (none):

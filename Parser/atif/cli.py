@@ -23,6 +23,7 @@ Every command works on a selection of agents x configs x runs x bugs:
     python3 -m atif.cli audit 18 --agent qwen     # what fraction of each raw log survives
     python3 -m atif.cli output 18 codex <call_id> --run 2
     python3 -m atif.cli serve                     # viewer + Analyze page on http://127.0.0.1:8765/
+    python3 -m atif.cli engine                    # the Analyze page's in-browser engine (Pyodide)
     python3 -m atif.cli analyze LOG [--rules rules.json] [--json out.json]
                                                   # one log of any agent, outside the corpus
     python3 -m atif.cli view --all --rules rules.json      # the corpus under your own rules
@@ -48,7 +49,8 @@ if __package__ in (None, ""):                      # allow running the file dire
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from atif import audit as audit_mod
-from atif import corpus, detect, outcomes, phase, rules, schema, segment, tar, taxonomy, view
+from atif import (corpus, detect, engine, outcomes, phase, rules, schema, segment, tar, taxonomy,
+                  view)
 from atif.corpus import Key
 
 HERE = Path(__file__).resolve().parent.parent          # Parser/
@@ -780,9 +782,27 @@ def cmd_view(args: argparse.Namespace) -> int:
           f"{summary['trajectories']} trajectories; largest "
           f"{_rel(Path(summary['largest_bug_file'])) if summary['largest_bug_file'] else '-'} "
           f"({summary['largest_bug_bytes']:,} bytes)")
+    packs = view.write_packs(out, Path(args.path), config=sel.configs[0], runs=sel.runs,
+                             bug_ids=sel.bugs or corpus.all_bug_ids(dataset), agents=sel.agents)
+    print(f"wrote {packs['files']} corpus pack(s), {packs['bytes']:,} bytes "
+          f"(data/atif/: the ATIF the viewer re-runs under a user's rules)")
+    _write_engine(Path(args.path))
     if summary["missing"]:
         print(f"  {len(summary['missing'])} trajectories not converted yet (run convert first): "
               + ", ".join(summary["missing"][:8]) + (" ..." if len(summary["missing"]) > 8 else ""))
+    return 0
+
+
+def _write_engine(viewer_dir: Path) -> None:
+    out = engine.write(viewer_dir)
+    print(f"wrote {_rel(out)} ({out.stat().st_size:,} bytes, {len(engine.sources())} modules: "
+          f"the Analyze page's engine)")
+
+
+def cmd_engine(args: argparse.Namespace) -> int:
+    """Write ``viewer/engine/atif.zip``, this package for the Analyze page to run in the
+    browser (``atif.engine``)."""
+    _write_engine(Path(args.path))
     return 0
 
 
@@ -795,8 +815,9 @@ def load_rules(path: str) -> Dict[str, Any]:
 
 
 def cmd_analyze(args: argparse.Namespace) -> int:
-    """Analyse one log of any of the three agents (or an ATIF file) that need not be in the
-    corpus, under the default rules or ``--rules``, and print its phases outline."""
+    """Analyse one log of any of the three agents, a SWE-bench run of SWE-agent, OpenHands or
+    mini-swe-agent, or an ATIF file, that need not be in the corpus, under the default rules or
+    ``--rules``, and print its phases outline."""
     from atif import upload
     ruleset = load_rules(args.rules) if args.rules else None
     outcome = {"pass": True, "fail": False}.get(args.outcome)
@@ -1032,7 +1053,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     analyzer = sub.add_parser("analyze", help="phases of one log of any agent (or an ATIF "
                                               "file), outside the corpus")
-    analyzer.add_argument("log", help="a Claude Code, Codex CLI or Qwen Code log, or an ATIF file")
+    analyzer.add_argument("log", help="a Claude Code, Codex CLI or Qwen Code log, a SWE-agent, OpenHands or "
+                                               "mini-swe-agent run, or an ATIF file")
     analyzer.add_argument("--rules", metavar="FILE", help="a rule set (JSON)")
     analyzer.add_argument("--bug", help="the bug id, when the log does not name its bug-<id> checkout")
     analyzer.add_argument("--outcome", choices=("pass", "fail"), help="the harness outcome, if known")
@@ -1047,6 +1069,11 @@ def build_parser() -> argparse.ArgumentParser:
     server.add_argument("--open", action="store_true", help="open the Analyze page in a browser")
     server.add_argument("--path", default=str(DEFAULT_VIEW), help="viewer directory")
     server.set_defaults(func=cmd_serve)
+
+    packer = sub.add_parser("engine", help="pack this package for the Analyze page to run "
+                                           "in the browser (viewer/engine/atif.zip)")
+    packer.add_argument("--path", default=str(DEFAULT_VIEW), help="viewer directory")
+    packer.set_defaults(func=cmd_engine)
 
     listing = sub.add_parser("list", help="what the dataset contains, and outcome counts")
     add_selection(listing, every_config=True)

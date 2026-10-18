@@ -7,9 +7,9 @@
 - steps (LLM inferences): 10 | actions: 10 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(7: succeeded) -> repair(2: succeeded) -> validation(1: unchecked)
+Phases: localization(7: succeeded) -> repair(1: succeeded) -> validation(2: succeeded)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -29,7 +29,7 @@ Explore the Android project at /home/antu_shared/automated_program_repair_for_ui
 **Result**:
 _delegated to subagent `sub-call_7e40174be57c40cf98f8b5d8` -- its 0 actions follow below_
 
-## 2. read_file / localization  (read_file)
+## 2. read / localization  (read_file)
 _step 4 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -61,7 +61,7 @@ import ch.logixisland.anuto.entity.Types;
 import ch.logixisl
 ```
 
-## 3. read_file / localization  (read_file)
+## 3. read / localization  (read_file)
 _step 4 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -91,7 +91,7 @@ public class ScoreBoard {
     private final List<
 ```
 
-## 4. read_file / localization  (read_file)
+## 4. read / localization  (read_file)
 _step 4 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -119,7 +119,7 @@ import ch.logixisland.anuto.business.control.TowerInserter;
 import ch.logixisland.a
 ```
 
-## 5. search_code / localization  (grep_search)
+## 5. search / localization  (grep_search)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -144,7 +144,7 @@ TowerInserterTest
 No matches found
 ```
 
-## 6. search_code / localization  (glob)
+## 6. search / localization  (glob)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -160,7 +160,7 @@ _(same inference as the previous action)_
 No files found
 ```
 
-## 7. search_code / localization  (glob)
+## 7. search / localization  (glob)
 _step 6_
 
 **Thought** (reasoning):
@@ -178,7 +178,7 @@ No existing tests for TowerInserter. Let me check what test framework and struct
 No files found
 ```
 
-## 8. edit_file / repair  (edit)
+## 8. edit / repair  (edit)
 _step 7_
 
 **Thought** (reasoning):
@@ -247,7 +247,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             if (mScoreBoard.getCredits() < mInsertedTower.
 ```
 
-## 9. build / repair  (run_shell_command)
+## 9. build / validation  (run_shell_command)
 _step 8_
 
 **Thought** (reasoning):
@@ -271,7 +271,7 @@ It will be removed at the end of 2018. For more information see: http://d.androi
 Mapping new ns http:/
 ```
 
-## 10. read_file / validation  (read_file)
+## 10. read / validation  (read_file)
 _step 9_
 
 **Thought** (reasoning):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(9: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(8: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:38:32.424Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the entry-validation path, patch the root cause, then build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:38:35.727Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:38:37.012Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ Relevant files:
 ./app/
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T08:38:40.159Z | **FAILED**_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ Total output lines: 756
  * in the Software without restriction, including without lim
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T08:38:43.828Z_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ Total output lines: 393
    103	                    periodInput.setText(String.format(Locale.US, "%d
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T08:38:47.499Z_
 
 **Thought** (none):
@@ -169,7 +169,7 @@ Output:
    195	                .setPositiveButton(R.string.button_save, new DialogInterface.OnClickListen
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T08:38:50.228Z_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ Total output lines: 213
    237	        TextWa
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T08:39:01.210Z_
 
 **Thought** (narration):
@@ -225,7 +225,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Activities/SettingsActivity.java:1
 app/src/main/java/org/shadowice/flocke/andotp/Activities/SettingsActivity.ja
 ```
 
-## 9. vcs / localization  (exec_command)
+## 9. other / localization  (exec_command)
 _step 13 | 2026-09-23T08:39:05.924Z_
 
 **Thought** (none):
@@ -248,7 +248,7 @@ Output:
 fatal: unable to access 'https://github.com/andOTP/andOTP.git/': CONNECT tunnel failed, response 403
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-23T08:39:13.804Z_
 
 **Thought** (narration):
@@ -266,7 +266,7 @@ The defect is confined to manual-entry UI handling. There is no local JVM test s
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-23T08:39:33.412Z_
 
 **Thought** (none):
@@ -297,7 +297,7 @@ Success. Updated the following files:
 M app/src/main/res/values/strings_main.xml
 ```
 
-## 12. diff / repair  (exec_command)
+## 12. search / validation  (exec_command)
 _step 16 | 2026-09-23T08:39:35.924Z_
 
 **Thought** (narration):
@@ -322,7 +322,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java:195
 app/src/main/java/org/shadowice/flock
 ```
 
-## 13. vcs / repair  (exec_command)
+## 13. vcs / validation  (exec_command)
 _step 17 | 2026-09-23T08:39:41.046Z_
 
 **Thought** (none):
@@ -345,7 +345,7 @@ HARNESS
 ls: .git: No such file or directory
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T08:39:44.421Z_
 
 **Thought** (none):
@@ -361,7 +361,7 @@ _(none)_
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-23T08:39:49.003Z_
 
 **Thought** (none):
@@ -383,7 +383,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T08:39:51.465Z_
 
 **Thought** (narration):
@@ -409,7 +409,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/a
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-23T08:39:58.299Z_
 
 **Thought** (none):
@@ -436,7 +436,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files use unchecked or unsafe
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T08:40:05.158Z_
 
 **Thought** (none):
@@ -464,7 +464,7 @@ Output:
 > Ta
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-23T08:40:11.385Z_
 
 **Thought** (none):
@@ -490,7 +490,7 @@ BUILD SUCCESSFUL in 21s
 66 actionable tasks: 64 executed, 2 up-to-date
 ```
 
-## 20. search_code / validation  (exec_command)
+## 20. search / validation  (exec_command)
 _step 24 | 2026-09-23T08:40:13.503Z_
 
 **Thought** (narration):
@@ -518,7 +518,7 @@ Output:
    193	        builder.setTitle(R
 ```
 
-## 21. plan / validation  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-23T08:40:16.892Z_
 
 **Thought** (none):

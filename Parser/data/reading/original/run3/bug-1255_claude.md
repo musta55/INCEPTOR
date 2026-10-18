@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 23 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(16: succeeded) -> repair(5: succeeded) -> localization(1: failed)
+Phases: localization(17: succeeded) -> repair(4: succeeded) -> validation(2: succeeded)
 
-## 1. read_file / understanding  (Bash)
+## 1. read / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -41,7 +41,7 @@ settings.gradle
 include ':app'
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -57,7 +57,7 @@ grep -rn "copy_url\|CopyUrl\|copyUrl\|Copy Url" --include=*.java --include=*.kt 
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -77,7 +77,7 @@ app/src/main/res/values-zh-rTW/strings_youtube_player.xml:18:    <string name="c
 app/src/main/r
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -95,7 +95,7 @@ app/src/main/java/free/rm/skytube/app/SkyTubeApp.java:423:	public static void co
 app/src/main/java/free/rm/skytube/gui/fragments/YouTubePlayerV2Fragment.java:723:
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ public BigInteger getViewsCountInt() {
 		this.durationInS
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ private void onOptionsButtonClick(final View view, YouTubeVideo youTubeVideo) {
 		// If playback history is not disabled, see if this video has been watched. Otherwise, hide the "mark watched"
 ```
 
-## 7. read_file / localization  (Bash)
+## 7. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -171,7 +171,7 @@ cat app/src/main/java/free/rm/skytube/gui/businessobjects/views/ChannelActionHan
  * ME
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -190,7 +190,7 @@ app/src/main/java/free/rm/skytube/businessobjects/YouTube/newpipe/ChannelId.java
 app/src/main/java/free/rm/skytube/businessobjects/YouTube
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 8 | **FAILED**_
 
 **Thought** (none):
@@ -221,7 +221,7 @@ Exit code 2
 			return YoutubeChannelLinkHandlerFactory.getInstance().getUrl
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ app/src/main/java/free/rm/skytube/gui/fragments/YouTubePlayerV1Fragment.java:671
 app/src/main/java/free/rm/skytube/gui/businessobjects
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / localization  (Bash)
 _step 10 | **FAILED**_
 
 **Thought** (none):
@@ -260,7 +260,7 @@ Exit code 1
                         binding.videoPositionProgressBar.setProgress(youTubeVideo.ge
 ```
 
-## 12. read_file / localization  (Bash)
+## 12. read / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -287,7 +287,7 @@ if (youTubeVideo != null) {
         s
 ```
 
-## 13. search_code / localization  (Bash)
+## 13. search / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -306,7 +306,7 @@ app/src/main/java/free/rm/skytube/gui/businessobjects/adapters/GridViewHolder.ja
 app/src/main/java/free/rm/skytube/gui/businessobjects/views/ChannelActionHandler.
 ```
 
-## 14. search_code / localization  (Bash)
+## 14. search / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -325,7 +325,7 @@ app/src/main/java/free/rm/skytube/app/Utils.java:63:    public static String rem
 app/src/main/java/free/rm/skytube/businessobjects/YouTube/newpipe/ChannelId.java:26:        this.id = Utils.rem
 ```
 
-## 15. search_code / localization  (Bash)
+## 15. search / localization  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -354,7 +354,7 @@ sed -n 50,80p app/src/main/java/free/rm/skytube/app/Utils.java; printf '=====\n'
     public static String removeChannelIdPre
 ```
 
-## 16. read_file / localization  (Bash)
+## 16. read / localization  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -380,7 +380,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * <p>This class has the ability
 ```
 
-## 17. search_code / localization  (Bash)
+## 17. search / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -407,7 +407,7 @@ app/src/main/res/menu/menu_youtube_player.xml:19:	      android:title="@string/s
 app/src/main/res/menu/menu_youtube_playe
 ```
 
-## 18. edit_file / repair  (Edit)
+## 18. edit / repair  (Edit)
 _step 17_
 
 **Thought** (narration):
@@ -425,7 +425,7 @@ Now let me apply the fixes. First, give the channel menu its own item ids:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1255/app/src/main/res/menu/channel_options_menu.xml has been updated successfully.
 ```
 
-## 19. edit_file / repair  (Edit)
+## 19. edit / repair  (Edit)
 _step 18_
 
 **Thought** (none):
@@ -441,7 +441,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1255/app/src/main/java/free/rm/skytube/gui/businessobjects/views/ChannelActionHandler.java has been updated successfully.
 ```
 
-## 20. edit_file / repair  (Edit)
+## 20. edit / repair  (Edit)
 _step 19_
 
 **Thought** (none):
@@ -457,7 +457,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1255/app/src/main/java/free/rm/skytube/gui/businessobjects/views/ChannelActionHandler.java has been updated successfully.
 ```
 
-## 21. edit_file / repair  (Edit)
+## 21. edit / repair  (Edit)
 _step 20_
 
 **Thought** (narration):
@@ -475,7 +475,7 @@ Now fix the malformed channel URL itself (the doubled prefix):
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1255/app/src/main/java/free/rm/skytube/businessobjects/YouTube/POJOs/YouTubeChannel.java has been updated successfully.
 ```
 
-## 22. build / repair  (Bash)
+## 22. build / validation  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -502,7 +502,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :ap
 ```
 
-## 23. search_code / localization  (Bash)
+## 23. search / validation  (Bash)
 _step 22_
 
 **Thought** (none):

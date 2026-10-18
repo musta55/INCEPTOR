@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 23 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(2: succeeded) -> validation(3: unchecked) -> localization(2: failed) -> validation(6: succeeded)
+Phases: planning(1: unchecked) -> localization(8: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(5: succeeded) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:37:28.605Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the manual-entry validation and OTP construction paths, then patch 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:37:32.570Z | **FAILED**_
 
 **Thought** (none):
@@ -61,7 +61,7 @@ settings.gradle
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:37:33.752Z_
 
 **Thought** (narration):
@@ -88,7 +88,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java:125:          
 app/src/main/j
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T04:37:39.849Z_
 
 **Thought** (none):
@@ -116,7 +116,7 @@ Total output lines: 781
  * in the Software without restriction, including without limitatio
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:37:43.474Z_
 
 **Thought** (none):
@@ -147,7 +147,7 @@ Total output lines: 468
     5
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T04:37:46.447Z_
 
 **Thought** (none):
@@ -177,7 +177,7 @@ Total output lines: 257
    132	                TagsDialog
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T04:37:50.747Z_
 
 **Thought** (narration):
@@ -206,7 +206,7 @@ Output:
 [![Current release](https://img.shields.io/github/release/andOTP/andOTP/all.svg)](https://github.com/andOTP/an
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. other / localization  (exec_command)
 _step 12 | 2026-09-25T04:37:56.782Z_
 
 **Thought** (none):
@@ -227,7 +227,7 @@ Output:
 curl: (56) CONNECT tunnel failed, response 403
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T04:38:06.415Z_
 
 **Thought** (none):
@@ -258,7 +258,7 @@ Output:
     45
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-25T04:38:11.946Z_
 
 **Thought** (none):
@@ -274,7 +274,7 @@ The dialog already has a centralized TextWatcher for Save-button state, so the f
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-25T04:38:17.530Z_
 
 **Thought** (narration):
@@ -305,7 +305,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java
 ```
 
-## 12. build / repair  (exec_command)
+## 12. diff / validation  (exec_command)
 _step 16 | 2026-09-25T04:38:20.682Z_
 
 **Thought** (narration):
@@ -337,7 +337,7 @@ Build time:   2017-08-07 14:38:48 UTC
 Revision:     941559e020f6c357ebb08d
 ```
 
-## 13. read_file / validation  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-25T04:38:24.859Z | **FAILED**_
 
 **Thought** (none):
@@ -362,7 +362,7 @@ Output:
                             adapter.saveEntries();
 ```
 
-## 14. read_file / validation  (exec_command)
+## 14. diff / validation  (exec_command)
 _step 18 | 2026-09-25T04:38:28.646Z_
 
 **Thought** (none):
@@ -386,7 +386,7 @@ b71d5b2 harness baseline
  1 file changed, 2 insertions(+)
 ```
 
-## 15. read_file / validation  (exec_command)
+## 15. read / validation  (exec_command)
 _step 19 | 2026-09-25T04:38:31.707Z_
 
 **Thought** (none):
@@ -413,7 +413,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r--@  1 sage
 ```
 
-## 16. read_file / localization  (exec_command)
+## 16. read / validation  (exec_command)
 _step 20 | 2026-09-25T04:38:33.824Z_
 
 **Thought** (none):
@@ -437,7 +437,7 @@ cat: .git: No such file or directory
 /private/var/folders/28/_9_mht7s10d5tf_cw0nmz8tc0000gn/T/uiab-read-guard/codex_original_run2/bug-1207/git-stub-workt
 ```
 
-## 17. plan / localization  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-25T04:38:36.007Z_
 
 **Thought** (none):
@@ -477,7 +477,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 19. wait_process / validation  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T04:38:42.412Z_
 
 **Thought** (none):
@@ -502,7 +502,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.and
 ```
 
-## 20. wait_process / validation  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-25T04:38:48.706Z_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ Output:
 Note: Recompile with -
 ```
 
-## 21. wait_process / validation  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-25T04:38:55.929Z_
 
 **Thought** (none):
@@ -556,7 +556,7 @@ BUILD SUCCESSFUL in 13s
 28 actionable tasks: 26 executed, 2 up-to-date
 ```
 
-## 22. search_code / validation  (exec_command)
+## 22. read / validation  (exec_command)
 _step 26 | 2026-09-25T04:38:59.833Z_
 
 **Thought** (narration):
@@ -585,7 +585,7 @@ Output:
    201	            public void onTextChanged(CharSe
 ```
 
-## 23. plan / validation  (update_plan)
+## 23. plan / planning  (update_plan)
 _step 27 | 2026-09-25T04:39:04.287Z_
 
 **Thought** (none):

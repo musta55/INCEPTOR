@@ -7,9 +7,9 @@
 - steps (LLM inferences): 8 | actions: 8 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, stderr_interleaved
 
-Phases: localization(4: succeeded) -> repair(3: succeeded) -> validation(1: unchecked)
+Phases: localization(4: succeeded) -> repair(2: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (grep_search)
+## 1. search / localization  (grep_search)
 _step 1 | call 1/3 of this inference_
 
 **Thought** (reasoning):
@@ -33,7 +33,7 @@ Let me start by exploring the codebase to find the "queries remover" functionali
 Found 2 matches
 ```
 
-## 2. search_code / localization  (grep_search)
+## 2. search / localization  (grep_search)
 _step 1 | call 2/3 of this inference_
 
 **Thought** (reasoning):
@@ -49,7 +49,7 @@ _(same inference as the previous action)_
 Found 17 matches
 ```
 
-## 3. search_code / localization  (grep_search)
+## 3. search / localization  (grep_search)
 _step 1 | call 3/3 of this inference_
 
 **Thought** (reasoning):
@@ -65,7 +65,7 @@ _(same inference as the previous action)_
 No matches found
 ```
 
-## 4. read_file / localization  (read_file)
+## 4. read / localization  (read_file)
 _step 2_
 
 **Thought** (reasoning):
@@ -94,7 +94,7 @@ import com.trianguloy.urlchecker.modules.AModuleConfig;
 import com.triangulo
 ```
 
-## 5. edit_file / repair  (edit)
+## 5. edit / repair  (edit)
 _step 3_
 
 **Thought** (reasoning):
@@ -151,7 +151,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             String[] spl
 ```
 
-## 6. edit_file / repair  (edit)
+## 6. edit / repair  (edit)
 _step 4_
 
 **Thought** (reasoning):
@@ -176,7 +176,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             String[] split
 ```
 
-## 7. build / repair  (run_shell_command)
+## 7. build / validation  (run_shell_command)
 _step 6_
 
 **Thought** (reasoning):
@@ -195,7 +195,7 @@ cd /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run
 /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_original_run1/bug-365/app/src/main/res/values-r
 ```
 
-## 8. read_file / validation  (read_file)
+## 8. read / validation  (read_file)
 _step 7_
 
 **Thought** (reasoning):

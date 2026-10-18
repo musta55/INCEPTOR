@@ -7,9 +7,9 @@
 - steps (LLM inferences): 31 | actions: 26 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(8: succeeded) -> repair(8: blocked) -> validation(4: succeeded) -> localization(2: failed)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(7: succeeded) -> planning(1: unchecked) -> repair(1: blocked) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(10: blocked, succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:57:43.837Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the fishing-spot edit flow, patch the root cause, then run the requ
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:57:48.767Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Guidance files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:57:50.592Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  7 sage  staff   224 Sep  9 11:54 app
 -rw-r--r--@  1 sage  staff
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T08:57:54.584Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T08:57:57.657Z_
 
 **Thought** (narration):
@@ -127,7 +127,7 @@ app/src/main/java/com/cohenadair/anglerslog/model/user_defines/FishingSpot.java
 app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpotFragment.j
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-23T08:58:01.343Z_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ import android.widget.ImageButton;
 import
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-23T08:58:05.843Z_
 
 **Thought** (none):
@@ -189,7 +189,7 @@ Total output lines: 782
      8	import android.v
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T08:58:11.072Z_
 
 **Thought** (none):
@@ -215,7 +215,7 @@ Total output lines: 681
 app/src/main/java/com/cohenadair/anglerslog/locations/ManageFishingSpo
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-23T08:58:16.317Z_
 
 **Thought** (none):
@@ -245,7 +245,7 @@ Total output lines: 290
      8	impor
 ```
 
-## 10. read_file / localization  (exec_command)
+## 10. read / localization  (exec_command)
 _step 14 | 2026-09-23T08:58:21.195Z_
 
 **Thought** (none):
@@ -275,7 +275,7 @@ Output:
    129	            AlertUtils.showError(getActivity(), R.string.error_
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-23T08:58:41.286Z_
 
 **Thought** (narration):
@@ -301,7 +301,7 @@ Output:
 // i_offline_repo/ at the dataset root — see c_utils/vendo
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-23T08:58:52.634Z_
 
 **Thought** (none):
@@ -317,7 +317,7 @@ _(none)_
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-23T08:58:56.641Z_
 
 **Thought** (narration):
@@ -348,7 +348,7 @@ Success. Updated the following files:
 M app/src/main/java/com/cohenadair/anglerslog/locations/ManageLocationFragment.java
 ```
 
-## 14. search_code / repair  (exec_command)
+## 14. search / validation  (exec_command)
 _step 18 | 2026-09-23T08:59:08.313Z_
 
 **Thought** (narration):
@@ -378,7 +378,7 @@ Total output lines: 162
    218
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-23T08:59:13.556Z_
 
 **Thought** (none):
@@ -394,7 +394,7 @@ _(none)_
 Plan updated
 ```
 
-## 16. build / repair  (exec_command)
+## 16. build / validation  (exec_command)
 _step 20 | 2026-09-23T08:59:18.218Z_
 
 **Thought** (none):
@@ -416,7 +416,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-23T08:59:21.008Z_
 
 **Thought** (narration):
@@ -444,7 +444,7 @@ For more information, see http://d.android.com/r/tools/update-dependency-configu
 W
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T08:59:28.382Z_
 
 **Thought** (none):
@@ -464,7 +464,7 @@ Original token count: 0
 Output:
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-23T08:59:35.501Z_
 
 **Thought** (none):
@@ -484,7 +484,7 @@ Original token count: 0
 Output:
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-23T08:59:43.798Z | **FAILED**_
 
 **Thought** (none):
@@ -512,7 +512,7 @@ Execution failed for task ':app:mergeReleaseFlavorDebugAssets'.
 > Could not resolve all files for configuration ':app:releaseFlavorDebugRunt
 ```
 
-## 21. search_code / validation  (exec_command)
+## 21. search / validation  (exec_command)
 _step 25 | 2026-09-23T08:59:49.712Z_
 
 **Thought** (narration):
@@ -565,7 +565,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 5 stopped Daemons could not be reused, use --status for details
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-23T09:00:18.067Z_
 
 **Thought** (none):
@@ -591,7 +591,7 @@ For more information, see http://d.android.com/r/tools/update-dependency-configu
 W
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-23T09:00:25.267Z_
 
 **Thought** (none):
@@ -618,7 +618,7 @@ Output:
 > Task :app
 ```
 
-## 25. search_code / localization  (exec_command)
+## 25. search / validation  (exec_command)
 _step 29 | 2026-09-23T09:00:32.281Z_
 
 **Thought** (narration):
@@ -644,7 +644,7 @@ app/build/outputs/apk/uiTesting/debug/app-uiTesting-debug.apk
 -rw-r--r--@ 1 sage  staff   7.0M Sep 23 05:00 app
 ```
 
-## 26. plan / localization  (update_plan)
+## 26. plan / planning  (update_plan)
 _step 30 | 2026-09-23T09:00:38.328Z_
 
 **Thought** (none):

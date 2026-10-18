@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(8: succeeded) -> repair(4: blocked) -> validation(7: succeeded)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(2: succeeded) -> repair(3: blocked) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:30:34.152Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the note editor’s save/back flow, patch the root cause, then run 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:30:35.759Z_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep  9 11:55 .github
 -rw-r--r--@
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:30:37.801Z_
 
 **Thought** (narration):
@@ -87,7 +87,7 @@ Total output lines: 952
  *
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-26T17:30:40.540Z_
 
 **Thought** (none):
@@ -116,7 +116,7 @@ Total output lines: 1061
     86	    private TextFormat _textFormat;
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-26T17:30:43.481Z_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ Total output lines: 630
    181	        switch (item.getIte
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-26T17:30:45.687Z_
 
 **Thought** (none):
@@ -178,7 +178,7 @@ Total output lines: 624
    2
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T17:30:54.863Z_
 
 **Thought** (narration):
@@ -212,7 +212,7 @@ Total output lines: 486
 #
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-26T17:31:07.465Z_
 
 **Thought** (none):
@@ -228,7 +228,7 @@ The failure occurs when editor history is disabled: after the delayed UI-to-mode
 Plan updated
 ```
 
-## 9. search_code / localization (own phase understanding)  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-26T17:31:13.826Z_
 
 **Thought** (narration):
@@ -257,7 +257,7 @@ Total output lines: 258
  * coke in return. Provided as
 ```
 
-## 10. read_file / localization  (exec_command)
+## 10. read / localization  (exec_command)
 _step 14 | 2026-09-26T17:31:18.720Z_
 
 **Thought** (none):
@@ -285,7 +285,7 @@ Output:
      8	 *  https://www.apach
 ```
 
-## 11. run_test / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-26T17:31:23.338Z_
 
 **Thought** (none):
@@ -319,7 +319,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / repair  (write_stdin)
 _step 16 | 2026-09-26T17:31:29.022Z_
 
 **Thought** (narration):
@@ -347,7 +347,7 @@ Parallel execution with configuration on demand is an incubating feature.
 WARNING: The specified Android SDK Build Tools version (27.0.3) is ignored, as it is below the minimum supported version (28.0.3) for Android Gradle Plugin 3
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / repair  (write_stdin)
 _step 17 | 2026-09-26T17:31:35.728Z | **FAILED**_
 
 **Thought** (none):
@@ -375,7 +375,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:javaPreC
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-26T17:31:39.413Z_
 
 **Thought** (narration):
@@ -415,7 +415,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 ```
 
-## 16. wait_process / validation  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T17:31:43.877Z_
 
 **Thought** (none):
@@ -441,7 +441,7 @@ Parallel execution with configuration on demand is an incubating feature.
 WARNING: The specified Android SDK Build Tools version (27.0.3) is ignored, as it is below the minimum supported version (28.0.3) for Android Gradle Plugin 3
 ```
 
-## 17. wait_process / validation  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:31:49.867Z_
 
 **Thought** (none):
@@ -469,7 +469,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeFlavorDef
 ```
 
-## 18. wait_process / validation  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:31:55.848Z_
 
 **Thought** (none):
@@ -497,7 +497,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeFlavorGplayDebu
 ```
 
-## 19. wait_process / validation  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:32:01.981Z_
 
 **Thought** (none):
@@ -523,7 +523,7 @@ BUILD SUCCESSFUL in 18s
 82 actionable tasks: 79 executed, 3 up-to-date
 ```
 
-## 20. diff / validation  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-26T17:32:04.149Z_
 
 **Thought** (narration):
@@ -558,7 +558,7 @@ Output:
    140	        if (!document.getFile().
 ```
 
-## 21. plan / validation  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-26T17:32:08.801Z_
 
 **Thought** (none):

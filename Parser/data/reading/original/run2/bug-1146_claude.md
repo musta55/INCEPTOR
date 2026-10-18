@@ -7,9 +7,9 @@
 - steps (LLM inferences): 16 | actions: 17 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(9: succeeded) -> repair(5: blocked) -> validation(3: succeeded)
+Phases: localization(9: succeeded) -> repair(3: blocked) -> validation(5: blocked, succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -48,7 +48,7 @@ TRANSLATIONS.md
 ./GPSTest/src/main/res/values/strings.xml:120:    <str
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -68,7 +68,7 @@ grep -rni "filter" --include="*.kt" --include="*.java" -l . | head -30
 ./GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -91,7 +91,7 @@ grep -n "filter\|Filter\|onGnssStopped\|onGnssStarted\|gnssStop" /Volumes/Dumpy/
 236:        filterTextView = v.findViewById(R.id.filter
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 3 | **FAILED**_
 
 **Thought** (none):
@@ -123,7 +123,7 @@ Exit code 1
     public void onSatelliteStatusChanged(G
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -147,7 +147,7 @@ grep -n "setStarted" -A 30 /Volumes/Dumpy/Research/automated_program_repair_for_
 291-                mTTFFView.setTex
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ mSbasStatus = SortUtil.Companion.sortBySbasThenUsedThenId(mSbasStatus);
             filterGroup.setVisibility(View.GONE);
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ grep -n "filter\|Filter\|setStarted\|onGnssStopped" /Volumes/Dumpy/Research/auto
 374:            mSnrCn0InViewAvg.setColorFilter(color);
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -213,7 +213,7 @@ grep -rn "filter_text\|filter_show_all\|status_filter_group\|filter_group" /Volu
 /Volumes/Dumpy/Re
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ _(none)_
 290	                updateFixTime();
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 8_
 
 **Thought** (none):
@@ -255,7 +255,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1146/GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -273,7 +273,7 @@ Now add the `hideFilterView()` helper next to `updateFilterView()`:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1146/GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -289,7 +289,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1146/GPSTest/src/main/java/com/android/gpstest/GpsStatusFragment.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. read_file / repair (own phase localization)  (Bash)
+## 13. read / validation  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -315,7 +315,7 @@ sed -n '215,250p' /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/r
              android:o
 ```
 
-## 14. build / repair  (Bash)
+## 14. build / validation  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -334,7 +334,7 @@ at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(Nati
 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java
 ```
 
-## 15. env_setup / validation  (Bash)
+## 15. search / validation  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -378,7 +378,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :GPSTest:mergeG
 ```
 
-## 17. read_file / validation  (Bash)
+## 17. read / validation  (Bash)
 _step 15_
 
 **Thought** (narration):

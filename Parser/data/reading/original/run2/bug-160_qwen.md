@@ -7,9 +7,9 @@
 - steps (LLM inferences): 12 | actions: 10 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(4: succeeded) -> repair(2: succeeded) -> validation(1: unchecked) -> localization(2: succeeded) -> validation(1: unchecked)
+Phases: localization(4: succeeded) -> repair(1: succeeded) -> validation(5: succeeded)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -38,7 +38,7 @@ I need to find all code related to the whiteboard and eraser functionality in th
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-885051c40e8327f5` -- its 0 actions follow below_
 
-## 2. read_file / localization  (read_file)
+## 2. read / localization  (read_file)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (reasoning):
@@ -62,7 +62,7 @@ Let me read the actual source code to understand this better and confirm the fix
  *
 ```
 
-## 3. read_file / localization  (read_file)
+## 3. read / localization  (read_file)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (reasoning):
@@ -78,7 +78,7 @@ _(same inference as the previous action)_
 Read lines 421-470 of 930 from AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java
 ```
 
-## 4. read_file / localization  (read_file)
+## 4. read / localization  (read_file)
 _step 5_
 
 **Thought** (reasoning):
@@ -123,7 +123,7 @@ Actually, I'm seeing the real issue now. The menu logic checks if the undo stack
 Read lines 261-300 of 407 from AnkiDroid/src/main/java/com/ichi2/anki/Whiteboard.java
 ```
 
-## 5. edit_file / repair  (edit)
+## 5. edit / repair  (edit)
 _step 6_
 
 **Thought** (reasoning):
@@ -179,7 +179,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
             mCardV
 ```
 
-## 6. build / repair  (run_shell_command)
+## 6. build / validation  (run_shell_command)
 _step 7_
 
 **Thought** (reasoning):
@@ -230,7 +230,7 @@ Signal: (none)
 Process Group PGID: 492482
 ```
 
-## 8. vcs / localization  (run_shell_command)
+## 8. diff / validation  (run_shell_command)
 _step 9_
 
 **Thought** (reasoning):
@@ -249,7 +249,7 @@ On branch master
 nothing to commit, working tree clean
 ```
 
-## 9. search_code / localization  (run_shell_command)
+## 9. search / validation  (run_shell_command)
 _step 10 | **FAILED**_
 
 **Thought** (reasoning):
@@ -273,7 +273,7 @@ Signal: (none)
 Process Group PGID: 492507
 ```
 
-## 10. read_file / validation  (read_file)
+## 10. read / validation  (read_file)
 _step 11_
 
 **Thought** (reasoning):

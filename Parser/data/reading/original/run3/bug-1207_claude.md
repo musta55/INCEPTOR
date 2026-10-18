@@ -7,9 +7,9 @@
 - steps (LLM inferences): 34 | actions: 36 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(9: succeeded) -> repair(4: blocked) -> validation(12: blocked, failed) -> localization(5: succeeded) -> repair(1: unchecked) -> validation(5: unchecked)
+Phases: localization(9: succeeded) -> repair(3: blocked) -> validation(13: blocked, failed) -> localization(5: succeeded) -> repair(1: unchecked) -> validation(5: unchecked)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -39,7 +39,7 @@ settings.gradle
 ./app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -55,7 +55,7 @@ find . -path ./build -prune -o -name "*.xml" -print | grep -i manual
 ./app/src/main/res/layout/dialog_manual_entry.xml
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -78,7 +78,7 @@ _(none)_
 8	 * copies of the Softwar
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ _(same inference as the previous action)_
 8	    android:paddingEnd="@dimen/activity_marg
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -117,7 +117,7 @@ grep -n "label_period\|label_digits\|hint_label\|error" app/src/main/res/values/
 ugrep: warning: app/src/main/res/values/strings.xml: No such file or directory
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Utilities/TokenCalculator.java:36:
 app/src/main/java/org/shadowice/flocke/andotp/Utilities/TokenCalculator.java:37:    public static final int STEAM_DEFAULT_DIGITS = 5;
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ strings_settings.xml
 app/src/main/res/value
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ grep -n "label_\|hint_\|dialog_title_manual" app/src/main/res/values/strings_mai
 27:    <string n
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 6_
 
 **Thought** (none):
@@ -220,7 +220,7 @@ _(none)_
 10	    <string name
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 7_
 
 **Thought** (narration):
@@ -238,7 +238,7 @@ Now let me add error strings:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1207/app/src/main/res/values/strings_main.xml has been updated successfully.
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 8_
 
 **Thought** (none):
@@ -254,7 +254,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 9_
 
 **Thought** (narration):
@@ -272,7 +272,7 @@ Now the validation logic in the watcher plus helper methods:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. build / repair  (Bash)
+## 13. build / validation  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -333,7 +333,7 @@ _(none)_
    > Could not download kot
 ```
 
-## 16. search_code / validation  (Bash)
+## 16. orient / validation  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -370,7 +370,7 @@ wrapper
 GRADLE_OPTS=-Djava.net.preferIPv4Stack=true
 ```
 
-## 17. search_code / validation  (Bash)
+## 17. search / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -410,7 +410,7 @@ build.gradle:14:        // in the individual module build.gradle files
 6:distributionUrl=https\://services.gradle.org/distributions/gradle-4.1-all.zip
 ```
 
-## 18. read_file / validation  (Bash)
+## 18. orient / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -457,7 +457,7 @@ import android.app.AlertDialog;
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-
 ```
 
-## 20. env_setup / validation  (Bash)
+## 20. orient / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -477,7 +477,7 @@ OpenJDK Runtime Environment (Temurin)(build 1.8.0_452-b09)
 OpenJDK 64-Bit Server VM (Temurin)(build 25.452-b09, mixed mode)
 ```
 
-## 21. read_file / validation  (Bash)
+## 21. orient / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -583,7 +583,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 HELPERS COMPILE OK
 ```
 
-## 26. search_code / localization  (Bash)
+## 26. search / localization  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -601,7 +601,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java:125:          
 app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java:246:            int value = Integer.parseInt(input.getText().toString().trim());
 ```
 
-## 27. read_file / localization  (Read)
+## 27. read / localization  (Read)
 _step 24_
 
 **Thought** (none):
@@ -626,7 +626,7 @@ _(none)_
 109
 ```
 
-## 28. read_file / localization  (Read)
+## 28. read / localization  (Read)
 _step 25_
 
 **Thought** (none):
@@ -659,7 +659,7 @@ _(none)_
 297	    public boolean updateOTP() {
 ```
 
-## 29. search_code / localization  (Bash)
+## 29. search / localization  (Bash)
 _step 26_
 
 **Thought** (none):
@@ -681,7 +681,7 @@ grep -n "public Entry\|setPeriod\|getPeriod\|setDigits" app/src/main/java/org/sh
 237:    public void se
 ```
 
-## 30. read_file / localization  (Read)
+## 30. read / localization  (Read)
 _step 27_
 
 **Thought** (none):
@@ -715,7 +715,7 @@ _(none)_
 246	        this
 ```
 
-## 31. edit_file / repair  (Edit)
+## 31. edit / repair  (Edit)
 _step 28_
 
 **Thought** (none):
@@ -731,7 +731,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-1207/app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java has been updated successfully.
 ```
 
-## 32. read_file / validation  (Read)
+## 32. read / validation  (Read)
 _step 29_
 
 **Thought** (narration):
@@ -754,7 +754,7 @@ Now let me review the final state of the dialog code:
 165	                    public void onClick(DialogInterface dialogInterface,
 ```
 
-## 33. search_code / validation (own phase localization)  (Bash)
+## 33. search / validation  (Bash)
 _step 30_
 
 **Thought** (none):
@@ -777,7 +777,7 @@ TagsDialog.java
 ThumbnailSelectionAdapter.java
 ```
 
-## 34. search_code / validation  (Bash)
+## 34. test / validation  (Bash)
 _step 31_
 
 **Thought** (none):
@@ -797,7 +797,7 @@ XML OK
 25:    <string name="error_invalid_digits">The digits have to be a positive number</string>
 ```
 
-## 35. search_code / validation (own phase localization)  (Bash)
+## 35. search / validation  (Bash)
 _step 32_
 
 **Thought** (none):
@@ -817,7 +817,7 @@ grep -n "digits" app/src/main/java/org/shadowice/flocke/andotp/Utilities/TokenCa
 71:        return Stri
 ```
 
-## 36. read_file / validation  (Bash)
+## 36. build / validation  (Bash)
 _step 33_
 
 **Thought** (none):

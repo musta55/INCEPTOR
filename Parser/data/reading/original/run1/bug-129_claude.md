@@ -7,9 +7,9 @@
 - steps (LLM inferences): 40 | actions: 41 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(12: succeeded) -> repair(7: succeeded) -> localization(4: failed) -> repair(12: succeeded) -> validation(6: unchecked)
+Phases: localization(12: succeeded) -> repair(2: succeeded) -> localization(1: failed) -> validation(2: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> localization(4: failed) -> repair(2: succeeded) -> validation(1: unchecked) -> repair(8: succeeded) -> validation(7: succeeded)
 
-## 1. read_file / localization  (Read)
+## 1. read / localization  (Read)
 _step 1 | call 1/2 of this inference | **FAILED**_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I'll start by exploring the relevant code.
 Access outside repo directory is not allowed: /app/app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -72,7 +72,7 @@ README.md
 settings.gradle
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -95,7 +95,7 @@ _(none)_
 8	 * copies of the So
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -118,7 +118,7 @@ _(same inference as the previous action)_
 8	 * to use, copy, modify, merge, publish, distribute, subl
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 4 | **FAILED**_
 
 **Thought** (none):
@@ -153,7 +153,7 @@ UIHelper.java
 ugrep: warning: app/src/main/res/values/str
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -190,7 +190,7 @@ strings_intro.xml
 strings
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -211,7 +211,7 @@ grep -n "hint_secret\|invalid\|error" app/src/main/res/values/strings_main.xml |
 82:    <string name="dialog_title_keystore_error">
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -236,7 +236,7 @@ _(none)_
 149
 ```
 
-## 10. search_code / localization  (Bash)
+## 10. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -263,7 +263,7 @@ TagsDialog.java
  * to use, copy, modify, merge, publish,
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -288,7 +288,7 @@ sed -n 1,40p app/src/main/res/values/strings_main.xml; echo ...; sed -n 60,80p a
     <string name="button_settings">Se
 ```
 
-## 12. read_file / localization  (Read)
+## 12. read / localization  (Read)
 _step 10_
 
 **Thought** (narration):
@@ -315,7 +315,7 @@ Now let me implement the fix. First, a validation helper in `Tools`:
 49	        return Environment.MEDIA
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 11_
 
 **Thought** (none):
@@ -331,7 +331,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Utilities/Tools.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 12_
 
 **Thought** (none):
@@ -347,7 +347,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Utilities/Tools.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. search_code / repair (own phase localization)  (Bash)
+## 15. search / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -363,7 +363,7 @@ grep -rn "commons-codec\|commons.codec" app/build.gradle build.gradle; find . -p
 app/build.gradle:61:    implementation "commons-codec:commons-codec:1.14"
 ```
 
-## 16. search_code / repair  (Bash)
+## 16. search / validation  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -379,7 +379,7 @@ find ~/.gradle /root -name "commons-codec-1.14.jar" 2>/dev/null | head -3
 /Users/splash/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.14/3cb1181b2141a7e752f5bdc998b7ef1849f726cf/commons-codec-1.14.jar
 ```
 
-## 17. env_setup / repair  (Bash)
+## 17. read / validation  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -399,7 +399,7 @@ protected abstract boolean isInAlphabet(byte);
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129
 ```
 
-## 18. edit_file / repair  (Edit)
+## 18. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -415,7 +415,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Utilities/Tools.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 19. run_test / repair  (Bash)
+## 19. test / validation  (Bash)
 _step 17_
 
 **Thought** (narration):
@@ -457,7 +457,7 @@ public class T {
 [MFRGG===] -> true
 ```
 
-## 20. search_code / localization  (Bash)
+## 20. search / localization  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -473,7 +473,7 @@ grep -rn "new Entry(" app/src/main/java --include=*.java
 (eval):1: no matches found: --include=*.java
 ```
 
-## 21. search_code / localization  (Bash)
+## 21. search / localization  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -491,7 +491,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java:210
 app/src/main/java/org/shadowice/flocke/an
 ```
 
-## 22. read_file / localization  (Bash)
+## 22. read / localization  (Bash)
 _step 20 | **FAILED**_
 
 **Thought** (none):
@@ -514,7 +514,7 @@ Exit code 1
             if (intentAction.equals(INTENT_SCAN_QR)) {
 ```
 
-## 23. read_file / localization  (Bash)
+## 23. read / localization  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -540,7 +540,7 @@ Toast.makeText(this, R.string.backup_toast_storage_permissions, Toast.LENGTH_LON
                 Entry e = new Entry(result);
 ```
 
-## 24. edit_file / repair  (Edit)
+## 24. edit / repair  (Edit)
 _step 22_
 
 **Thought** (none):
@@ -556,7 +556,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/res/values/strings_main.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 25. edit_file / repair  (Edit)
+## 25. edit / repair  (Edit)
 _step 23_
 
 **Thought** (narration):
@@ -574,7 +574,7 @@ Now wire validation into the dialog:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 26. read_file / repair (own phase localization)  (Read)
+## 26. read / validation  (Read)
 _step 24_
 
 **Thought** (none):
@@ -600,7 +600,7 @@ _(none)_
 247	            public void af
 ```
 
-## 27. edit_file / repair  (Edit)
+## 27. edit / repair  (Edit)
 _step 25_
 
 **Thought** (none):
@@ -616,7 +616,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 28. edit_file / repair  (Edit)
+## 28. edit / repair  (Edit)
 _step 26_
 
 **Thought** (none):
@@ -632,7 +632,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 29. edit_file / repair  (Edit)
+## 29. edit / repair  (Edit)
 _step 27_
 
 **Thought** (none):
@@ -648,7 +648,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 30. edit_file / repair  (Edit)
+## 30. edit / repair  (Edit)
 _step 28_
 
 **Thought** (none):
@@ -664,7 +664,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 31. edit_file / repair  (Edit)
+## 31. edit / repair  (Edit)
 _step 29_
 
 **Thought** (none):
@@ -680,7 +680,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 32. edit_file / repair  (Edit)
+## 32. edit / repair  (Edit)
 _step 30_
 
 **Thought** (narration):
@@ -698,7 +698,7 @@ Now the defense-in-depth guard in the save handler:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 33. edit_file / repair  (Edit)
+## 33. edit / repair  (Edit)
 _step 31_
 
 **Thought** (none):
@@ -714,7 +714,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 34. edit_file / repair  (Edit)
+## 34. edit / repair  (Edit)
 _step 32_
 
 **Thought** (none):
@@ -730,7 +730,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-129/app/src/main/res/values/strings_main.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 35. build / repair  (Bash)
+## 35. build / validation  (Bash)
 _step 33_
 
 **Thought** (narration):
@@ -818,7 +818,7 @@ bug-129_output.txt
 build.gradle
 ```
 
-## 39. vcs / validation  (Bash)
+## 39. diff / validation  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -839,7 +839,7 @@ d2b96c29 add qwen as a model
 0e1ef440 Add prompts, bug info, and run generator
 ```
 
-## 40. read_file / validation (own phase localization)  (Bash)
+## 40. vcs / validation  (Bash)
 _step 38_
 
 **Thought** (none):
@@ -855,7 +855,7 @@ git rev-parse --show-toplevel; cat .gitignore 2>/dev/null | head
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs
 ```
 
-## 41. read_file / validation  (Read)
+## 41. read / validation  (Read)
 _step 39_
 
 **Thought** (none):

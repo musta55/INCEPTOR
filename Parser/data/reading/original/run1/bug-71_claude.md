@@ -7,9 +7,9 @@
 - steps (LLM inferences): 30 | actions: 50 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(1: unchecked) -> localization(42: succeeded) -> repair(4: succeeded) -> validation(3: unchecked)
+Phases: planning(1: unchecked) -> localization(38: succeeded) -> planning(2: unchecked) -> localization(2: succeeded) -> repair(2: succeeded) -> validation(5: succeeded)
 
-## 1. orient / understanding  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -43,7 +43,7 @@ settings.gradle
 utils
 ```
 
-## 2. delegate / localization  (Agent)
+## 2. sub-agent / localization  (Agent)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -57,7 +57,7 @@ In this Android project (KISS launcher), find the code related to these preferen
 **Result**:
 _delegated to subagent `sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ` -- its 18 actions follow below_
 
-## 3. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 3. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 2_
 
 **Thought** (none):
@@ -75,7 +75,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_
 ```
 
-## 4. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 4. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 3_
 
 **Thought** (none):
@@ -92,7 +92,7 @@ grep -r "favorites-hide\|hide-favorites\|favorites-screen\|history-hide" /Volume
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-71/app/src/main/res/xml/preferences.xml:                android:key="his
 ```
 
-## 5. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 5. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 4_
 
 **Thought** (none):
@@ -110,7 +110,7 @@ grep -rn "displayFavorites\|hideFavorites\|favorites.*visibility\|mFavorites\|fa
 /Volumes/Dumpy/Research/a
 ```
 
-## 6. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 6. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 5_
 
 **Thought** (none):
@@ -127,7 +127,7 @@ grep -rn "setVisibility\|VISIBLE\|GONE\|INVISIBLE" /Volumes/Dumpy/Research/autom
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-71/app/src/main/java/fr/neamar/kiss/MainActivity.java:267:                    emptyListView.setVisib
 ```
 
-## 7. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 7. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 6_
 
 **Thought** (none):
@@ -154,7 +154,7 @@ _(none)_
 12	import and
 ```
 
-## 8. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 8. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 7_
 
 **Thought** (none):
@@ -172,7 +172,7 @@ grep -rn "favorites\|favoritesBar\|enable-favorites-bar" /Volumes/Dumpy/Research
 /Volumes/Dumpy/Resea
 ```
 
-## 9. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 9. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 8_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ _(none)_
 12	import and
 ```
 
-## 10. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 10. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 9_
 
 **Thought** (none):
@@ -229,7 +229,7 @@ _(none)_
 15	imp
 ```
 
-## 11. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 11. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 10_
 
 **Thought** (none):
@@ -253,7 +253,7 @@ _(none)_
 9
 ```
 
-## 12. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 12. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 11_
 
 **Thought** (none):
@@ -281,7 +281,7 @@ _(none)_
 13	import fr.neamar.kiss.MainActivity
 ```
 
-## 13. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 13. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 12_
 
 **Thought** (none):
@@ -299,7 +299,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_r
 ```
 
-## 14. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 14. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 13_
 
 **Thought** (none):
@@ -326,7 +326,7 @@ _(none)_
 12	import android.provider.Contacts
 ```
 
-## 15. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 15. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 14_
 
 **Thought** (none):
@@ -343,7 +343,7 @@ grep -rn "setVisibility" /Volumes/Dumpy/Research/automated_program_repair_for_ui
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-71/app/src/main/java/fr/neamar/kiss/forwarder/Favorites.ja
 ```
 
-## 16. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 16. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 15_
 
 **Thought** (none):
@@ -361,7 +361,7 @@ find /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_or
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-71/app/src/main/res/layout/main_kissbar.xml
 ```
 
-## 17. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 17. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 16_
 
 **Thought** (none):
@@ -387,7 +387,7 @@ _(none)_
 11
 ```
 
-## 18. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 18. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 17_
 
 **Thought** (none):
@@ -414,7 +414,7 @@ _(none)_
 12	import an
 ```
 
-## 19. search_code / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 19. search / localization  (Bash)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 18_
 
 **Thought** (none):
@@ -431,7 +431,7 @@ grep -rn "favorites_hide\|history_hide_name\|enable_favorites_bar" /Volumes/Dump
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-71/app/src/main/res/values/strings.xml:148:    <string name="enable_favorites_bar">Show favorites above search bar
 ```
 
-## 20. read_file / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
+## 20. read / localization  (Read)  [subagent sub-toolu_012Bu1Gq6ZrFWph9ZLWWnVZZ]
 _step 19_
 
 **Thought** (none):
@@ -461,7 +461,7 @@ _(none)_
 15	}
 ```
 
-## 21. read_file / localization  (Read)
+## 21. read / localization  (Read)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -488,7 +488,7 @@ _(none)_
 12	import and
 ```
 
-## 22. read_file / localization  (Read)
+## 22. read / localization  (Read)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -515,7 +515,7 @@ _(same inference as the previous action)_
 12	import android.provider.Contacts
 ```
 
-## 23. read_file / localization  (Bash)
+## 23. read / localization  (Bash)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -570,7 +570,7 @@ c3783c71 Added files to set up the server.
 d523
 ```
 
-## 25. read_file / localization  (Bash)
+## 25. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -596,7 +596,7 @@ sed -n 1,200p app/src/main/res/layout/main.xml
         android:layout_
 ```
 
-## 26. search_code / localization  (Bash)
+## 26. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -620,7 +620,7 @@ grep -n "updateSearchRecords\|isViewingSearchResults\|isViewingAllApps\|displayK
 406:            displa
 ```
 
-## 27. read_file / localization  (Bash)
+## 27. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -644,7 +644,7 @@ protected void onResume() {
             prefs.edit().putBoolean("require-layout-u
 ```
 
-## 28. search_code / localization  (Bash)
+## 28. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -660,7 +660,7 @@ grep -rn "history-onclick\|favorites-hide\|display-history\|touch-and-hold\|hist
 (eval):1: no matches found: --include=*.xml
 ```
 
-## 29. search_code / localization  (Bash)
+## 29. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -680,7 +680,7 @@ app/src/main/res/xml/preferences.xml:170:                android:dependency="his
 app
 ```
 
-## 30. search_code / localization  (Bash)
+## 30. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -701,7 +701,7 @@ grep -n "onTouch\|OnTouchListener\|setOnTouchListener\|dispatchTouchEvent" app/s
 574:    public bo
 ```
 
-## 31. read_file / localization  (Bash)
+## 31. read / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -727,7 +727,7 @@ sed -n 180,300p app/src/main/java/fr/neamar/kiss/MainActivity.java; echo ---; se
         IntentFilter intentFilterFullLoadOver = new Int
 ```
 
-## 32. read_file / localization  (Bash)
+## 32. read / localization  (Bash)
 _step 11 | **FAILED**_
 
 **Thought** (none):
@@ -760,7 +760,7 @@ import java.util.concurrent.Executors;
 import fr.neamar
 ```
 
-## 33. read_file / localization  (Bash)
+## 33. read / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -781,7 +781,7 @@ Preview (first 2KB):
 SystemMessage(subtype='init', data={'type': 'system', 'subtype': 'init', 'cwd': '/Volumes/Dum
 ```
 
-## 34. read_file / localization  (Bash)
+## 34. other / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -814,7 +814,7 @@ public class NullSearcher extends Searcher {
         // (oth
 ```
 
-## 35. read_file / localization  (Bash)
+## 35. read / localization  (Bash)
 _step 14 | **FAILED**_
 
 **Thought** (none):
@@ -831,7 +831,7 @@ Exit code 1
 (eval):cd:1: no such file or directory: app/src/main/java/fr/neamar/kiss/forwarder
 ```
 
-## 36. read_file / localization  (Bash)
+## 36. read / localization  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -856,7 +856,7 @@ if (appWidgetId != -1) {
             int appWidgetId = mAppWidgetHost.allocateAppWidgetId();
 ```
 
-## 37. read_file / localization  (Bash)
+## 37. read / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -882,7 +882,7 @@ cat /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_ori
     <Im
 ```
 
-## 38. read_file / localization  (Bash)
+## 38. read / localization  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -906,7 +906,7 @@ sed -n 300,380p /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/run
         });
 ```
 
-## 39. search_code / localization  (Bash)
+## 39. search / localization  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -936,7 +936,7 @@ cd /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_orig
 23:        versionName "3.13.5"
 ```
 
-## 40. read_file / localization  (Bash)
+## 40. read / planning  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -962,7 +962,7 @@ Fix since the last beta version:
 * Fix: fix long click issue on scrol
 ```
 
-## 41. read_file / localization  (Bash)
+## 41. other / planning  (Bash)
 _step 20 | **FAILED**_
 
 **Thought** (none):
@@ -978,7 +978,7 @@ cd /tmp && timeout 15 curl -sS "https://api.github.com/search/issues?q=repo:Neam
 api.github.com is blocked: this experiment measures repair, not retrieval of the upstream fix. Work from the bug report and the code in this repo.
 ```
 
-## 42. read_file / localization  (Bash)
+## 42. read / localization  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -1006,7 +1006,7 @@ sed -n 425,520p /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/run
         // http://developer.and
 ```
 
-## 43. read_file / localization  (Read)
+## 43. read / localization  (Read)
 _step 22_
 
 **Thought** (narration):
@@ -1031,7 +1031,7 @@ Now I understand the structure. Let me examine the exact tap-handling logic once
 79
 ```
 
-## 44. edit_file / repair  (Edit)
+## 44. edit / repair  (Edit)
 _step 23_
 
 **Thought** (narration):
@@ -1063,7 +1063,7 @@ Fix: decouple "reveal the favorites bar" from the `history-onclick`/gesture-acti
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-71/app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 45. edit_file / repair  (Edit)
+## 45. edit / repair  (Edit)
 _step 24_
 
 **Thought** (none):
@@ -1079,7 +1079,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-71/app/src/main/java/fr/neamar/kiss/forwarder/ExperienceTweaks.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 46. read_file / repair  (Bash)
+## 46. read / validation  (Bash)
 _step 25_
 
 **Thought** (none):
@@ -1103,7 +1103,7 @@ private void doAction(String action) {
                     case "display-apps":
 ```
 
-## 47. build / repair  (Bash)
+## 47. build / validation  (Bash)
 _step 26_
 
 **Thought** (narration):
@@ -1165,7 +1165,7 @@ git status --short; git --no-pager diff -- app/src/main/java/fr/neamar/kiss/forw
 (Bash completed with no output)
 ```
 
-## 50. vcs / validation  (Bash)
+## 50. diff / validation  (Bash)
 _step 29_
 
 **Thought** (none):

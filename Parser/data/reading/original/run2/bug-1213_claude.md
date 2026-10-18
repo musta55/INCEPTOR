@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 19 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(9: succeeded) -> repair(9: succeeded) -> validation(1: unchecked)
+Phases: localization(9: succeeded) -> repair(4: succeeded) -> localization(1: succeeded) -> repair(3: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -40,7 +40,7 @@ settings.gradle
 (eval):1: no matches found: --include=*.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -64,7 +64,7 @@ app/src/main/res/values-bg-rBG/strings_auth.xml
 app/src
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -84,7 +84,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java
 app/src/main/java/org/shadowice/flocke/andotp/Activities/AuthenticateActivity
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -107,7 +107,7 @@ cat app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPrefere
  * copies of the Software, and to p
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -131,7 +131,7 @@ cat app/src/main/res/layout/component_authentication.xml app/src/main/res/layout
     android:paddingBottom="@dimen/activity_margin_small"
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ grep -n "Confirm\|Transformation\|endIcon\|EndIcon\|passwordVisib\|Toggle" app/s
 381:                    passwordConfirm.setInputType(InputType
 ```
 
-## 7. read_file / localization  (Read)
+## 7. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ _(none)_
 362
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ grep -n "material\|compileSdk\|appcompat" app/build.gradle
 76:    implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 9_
 
 **Thought** (none):
@@ -216,7 +216,7 @@ grep -n "Confirm\|Transformation\|passwordLayout" app/src/main/java/org/shadowic
 105:            passwordConfi
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (narration):
@@ -234,7 +234,7 @@ Now let me apply the fix to `CredentialsPreference.java`, porting the approach u
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (none):
@@ -250,7 +250,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -268,7 +268,7 @@ Now I'll add the helper methods that keep both fields in sync:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -284,7 +284,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1213/app/src/main/res/layout/component_authentication.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. read_file / repair (own phase localization)  (Read)
+## 14. read / localization  (Read)
 _step 14_
 
 **Thought** (narration):
@@ -318,7 +318,7 @@ Now let me check the encryption-password dialog in settings, which shares the sa
 71	    public PasswordEncryptedPreference(Contex
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 15_
 
 **Thought** (none):
@@ -334,7 +334,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/PasswordEncryptedPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -350,7 +350,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1213/app/src/main/java/org/shadowice/flocke/andotp/Preferences/PasswordEncryptedPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 17_
 
 **Thought** (none):
@@ -366,7 +366,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1213/app/src/main/res/layout/component_password.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. build / repair  (Bash)
+## 18. build / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -390,7 +390,7 @@ _(none)_
 > Task :app:mergePlayDebugJavaResource
 ```
 
-## 19. search_code / validation  (Bash)
+## 19. search / validation  (Bash)
 _step 19_
 
 **Thought** (none):

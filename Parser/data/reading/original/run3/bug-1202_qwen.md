@@ -7,9 +7,9 @@
 - steps (LLM inferences): 13 | actions: 10 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, subagent_internals_not_streamed, subagent_result_not_streamed, num_turns_excludes_continuation_turns
 
-Phases: localization(2: succeeded) -> repair(2: blocked) -> validation(6: blocked)
+Phases: localization(2: succeeded) -> repair(1: blocked) -> validation(7: blocked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -42,7 +42,7 @@ Explore this Android project to find code related to "Filter Images" functionali
 **Result**:
 _delegated to subagent `sub-chatcmpl-tool-8405a96363268b4c` -- its 0 actions follow below_
 
-## 2. read_file / localization  (read_file)
+## 2. read / localization  (read_file)
 _step 4_
 
 **Thought** (reasoning):
@@ -112,7 +112,7 @@ import android.support.v7.widget.RecyclerView;
 import andr
 ```
 
-## 3. edit_file / repair  (edit)
+## 3. edit / repair  (edit)
 _step 5_
 
 **Thought** (reasoning):
@@ -153,7 +153,7 @@ The file: /home/antu_shared/automated_program_repair_for_ui_bugs/runs/qwen_origi
         if (mClickedFilter || mDoodleSelected) {
 ```
 
-## 4. build / repair  (run_shell_command)
+## 4. build / validation  (run_shell_command)
 _step 6 | **FAILED**_
 
 **Thought** (reasoning):
@@ -209,7 +209,7 @@ A problem occurred configuring root project 'bug-1202'.
       > No cached version of com.android.tools.build:gradle:3
 ```
 
-## 6. build / validation  (run_shell_command)
+## 6. search / validation  (run_shell_command)
 _step 8_
 
 **Thought** (reasoning):
@@ -233,7 +233,7 @@ Gradle 4.4.1
 /usr/bin/gradle
 ```
 
-## 7. read_file / validation  (read_file)
+## 7. read / validation  (read_file)
 _step 9_
 
 **Thought** (reasoning):
@@ -304,7 +304,7 @@ Signal: (none)
 Process Group PGID: 3075570
 ```
 
-## 10. read_file / validation  (read_file)
+## 10. read / validation  (read_file)
 _step 12_
 
 **Thought** (reasoning):

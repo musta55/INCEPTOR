@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(9: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> localization(1: succeeded) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:30:44.047Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the manual-entry validation, patch numeric parsing safely, then run
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:30:47.279Z | **FAILED**_
 
 **Thought** (none):
@@ -60,7 +60,7 @@ settings.gradle
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:30:49.143Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java:221
 app/src/main/java/org
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T08:30:53.090Z_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ Total output lines: 428
  * in the Software without restriction, including without limi
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T08:30:55.941Z_
 
 **Thought** (none):
@@ -141,7 +141,7 @@ Output:
             }
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-23T08:31:04.840Z_
 
 **Thought** (narration):
@@ -159,7 +159,7 @@ The defect is confirmed: validation parses `int` values without guarding overflo
 Plan updated
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T08:31:08.391Z_
 
 **Thought** (none):
@@ -184,7 +184,7 @@ Output:
         final EditText labelInp
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-23T08:31:10.883Z_
 
 **Thought** (none):
@@ -213,7 +213,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java
 ```
 
-## 9. diff / repair  (exec_command)
+## 9. read / validation  (exec_command)
 _step 13 | 2026-09-23T08:31:18.871Z_
 
 **Thought** (narration):
@@ -240,7 +240,7 @@ Output:
             if (oldType == Entry.OTPType.TOTP || oldType == Entry
 ```
 
-## 10. vcs / repair  (exec_command)
+## 10. diff / validation  (exec_command)
 _step 14 | 2026-09-23T08:31:22.658Z_
 
 **Thought** (none):
@@ -264,7 +264,7 @@ show:128
 cmp:1
 ```
 
-## 11. plan / repair  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-23T08:31:25.707Z_
 
 **Thought** (none):
@@ -280,7 +280,7 @@ _(none)_
 Plan updated
 ```
 
-## 12. build / repair  (exec_command)
+## 12. build / validation  (exec_command)
 _step 16 | 2026-09-23T08:31:27.664Z_
 
 **Thought** (none):
@@ -302,7 +302,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 6 stopped Daemons could not be reused, use --status for details
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-23T08:31:29.651Z_
 
 **Thought** (none):
@@ -330,7 +330,7 @@ Output:
 > Task :
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-23T08:31:35.836Z_
 
 **Thought** (narration):
@@ -360,7 +360,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-23T08:31:43.421Z_
 
 **Thought** (none):
@@ -387,7 +387,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked fo
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T08:31:48.749Z_
 
 **Thought** (none):
@@ -403,7 +403,7 @@ _(none)_
 Plan updated
 ```
 
-## 17. search_code / validation  (exec_command)
+## 17. search / validation  (exec_command)
 _step 21 | 2026-09-23T08:31:51.306Z_
 
 **Thought** (none):

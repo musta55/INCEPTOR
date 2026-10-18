@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(3: succeeded) -> repair(6: succeeded) -> validation(2: unchecked) -> localization(2: failed)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(3: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:09:14.484Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the Info page’s license source, patch the truncation, then run th
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:09:16.952Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:09:17.828Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rwxr-xr-x@  1 sage
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T05:09:21.034Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-25T05:09:22.555Z_
 
 **Thought** (narration):
@@ -131,7 +131,7 @@ Total output lines: 245
      7	    <string name="menu_editSchedule">Edit Schedule</string>
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:09:25.833Z_
 
 **Thought** (none):
@@ -157,7 +157,7 @@ Output:
     an
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-25T05:09:35.654Z_
 
 **Thought** (narration):
@@ -175,7 +175,7 @@ The defect is explicit truncation (`"..."`) in `strings.xml`, not a scrolling is
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-25T05:09:49.969Z_
 
 **Thought** (none):
@@ -212,7 +212,7 @@ Success. Updated the following files:
 A app/src/main/res/raw/license.txt
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-25T05:09:53.119Z_
 
 **Thought** (narration):
@@ -230,7 +230,7 @@ The complete GPL is now packaged as a raw resource and displayed verbatim. I’m
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-25T05:09:55.626Z_
 
 **Thought** (none):
@@ -252,7 +252,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-25T05:09:57.784Z_
 
 **Thought** (none):
@@ -276,7 +276,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/a
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-25T05:10:04.383Z_
 
 **Thought** (none):
@@ -306,7 +306,7 @@ Output:
 :app:transformDexArchiveWithDexMergerForDe
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-25T05:10:08.805Z_
 
 **Thought** (narration):
@@ -324,7 +324,7 @@ The required build passes. I’m doing a final diff and APK-content sanity check
 Plan updated
 ```
 
-## 14. env_setup / validation  (exec_command)
+## 14. search / validation  (exec_command)
 _step 18 | 2026-09-25T05:10:12.045Z_
 
 **Thought** (none):
@@ -355,7 +355,7 @@ Output:
      4	impo
 ```
 
-## 15. search_code / validation  (exec_command)
+## 15. search / validation  (exec_command)
 _step 19 | 2026-09-25T05:10:14.110Z_
 
 **Thought** (narration):
@@ -385,7 +385,7 @@ exit=128
 -- config --
 ```
 
-## 16. read_file / localization  (exec_command)
+## 16. read / validation  (exec_command)
 _step 20 | 2026-09-25T05:10:18.719Z_
 
 **Thought** (none):
@@ -413,7 +413,7 @@ HARNESS
 /var/folders/28/_9_mht7s10d5tf_cw0nmz8tc0000gn/T/uiab-read-guard/codex_original_run2/
 ```
 
-## 17. plan / localization  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-25T05:10:22.610Z_
 
 **Thought** (none):

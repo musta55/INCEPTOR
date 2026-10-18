@@ -7,9 +7,9 @@
 - steps (LLM inferences): 24 | actions: 19 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(5: succeeded) -> repair(8: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(5: succeeded) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:36:04.455Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the back-navigation and orange selector behavior, then patch and bu
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:36:06.290Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r--@
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:36:08.446Z_
 
 **Thought** (narration):
@@ -84,7 +84,7 @@ app/src/main/java/swati4star/createpdf/interfaces/DataSetChanged.java
 app/src/main/java/swati4star/createpdf/interfaces/OnPDFCompresse
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T04:36:10.641Z_
 
 **Thought** (none):
@@ -100,7 +100,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:36:13.850Z_
 
 **Thought** (narration):
@@ -134,7 +134,7 @@ import android.os.Bundle;
 import android.
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T04:36:16.591Z_
 
 **Thought** (none):
@@ -158,7 +158,7 @@ app/src/main/java/swati4star/createpdf/fragment/InvertPdfFragment.java-46-import
 app/src/main/java/swati4star/createpdf/fragment/InvertPdfFragment.java-47-import static swati4star.createpdf.util.String
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T04:36:20.123Z_
 
 **Thought** (none):
@@ -185,7 +185,7 @@ Total output lines: 208
    254	        ArrayList<Uri> imageUris = intent.get
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T04:36:28.668Z_
 
 **Thought** (narration):
@@ -219,7 +219,7 @@ android {
         vectorDrawables.useSupportLibrar
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T04:36:32.116Z_
 
 **Thought** (none):
@@ -252,7 +252,7 @@ check.dependsOn 'checkstyle'
 task checkstyle(type: Checkstyle, group: 'V
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-25T04:36:38.329Z_
 
 **Thought** (narration):
@@ -286,7 +286,7 @@ Success. Updated the following files:
 M app/src/main/java/swati4star/createpdf/activity/MainActivity.java
 ```
 
-## 11. search_code / repair  (exec_command)
+## 11. search / validation  (exec_command)
 _step 15 | 2026-09-25T04:36:43.300Z_
 
 **Thought** (none):
@@ -313,7 +313,7 @@ Output:
 270-            Fragment currentFr
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-25T04:36:46.136Z_
 
 **Thought** (narration):
@@ -331,7 +331,7 @@ The source tree is untracked in this harness baseline, but the patch is present.
 Plan updated
 ```
 
-## 13. build / repair  (exec_command)
+## 13. build / validation  (exec_command)
 _step 17 | 2026-09-25T04:36:48.236Z_
 
 **Thought** (none):
@@ -353,7 +353,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T04:36:50.090Z_
 
 **Thought** (none):
@@ -377,7 +377,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T04:36:58.213Z_
 
 **Thought** (narration):
@@ -407,7 +407,7 @@ warn: removing resource swati4star.createpdf:plurals/error_over_count without re
 :app:javaPreCompileDebug
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T04:37:06.324Z_
 
 **Thought** (none):
@@ -435,7 +435,7 @@ Output:
 :app:transformResourcesWithMergeJav
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T04:37:12.653Z_
 
 **Thought** (none):
@@ -455,7 +455,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. read_file / validation  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-25T04:37:17.160Z_
 
 **Thought** (narration):
@@ -491,7 +491,7 @@ Relevant lines:
      7
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-25T04:37:19.883Z_
 
 **Thought** (none):

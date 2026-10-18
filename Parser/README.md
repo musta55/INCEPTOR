@@ -44,12 +44,13 @@ python3 -m atif.cli validate                            # re-validate the conver
 python3 -m atif.cli validate --from-raw --config all    # all 7,650 converted in memory; writes only the report
 python3 -m atif.cli validate --harbor                   # plus Harbor's official validator
 python3 -m atif.cli phases 18 --runs 1                  # phases -> subphases outline, with outcomes
-python3 -m atif.cli view --all                          # viewer data: viewer/data/overview.js + bugs/bug-<id>.js
+python3 -m atif.cli view --all                          # viewer data: overview.js, bugs/bug-<id>.js, corpus packs, engine
 python3 -m atif.cli segment 18 --runs 1                 # purposes -> segments outline (baseline B3)
 python3 -m atif.cli actions 18                          # categories, phases and the phase sequence
 python3 -m atif.cli audit 18 --agent qwen               # how much of each raw log survived conversion
 python3 -m atif.cli output 8 codex <call_id> --run 2    # one tool result in full, from the raw log
-python3 -m atif.cli serve --open                        # viewer + Analyze page on http://127.0.0.1:8765/
+python3 -m atif.cli serve --open                        # viewer + its engine (uploads, rules) on http://127.0.0.1:8765/
+python3 -m atif.cli engine                              # the hosted viewer's engine: viewer/engine/atif.zip
 python3 -m atif.cli analyze LOG [--rules rules.json]    # one log of any agent (or ATIF), outside the corpus
 python3 -m atif.cli view --all --rules rules.json       # the corpus viewer under your own rules
 python3 -m unittest discover -s tests -t .
@@ -94,39 +95,129 @@ directly under `data/atif/`, `data/annotation/` and `data/reading/` are archived
 Outcomes come from `Dataset/a_apr_test_results/` (`atif.outcomes`): the harness compiled the patched
 app and ran the bug's instrumentation tests, so the verdict is not the agent's own claim.
 
-The viewer (`viewer/index.html`, then a bug's `viewer/bug.html`) opens from `file://` with no
-server. It shows the `original` configuration: the overview holds run 1 of every bug × agent, and
-each bug page holds runs 1–3 as phases → subphases → steps, with the repair attempts and the
-first fix marked; its tooltips quote the codebook. The data format is
+The viewer (`viewer/`) is TrajecTiers, a trace exploration dashboard. It has four pages; the
+header links Corpus and Lookup tables. The corpus pages
+(`viewer/index.html`, then a bug's `viewer/bug.html`) open from `file://` with no server. They show
+the `original` configuration: the corpus page holds run 1 of every bug × agent (an Agent filter, an
+Outcome filter, a search where a bug id such as `8` or `bug8` matches exactly that bug, and a
+Statistics tab), and each bug page holds runs 1–3 as phases → categories (consecutive actions of
+one category) → steps, each phase with its outcome (a phase whose checks changed shows them in
+order, ✗ → ✓), with the repair attempts and the first fix marked; its tooltips quote the
+codebook. The only identifier shown for an action is its number (`#12`). A step's details panel
+shows the line of the output that decided its verdict (`BUILD SUCCESSFUL in 1m 55s`), the
+actions that decided its phase's outcome as links (the edits of a repair attempt are judged by
+the build or test after them), why it got its phase (the phase lookup's row), the step's full
+thought and result, and its raw ATIF JSON (read from the
+corpus packs, so not from `file://`). Corpus bugs can be removed
+from view (kept in the browser, with Restore). The data format is
 [View data contract.md](View%20data%20contract.md) (`trajview/3`); `python3 -m atif.cli view --all`
-rewrites it after `convert`.
+rewrites it after `convert`, together with the corpus packs (`viewer/data/atif/run<k>/bug-<id>.json.gz`,
+the converted ATIF, about 11 MB) and the engine zip.
 
-**Analyze a log, with your own rules.** `python3 -m atif.cli serve` starts a local server
-(standard library only, this machine only) that serves the viewer and its third page,
-`analyze.html`. Drop one log of Claude Code, Codex CLI or Qwen Code, or an ATIF file, on it: the
-agent is recognised from the content, the bug id from the log's paths, and the trajectory is
-shown with the bug page's Trajectory and Timeline views. Raw logs are read as the agents wrote
-them: Codex's rollout JSONL, Qwen Code's stream-json, and for Claude Code its stream-json or
-session transcript JSONL (or the SDK dump of the corpus); a JSON array of events works too.
-Its Rules card has three tiers, one sentence per rule: **mandatory** rules (codebook G1–G7 and
-the repeated-reads flag F1, with fixed numbers), always applied, with no way to switch them off,
-remove them or change them, in the page or in a rules file; four **optional** rules (O1 lint is a
-build, O2 shared test code, O3 project docs are orientation, O4 web lookups are localization),
-none added by default, each added or removed with one click; and **custom** rules:
-set the phase or the category of actions whose command, target or tool contains some text, or
-the role of files whose path does. Each matching rule reports the actions it changed; one that
-would break a mandatory rule (say, the first-fix boundary of G1) is listed as skipped. "+ Rule from this action" in the details panel starts a rule from an
-action. Export the rules as `rules.json` and apply them to the corpus pages with
-`view --all --rules rules.json`, or to one log with `analyze`. The rule set format is in
-`atif/rules.py`; the default rule set reproduces `atif.phase` exactly (`tests/test_rules.py`).
-The overview and bug pages show the rules they were built with under **Rules**.
+**Lookup tables, one set of rows for every trajectory.** Categories and phases come from the
+Final lookup tables (`atif/lookup.py`, word for word the tab "Final lookup table" of
+`Ground Truth/annotation_workbook.xlsx`, 2026-10-17): the action table turns a tool call into
+one of 11 categories (a shell command program by program, the highest category on the line
+winning), the target table gives every file a target (source, test, docs, build, other,
+outside), and the phase table (rows 1–15, the first that matches) turns the category, the
+targets and the position (the first step, before or after the first edit of a source file)
+into a phase: planning, localization, reproduction, repair or validation. Rows 14 and 15 and
+the general rule give the previous step's phase. There are no grouping rules. The phases'
+outcomes still read the runs' verdicts through the taxonomy's finer action kinds. `tables.html` (Lookup tables; `rules.html` redirects
+to it) shows the built-in tables and is the only place where rows are added, and every page
+applies them to every trajectory: the corpus page, each bug page and the uploads. With rows
+added, the corpus is re-run from its packs by the analysis engine (about 4 s for the 150 run-1
+trajectories in the browser, then cached per set of rows), and each row shows how many corpus
+actions it changed. The engine is this package: on the hosted viewer
+(https://trajectiers.vercel.app) it runs in the browser with Pyodide (CPython in WebAssembly,
+about 10 MB from cdn.jsdelivr.net on the first visit), from `viewer/engine/atif.zip`, which
+`view` and `engine` rewrite and `tests/test_rules.py` checks is current; locally,
+`python3 -m atif.cli serve` starts a server (standard library only, this machine only) that
+answers the same calls with native Python. A page opened from `file://` cannot start the engine
+and shows the built-in tables. The page names the tables (Final lookup table, 2026-10-17) and
+has three sections, action lookup, target files and phase lookup, each with the user's rows, a
+form to add one, and the table word for word in a collapsed block (Category | Shell commands |
+Native tools with the shell runners, the ignored programs and the several-programs rule; the
+target table; phase rows 1–15 and the general rule), whose rows have **Change…** to start a row
+of the user's from them. Two tiers: the **built-in** rows, always applied and never changed
+(the viewer no longer offers the ready-made rows O1–O4: the Final tables cover them, and a table
+file that lists some keeps only its own rows); and **your rows**, which win over the
+built-in ones (between two of yours, the later): an action row gives steps whose command, tool
+or program matches a category (and reads their runs as that category's), a *shell tool* row
+makes an unknown agent's tool a shell tool (its commands are then read like Bash's), a target row
+gives files whose path contains some text a target, a phase row gives matching steps a phase. A
+match that would break the first fix (an edit of a source file is always repair; reproduction
+only before the first fix, repair and validation only from it on) is skipped. A step's details
+panel says why it got its category (the action table's entry) and its phase (the phase table's
+row). "+ Row from this action" in the details panel of any trajectory opens the page
+with a row started from that action. `view --all --rules tables.json` writes the viewer data
+with a table file and `analyze --rules` applies one to a log (older `rules.json` files are read
+too; their grouping rules are ignored). The format is in `atif/rules.py`; with no rows added it
+reproduces `atif.phase` exactly (`tests/test_rules.py`). The grouping rules of codebook
+version 3 are baseline B4 and the phase lookup of version 4 (rows P1–P11) baseline B5
+(`atif/baselines.py`); table files written for version 4 are read with their values mapped
+(run_test → test, toolchain → build, understanding → planning).
+
+**Uploads.** The Upload page (`upload.html`) takes one or more files and asks how they are
+related: **separate** trajectories, **one bug, several agents**, or **one agent, several runs**.
+It shows each file's agent, model, bug and action count and checks the choice (one agent only for
+runs, distinct run numbers, one bug, no SWE-bench run beside an Android one); a comparison opens
+as `analyze.html#g=<id>` with its members in a bar and the **Fingerprint** tab, and
+`upload.html#g=<id>` edits it. Each upload is kept in the browser (IndexedDB, with its ATIF; a
+comparison is written on its members' records), listed on the corpus page next
+to the corpus, counted in its statistics by agent, and has its own page (`analyze.html#u=<id>`)
+that compares it with the corpus runs of the same agent and, when it names a corpus bug, with
+that bug's runs. **Unrecognized steps** (`atif/diagnose.py`): a step whose tool is in no table
+(it counts as `other`) or whose shell command runs a program in no table (`run_shell`) takes
+the phase of the step before it; the upload's page and the Lookup tables page list them, grouped
+by tool or program, each with a suggested row from fixed name rules (a tool whose `command`
+argument holds command lines is a shell tool, `list_dir` is orient, `cargo test` is run_test,
+...), which one click adds. The corpus agents have none (`tests/test_diagnose.py`). The agent
+and format are recognised from the content, never the file name:
+
+| Agent | Log | Versions read | Files |
+|---|---|---|---|
+| Claude Code | stream-json, session transcript JSONL, Claude Agent SDK dump | 2.1.181–2.1.283 (corpus) | `.jsonl` `.json` `.log` `.txt` |
+| Codex CLI | session rollout JSONL | 0.138 (corpus); the older `shell` tool too | `.jsonl` |
+| Qwen Code | stream-json | 0.24 (corpus) | `.jsonl` `.log` `.json` |
+| any agent | one ATIF trajectory (e.g. Harbor's `agent/trajectory.json`, written for 34 agents) | ATIF v1.x; checked on v1.2, v1.5, v1.6, v1.7 | `.json` |
+| SWE-agent | a SWE-bench run's `<instance>.traj`, or a row of Hugging Face's SWE-agent chat export (`nebius/SWE-agent-trajectories`) | 0.x and 1.x (SWE-bench Verified submissions) | `.traj` `.json` |
+| OpenHands | the run's messages (SWE-bench submissions' `trajs/<instance>.json`, `nebius/SWE-rebench-openhands-trajectories` rows) or its event stream (`--save-trajectory-path`, an evaluation row's `history`) | CodeAct 2.x | `.json` |
+| mini-swe-agent | `<instance>.traj.json` (live-SWE-agent too) | 1.13–1.14 | `.json` |
+
+A JSON array of events works too. Categories need the agent's tool names, which live in the
+"Agent vocabularies" tables of `atif/taxonomy.py`: Claude Code, Codex CLI and Qwen Code are
+checked on the corpus; OpenHands, Terminus-2, mini-swe-agent and Trae Agent on published Harbor
+ATIF runs (`tests/test_parsers.py`, `ForeignAgentTests`), and Gemini CLI shares Qwen Code's names.
+Any other agent's shell commands are read when its shell tool has one of these names; its other
+tools count as `other`. The rules were built for Android repair (paths relative to a `bug-<id>`
+checkout; Gradle, Maven, make and pytest runs), so another kind of project gets its categories and
+phases but fewer build and test verdicts.
+
+**SWE-bench runs** are kept apart from the Android corpus. The SWE-agent, OpenHands and
+mini-swe-agent adapters (`atif/sweagent.py`, `openhands.py`, `miniswe.py`, sharing
+`atif/swebench.py`) convert a run to ATIF and record a SWE-bench project in `extra.project`
+(`atif/project.py`): the repository root the task names (`/testbed`, `/workspace/<repo>`,
+`/<repo>`), and the instance id when the log or file name gives one. No bug id or outcome is
+needed. While such a trajectory is analysed, paths are read relative to that root, Python's test
+conventions apply (`tests/`, `test_*.py`, `conftest.py`; pytest's and unittest's summaries and
+tracebacks decide a test run), a script the agent writes at the repository root or outside it
+(`reproduce_issue.py`, `/tmp/repro.py`) is its reproduction script (test code, but not a
+`test_modified` change), running it is a test run, and running an editing script of its own
+(`python edit_file.py <file> ...`, as live-SWE-agent does) edits the file it names. An ATIF file
+whose task names the repository folder gets the same project. Every other trajectory, the
+corpus included, is read exactly as before (`tests/test_swebench.py`). An upload's page does not
+compare a SWE-bench run with the corpus, and Statistics counts it in its own group. Agentless
+and AutoCodeRover are fixed pipelines, not agents, and are not read.
 
 Manual annotation runs on `Ground Truth/`, built by `python3 make_ground_truth.py`:
 - 15 trajectories of `original`/run 1, 5 per agent, split by each agent's pass rate;
-- one workbook per annotator, with a tab per trajectory.
+- one workbook, `annotation_workbook.xlsx`: all 15 trajectories on its Annotation sheet, with
+  three columns per annotator (`A1 …`, `A2 …`) and the ATIF columns (full command, shell
+  command, result, …); `--workbook-only --labels FILE:K` rewrites it and copies labels in.
 
-The procedure, lookup tables and grouping rules are in
-[Annotation Codebook.docx](Annotation%20Codebook.docx) (v3.0).
+The procedure and the lookup tables are in
+[Annotation Codebook.docx](Annotation%20Codebook.docx) (v4.0).
 
 Scoring (codebook §11.1, spec §9): download each annotator's filled workbook from Drive, then
 
@@ -159,15 +250,18 @@ other plans of September, in `../Inspection/plans-and-reports-before-phase-taxon
 | `atif/detect.py` | which parser a file needs, from its content |
 | `atif/corpus.py` | the dataset layout: find any (agent, config, run, bug) log, output paths |
 | `atif/outcomes.py` | APR outcomes per (agent, config, run, bug); badges read from the trajectory |
-| `atif/taxonomy.py` | L1 `category`, file roles and the tool registry (the mid-level labels it refines are what baseline B3 reads) |
+| `atif/lookup.py` | the Final lookup tables, word for word, and the code that applies them: action → category, file → target, phase-table rows 1–15 |
+| `atif/taxonomy.py` | the finer action kinds (`kind`, `mid_level`) the verdicts, outcomes, flags and baselines read, file roles of codebook v4, and the tool registry |
 | `atif/phase.py` | phases → outcome subphases, metrics, invariants ([Phase taxonomy.md](Phase%20taxonomy.md)) |
-| `atif/baselines.py` | baselines B1 (V2 first-edit split) and B3 (old purposes as phases) |
-| `atif/codebook.py` | the codebook's lookup tables, word for word, for the workbooks and the viewer |
+| `atif/baselines.py` | baselines B1 (V2 first-edit split), B3 (old purposes as phases), B4 (v3 grouping rules), B5 (v4 Table 4) |
+| `atif/codebook.py` | codebook version 4, word for word: Tables 1–4 (baseline B5), the outcome and flag tables the viewer quotes |
 | `atif/agreement.py` | kappa, boundary F1 with tolerance, WindowDiff, bootstrap CIs (`score_ground_truth.py`) |
 | `atif/view.py` | viewer data `trajview/3` ([View data contract.md](View%20data%20contract.md)) |
-| `atif/rules.py` | rule sets: the built-in rules in plain words, their settings, custom phase / category / file-role rules |
-| `atif/upload.py` | one uploaded log or ATIF text → `trajview-single/1` (Analyze page, `analyze`) |
-| `atif/serve.py` | local server for the viewer and the Analyze page (`serve`) |
+| `atif/rules.py` | lookup tables: the built-in contents in plain words (`contents`), ready-made rows, the user's action / shell-tool / file-role / phase rows |
+| `atif/upload.py` | one uploaded log or ATIF text → `trajview-single/1` (`analyze.html`, `analyze`); corpus packs re-run under a rule set (`corpus_request`) |
+| `atif/diagnose.py` | an upload's unrecognized steps (unknown tools and programs), grouped, each with a suggested lookup-table row |
+| `atif/serve.py` | local server for the viewer and its engine: `/api/rules`, `/api/analyze`, `/api/corpus` (`serve`) |
+| `atif/engine.py` | this package zipped for the viewer to run in the browser with Pyodide (`engine`) |
 | `atif/verdict.py`, `atif/segment.py` | result verdicts; purposes → segments → loops (kept as baseline B3) |
 | `atif/tar.py` | TAR iteration rows, annotation CSV, reading views |
 | `atif/audit.py` | per-record-type retention measurement, independent of the parsers |

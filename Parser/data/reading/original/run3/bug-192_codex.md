@@ -7,9 +7,9 @@
 - steps (LLM inferences): 27 | actions: 22 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(12: succeeded)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(3: unchecked) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:08:35.057Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the editor lifecycle and state restoration, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:08:36.629Z | **FAILED**_
 
 **Thought** (none):
@@ -63,7 +63,7 @@ settings.gradle
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:08:37.395Z_
 
 **Thought** (narration):
@@ -94,7 +94,7 @@ app/src/main/java/net/gsantner/markor/format/highlighter/SpanCreatorP.java
 app/src/main/java/net/gs
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:08:38.969Z_
 
 **Thought** (none):
@@ -126,7 +126,7 @@ import android.appwidget.AppWidgetManager;
 im
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-26T17:08:41.096Z_
 
 **Thought** (narration):
@@ -144,7 +144,7 @@ The reset is in `onResume()`: every foreground transition calls `setText()`. I�
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:08:43.501Z_
 
 **Thought** (none):
@@ -173,7 +173,7 @@ Total output lines: 350
     76	    private V
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T17:08:44.371Z_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ Total output lines: 294
    176	    @OnTextChanged(value = R.id.document__fragment__edit__highlighting_editor, callback = OnTextChanged.Cal
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-26T17:08:46.626Z_
 
 **Thought** (none):
@@ -229,7 +229,7 @@ Total output lines: 481
    26
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-26T17:08:50.517Z | **FAILED**_
 
 **Thought** (none):
@@ -255,7 +255,7 @@ Total output lines: 201
     38
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-26T17:08:53.486Z_
 
 **Thought** (narration):
@@ -273,7 +273,7 @@ Reload handling already updates the UI only when disk content changes. I’ll re
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-26T17:08:55.373Z_
 
 **Thought** (none):
@@ -305,7 +305,7 @@ Success. Updated the following files:
 M app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java
 ```
 
-## 12. diff / repair  (exec_command)
+## 12. search / validation  (exec_command)
 _step 16 | 2026-09-26T17:08:56.353Z_
 
 **Thought** (narration):
@@ -341,7 +341,7 @@ app/src/main/res/layout
 app/src/main/re
 ```
 
-## 13. diff / repair  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-26T17:08:58.405Z_
 
 **Thought** (none):
@@ -374,7 +374,7 @@ Output:
 fatal: path 'app/
 ```
 
-## 14. read_file / repair  (exec_command)
+## 14. diff / validation  (exec_command)
 _step 18 | 2026-09-26T17:09:00.127Z_
 
 **Thought** (narration):
@@ -404,7 +404,7 @@ drwxr-xr-x@  4 sage  staff   128 Sep  9 11:54 .github
 -rw-r--r--@
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T17:09:02.563Z_
 
 **Thought** (none):
@@ -420,7 +420,7 @@ No Android lifecycle test framework exists in this legacy project, so verificati
 Plan updated
 ```
 
-## 16. build / repair  (exec_command)
+## 16. build / validation  (exec_command)
 _step 20 | 2026-09-26T17:09:03.989Z_
 
 **Thought** (narration):
@@ -444,7 +444,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:09:07.156Z_
 
 **Thought** (none):
@@ -469,7 +469,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/r
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:09:13.189Z_
 
 **Thought** (none):
@@ -497,7 +497,7 @@ Note: Recompile with -Xlint:deprecation for details.
 :app:genera
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:09:19.272Z_
 
 **Thought** (none):
@@ -523,7 +523,7 @@ Output:
 :app:processFlavorDefaultDebugJavaRes NO-SOUR
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-26T17:09:25.039Z_
 
 **Thought** (none):
@@ -550,7 +550,7 @@ Output:
 :app:t
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-26T17:09:30.800Z_
 
 **Thought** (none):
@@ -578,7 +578,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 :app:tran
 ```
 
-## 22. plan / repair  (update_plan)
+## 22. plan / planning  (update_plan)
 _step 26 | 2026-09-26T17:09:34.856Z_
 
 **Thought** (narration):

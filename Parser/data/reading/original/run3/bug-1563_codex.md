@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 18 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(5: succeeded) -> repair(7: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:54:28.794Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the directory reload and list-state flow, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:54:30.821Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r-
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:54:31.704Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/main/java/io/lerk/lrkFM/entities/HistoryEntry.java
 app/src/m
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T16:54:34.498Z_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-26T16:54:37.135Z_
 
 **Thought** (none):
@@ -133,7 +133,7 @@ import android.content.Intent;
 im
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T16:54:38.029Z_
 
 **Thought** (none):
@@ -161,7 +161,7 @@ Total output lines: 917
 192:     * The
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T16:54:40.773Z_
 
 **Thought** (narration):
@@ -192,7 +192,7 @@ Total output lines: 887
    126	            Manifest.permission.WRITE_EXTERNAL_STO
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T16:54:43.761Z_
 
 **Thought** (none):
@@ -219,7 +219,7 @@ Total output lines: 681
    544	        bookmarkItems.remo
 ```
 
-## 9. plan / localization  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-26T16:54:52.781Z_
 
 **Thought** (narration):
@@ -237,7 +237,7 @@ I’ve isolated the fix to `reloadCurrentDirectory()`: capture the first visible
 Plan updated
 ```
 
-## 10. edit_file / repair  (exec_command)
+## 10. edit / repair  (exec_command)
 _step 14 | 2026-09-26T16:54:58.333Z_
 
 **Thought** (none):
@@ -269,7 +269,7 @@ Success. Updated the following files:
 M app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java
 ```
 
-## 11. diff / repair  (exec_command)
+## 11. read / validation  (exec_command)
 _step 15 | 2026-09-26T16:55:02.194Z_
 
 **Thought** (none):
@@ -299,7 +299,7 @@ Output:
    571	        View firstVisibleView = fileL
 ```
 
-## 12. read_file / repair  (exec_command)
+## 12. read / validation  (exec_command)
 _step 16 | 2026-09-26T16:55:04.210Z_
 
 **Thought** (narration):
@@ -326,7 +326,7 @@ show_status=128
 fatal: path 'app/src/main/java/io/lerk/lrkFM/activities/FileActivity.java' exists on disk, but not in 'HE
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-26T16:55:07.522Z_
 
 **Thought** (none):
@@ -342,7 +342,7 @@ _(none)_
 Plan updated
 ```
 
-## 14. build / repair  (exec_command)
+## 14. build / validation  (exec_command)
 _step 18 | 2026-09-26T16:55:11.084Z_
 
 **Thought** (narration):
@@ -366,7 +366,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 3 stopped Daemons could not be reused, use --status for details
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-26T16:55:14.562Z_
 
 **Thought** (none):
@@ -389,7 +389,7 @@ Android SDK Build Tools 29.0.2 will be used.
 To suppress this warning, remove "buildToolsVersion '28.0.2'" from your build
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T16:55:22.719Z_
 
 **Thought** (none):
@@ -417,7 +417,7 @@ BUILD SUCCESSFUL in 9s
 28 actionable tasks: 26 executed, 2 up-to-date
 ```
 
-## 17. read_file / validation  (exec_command)
+## 17. read / validation  (exec_command)
 _step 21 | 2026-09-26T16:55:26.261Z_
 
 **Thought** (narration):
@@ -446,7 +446,7 @@ Output:
         View firstVisibleView = fileListView.getChildAt(0);
 ```
 
-## 18. plan / validation  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-26T16:55:29.455Z_
 
 **Thought** (none):

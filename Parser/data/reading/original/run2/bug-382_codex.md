@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 14 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(3: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:39:22.577Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace URI parameter parsing, patch the decoding order, then build the app
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:39:25.232Z | **FAILED**_
 
 **Thought** (none):
@@ -59,7 +59,7 @@ settings.gradle
 -- project files --
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:39:28.125Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ app/src/main/play/release-notes/es-ES/default.txt
 a
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:39:31.621Z_
 
 **Thought** (none):
@@ -123,7 +123,7 @@ import android.widget.TextView;
 import com.trianguloy.urlchecker.R
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:39:37.567Z_
 
 **Thought** (narration):
@@ -161,7 +161,7 @@ Output:
     pu
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-25T05:39:40.728Z_
 
 **Thought** (none):
@@ -177,7 +177,7 @@ The query is decoded before UrlQuerySanitizer splits it, turning encoded delimit
 Plan updated
 ```
 
-## 7. edit_file / repair  (exec_command)
+## 7. edit / repair  (exec_command)
 _step 11 | 2026-09-25T05:39:43.814Z_
 
 **Thought** (narration):
@@ -209,7 +209,7 @@ Success. Updated the following files:
 M app/src/main/java/com/trianguloy/urlchecker/modules/list/UriPartsModule.java
 ```
 
-## 8. plan / repair  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-25T05:39:48.307Z_
 
 **Thought** (narration):
@@ -227,7 +227,7 @@ The project has no unit or instrumentation test sources, so the focused one-line
 Plan updated
 ```
 
-## 9. build / repair  (exec_command)
+## 9. build / validation  (exec_command)
 _step 13 | 2026-09-25T05:39:51.464Z_
 
 **Thought** (none):
@@ -252,7 +252,7 @@ Starting a Gradle Daemon (subsequent builds will be faster)
 [2A[1B[1m> Starting Daemon[m[17D[1B[1A> IDLE[0K[6D[1B[2A[1m<[0;1m-------------> 0% INITIALIZING [32ms][m[38D[2B
 ```
 
-## 10. wait_process / repair  (write_stdin)
+## 10. other / validation  (write_stdin)
 _step 14 | 2026-09-25T05:39:53.327Z_
 
 **Thought** (none):
@@ -273,7 +273,7 @@ Output:
 [2A[1m<[0;1m-------------> 0% INITIALIZING [131ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [224ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [329ms][m[39D[1B[1m> Running init scripts[m[22D[1B[2A[1m<[0;1m-------------> 0% INITIALIZING [432ms
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-25T05:39:59.149Z_
 
 **Thought** (none):
@@ -295,7 +295,7 @@ Output:
 [3A[1m<[0;32;1m=[0;39;1m------
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-25T05:40:05.695Z_
 
 **Thought** (none):
@@ -322,7 +322,7 @@ Output:
 [4A[1m<[0;1m-------------> 0% WAITING[m[26D[1B> IDLE[6D[1B
 ```
 
-## 13. read_file / validation  (exec_command)
+## 13. read / validation  (exec_command)
 _step 17 | 2026-09-25T05:40:10.819Z_
 
 **Thought** (narration):
@@ -352,7 +352,7 @@ Output:
     77	        // the default parse
 ```
 
-## 14. plan / validation  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-25T05:40:12.733Z_
 
 **Thought** (none):

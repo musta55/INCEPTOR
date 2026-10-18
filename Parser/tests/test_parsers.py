@@ -542,7 +542,7 @@ class SufficiencyTests(unittest.TestCase):
     ATIF is a sufficient representation for the analysis, not just a convenient one."""
 
     def _labels(self, trajectory):
-        return [(r["action_index"], r["tool"], r["mid_level"], r["category"], r["edit_role"],
+        return [(r["action_index"], r["tool"], r["mid_level"], r["kind"], r["edit_role"],
                  r["failed"]) for r in taxonomy.annotate(trajectory)]
 
     def test_labels_are_invariant_to_output_truncation(self):
@@ -755,3 +755,51 @@ class ClaudeJsonTests(unittest.TestCase):
         self.assertEqual([c["function_name"] for c in calls], ["Read"])
         self.assertEqual(t["extra"]["cwd"], "/w/bug-18")
         self.assertEqual(t["agent"]["model_name"], "claude-opus-5")
+
+
+class ForeignAgentTests(unittest.TestCase):
+    """ATIF written by Harbor for agents outside the corpus: their tool vocabularies
+    (``taxonomy.SHELL_TOOLS``, ``EDITOR_TOOLS``, ``TOOL_MAP``) and results that carry no
+    ``source_call_id``.  The shapes are those of Harbor's published trajectories."""
+
+    @staticmethod
+    def _traj(calls, loose=False):
+        steps = []
+        for k, (name, args, out) in enumerate(calls, 1):
+            cid = f"c{k}"
+            steps.append({"step_id": k, "source": "agent", "message": "",
+                          "tool_calls": [{"tool_call_id": cid, "function_name": name, "arguments": args}],
+                          "observation": {"results": [{"content": out} if loose else
+                                                      {"source_call_id": cid, "content": out}]}})
+        return {"schema_version": "ATIF-v1.6", "session_id": "s", "agent": {"name": "x", "version": "1"},
+                "steps": steps}
+
+    def _cats(self, traj):
+        return [(r["kind"], r["result"]) for r in taxonomy.annotate(traj)]
+
+    def test_openhands(self):
+        rows = self._cats(self._traj([
+            ("str_replace_editor", {"command": "view", "path": "/stage"}, "dir listing"),
+            ("str_replace_editor", {"command": "view", "path": "/stage/a.py"}, "code"),
+            ("str_replace_editor", {"command": "str_replace", "path": "/stage/a.py",
+                                    "old_str": "a", "new_str": "b"}, "edited"),
+            ("execute_bash", {"command": "grep -rn foo /stage"}, "a.py:1: foo\n[The command completed with exit code 0.]"),
+            ("task_tracker", {"command": "plan", "task_list": []}, "ok"),
+            ("think", {"thought": "hm"}, "ok")]))
+        self.assertEqual([c for c, _ in rows], ["orient", "read_file", "edit_file", "search_code", "plan", "plan"])
+
+    def test_terminus_keystrokes_and_loose_results(self):
+        traj = self._traj([("bash_command", {"keystrokes": "cat notes.txt\n", "duration": 0.1}, "hello"),
+                           ("mark_task_complete", {}, "")], loose=True)
+        rows = self._cats(traj)
+        self.assertEqual(rows[0], ("read_file", "hello"))
+        self.assertEqual(rows[1][0], "other")
+
+    def test_trae_and_mini_swe_agent(self):
+        rows = self._cats(self._traj([
+            ("bash", {"command": "sed -n '1,20p' app.py"}, "x"),
+            ("str_replace_based_edit_tool", {"command": "create", "path": "/testbed/t.py", "file_text": "x"}, "ok"),
+            ("bash_command", {"command": "ls -la"}, "<returncode>0</returncode>\n<output>\n.</output>")]))
+        self.assertEqual([c for c, _ in rows], ["read_file", "edit_file", "orient"])
+        self.assertEqual(taxonomy.shell_command({"function_name": "str_replace_editor",
+                                                 "arguments": {"command": "view", "path": "/a"}}), "")

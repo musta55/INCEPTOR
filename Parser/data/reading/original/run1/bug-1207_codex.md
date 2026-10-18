@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 15 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(5: succeeded) -> repair(4: blocked) -> validation(1: blocked) -> localization(2: succeeded)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> repair(1: blocked) -> planning(1: unchecked) -> validation(4: blocked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:25:08.124Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the manual-entry validation and OTP calculations, then patch and bu
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:25:11.405Z | **FAILED**_
 
 **Thought** (none):
@@ -61,7 +61,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:25:12.656Z_
 
 **Thought** (narration):
@@ -89,7 +89,7 @@ Relevant files:
 ./app/src/main/java/org/shadowice/flocke/andotp/View/EntryViewHolder.java:156:        customPeriod.setText(String.f
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T08:25:17.599Z_
 
 **Thought** (none):
@@ -117,7 +117,7 @@ Total output lines: 379
  * in the Software without restriction, including without limitatio
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T08:25:20.876Z_
 
 **Thought** (none):
@@ -141,7 +141,7 @@ Total output lines: 177
     66	        final ArrayAdapter<Entry.OTPType> typeAdapter
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-23T08:25:23.538Z_
 
 **Thought** (none):
@@ -169,7 +169,7 @@ Total output lines: 263
         builder.setTitle(R.string.dialog_ti
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-23T08:25:27.857Z_
 
 **Thought** (narration):
@@ -200,7 +200,7 @@ Output:
     private static final
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-23T08:25:37.364Z_
 
 **Thought** (none):
@@ -216,7 +216,7 @@ The defect is confined to manual entry: only label/secret control Save, while pe
 Plan updated
 ```
 
-## 9. edit_file / repair  (exec_command)
+## 9. edit / repair  (exec_command)
 _step 13 | 2026-09-23T08:25:39.443Z_
 
 **Thought** (narration):
@@ -250,7 +250,7 @@ M app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java
 M app/src/main/res/values/strings_main.xml
 ```
 
-## 10. plan / repair  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-23T08:25:51.598Z_
 
 **Thought** (narration):
@@ -268,7 +268,7 @@ Validation is patched with defensive parsing; next I’m running the required cl
 Plan updated
 ```
 
-## 11. build / repair  (exec_command)
+## 11. build / validation  (exec_command)
 _step 15 | 2026-09-23T08:25:54.601Z_
 
 **Thought** (none):
@@ -290,7 +290,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 3 stopped Daemons could not be reused, use --status for details
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-23T08:25:56.991Z | **FAILED**_
 
 **Thought** (none):
@@ -347,7 +347,7 @@ Total output lines: 189
     55	            int
 ```
 
-## 14. search_code / localization  (exec_command)
+## 14. test / validation  (exec_command)
 _step 18 | 2026-09-23T08:26:12.486Z_
 
 **Thought** (narration):
@@ -380,7 +380,7 @@ Validation block:
                 boolean digitsValid = getPositiveInteg
 ```
 
-## 15. plan / localization  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-23T08:26:27.641Z_
 
 **Thought** (none):

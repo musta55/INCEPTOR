@@ -7,9 +7,9 @@
 - steps (LLM inferences): 101 | actions: 113 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: understanding(2: unchecked) -> localization(12: succeeded) -> understanding(11: unchecked) -> localization(2: succeeded) -> repair(6: succeeded) -> localization(2: succeeded) -> repair(4: succeeded) -> validation(74: succeeded)
+Phases: planning(2: unchecked) -> localization(25: succeeded) -> repair(6: succeeded) -> validation(2: unchecked) -> repair(3: succeeded) -> validation(58: succeeded) -> repair(1: succeeded) -> validation(16: succeeded)
 
-## 1. orient / understanding  (Bash)
+## 1. orient / planning  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -42,7 +42,7 @@ var
 Volumes
 ```
 
-## 2. orient / understanding  (Bash)
+## 2. orient / planning  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -71,7 +71,7 @@ README.md
 settings.gradle
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -87,7 +87,7 @@ grep -rl "passwordToggle\|PasswordTransformation\|show_password\|showPassword\|p
 (eval):1: no matches found: --include=*.java
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -109,7 +109,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.
 app/src/main/java/org/shadowice/flocke/andotp/Preferences
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 4 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -135,7 +135,7 @@ _(none)_
 11	        android:layout_width="ma
 ```
 
-## 6. read_file / localization  (Read)
+## 6. read / localization  (Read)
 _step 4 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ _(same inference as the previous action)_
 9	    android:paddingBottom="@dimen/activ
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -181,7 +181,7 @@ grep -n "Password\|Confirm\|passwordToggle\|Transformation" app/src/main/java/or
 329:            passwordLayout = root.findViewById(R.id.introPasswo
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 5 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -204,7 +204,7 @@ cat app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPrefere
  * copies of the Software, and to p
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 6 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -226,7 +226,7 @@ _(none)_
 306
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 6 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -249,7 +249,7 @@ _(same inference as the previous action)_
 8	 * copies of the So
 ```
 
-## 11. read_file / localization  (Read)
+## 11. read / localization  (Read)
 _step 7 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -273,7 +273,7 @@ _(none)_
 9	    android:paddingBottom="@dimen/activ
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 7 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -292,7 +292,7 @@ app/build.gradle:63:    implementation "com.heinrichreimersoftware:material-intr
 app/build.gradle:66:    implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
 ```
 
-## 13. read_file / localization  (Bash)
+## 13. orient / localization  (Bash)
 _step 8 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -321,7 +321,7 @@ TagsAdapter.java
 ThumbnailSelectionAdapter.java
 ```
 
-## 14. search_code / localization  (Bash)
+## 14. search / localization  (Bash)
 _step 8 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -345,7 +345,7 @@ cat app/src/main/res/layout/dialog_password_entry.xml; grep -n "passwordConfirm\
     android:layout_marginEnd="@
 ```
 
-## 15. orient / understanding  (Bash)
+## 15. orient / localization  (Bash)
 _step 9 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -374,7 +374,7 @@ android-35
 android-36
 ```
 
-## 16. read_file / understanding  (Bash)
+## 16. read / localization  (Bash)
 _step 9 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -402,7 +402,7 @@ android {
         applicationId "org.shadowice.flocke.andotp"
 ```
 
-## 17. search_code / understanding  (Bash)
+## 17. read / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -420,7 +420,7 @@ public final android.text.method.TransformationMethod getTransformationMethod();
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214
 ```
 
-## 18. search_code / understanding  (Bash)
+## 18. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -436,7 +436,7 @@ find ~/.gradle /root/.gradle ~/.m2 -path "*material*1.1.0*" -name "*.aar" 2>/dev
 /Users/splash/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.1.0/d61ed3259ed48bb0db311d73ab9f358554987b2/material-1.1.0.aar
 ```
 
-## 19. env_setup / understanding  (Bash)
+## 19. read / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -481,7 +481,7 @@ values-h360dp-land-v13
 values-h480dp-land-v1
 ```
 
-## 20. env_setup / understanding  (Bash)
+## 20. orient / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -509,7 +509,7 @@ DropdownMenuEndIconDelegate$1.class
 DropdownMenuEndIcon
 ```
 
-## 21. read_file / understanding  (Bash)
+## 21. read / localization  (Bash)
 _step 14 | **FAILED**_
 
 **Thought** (none):
@@ -526,7 +526,7 @@ Error: class not found: com/google/android/material/textfield/PasswordToggleEndI
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214
 ```
 
-## 22. read_file / understanding  (Bash)
+## 22. read / localization  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -547,7 +547,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate$1 impl
     Code
 ```
 
-## 23. read_file / understanding  (Bash)
+## 23. read / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -567,7 +567,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate$2 impl
   com.google.android.material.textfield.PasswordToggleEndIconDelegate$2(com.google.android.mat
 ```
 
-## 24. read_file / understanding  (Bash)
+## 24. read / localization  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -589,7 +589,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate extend
   private final com.google.and
 ```
 
-## 25. read_file / understanding  (Bash)
+## 25. read / localization  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -609,7 +609,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate$4 impl
   com.google.android.material.textfield.PasswordToggleEndIconDelegate$4(com.google.android.material.textfield.PasswordToggleEndIconDelegate);
 ```
 
-## 26. search_code / localization  (Bash)
+## 26. search / localization  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -640,7 +640,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/PasswordEntryDialog.java:3
     private String
 ```
 
-## 27. read_file / localization  (Read)
+## 27. read / localization  (Read)
 _step 20_
 
 **Thought** (none):
@@ -667,7 +667,7 @@ _(none)_
 12	i
 ```
 
-## 28. edit_file / repair  (Edit)
+## 28. edit / repair  (Edit)
 _step 21_
 
 **Thought** (narration):
@@ -685,7 +685,7 @@ Now I understand the defect. Let me examine how the Material password toggle wor
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Utilities/UIHelper.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 29. edit_file / repair  (Edit)
+## 29. edit / repair  (Edit)
 _step 22_
 
 **Thought** (none):
@@ -701,7 +701,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Utilities/UIHelper.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 30. edit_file / repair  (Edit)
+## 30. edit / repair  (Edit)
 _step 23 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -719,7 +719,7 @@ Now wiring it into the intro screen (the reported bug) and the other screens sha
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScreenActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 31. edit_file / repair  (Edit)
+## 31. edit / repair  (Edit)
 _step 23 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -735,7 +735,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 32. edit_file / repair  (Edit)
+## 32. edit / repair  (Edit)
 _step 24 | call 1/2 of this inference | **FAILED**_
 
 **Thought** (none):
@@ -751,7 +751,7 @@ _(none)_
 <tool_use_error>File has not been read yet. Read it first before writing to it.</tool_use_error>
 ```
 
-## 33. edit_file / repair  (Edit)
+## 33. edit / repair  (Edit)
 _step 24 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -767,7 +767,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/PasswordEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 34. read_file / localization  (Read)
+## 34. read / validation  (Read)
 _step 25 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -793,7 +793,7 @@ _(none)_
 32	import androi
 ```
 
-## 35. search_code / localization  (Bash)
+## 35. search / validation  (Bash)
 _step 25 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -810,7 +810,7 @@ grep -n "import org.shadowice" app/src/main/java/org/shadowice/flocke/andotp/Dia
 16:import org.shadowice.flocke.andotp.Utilities.Tools;
 ```
 
-## 36. edit_file / repair  (Edit)
+## 36. edit / repair  (Edit)
 _step 26 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -826,7 +826,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Preferences/PasswordEncryptedPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 37. edit_file / repair  (Edit)
+## 37. edit / repair  (Edit)
 _step 26 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -842,7 +842,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/PasswordEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 38. edit_file / repair  (Edit)
+## 38. edit / repair  (Edit)
 _step 27_
 
 **Thought** (none):
@@ -858,7 +858,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1214/app/src/main/java/org/shadowice/flocke/andotp/Preferences/PasswordEncryptedPreference.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 39. build / repair  (Bash)
+## 39. build / validation  (Bash)
 _step 28_
 
 **Thought** (narration):
@@ -919,7 +919,7 @@ git --no-pager diff -- app/src
 (Bash completed with no output)
 ```
 
-## 42. vcs / validation  (Bash)
+## 42. diff / validation  (Bash)
 _step 31_
 
 **Thought** (none):
@@ -935,7 +935,7 @@ git status --porcelain | head; git rev-parse --show-toplevel
 /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs
 ```
 
-## 43. search_code / validation  (Bash)
+## 43. search / validation  (Bash)
 _step 32 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -954,7 +954,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/PasswordEntryDialog.java-4
 app/src/main/java/org/shadowice/flocke/a
 ```
 
-## 44. read_file / validation  (Read)
+## 44. read / validation  (Read)
 _step 32 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -982,7 +982,7 @@ _(same inference as the previous action)_
 70
 ```
 
-## 45. device_ops / validation  (Bash)
+## 45. test / validation  (Bash)
 _step 33 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -1016,7 +1016,7 @@ Pixel_3.avd
 Pixel_3.ini
 ```
 
-## 46. search_code / validation  (Bash)
+## 46. search / validation  (Bash)
 _step 33 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -1037,7 +1037,7 @@ main
 play
 ```
 
-## 47. device_ops / validation  (Bash)
+## 47. test / validation  (Bash)
 _step 34_
 
 **Thought** (narration):
@@ -1062,7 +1062,7 @@ app-play-debug.apk
 output.json
 ```
 
-## 48. device_ops / validation  (Bash)
+## 48. test / validation  (Bash)
 _step 35_
 
 **Thought** (none):
@@ -1080,7 +1080,7 @@ Performing Streamed Install
 Success
 ```
 
-## 49. device_ops / validation  (Bash)
+## 49. test / validation  (Bash)
 _step 36_
 
 **Thought** (none):
@@ -1096,7 +1096,7 @@ export PATH=$PATH:/Volumes/Dumpy/Android/sdk/platform-tools; adb shell am start 
 Starting: Intent { cmp=org.shadowice.flocke.andotp.dev/org.shadowice.flocke.andotp.Activities.MainActivity }
 ```
 
-## 50. device_ops / validation  (Bash)
+## 50. test / validation  (Bash)
 _step 37_
 
 **Thought** (none):
@@ -1113,7 +1113,7 @@ topResumedActivity=ActivityRecord{7728e99 u0 org.shadowice.flocke.andotp.dev/org
 ok
 ```
 
-## 51. read_file / validation  (Read)
+## 51. read / validation  (Read)
 _step 38 | **FAILED**_
 
 **Thought** (none):
@@ -1129,7 +1129,7 @@ _(none)_
 Access outside repo directory is not allowed: /tmp/s1.png
 ```
 
-## 52. device_ops / validation  (Bash)
+## 52. test / validation  (Bash)
 _step 39_
 
 **Thought** (none):
@@ -1145,7 +1145,7 @@ mkdir -p .verify && export PATH=$PATH:/Volumes/Dumpy/Android/sdk/platform-tools;
 done
 ```
 
-## 53. read_file / validation  (Read)
+## 53. read / validation  (Read)
 _step 40_
 
 **Thought** (none):
@@ -1161,7 +1161,7 @@ _(none)_
 [image: image/png, 114,892 base64 chars omitted]
 ```
 
-## 54. device_ops / validation  (Bash)
+## 54. test / validation  (Bash)
 _step 41_
 
 **Thought** (none):
@@ -1177,7 +1177,7 @@ export PATH=$PATH:/Volumes/Dumpy/Android/sdk/platform-tools; adb shell input tap
 done
 ```
 
-## 55. read_file / validation  (Read)
+## 55. read / validation  (Read)
 _step 42_
 
 **Thought** (none):
@@ -1193,7 +1193,7 @@ _(none)_
 [image: image/png, 179,600 base64 chars omitted]
 ```
 
-## 56. device_ops / validation  (Bash)
+## 56. test / validation  (Bash)
 _step 43_
 
 **Thought** (none):
@@ -1209,7 +1209,7 @@ export PATH=$PATH:/Volumes/Dumpy/Android/sdk/platform-tools; adb shell input tap
 done
 ```
 
-## 57. read_file / validation  (Read)
+## 57. read / validation  (Read)
 _step 44_
 
 **Thought** (none):
@@ -1225,7 +1225,7 @@ _(none)_
 [image: image/png, 171,408 base64 chars omitted]
 ```
 
-## 58. device_ops / validation  (Bash)
+## 58. test / validation  (Bash)
 _step 45_
 
 **Thought** (none):
@@ -1241,7 +1241,7 @@ export PATH=$PATH:/Volumes/Dumpy/Android/sdk/platform-tools; adb shell input tap
 done
 ```
 
-## 59. read_file / validation  (Read)
+## 59. read / validation  (Read)
 _step 46_
 
 **Thought** (none):
@@ -1257,7 +1257,7 @@ _(none)_
 [image: image/png, 136,776 base64 chars omitted]
 ```
 
-## 60. device_ops / validation  (Bash)
+## 60. test / validation  (Bash)
 _step 47_
 
 **Thought** (none):
@@ -1278,7 +1278,7 @@ adb exec-out screencap -p > .verify/s5.png; echo done
 done
 ```
 
-## 61. read_file / validation  (Read)
+## 61. read / validation  (Read)
 _step 48_
 
 **Thought** (none):
@@ -1294,7 +1294,7 @@ _(none)_
 [image: image/png, 110,392 base64 chars omitted]
 ```
 
-## 62. device_ops / validation  (Bash)
+## 62. test / validation  (Bash)
 _step 49_
 
 **Thought** (none):
@@ -1313,7 +1313,7 @@ adb shell cat /sdcard/ui.xml | tr '>' '>\n' | grep -i "EditText\|password" | hea
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?><hierarchy rotation="0"><node index="0" text="" resource-id="" class="android.widget.FrameLayout" package="org.shadowice.flocke.andotp.dev" content-desc="" checkable="false" checked="false" clickable="false" enabled="true" focusable="false" focused="false" scrollable="false" long-clickable="false" password="false" selected="false" bounds="[0,
 ```
 
-## 63. device_ops / validation  (Bash)
+## 63. test / validation  (Bash)
 _step 50_
 
 **Thought** (none):
@@ -1339,7 +1339,7 @@ text="Secret123" resource-id="org.shadowice.flocke.andotp.dev:id/introPasswordEd
 text="Confirm password" resource-id="org.shadowice.flocke.andotp.dev:id/introPasswordConfirm"
 ```
 
-## 64. device_ops / validation  (Bash)
+## 64. test / validation  (Bash)
 _step 51_
 
 **Thought** (none):
@@ -1360,7 +1360,7 @@ adb shell cat /sdcard/ui3.xml | tr '>' '>\n' | grep -o 'text="[^"]*" resource-id
 (Bash completed with no output)
 ```
 
-## 65. device_ops / validation  (Bash)
+## 65. test / validation  (Bash)
 _step 52_
 
 **Thought** (none):
@@ -1377,7 +1377,7 @@ adb shell uiautomator dump /sdcard/ui3.xml; adb shell cat /sdcard/ui3.xml | tr '
 UI hierchary dumped to: /sdcard/ui3.xml
 ```
 
-## 66. device_ops / validation  (Bash)
+## 66. test / validation  (Bash)
 _step 53_
 
 **Thought** (none):
@@ -1394,7 +1394,7 @@ adb shell cat /sdcard/ui3.xml | tr '<' '\n' | grep -o 'text="[^"]*" resource-id=
 (Bash completed with no output)
 ```
 
-## 67. device_ops / validation  (Bash)
+## 67. test / validation  (Bash)
 _step 54_
 
 **Thought** (none):
@@ -1418,7 +1418,7 @@ for m in re.finditer(r'<node[^>]*>', x):
 (Bash completed with no output)
 ```
 
-## 68. read_file / validation (own phase localization)  (Bash)
+## 68. read / validation  (Bash)
 _step 55_
 
 **Thought** (none):
@@ -1441,7 +1441,7 @@ drwxr-xr-x@ 18 splash  staff     576 Sep 18 01:03 ..
 -rw-r--r--   1 splash  staff  173986 Sep 18 01:03 s5.png
 ```
 
-## 69. device_ops / validation  (Bash)
+## 69. test / validation  (Bash)
 _step 56_
 
 **Thought** (none):
@@ -1457,7 +1457,7 @@ export PATH=$PATH:/Volumes/Dumpy/Android/sdk/platform-tools; adb exec-out screen
 ok
 ```
 
-## 70. read_file / validation  (Read)
+## 70. read / validation  (Read)
 _step 57_
 
 **Thought** (none):
@@ -1473,7 +1473,7 @@ _(none)_
 [image: image/png, 143,364 base64 chars omitted]
 ```
 
-## 71. device_ops / validation  (Bash)
+## 71. test / validation  (Bash)
 _step 58_
 
 **Thought** (none):
@@ -1491,7 +1491,7 @@ adb shell dumpsys activity activities | grep -m1 topResumedActivity
 topResumedActivity=ActivityRecord{7728e99 u0 org.shadowice.flocke.andotp.dev/org.shadowice.flocke.andotp.Activities.IntroScreenActivity t190}
 ```
 
-## 72. device_ops / validation  (Bash)
+## 72. test / validation  (Bash)
 _step 59_
 
 **Thought** (none):
@@ -1519,7 +1519,7 @@ org.shadowice.flocke.andotp.dev:id/text_input_end_icon | text= '' | checked= fal
 org.shadowice.flocke.andotp.dev:id/introPasswordConfirm | text= 'Confirm password
 ```
 
-## 73. device_ops / validation  (Bash)
+## 73. test / validation  (Bash)
 _step 60_
 
 **Thought** (none):
@@ -1548,7 +1548,7 @@ org.shadowice.flocke.andotp.dev:id/text_input_end_icon | text= '' | checked= fal
 org.shadowice.flocke.andotp.dev:id/introPasswordConfirm | text= '•••••••••' | che
 ```
 
-## 74. device_ops / validation  (Bash)
+## 74. test / validation  (Bash)
 _step 61_
 
 **Thought** (none):
@@ -1576,7 +1576,7 @@ org.shadowice.flocke.andotp.dev:id/text_input_end_icon | text= '' | checked= tru
 org.shadowice.flocke.andotp.dev:id/introPasswordConfirm | text= 'Secret123' | checked= false | desc=
 ```
 
-## 75. read_file / validation  (Read)
+## 75. read / validation  (Read)
 _step 62_
 
 **Thought** (none):
@@ -1592,7 +1592,7 @@ _(none)_
 [image: image/png, 128,104 base64 chars omitted]
 ```
 
-## 76. device_ops / validation  (Bash)
+## 76. test / validation  (Bash)
 _step 63_
 
 **Thought** (none):
@@ -1620,7 +1620,7 @@ org.shadowice.flocke.andotp.dev:id/text_input_end_icon | text= '' | checked= fal
 org.shadowice.flocke.andotp.dev:id/introPasswordConfirm | text= '•••••••••' | checked= false
 ```
 
-## 77. device_ops / validation  (Bash)
+## 77. test / validation  (Bash)
 _step 64_
 
 **Thought** (none):
@@ -1639,7 +1639,7 @@ adb shell uiautomator dump /sdcard/u5.xml >/dev/null; adb shell cat /sdcard/u5.x
 text="Finished"
 ```
 
-## 78. device_ops / validation  (Bash)
+## 78. test / validation  (Bash)
 _step 65_
 
 **Thought** (none):
@@ -1658,7 +1658,7 @@ adb shell dumpsys activity activities | grep -m1 topResumedActivity
 topResumedActivity=ActivityRecord{b1b007c u0 org.shadowice.flocke.andotp.dev/org.shadowice.flocke.andotp.Activities.AuthenticateActivity t190}
 ```
 
-## 79. device_ops / validation  (Bash)
+## 79. test / validation  (Bash)
 _step 66_
 
 **Thought** (none):
@@ -1684,7 +1684,7 @@ org.shadowice.flocke.andotp.dev:id/text_input_end_icon android.widget.ImageButto
 org.shadowice.flocke.andotp.dev:id/buttonUnlock android.widget.Button [772,693][975,819]
 ```
 
-## 80. device_ops / validation  (Bash)
+## 80. test / validation  (Bash)
 _step 67_
 
 **Thought** (none):
@@ -1706,7 +1706,7 @@ adb shell dumpsys activity activities | grep -m1 topResumedActivity
 topResumedActivity=ActivityRecord{2b9a8c6 u0 org.shadowice.flocke.andotp.dev/org.shadowice.flocke.andotp.Activities.MainActivity t190}
 ```
 
-## 81. device_ops / validation  (Bash)
+## 81. test / validation  (Bash)
 _step 68_
 
 **Thought** (none):
@@ -1733,7 +1733,7 @@ at android.os.Binder.execTransactInternal(Binder.java:1505)
 'This will be the last version of andOTP to support Android versions below 5.1 (Lollipop). The increased effort required to maintain a separate storage implementation just for those older versions as well as their low market shares make a continu
 ```
 
-## 82. device_ops / validation  (Bash)
+## 82. test / validation  (Bash)
 _step 69_
 
 **Thought** (none):
@@ -1758,7 +1758,7 @@ for s in re.findall(r'<node[^>]*>', x):
 android.widget.Button 'OK' [810,1184][978,1310]
 ```
 
-## 83. device_ops / validation  (Bash)
+## 83. test / validation  (Bash)
 _step 70_
 
 **Thought** (none):
@@ -1783,7 +1783,7 @@ ERROR: could not get idle state.
 cat: /sdcard/c.xml: No such file or directory
 ```
 
-## 84. device_ops / validation  (Bash)
+## 84. test / validation  (Bash)
 _step 71_
 
 **Thought** (none):
@@ -1808,7 +1808,7 @@ topResumedActivity=ActivityRecord{2b9a8c6 u0 org.shadowice.flocke.andotp.dev/org
 cat: /sdcard/c.xml: No such file or directory
 ```
 
-## 85. device_ops / validation  (Bash)
+## 85. test / validation  (Bash)
 _step 72_
 
 **Thought** (none):
@@ -1835,7 +1835,7 @@ for s in re.findall(r'<node[^>]*>', x):
 '' | 'Next' [891,1605][1038,1752]
 ```
 
-## 86. device_ops / validation  (Bash)
+## 86. test / validation  (Bash)
 _step 73_
 
 **Thought** (none):
@@ -1855,7 +1855,7 @@ mLastPausedActivity: ActivityRecord{b1b007c u0 org.shadowice.flocke.andotp.dev/o
     * Hist  #0: ActivityRecord{2b9a8c6 u0 org.shadowice.flocke.andotp.dev/org.shadowice.flocke.andotp.Activiti
 ```
 
-## 87. read_file / validation  (Read)
+## 87. read / validation  (Read)
 _step 74_
 
 **Thought** (none):
@@ -1871,7 +1871,7 @@ _(none)_
 [image: image/png, 30,816 base64 chars omitted]
 ```
 
-## 88. device_ops / validation  (Bash)
+## 88. test / validation  (Bash)
 _step 75_
 
 **Thought** (none):
@@ -1888,7 +1888,7 @@ adb logcat -d -t 400 2>/dev/null | grep -iE "andotp|AndroidRuntime" | grep -iE "
 --- no crash lines above means clean ---
 ```
 
-## 89. device_ops / validation  (Bash)
+## 89. test / validation  (Bash)
 _step 76_
 
 **Thought** (none):
@@ -1913,7 +1913,7 @@ android.widget.ImageButton org.shadowice.flocke.andotp.dev:id/text_input_end_ico
 android.widget.Button org.shadowice.flocke.andotp.dev:id/buttonUnlock '' [772,638][975,764]
 ```
 
-## 90. device_ops / validation  (Bash)
+## 90. test / validation  (Bash)
 _step 77_
 
 **Thought** (none):
@@ -1940,7 +1940,7 @@ for s in re.findall(r'<node[^>]*>', x):
 cat: /sdcard/f.xml: No such file or directory
 ```
 
-## 91. device_ops / validation  (Bash)
+## 91. test / validation  (Bash)
 _step 78_
 
 **Thought** (none):
@@ -1966,7 +1966,7 @@ topResumedActivity=ActivityRecord{b275522 u0 org.shadowice.flocke.andotp.dev/org
 ERROR: could not get idle state.
 ```
 
-## 92. device_ops / validation  (Bash)
+## 92. test / validation  (Bash)
 _step 79_
 
 **Thought** (none):
@@ -1983,7 +1983,7 @@ adb exec-out screencap -p > .verify/main.png; echo ok
 ok
 ```
 
-## 93. read_file / validation  (Read)
+## 93. read / validation  (Read)
 _step 80_
 
 **Thought** (none):
@@ -1999,7 +1999,7 @@ _(none)_
 [image: image/png, 30,800 base64 chars omitted]
 ```
 
-## 94. search_code / validation (own phase localization)  (Bash)
+## 94. search / validation  (Bash)
 _step 81_
 
 **Thought** (none):
@@ -2016,7 +2016,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Utilities/Settings.java:538:      
 ugrep: warning: app/src/main/res/values/strings.xml: No such file or directory
 ```
 
-## 95. device_ops / validation  (Bash)
+## 95. test / validation  (Bash)
 _step 82_
 
 **Thought** (none):
@@ -2034,7 +2034,7 @@ _has_set_default_values.xml
 org.shadowice.flocke.andotp.dev_preferences.xml
 ```
 
-## 96. device_ops / validation  (Bash)
+## 96. test / validation  (Bash)
 _step 83_
 
 **Thought** (none):
@@ -2058,7 +2058,7 @@ adb shell run-as org.shadowice.flocke.andotp.dev cat shared_prefs/org.shadowice.
     <set name="pre
 ```
 
-## 97. device_ops / validation  (Bash)
+## 97. edit / repair  (Bash)
 _step 84_
 
 **Thought** (none):
@@ -2083,7 +2083,7 @@ o
     <boolean name="pref_enable_screenshot" value="true" />
 ```
 
-## 98. device_ops / validation  (Bash)
+## 98. test / validation  (Bash)
 _step 85_
 
 **Thought** (none):
@@ -2102,7 +2102,7 @@ adb exec-out screencap -p > .verify/auth2.png; echo ok
 ok
 ```
 
-## 99. read_file / validation  (Read)
+## 99. read / validation  (Read)
 _step 86_
 
 **Thought** (none):
@@ -2118,7 +2118,7 @@ _(none)_
 [image: image/png, 159,664 base64 chars omitted]
 ```
 
-## 100. device_ops / validation  (Bash)
+## 100. test / validation  (Bash)
 _step 87_
 
 **Thought** (none):
@@ -2140,7 +2140,7 @@ adb exec-out screencap -p > .verify/main2.png; echo ok
 ok
 ```
 
-## 101. read_file / validation  (Read)
+## 101. read / validation  (Read)
 _step 88_
 
 **Thought** (none):
@@ -2156,7 +2156,7 @@ _(none)_
 [image: image/png, 56,316 base64 chars omitted]
 ```
 
-## 102. device_ops / validation  (Bash)
+## 102. test / validation  (Bash)
 _step 89_
 
 **Thought** (none):
@@ -2173,7 +2173,7 @@ adb shell input tap 1022 137; sleep 1; adb exec-out screencap -p > .verify/menu.
 ok
 ```
 
-## 103. read_file / validation  (Read)
+## 103. read / validation  (Read)
 _step 90_
 
 **Thought** (none):
@@ -2189,7 +2189,7 @@ _(none)_
 [image: image/png, 74,756 base64 chars omitted]
 ```
 
-## 104. device_ops / validation  (Bash)
+## 104. test / validation  (Bash)
 _step 91_
 
 **Thought** (none):
@@ -2206,7 +2206,7 @@ adb shell input tap 672 263; sleep 2; adb exec-out screencap -p > .verify/settin
 ok
 ```
 
-## 105. read_file / validation  (Read)
+## 105. read / validation  (Read)
 _step 92_
 
 **Thought** (none):
@@ -2222,7 +2222,7 @@ _(none)_
 [image: image/png, 188,884 base64 chars omitted]
 ```
 
-## 106. device_ops / validation  (Bash)
+## 106. test / validation  (Bash)
 _step 93_
 
 **Thought** (none):
@@ -2239,7 +2239,7 @@ adb shell input tap 300 573; sleep 2; adb exec-out screencap -p > .verify/authpr
 ok
 ```
 
-## 107. read_file / validation  (Read)
+## 107. read / validation  (Read)
 _step 94_
 
 **Thought** (none):
@@ -2255,7 +2255,7 @@ _(none)_
 [image: image/png, 151,800 base64 chars omitted]
 ```
 
-## 108. device_ops / validation  (Bash)
+## 108. test / validation  (Bash)
 _step 95_
 
 **Thought** (none):
@@ -2275,7 +2275,7 @@ adb exec-out screencap -p > .verify/authpref2.png; echo ok
 ok
 ```
 
-## 109. read_file / validation  (Read)
+## 109. read / validation  (Read)
 _step 96_
 
 **Thought** (none):
@@ -2291,7 +2291,7 @@ _(none)_
 [image: image/png, 153,192 base64 chars omitted]
 ```
 
-## 110. device_ops / validation  (Bash)
+## 110. test / validation  (Bash)
 _step 97_
 
 **Thought** (none):
@@ -2315,7 +2315,7 @@ adb exec-out screencap -p > .verify/authpref4.png; echo ok
 ok
 ```
 
-## 111. read_file / validation  (Read)
+## 111. read / validation  (Read)
 _step 98_
 
 **Thought** (none):
@@ -2331,7 +2331,7 @@ _(none)_
 [image: image/png, 153,140 base64 chars omitted]
 ```
 
-## 112. device_ops / validation  (Bash)
+## 112. edit / validation  (Bash)
 _step 99_
 
 **Thought** (narration):

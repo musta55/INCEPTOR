@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 24 | failed actions: 3
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(13: succeeded) -> repair(5: succeeded) -> localization(2: failed) -> repair(3: succeeded) -> validation(1: unchecked)
+Phases: localization(13: succeeded) -> repair(5: succeeded) -> validation(6: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -56,7 +56,7 @@ README.md
 settings.gradle
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -79,7 +79,7 @@ _(none)_
 8	 * copies of the So
 ```
 
-## 4. read_file / localization  (Read)
+## 4. read / localization  (Read)
 _step 2 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -102,7 +102,7 @@ _(same inference as the previous action)_
 8	 * to use, copy, modify, merge, publish, distribute, subl
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 3 | **FAILED**_
 
 **Thought** (none):
@@ -121,7 +121,7 @@ ugrep: warning: app/src/main/res/values/strings.xml: No such file or directory
 (eval):1: no matches found: --include=*.java
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -167,7 +167,7 @@ values-tr-rTR
 values-u
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -195,7 +195,7 @@ styles.xml
 ugrep: warning: app/src/main/res/values/strings.xml: No such file or directory
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -214,7 +214,7 @@ app/src/main/res/values/strings_main.xml:63:    <string name="toast_auth_failed_
 app/src/main/res/values/strings_main.xml:64
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -232,7 +232,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java:210
 app/src/main/java/org/shadowice/flocke/an
 ```
 
-## 10. read_file / localization  (Bash)
+## 10. read / localization  (Bash)
 _step 8 | **FAILED**_
 
 **Thought** (none):
@@ -256,7 +256,7 @@ Exit code 1
  * copies of the Softwa
 ```
 
-## 11. read_file / localization  (Read)
+## 11. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ _(none)_
 137	        List<String> ta
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -298,7 +298,7 @@ app/build.gradle:61:    implementation "commons-codec:commons-codec:1.14"
 app/src/main/java/org/shadowice/flocke/andotp/Utilities/StorageAccessHelper.java:7:import org.apa
 ```
 
-## 13. read_file / localization  (Read)
+## 13. read / localization  (Read)
 _step 11_
 
 **Thought** (none):
@@ -321,7 +321,7 @@ _(none)_
 62	    <string name="toast_auth_failed">Authentic
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 12_
 
 **Thought** (narration):
@@ -339,7 +339,7 @@ Now let me add an error string resource:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-129/app/src/main/res/values/strings_main.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -355,7 +355,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. edit_file / repair  (Edit)
+## 16. edit / repair  (Edit)
 _step 14_
 
 **Thought** (none):
@@ -371,7 +371,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 17. edit_file / repair  (Edit)
+## 17. edit / repair  (Edit)
 _step 15_
 
 **Thought** (narration):
@@ -389,7 +389,7 @@ Now update the validation watcher and guard the save action:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 18. edit_file / repair  (Edit)
+## 18. edit / repair  (Edit)
 _step 16_
 
 **Thought** (none):
@@ -405,7 +405,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-129/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 19. read_file / localization  (Bash)
+## 19. read / validation  (Bash)
 _step 17 | **FAILED**_
 
 **Thought** (none):
@@ -429,7 +429,7 @@ Exit code 1
             }
 ```
 
-## 20. read_file / localization  (Bash)
+## 20. read / validation  (Bash)
 _step 18_
 
 **Thought** (none):
@@ -456,7 +456,7 @@ sed -n 845,870p app/src/main/java/org/shadowice/flocke/andotp/Activities/MainAct
                 Toast.makeText(this, R.string.to
 ```
 
-## 21. search_code / repair  (Bash)
+## 21. search / validation  (Bash)
 _step 19_
 
 **Thought** (none):
@@ -472,7 +472,7 @@ find ~/.gradle/caches -name "commons-codec-1.14.jar" 2>/dev/null | head -3; find
 /Users/splash/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.14/3cb1181b2141a7e752f5bdc998b7ef1849f726cf/commons-codec-1.14.jar
 ```
 
-## 22. run_test / repair  (Bash)
+## 22. test / validation  (Bash)
 _step 20_
 
 **Thought** (none):
@@ -508,7 +508,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 '12345678' -> false
 ```
 
-## 23. build / repair  (Bash)
+## 23. build / validation  (Bash)
 _step 21_
 
 **Thought** (none):
@@ -535,7 +535,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > T
 ```
 
-## 24. read_file / validation  (Bash)
+## 24. read / validation  (Bash)
 _step 22_
 
 **Thought** (narration):

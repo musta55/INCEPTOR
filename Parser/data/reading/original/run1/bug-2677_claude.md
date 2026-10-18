@@ -7,9 +7,9 @@
 - steps (LLM inferences): 38 | actions: 37 | failed actions: 2
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(10: succeeded) -> understanding(6: unchecked) -> localization(3: succeeded) -> repair(5: succeeded) -> localization(2: succeeded) -> repair(4: succeeded) -> validation(7: unchecked)
+Phases: localization(19: succeeded) -> repair(3: succeeded) -> validation(4: succeeded) -> repair(3: succeeded) -> validation(8: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -34,7 +34,7 @@ find . -iname "*servo*" -o -iname "*robot*" -o -iname "*arm*" | grep -v build/ |
 ./app/src/main/res/menu/robot
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -59,7 +59,7 @@ cat ./app/src/main/res/layout/servo_controller_layout.xml; grep -rl "Knob\|Dial\
         android:id="@+id/servo_title"
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -75,7 +75,7 @@ grep -rln "degreeText\|SeekArc" app/src/main/java/
 app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -97,7 +97,7 @@ grep -n "degreeText\|SeekArc\|seekArc\|setProgress\|getProgress\|EditorInfo\|OnE
 130:        degreeText3 = servo
 ```
 
-## 5. read_file / localization  (Read)
+## 5. read / localization  (Read)
 _step 5_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 221	        servo4Title.setText(getResources().getString(R.string.
 ```
 
-## 6. read_file / localization  (Read)
+## 6. read / localization  (Read)
 _step 6_
 
 **Thought** (none):
@@ -140,7 +140,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 475	            ((TextView) servo1TimeLine.getChildAt(i).findViewById(R.id.timeline_box_degree_text)).setText(servoData.getDegree1() + getResources
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 7 | **FAILED**_
 
 **Thought** (none):
@@ -160,7 +160,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:228:                
 app/src/main/java/io/pslab/activity/RoboticArmActivity.java:230:                    editEnter = false;
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8 | **FAILED**_
 
 **Thought** (none):
@@ -198,7 +198,7 @@ ls app/src/androidTest/java/io/pslab/activity/;
 ScreenshotsTest.java
 ```
 
-## 10. read_file / localization  (Read)
+## 10. read / localization  (Read)
 _step 10_
 
 **Thought** (none):
@@ -221,7 +221,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 127	        View servo4Layout = find
 ```
 
-## 11. search_code / understanding  (Bash)
+## 11. search / localization  (Bash)
 _step 11_
 
 **Thought** (narration):
@@ -242,7 +242,7 @@ find ~/.gradle /root -path "*Triggertrap*" -name "*.aar" 2>/dev/null | head; fin
 /Users/splash/.gradle/caches/modul
 ```
 
-## 12. env_setup / understanding  (Bash)
+## 12. orient / localization  (Bash)
 _step 12_
 
 **Thought** (none):
@@ -270,7 +270,7 @@ com
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2677
 ```
 
-## 13. search_code / understanding  (Bash)
+## 13. search / localization  (Bash)
 _step 13_
 
 **Thought** (none):
@@ -294,7 +294,7 @@ public class com.triggertrap.seekarc.SeekArc extends android.view.View {
   private final int mA
 ```
 
-## 14. search_code / understanding  (Bash)
+## 14. search / localization  (Bash)
 _step 14_
 
 **Thought** (none):
@@ -318,7 +318,7 @@ private void updateOnTouch(android.view.MotionEvent);
   public void setOnSeekArcChangeListener(co
 ```
 
-## 15. search_code / understanding  (Bash)
+## 15. search / localization  (Bash)
 _step 15_
 
 **Thought** (none):
@@ -344,7 +344,7 @@ int anim abc_slide_out_top 0x7f040009
 int att
 ```
 
-## 16. search_code / understanding  (Bash)
+## 16. search / localization  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -366,7 +366,7 @@ grep -n "attr max\|attr rotation\|attr startAngle\|attr sweepAngle\|attr progres
 1073:int[] styleable SeekArc { 0x7f010047, 0x7f010048, 0x7f010049, 0x7f01004a, 0x7f01004b, 0x7f01004c, 0x7f01004d, 0x7f01004e, 0x7f01004f, 0x7f010050, 0x7f010051, 0x7f010052, 0x7f010053, 0x7f
 ```
 
-## 17. search_code / localization  (Bash)
+## 17. search / localization  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -385,7 +385,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:67:    private EditT
 app/src/main/java/io/pslab/activity/RoboticArmActivity.java:69:    private LinearLayout servo1TimeLine, servo2Tim
 ```
 
-## 18. read_file / localization  (Read)
+## 18. read / localization  (Read)
 _step 18_
 
 **Thought** (none):
@@ -409,7 +409,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 344	        servo4Layout.findViewById(R.id.drag_handle).setOnLongClickListener(new View
 ```
 
-## 19. read_file / localization  (Read)
+## 19. read / localization  (Read)
 _step 19_
 
 **Thought** (narration):
@@ -436,7 +436,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 69	    private LinearLayout servo1TimeLine,
 ```
 
-## 20. edit_file / repair  (Edit)
+## 20. edit / repair  (Edit)
 _step 20_
 
 **Thought** (none):
@@ -452,7 +452,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 The file app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 21. edit_file / repair  (Edit)
+## 21. edit / repair  (Edit)
 _step 21_
 
 **Thought** (narration):
@@ -470,7 +470,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 The file app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 22. shell_edit / repair  (Bash)
+## 22. edit / repair  (Bash)
 _step 22_
 
 **Thought** (none):
@@ -495,7 +495,7 @@ for n in (1,2,3,4):
 ok
 ```
 
-## 23. read_file / repair (own phase localization)  (Bash)
+## 23. read / validation  (Bash)
 _step 23_
 
 **Thought** (none):
@@ -517,7 +517,7 @@ seekArc1.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
                     degreeText1.setText(
 ```
 
-## 24. build / repair  (Bash)
+## 24. build / validation  (Bash)
 _step 24_
 
 **Thought** (narration):
@@ -545,7 +545,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 ```
 
-## 25. search_code / localization  (Bash)
+## 25. search / validation  (Bash)
 _step 25_
 
 **Thought** (none):
@@ -561,7 +561,7 @@ cd "$(pwd)" && grep -n "setTag\|getTag" app/src/main/java/io/pslab/activity/Robo
 (Bash completed with no output)
 ```
 
-## 26. read_file / localization  (Read)
+## 26. read / validation  (Read)
 _step 26_
 
 **Thought** (none):
@@ -579,7 +579,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 483
 ```
 
-## 27. edit_file / repair  (Edit)
+## 27. edit / repair  (Edit)
 _step 27_
 
 **Thought** (narration):
@@ -597,7 +597,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 The file app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 28. edit_file / repair  (Edit)
+## 28. edit / repair  (Edit)
 _step 28_
 
 **Thought** (none):
@@ -613,7 +613,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 The file app/src/main/java/io/pslab/activity/RoboticArmActivity.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 29. shell_edit / repair  (Bash)
+## 29. edit / repair  (Bash)
 _step 29_
 
 **Thought** (none):
@@ -650,7 +650,7 @@ ok
             public voi
 ```
 
-## 30. build / repair  (Bash)
+## 30. build / validation  (Bash)
 _step 30_
 
 **Thought** (none):
@@ -673,7 +673,7 @@ BUILD SUCCESSFUL in 8s
 37 actionable tasks: 5 executed, 32 up-to-
 ```
 
-## 31. build / validation  (Bash)
+## 31. test / validation  (Bash)
 _step 31_
 
 **Thought** (narration):
@@ -708,7 +708,7 @@ enter 359 -> 359 OK
 Shell cwd was reset to /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-2677
 ```
 
-## 32. build / validation  (Bash)
+## 32. test / validation  (Bash)
 _step 32_
 
 **Thought** (none):
@@ -803,7 +803,7 @@ scripts
 settings.gradle.kts
 ```
 
-## 36. vcs / validation  (Bash)
+## 36. diff / validation  (Bash)
 _step 36_
 
 **Thought** (none):
@@ -820,7 +820,7 @@ cd "$(pwd)" && git rev-parse --show-toplevel && git check-ignore -v app/src/main
 .gitignore:40:runs/	app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 ```
 
-## 37. read_file / validation  (Bash)
+## 37. read / validation  (Bash)
 _step 37_
 
 **Thought** (none):

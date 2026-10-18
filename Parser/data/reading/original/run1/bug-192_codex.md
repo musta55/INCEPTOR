@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(12: succeeded) -> repair(4: blocked) -> validation(3: blocked)
+Phases: planning(1: unchecked) -> localization(7: succeeded) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: blocked) -> planning(1: unchecked) -> validation(4: blocked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:21:28.618Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the editor lifecycle and state restoration, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:21:31.692Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ settings.gradle
 --- files ---
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:21:33.887Z_
 
 **Thought** (narration):
@@ -92,7 +92,7 @@ app/src/main/java/net/gsantner/markor/format/highlighter/SpanCreatorP.java
 app/src/main/java/net/gsantner/marko
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-23T09:21:37.260Z_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ import android.appwidget.AppWidgetManager;
 imp
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T09:21:42.566Z_
 
 **Thought** (none):
@@ -154,7 +154,7 @@ Total output lines: 599
      8	import android.app.
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:21:47.454Z_
 
 **Thought** (none):
@@ -185,7 +185,7 @@ Total output lines: 418
    116	    public void onCreateOptionsMenu(Men
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-23T09:21:55.264Z_
 
 **Thought** (none):
@@ -211,7 +211,7 @@ Total output lines: 473
    198	        if (document.getHistory().
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T09:21:58.539Z_
 
 **Thought** (none):
@@ -237,7 +237,7 @@ Output:
    297
 ```
 
-## 9. plan / localization  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-23T09:22:05.196Z_
 
 **Thought** (narration):
@@ -255,7 +255,7 @@ The unconditional editor text replacement in onResume reproduces the reported cu
 Plan updated
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:22:12.666Z_
 
 **Thought** (none):
@@ -281,7 +281,7 @@ Total output lines: 1048
      4	 * with it. If we meet some day, and you think it is worth it, you can buy me a
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-23T09:22:16.766Z_
 
 **Thought** (none):
@@ -305,7 +305,7 @@ Output:
    101	            if (TodoTxtTextConverter.TODOTXT_FILE_PATTERN.matcher(fnl
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-23T09:22:27.111Z_
 
 **Thought** (none):
@@ -327,7 +327,7 @@ app/src/main/java/net/gsantner/opoc/util/ActivityUtils.java:72:            _acti
 app/src/main/java/net/gsantner/opoc/util/ContextUtils.java:371:    public static void setDrawableWithColorToImageView(ImageView imageView, @DrawableRes int drawableR
 ```
 
-## 13. read_file / localization  (exec_command)
+## 13. read / localization  (exec_command)
 _step 17 | 2026-09-23T09:22:32.210Z_
 
 **Thought** (none):
@@ -352,7 +352,7 @@ Output:
    224	            String selected_text = _hlEditor.getText()
 ```
 
-## 14. plan / localization  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T09:22:35.814Z_
 
 **Thought** (narration):
@@ -370,7 +370,7 @@ Persistence is already handled in `onPause()`, and disk changes use a selection-
 Plan updated
 ```
 
-## 15. edit_file / repair  (exec_command)
+## 15. edit / repair  (exec_command)
 _step 19 | 2026-09-23T09:22:41.281Z_
 
 **Thought** (none):
@@ -413,7 +413,7 @@ M app/src/main/java/net/gsantner/markor/activity/DocumentEditFragment.java
         checkR
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:22:45.441Z_
 
 **Thought** (narration):
@@ -431,7 +431,7 @@ No instrumentation/Robolectric lifecycle test setup exists; adding source-couple
 Plan updated
 ```
 
-## 17. build / repair  (exec_command)
+## 17. build / validation  (exec_command)
 _step 21 | 2026-09-23T09:22:51.371Z_
 
 **Thought** (none):
@@ -453,7 +453,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T09:22:54.650Z | **FAILED**_
 
 **Thought** (narration):
@@ -502,7 +502,7 @@ Original token count: 0
 Output:
 ```
 
-## 20. wait_process / validation  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-23T09:23:06.723Z_
 
 **Thought** (none):
@@ -526,7 +526,7 @@ Output:
 	at o
 ```
 
-## 21. plan / validation  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-23T09:23:18.721Z_
 
 **Thought** (narration):

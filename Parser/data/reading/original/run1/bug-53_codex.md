@@ -7,9 +7,9 @@
 - steps (LLM inferences): 36 | actions: 31 | failed actions: 3
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(3: blocked) -> validation(16: succeeded) -> localization(2: succeeded)
+Phases: planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> localization(2: failed) -> repair(1: blocked) -> validation(4: blocked, succeeded) -> planning(1: unchecked) -> validation(7: succeeded) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:45:51.169Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the new-file dialog state, patch the mismatch, then run the require
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:45:54.483Z | **FAILED**_
 
 **Thought** (none):
@@ -66,7 +66,7 @@ settings.gradle
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:45:55.474Z_
 
 **Thought** (narration):
@@ -94,7 +94,7 @@ app/src/main/java/net/gsantner/markor/util/DocumentIO.java:27:import net.gsantne
 app/src/main/java/net/gsantner/markor/util/DocumentIO.java:86:                filePath = new File(ext
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:45:58.247Z_
 
 **Thought** (none):
@@ -117,7 +117,7 @@ app/src/main/java/net/gsantner/markor/format/TextFormat.java:91:            case
 app/src/main/res/layout/new_file_dialog.xml:15:    andro
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T09:46:01.344Z_
 
 **Thought** (narration):
@@ -150,7 +150,7 @@ Total output lines: 373
 ####################
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-23T09:46:03.721Z_
 
 **Thought** (none):
@@ -177,7 +177,7 @@ Total output lines: 417
         final CheckBox encryptCheckb
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:46:06.003Z | **FAILED**_
 
 **Thought** (none):
@@ -204,7 +204,7 @@ Output:
         <item translat
 ```
 
-## 8. plan / localization  (update_plan)
+## 8. plan / planning  (update_plan)
 _step 12 | 2026-09-23T09:46:11.399Z_
 
 **Thought** (narration):
@@ -222,7 +222,7 @@ Located the defect in NewFileDialog: it restores only the extension EditText whi
 Plan updated
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:46:18.906Z_
 
 **Thought** (none):
@@ -245,7 +245,7 @@ app/src/main/java/net/gsantner/markor/format/todotxt/TodoTxtTextConverter.java:5
 ap
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:46:20.641Z_
 
 **Thought** (none):
@@ -267,7 +267,7 @@ app/src/main/java/net/gsantner/markor/format/todotxt/TodoTxtTextConverter.java:5
 app/src/main/java/net/gsantner/markor/format/plaintext/PlaintextConverter.java:56:        filepa
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-23T09:46:31.983Z_
 
 **Thought** (none):
@@ -299,7 +299,7 @@ M app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java
 188:    static int getTypeSpinnerPosition(String extension,
 ```
 
-## 12. run_test / repair  (exec_command)
+## 12. edit / validation  (exec_command)
 _step 16 | 2026-09-23T09:46:36.387Z_
 
 **Thought** (narration):
@@ -337,7 +337,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-23T09:46:40.890Z | **FAILED**_
 
 **Thought** (none):
@@ -366,7 +366,7 @@ Task 'testDebugUnitTest' not found in root project 'bug-53'.
 Run gradlew tasks to get a list of available tasks. Run with --stacktrace option to get the stack trace. Run with -
 ```
 
-## 14. build / validation  (exec_command)
+## 14. orient / validation  (exec_command)
 _step 18 | 2026-09-23T09:46:44.315Z_
 
 **Thought** (narration):
@@ -389,7 +389,7 @@ Output:
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 ```
 
-## 15. wait_process / validation  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-23T09:46:48.113Z_
 
 **Thought** (none):
@@ -414,7 +414,7 @@ app:testFlavorAtestDebugUnitTest - Run unit tests for the flavorAtestDebug build
 app:testFlavorAtestReleaseUnitTest - Run un
 ```
 
-## 16. plan / validation  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:46:52.153Z_
 
 **Thought** (none):
@@ -430,7 +430,7 @@ _(none)_
 Plan updated
 ```
 
-## 17. run_test / validation  (exec_command)
+## 17. test / validation  (exec_command)
 _step 21 | 2026-09-23T09:46:54.197Z_
 
 **Thought** (none):
@@ -452,7 +452,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 3 stopped Daemons could not be reused, use --status for details
 ```
 
-## 18. wait_process / validation  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T09:46:56.149Z_
 
 **Thought** (none):
@@ -478,7 +478,7 @@ Configuration on demand is an incubating feature.
 > Task :app:generateFlavorDefaultDebugBui
 ```
 
-## 19. wait_process / validation  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-23T09:47:02.061Z_
 
 **Thought** (none):
@@ -504,7 +504,7 @@ Output:
 > Task :app:proce
 ```
 
-## 20. wait_process / validation  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-23T09:47:07.865Z_
 
 **Thought** (none):
@@ -524,7 +524,7 @@ Original token count: 0
 Output:
 ```
 
-## 21. wait_process / validation  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-23T09:47:14.741Z_
 
 **Thought** (none):
@@ -544,7 +544,7 @@ Original token count: 0
 Output:
 ```
 
-## 22. wait_process / validation  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-23T09:47:20.571Z_
 
 **Thought** (none):
@@ -564,7 +564,7 @@ Original token count: 0
 Output:
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-23T09:47:27.855Z_
 
 **Thought** (none):
@@ -593,7 +593,7 @@ BUILD SUCCESSFUL in 36s
 14 actionable tasks: 14 executed
 ```
 
-## 24. plan / validation  (update_plan)
+## 24. plan / planning  (update_plan)
 _step 28 | 2026-09-23T09:47:32.709Z_
 
 **Thought** (narration):
@@ -633,7 +633,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 26. wait_process / validation  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-23T09:47:37.059Z_
 
 **Thought** (none):
@@ -661,7 +661,7 @@ Configuration on demand is an incubating feature.
 > Task :app:compileFlavorAtes
 ```
 
-## 27. wait_process / validation  (write_stdin)
+## 27. other / validation  (write_stdin)
 _step 31 | 2026-09-23T09:47:45.069Z_
 
 **Thought** (none):
@@ -687,7 +687,7 @@ Output:
 > Task :app:mergeFlavorAtestDebugS
 ```
 
-## 28. wait_process / validation  (write_stdin)
+## 28. other / validation  (write_stdin)
 _step 32 | 2026-09-23T09:47:53.313Z_
 
 **Thought** (none):
@@ -711,7 +711,7 @@ Gradle may disable incremental compilation as the following annotation processor
 Consider setting the experimental feature flag androi
 ```
 
-## 29. wait_process / validation  (write_stdin)
+## 29. other / validation  (write_stdin)
 _step 33 | 2026-09-23T09:47:59.212Z_
 
 **Thought** (none):
@@ -739,7 +739,7 @@ Output:
 > Task :app:packag
 ```
 
-## 30. read_file / localization  (exec_command)
+## 30. read / validation  (exec_command)
 _step 34 | 2026-09-23T09:48:01.892Z_
 
 **Thought** (narration):
@@ -765,7 +765,7 @@ Output:
     91	        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.
 ```
 
-## 31. plan / localization  (update_plan)
+## 31. plan / planning  (update_plan)
 _step 35 | 2026-09-23T09:48:05.510Z_
 
 **Thought** (none):

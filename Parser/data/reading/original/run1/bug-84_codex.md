@@ -7,9 +7,9 @@
 - steps (LLM inferences): 29 | actions: 24 | failed actions: 3
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(12: succeeded) -> understanding(1: unchecked) -> repair(7: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(13: succeeded) -> planning(1: unchecked) -> localization(1: failed) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:54:45.561Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace server settings persistence and API client URL construction, then p
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:54:49.404Z | **FAILED**_
 
 **Thought** (none):
@@ -71,7 +71,7 @@ ultrasonic-keystore.enc
 AGENTS files
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:54:50.570Z_
 
 **Thought** (narration):
@@ -99,7 +99,7 @@ subsonic-api/src/main/kotlin/org/moire/ultrasonic/api/subsonic/SubsonicAPIClient
 ultrasonic/src/main/kotlin/org/moire/ultrasonic/domain/APIMusicDirectoryConverter.kt:1:// Converts MusicDirectory en
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:54:54.166Z_
 
 **Thought** (none):
@@ -121,7 +121,7 @@ ultrasonic/src/main/java/org/moire/ultrasonic/service/MusicServiceFactory.java:9
 ultrasonic/src/main/java/org/moire/ultrasonic/service/MusicServiceFactory.java:100:        if (serverUrl ==
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T09:54:56.921Z_
 
 **Thought** (none):
@@ -151,7 +151,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:55:01.293Z | **FAILED**_
 
 **Thought** (none):
@@ -182,7 +182,7 @@ Total output lines: 342
     93	        if (preference
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-23T09:55:08.923Z_
 
 **Thought** (none):
@@ -210,7 +210,7 @@ Total output lines: 251
    200	    private void updateUsername() {
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T09:55:16.583Z_
 
 **Thought** (narration):
@@ -241,7 +241,7 @@ Total output lines: 221
    181		{
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-23T09:55:22.011Z_
 
 **Thought** (narration):
@@ -273,7 +273,7 @@ Total output lines: 396
      8	impo
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:55:27.538Z_
 
 **Thought** (none):
@@ -299,7 +299,7 @@ Total output lines: 206
    153	        } else if (Cons
 ```
 
-## 11. read_file / localization  (exec_command)
+## 11. read / localization  (exec_command)
 _step 15 | 2026-09-23T09:55:30.326Z_
 
 **Thought** (none):
@@ -325,7 +325,7 @@ Output:
    233	                if (activeServers == maxServerCo
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-23T09:55:34.507Z_
 
 **Thought** (none):
@@ -351,7 +351,7 @@ Output:
    250	                newServerPrefs.set
 ```
 
-## 13. search_code / localization  (exec_command)
+## 13. search / localization  (exec_command)
 _step 17 | 2026-09-23T09:55:36.549Z | **FAILED**_
 
 **Thought** (none):
@@ -376,7 +376,7 @@ Output:
 170:		SharedPreferences preferences = getPr
 ```
 
-## 14. search_code / localization  (exec_command)
+## 14. search / localization  (exec_command)
 _step 18 | 2026-09-23T09:55:40.884Z_
 
 **Thought** (none):
@@ -403,7 +403,7 @@ Output:
    396			builder.append("&c=").append(Cons
 ```
 
-## 15. plan / localization  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-23T09:55:45.972Z_
 
 **Thought** (narration):
@@ -421,7 +421,7 @@ The server editor uses PreferenceManager default storage, but MusicServiceFactor
 Plan updated
 ```
 
-## 16. search_code / understanding  (exec_command)
+## 16. search / localization  (exec_command)
 _step 20 | 2026-09-23T09:55:53.240Z_
 
 **Thought** (none):
@@ -443,7 +443,7 @@ ultrasonic/src/main/java/org/moire/ultrasonic/fragment/ServerSettingsFragment.ja
 ultrasonic/src/main/java/org/moire/ultrasonic/fragment/ServerSettingsFragment.java:64:        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getAc
 ```
 
-## 17. edit_file / repair  (exec_command)
+## 17. edit / repair  (exec_command)
 _step 21 | 2026-09-23T09:56:10.035Z_
 
 **Thought** (narration):
@@ -480,7 +480,7 @@ M ultrasonic/src/main/java/org/moire/ultrasonic/activity/MainActivity.java
 M ultrasonic/src/mai
 ```
 
-## 18. plan / repair  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-23T09:56:22.630Z_
 
 **Thought** (none):
@@ -496,7 +496,7 @@ Configured both preference fragments and default initialization to use the same 
 Plan updated
 ```
 
-## 19. build / repair  (exec_command)
+## 19. build / validation  (exec_command)
 _step 23 | 2026-09-23T09:56:27.419Z_
 
 **Thought** (narration):
@@ -520,7 +520,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-23T09:56:30.446Z_
 
 **Thought** (none):
@@ -547,7 +547,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns ht
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-23T09:56:37.643Z_
 
 **Thought** (none):
@@ -575,7 +575,7 @@ Note: Recompile with -Xlint:deprecation for details.
 No
 ```
 
-## 22. wait_process / repair  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-23T09:56:44.449Z_
 
 **Thought** (none):
@@ -602,7 +602,7 @@ Output:
 Deprecated Gradle features were used in this
 ```
 
-## 23. plan / repair  (update_plan)
+## 23. plan / planning  (update_plan)
 _step 27 | 2026-09-23T09:56:48.026Z_
 
 **Thought** (narration):
@@ -620,7 +620,7 @@ The required build passes. I’m doing a final change audit and capturing exact 
 Plan updated
 ```
 
-## 24. search_code / validation  (exec_command)
+## 24. search / validation  (exec_command)
 _step 28 | 2026-09-23T09:56:53.053Z_
 
 **Thought** (none):

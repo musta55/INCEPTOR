@@ -7,9 +7,9 @@
 - steps (LLM inferences): 12 | actions: 12 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(8: succeeded) -> repair(2: unchecked) -> localization(1: failed) -> validation(1: unchecked)
+Phases: localization(8: succeeded) -> repair(2: unchecked) -> validation(2: unchecked)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -42,7 +42,7 @@ sprites
 ./app/src/main/java/ch/logixisland/anu
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -58,7 +58,7 @@ grep -ril "credit" --include=*.java --include=*.kt . | head -30
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -79,7 +79,7 @@ app/src/main/java/ch/logixisland/anuto/business/level/WaveAttender.java
 app/src/main/java/ch/logixisland/anuto/busine
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 3_
 
 **Thought** (none):
@@ -105,7 +105,7 @@ import ch.logixisland.anuto.entity.Types;
 import ch.logixisl
 ```
 
-## 5. read_file / localization  (Bash)
+## 5. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -134,7 +134,7 @@ import android.view.View;
 import ch.logixisland.anuto.AnutoApplicatio
 ```
 
-## 6. search_code / localization  (Bash)
+## 6. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -153,7 +153,7 @@ app/src/main/java/ch/logixisland/anuto/view/game/GameView.java:95:            mT
 app/src/main/java/ch/logixisland/anuto/business/lev
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -181,7 +181,7 @@ sed -n 60,110p app/src/main/java/ch/logixisland/anuto/view/game/GameView.java; e
             Vector2 pos = mViewport.screenToGame(new Vector2(event.getX(), event.getY()));
 ```
 
-## 8. read_file / localization  (Bash)
+## 8. read / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -210,7 +210,7 @@ public class TowerFactory {
         mFactory = new GenericFactory<>(TowerConfig
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 8_
 
 **Thought** (none):
@@ -226,7 +226,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-191/app/src/main/java/ch/logixisland/anuto/business/control/TowerInserter.java has been updated successfully.
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -242,7 +242,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run3/bug-191/app/src/main/java/ch/logixisland/anuto/business/control/TowerInserter.java has been updated successfully.
 ```
 
-## 11. read_file / localization  (Bash)
+## 11. read / validation  (Bash)
 _step 10_
 
 **Thought** (none):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 23 | actions: 18 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(8: succeeded) -> repair(7: succeeded)
+Phases: planning(1: unchecked) -> localization(4: failed) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:52:16.672Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the onboarding state flow, patch the initialization/validation mism
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:52:19.393Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:52:20.155Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ app/src/main/res/values/strings_auth.xml:18:    <string name="auth_toast_passwor
 app/src/main/res/values/strings_intro.xml:26:        <b>andOTP</b>. Since you have chos
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T04:52:23.715Z_
 
 **Thought** (none):
@@ -114,7 +114,7 @@ app/src/androidTest/java/org/shadowice/flocke/andotp/ApplicationTest.java:195:  
 app/src/androidTest/java/org/shadowice/flocke/andotp/ApplicationTest.java:196:        ArrayList<
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:52:25.775Z_
 
 **Thought** (none):
@@ -138,7 +138,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Activities/AuthenticateActivity.ja
 app/src/main/java/org/shadowice/flocke/andotp/Ac
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-25T04:52:27.795Z_
 
 **Thought** (narration):
@@ -156,7 +156,7 @@ I found the defect concentrated in `IntroScreenActivity`: the spinner’s visual
 Plan updated
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T04:52:30.538Z_
 
 **Thought** (none):
@@ -184,7 +184,7 @@ Total output lines: 687
  * in the Software without restriction, including without limitatio
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T04:52:32.657Z_
 
 **Thought** (none):
@@ -210,7 +210,7 @@ Total output lines: 422
     93	                authe
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-25T04:52:35.289Z_
 
 **Thought** (none):
@@ -237,7 +237,7 @@ Total output lines: 286
    184	            for (int i = 0; i <
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-25T04:52:37.338Z_
 
 **Thought** (none):
@@ -264,7 +264,7 @@ Total output lines: 208
    278	            for (int i = 0; i < authValues.length; i+
 ```
 
-## 11. plan / localization  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-25T04:52:46.806Z_
 
 **Thought** (narration):
@@ -282,7 +282,7 @@ The state trace confirms both symptoms share one cause: the authentication slide
 Plan updated
 ```
 
-## 12. edit_file / repair  (exec_command)
+## 12. edit / repair  (exec_command)
 _step 16 | 2026-09-25T04:52:55.570Z_
 
 **Thought** (none):
@@ -316,7 +316,7 @@ M app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScreenActivity.j
    258	        public void updateEncryptionType(Constants.Encryp
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-25T04:52:58.227Z_
 
 **Thought** (narration):
@@ -334,7 +334,7 @@ The project has only instrumentation coverage and no focused JVM/UI test harness
 Plan updated
 ```
 
-## 14. build / repair  (exec_command)
+## 14. build / validation  (exec_command)
 _step 18 | 2026-09-25T04:53:01.863Z_
 
 **Thought** (none):
@@ -356,7 +356,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 5 stopped Daemons could not be reused, use --status for details
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T04:53:04.099Z_
 
 **Thought** (none):
@@ -380,7 +380,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T04:53:12.256Z_
 
 **Thought** (none):
@@ -407,7 +407,7 @@ Note: Recompile with -Xlint:unchecked for details.
 :app:compileFdroidDeb
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T04:53:18.503Z_
 
 **Thought** (none):
@@ -435,7 +435,7 @@ Output:
 :app:processPlayDebugMa
 ```
 
-## 18. plan / repair  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-25T04:53:27.616Z_
 
 **Thought** (narration):

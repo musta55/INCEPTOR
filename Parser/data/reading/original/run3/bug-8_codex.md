@@ -7,9 +7,9 @@
 - steps (LLM inferences): 27 | actions: 22 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(9: succeeded) -> repair(7: succeeded) -> validation(3: unchecked)
+Phases: planning(1: unchecked) -> localization(10: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(3: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:34:39.247Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the payment menu flow, patch the lifecycle misuse, then build the a
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:34:42.784Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:34:44.150Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ app/src/main/java/de/koelle/christian/trickytripper/activitysupport/MainPagerAda
 app/src/main/java/de/koelle/christian/trickytripper/activ
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-26T17:34:50.856Z_
 
 **Thought** (none):
@@ -121,7 +121,7 @@ import android.support.v7.view.ActionMode;
 import andr
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:34:52.854Z_
 
 **Thought** (none):
@@ -150,7 +150,7 @@ Total output lines: 329
      7	impor
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-26T17:34:55.005Z_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ Total output lines: 418
    107	        SumReport sumReport = fktnController.getSumRepo
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T17:35:00.017Z_
 
 **Thought** (narration):
@@ -207,7 +207,7 @@ Total output lines: 139
    197	        }
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-26T17:35:03.925Z_
 
 **Thought** (none):
@@ -237,7 +237,7 @@ Total output lines: 497
      8	import a
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-26T17:35:06.165Z_
 
 **Thought** (none):
@@ -263,7 +263,7 @@ Output:
    281	                + CurrencyUtil.getSymbolToCurrency(getResources(), trip.getBa
 ```
 
-## 10. read_file / localization  (exec_command)
+## 10. read / localization  (exec_command)
 _step 14 | 2026-09-26T17:35:10.835Z_
 
 **Thought** (none):
@@ -292,7 +292,7 @@ Output:
    143
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-26T17:35:19.679Z_
 
 **Thought** (none):
@@ -317,7 +317,7 @@ Output:
 ./releases/150307_1_5_1_V14/map
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-26T17:35:25.413Z_
 
 **Thought** (none):
@@ -333,7 +333,7 @@ The participant contextual action mode outlives its FragmentStatePagerAdapter pa
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-26T17:35:29.237Z_
 
 **Thought** (narration):
@@ -365,7 +365,7 @@ Success. Updated the following files:
 M app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperActivity.java
 ```
 
-## 14. diff / repair  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-26T17:35:32.584Z_
 
 **Thought** (none):
@@ -392,7 +392,7 @@ Output:
     76	        mDrawerList = (ListView)
 ```
 
-## 15. diff / repair  (exec_command)
+## 15. diff / validation  (exec_command)
 _step 19 | 2026-09-26T17:35:34.530Z_
 
 **Thought** (none):
@@ -413,7 +413,7 @@ Output:
 fatal: path 'app/src/main/java/de/koelle/christian/trickytripper/TrickyTripperActivity.java' exists on disk, but not in 'HEAD'
 ```
 
-## 16. read_file / repair  (exec_command)
+## 16. diff / validation  (exec_command)
 _step 20 | 2026-09-26T17:35:37.939Z_
 
 **Thought** (none):
@@ -437,7 +437,7 @@ HARNESS
  1 file changed, 2 insertions(+)
 ```
 
-## 17. plan / repair  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-26T17:35:40.377Z_
 
 **Thought** (narration):
@@ -455,7 +455,7 @@ The fix is in place. Next I’m running the required clean debug build.
 Plan updated
 ```
 
-## 18. build / repair  (exec_command)
+## 18. build / validation  (exec_command)
 _step 22 | 2026-09-26T17:35:43.050Z_
 
 **Thought** (none):
@@ -476,7 +476,7 @@ Output:
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:35:47.430Z_
 
 **Thought** (none):
@@ -500,7 +500,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/android/ge
 ```
 
-## 20. diff / validation  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-26T17:35:55.009Z | **FAILED**_
 
 **Thought** (narration):
@@ -526,7 +526,7 @@ Output:
         mViewPager = (ViewPager) findViewById(R.id.drawer_
 ```
 
-## 21. diff / validation  (exec_command)
+## 21. read / validation  (exec_command)
 _step 25 | 2026-09-26T17:35:57.569Z_
 
 **Thought** (none):
@@ -547,7 +547,7 @@ Output:
 Patch whitespace check passed
 ```
 
-## 22. plan / validation  (update_plan)
+## 22. plan / planning  (update_plan)
 _step 26 | 2026-09-26T17:36:01.085Z_
 
 **Thought** (none):

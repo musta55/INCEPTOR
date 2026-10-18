@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(6: succeeded) -> repair(9: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(5: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:27:11.305Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the JSON editor defaults and regex serialization, then patch and bu
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:27:13.436Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@  8 sage  staff   256 Sep  9 11:55 .github
 -rw-r--r--@  1 sage  s
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:27:14.313Z_
 
 **Thought** (narration):
@@ -94,7 +94,7 @@ LICENSE
 app/src/ma
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T17:27:17.446Z_
 
 **Thought** (none):
@@ -110,7 +110,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:27:18.897Z_
 
 **Thought** (narration):
@@ -143,7 +143,7 @@ import com.trianguloy.urlchecker.utilities.generics.GenericPref;
 import com.triang
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:27:21.449Z_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ import android.widget.TextView;
 import com.triangulo
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T17:27:23.834Z_
 
 **Thought** (none):
@@ -205,7 +205,7 @@ import com.trianguloy.urlchecker.activities.JsonEditorInterface;
 import com.trianguloy.urlchecker.utilities.wrappers.
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T17:27:28.022Z_
 
 **Thought** (narration):
@@ -230,7 +230,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/companions/VersionManager.ja
 app/src/main/java/com/trianguloy/urlchecker/modules/companions/VersionManager.java:91:                            .put("regex", re
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-26T17:27:35.396Z_
 
 **Thought** (none):
@@ -258,7 +258,7 @@ Output:
             i
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-26T17:27:37.749Z_
 
 **Thought** (narration):
@@ -276,7 +276,7 @@ I’ve isolated three faulty built-in patterns. I’m escaping only their domain
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-26T17:27:42.208Z_
 
 **Thought** (none):
@@ -307,7 +307,7 @@ app/src/main/java/com/trianguloy/urlchecker/modules/AutomationRules.java:58:    
 app/src/main/java/com/trianguloy/ur
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-26T17:27:44.721Z_
 
 **Thought** (narration):
@@ -325,7 +325,7 @@ The project has no local unit-test suite, so verification uses source assertions
 Plan updated
 ```
 
-## 13. search_code / repair  (exec_command)
+## 13. search / validation  (exec_command)
 _step 17 | 2026-09-26T17:27:47.674Z | **FAILED**_
 
 **Thought** (none):
@@ -354,7 +354,7 @@ Original token count: 0
 Output:
 ```
 
-## 14. search_code / repair  (exec_command)
+## 14. search / validation  (exec_command)
 _step 18 | 2026-09-26T17:27:50.070Z_
 
 **Thought** (narration):
@@ -384,7 +384,7 @@ Output:
 Verified 3 escaped privacy redirect domain separators.
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T17:27:52.365Z_
 
 **Thought** (none):
@@ -400,7 +400,7 @@ _(none)_
 Plan updated
 ```
 
-## 16. build / repair  (exec_command)
+## 16. build / validation  (exec_command)
 _step 20 | 2026-09-26T17:27:55.653Z_
 
 **Thought** (narration):
@@ -424,7 +424,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:27:57.966Z_
 
 **Thought** (none):
@@ -444,7 +444,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:28:04.951Z_
 
 **Thought** (none):
@@ -469,7 +469,7 @@ Found locales: "ar","be","bn","ca","cs","de","el","en","es","fr-FR","hi","in","i
 Extracted translators: 404pot
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:28:10.805Z_
 
 **Thought** (none):
@@ -496,7 +496,7 @@ BUILD SUCCESSFUL in 13s
 31 actionable tasks: 29 executed, 2 up-to-date
 ```
 
-## 20. read_file / validation  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-26T17:28:11.942Z_
 
 **Thought** (narration):
@@ -523,7 +523,7 @@ Output:
                 .put("Reddit ➔ Teddit", new JSONObject()
 ```
 
-## 21. plan / validation  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-26T17:28:15.434Z_
 
 **Thought** (none):

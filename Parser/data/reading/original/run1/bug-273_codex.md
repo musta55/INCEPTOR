@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 14 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(7: succeeded)
+Phases: planning(1: unchecked) -> localization(5: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:32:44.759Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the preview navigation lifecycle, identify lost state on rotation, 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:32:48.159Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:32:50.730Z_
 
 **Thought** (narration):
@@ -95,7 +95,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CardBrowserOrderDialog.java
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CardBrowserMySearchesDial
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:32:54.208Z_
 
 **Thought** (none):
@@ -119,7 +119,7 @@ Output:
  * Copyright (c) 2014 Brun
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:32:57.897Z_
 
 **Thought** (narration):
@@ -153,7 +153,7 @@ Total output lines: 416
     private Runnable removeChosenAnswerText = new
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:33:04.245Z_
 
 **Thought** (none):
@@ -179,7 +179,7 @@ Output:
 213-            android:configC
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-23T09:33:09.979Z_
 
 **Thought** (narration):
@@ -197,7 +197,7 @@ The defect is in Previewer’s manifest declaration: unlike Reviewer, rotation r
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-23T09:33:14.797Z_
 
 **Thought** (none):
@@ -229,7 +229,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/AndroidManifest.xml
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-23T09:33:18.171Z_
 
 **Thought** (narration):
@@ -247,7 +247,7 @@ No new unit test is warranted for this manifest-only lifecycle fix; behavior is 
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-23T09:33:22.518Z_
 
 **Thought** (none):
@@ -275,7 +275,7 @@ Tracking:
 /private/var/folders/28/_9_mht7s10d5t
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-23T09:33:24.775Z_
 
 **Thought** (none):
@@ -303,7 +303,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.a
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-23T09:33:30.935Z_
 
 **Thought** (none):
@@ -331,7 +331,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :AnkiDroid:mergeDebugSh
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-23T09:33:37.397Z_
 
 **Thought** (none):
@@ -358,7 +358,7 @@ Deprecated Gradle features were used in this build, making it incompatible with 
 Use '--warning-mode all' to show the individual dep
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T09:33:44.079Z_
 
 **Thought** (narration):

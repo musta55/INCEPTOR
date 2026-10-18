@@ -7,9 +7,9 @@
 - steps (LLM inferences): 25 | actions: 20 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(9: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> localization(6: succeeded) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:06:55.860Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the whiteboard/eraser state flow, patch the root cause, then run th
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:06:59.939Z_
 
 **Thought** (none):
@@ -56,7 +56,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep  9 11:54 .github
 -rw-r--r--@  1 sage  staff
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:07:02.020Z_
 
 **Thought** (narration):
@@ -86,7 +86,7 @@ AnkiDroid/src/main/res/menu/reviewer.xml:6:        android:title="@string/clear_
 AnkiDroid/src/mai
 ```
 
-## 4. read_file / localization  (exec_command)
+## 4. read / localization  (exec_command)
 _step 8 | 2026-09-23T09:07:06.078Z_
 
 **Thought** (none):
@@ -115,7 +115,7 @@ Total output lines: 538
         android:icon="@drawable
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:07:11.111Z_
 
 **Thought** (none):
@@ -146,7 +146,7 @@ Total output lines: 320
                 menu.findItem
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-23T09:07:18.097Z_
 
 **Thought** (narration):
@@ -164,7 +164,7 @@ Located the stale state in Whiteboard stroke completion and Reviewer menu prepar
 Plan updated
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:07:25.219Z_
 
 **Thought** (none):
@@ -193,7 +193,7 @@ Output:
 70-    public Whiteboard(AbstractFlashcardViewer card
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-23T09:07:28.658Z_
 
 **Thought** (none):
@@ -221,7 +221,7 @@ Total output lines: 337
         mActionButtons.setCustomButtonsStatus(menu
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:07:33.661Z_
 
 **Thought** (none):
@@ -253,7 +253,7 @@ Output:
     public void setup(S
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-23T09:07:37.963Z_
 
 **Thought** (none):
@@ -276,7 +276,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java-403-        // NOTE: This i
 AnkiDroid/src/main/java/com/ichi2/a
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-23T09:07:45.234Z | **FAILED**_
 
 **Thought** (none):
@@ -299,7 +299,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java-301-                // togg
 AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java-302-                Timber.i("Revi
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-23T09:07:57.418Z_
 
 **Thought** (none):
@@ -325,7 +325,7 @@ Total output lines: 234
 140:        Boolean isShownInActionBar = mActionButt
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-23T09:08:07.454Z_
 
 **Thought** (narration):
@@ -356,7 +356,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/java/com/ichi2/anki/Reviewer.java
 ```
 
-## 14. diff / repair  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-23T09:08:13.189Z_
 
 **Thought** (narration):
@@ -385,7 +385,7 @@ Output:
             menu.findItem(R.id.action_undo).setIcon(R.drawable.ic
 ```
 
-## 15. read_file / repair  (exec_command)
+## 15. read / validation  (exec_command)
 _step 19 | 2026-09-23T09:08:18.207Z_
 
 **Thought** (none):
@@ -409,7 +409,7 @@ show_exit=128
 cmp_exit=1
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:08:23.429Z_
 
 **Thought** (none):
@@ -425,7 +425,7 @@ Patched the reviewer menu to restore both enabled state and full alpha whenever 
 Plan updated
 ```
 
-## 17. build / repair  (exec_command)
+## 17. build / validation  (exec_command)
 _step 21 | 2026-09-23T09:08:26.605Z_
 
 **Thought** (none):
@@ -447,7 +447,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T09:08:31.394Z_
 
 **Thought** (narration):
@@ -478,7 +478,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 > Task :AnkiDroid
 ```
 
-## 19. diff / validation  (exec_command)
+## 19. read / validation  (exec_command)
 _step 23 | 2026-09-23T09:08:41.041Z_
 
 **Thought** (narration):
@@ -505,7 +505,7 @@ Output:
    434	            menu.findItem(R.id.action_undo).setIcon(R.drawable.ic_e
 ```
 
-## 20. plan / validation  (update_plan)
+## 20. plan / planning  (update_plan)
 _step 24 | 2026-09-23T09:08:44.987Z_
 
 **Thought** (none):

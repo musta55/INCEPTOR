@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 23 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(6: succeeded) -> understanding(3: unchecked) -> repair(7: succeeded) -> validation(4: unchecked)
+Phases: planning(1: unchecked) -> localization(10: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(3: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T08:28:06.015Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the password setup UI and visibility handling, then patch and build
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T08:28:09.530Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@ 54 sage  staff   1728 Sep 23 03:15 ..
 -rw-r--
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T08:28:10.923Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/debug/res/mipmap-xhdpi/ic_launcher_round.png
 app/src/debug/res/mipmap-xhdpi/ic_launcher.pn
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T08:28:14.785Z_
 
 **Thought** (none):
@@ -110,7 +110,7 @@ app/src/main/res/layout/content_authenticate.xml:25:        app:passwordToggleEn
 app/src/main/res/layout/content_authenticate.xml:35:    </com.goo
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-23T08:28:19.411Z_
 
 **Thought** (narration):
@@ -140,7 +140,7 @@ Total output lines: 369
             android:text
 ```
 
-## 6. search_code / localization (own phase understanding)  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T08:28:25.084Z_
 
 **Thought** (none):
@@ -174,7 +174,7 @@ android {
         versio
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T08:28:40.279Z_
 
 **Thought** (none):
@@ -194,7 +194,7 @@ Original token count: 0
 Output:
 ```
 
-## 8. wait_process / localization  (write_stdin)
+## 8. other / localization  (write_stdin)
 _step 12 | 2026-09-23T08:28:54.032Z_
 
 **Thought** (none):
@@ -210,7 +210,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T08:28:57.675Z_
 
 **Thought** (none):
@@ -234,7 +234,7 @@ Output:
 245:        pri
 ```
 
-## 10. env_setup / understanding  (exec_command)
+## 10. read / localization  (exec_command)
 _step 14 | 2026-09-23T08:29:00.402Z_
 
 **Thought** (none):
@@ -260,7 +260,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
   public
 ```
 
-## 11. env_setup / understanding  (exec_command)
+## 11. read / localization  (exec_command)
 _step 15 | 2026-09-23T08:29:17.013Z_
 
 **Thought** (narration):
@@ -291,7 +291,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
        9: getfield
 ```
 
-## 12. plan / understanding  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-23T08:29:31.759Z_
 
 **Thought** (none):
@@ -307,7 +307,7 @@ _(none)_
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-23T08:29:38.811Z_
 
 **Thought** (none):
@@ -339,7 +339,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScreenActivity.java
 ```
 
-## 14. plan / repair  (update_plan)
+## 14. plan / planning  (update_plan)
 _step 18 | 2026-09-23T08:29:42.202Z_
 
 **Thought** (narration):
@@ -357,7 +357,7 @@ The first-run toggle now updates both fields and preserves each cursor position.
 Plan updated
 ```
 
-## 15. build / repair  (exec_command)
+## 15. build / validation  (exec_command)
 _step 19 | 2026-09-23T08:29:44.865Z_
 
 **Thought** (none):
@@ -379,7 +379,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 5 stopped Daemons could not be reused, use --status for details
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-23T08:29:47.058Z_
 
 **Thought** (none):
@@ -407,7 +407,7 @@ Output:
 > Task :app:prep
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-23T08:29:53.690Z_
 
 **Thought** (none):
@@ -435,7 +435,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:compileF
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T08:30:01.065Z_
 
 **Thought** (none):
@@ -462,7 +462,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:compilePlayDebugJavaWithJ
 ```
 
-## 19. plan / repair  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-23T08:30:06.883Z_
 
 **Thought** (narration):
@@ -480,7 +480,7 @@ Both debug flavors compile successfully. I’m doing a final diff check for scop
 Plan updated
 ```
 
-## 20. diff / validation  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-23T08:30:13.377Z_
 
 **Thought** (none):
@@ -508,7 +508,7 @@ Output:
     31	import com.google.android.mat
 ```
 
-## 21. diff / validation  (exec_command)
+## 21. read / validation  (exec_command)
 _step 25 | 2026-09-23T08:30:17.150Z_
 
 **Thought** (none):
@@ -533,7 +533,7 @@ fatal: path 'app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScree
             authWarnings = root.findVie
 ```
 
-## 22. read_file / validation  (exec_command)
+## 22. read / validation  (exec_command)
 _step 26 | 2026-09-23T08:30:26.234Z_
 
 **Thought** (narration):
@@ -560,7 +560,7 @@ HARNESS
 HARNESS
 ```
 
-## 23. plan / validation  (update_plan)
+## 23. plan / planning  (update_plan)
 _step 27 | 2026-09-23T08:30:34.636Z_
 
 **Thought** (none):

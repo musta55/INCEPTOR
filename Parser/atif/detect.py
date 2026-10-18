@@ -16,6 +16,10 @@ The three formats cannot be confused with one another:
   was lost) makes Qwen the answer only if nothing later decides otherwise.
 
 Non-JSON lines (harness stderr) and JSON lines split by them are skipped while probing.
+
+A file that is one JSON document is first offered to the SWE-bench adapters
+(``atif.swebench``: SWE-agent, OpenHands, mini-swe-agent), whose formats are whole documents
+rather than event lines and share no shape with the three above.
 """
 from __future__ import annotations
 
@@ -23,7 +27,7 @@ import json
 from pathlib import Path
 from typing import Optional
 
-from . import claude, codex, qwen
+from . import claude, codex, qwen, swebench
 
 PARSERS = {
     claude.SOURCE_FORMAT: claude.parse,
@@ -31,11 +35,17 @@ PARSERS = {
     codex.SOURCE_FORMAT: codex.parse,
     qwen.SOURCE_FORMAT: qwen.parse,
 }
+#: the SWE-bench adapters' formats, each read by ``swebench.parse``
+SWEBENCH_FORMATS = {"sweagent_traj": "swe-agent", "sweagent_chat": "swe-agent",
+                    "openhands_messages": "openhands", "openhands_events": "openhands",
+                    "mini_swe_agent": "mini-swe-agent"}
+PARSERS.update({fmt: swebench.parse for fmt in SWEBENCH_FORMATS})
 AGENT_OF_FORMAT = {
     claude.SOURCE_FORMAT: "claude",
     claude.JSON_SOURCE_FORMAT: "claude",
     codex.SOURCE_FORMAT: "codex",
     qwen.SOURCE_FORMAT: "qwen",
+    **SWEBENCH_FORMATS,
 }
 CLAUDE_CLASSES = ("SystemMessage(", "AssistantMessage(", "UserMessage(", "ResultMessage(",
                   "TaskStartedMessage(", "TaskNotificationMessage(", "TaskProgressMessage(",
@@ -76,9 +86,34 @@ def _decisive(event: dict) -> bool:
         kind == "assistant" and bool((event.get("message") or {}).get("model")))
 
 
+def _document_head(path: Path) -> bool:
+    """Whether the file may be one JSON document: it starts with ``[``, or with a ``{``
+    line that is not a complete JSON object (JSON lines are one object per line)."""
+    try:
+        with path.open(encoding="utf-8", errors="replace") as handle:
+            head = handle.read(1 << 16)
+    except OSError:
+        return False
+    stripped = head.lstrip()
+    if stripped.startswith("["):
+        return True
+    if not stripped.startswith("{"):
+        return False
+    line = stripped.split("\n", 1)[0]
+    try:
+        json.loads(line)
+    except json.JSONDecodeError:
+        return True
+    return "\n" not in stripped.rstrip()           # one minified object: a document too
+
+
 def detect(path: Path, probe_lines: int = 400) -> Optional[str]:
     """Return a source format id, or None if the file is not a known trajectory."""
     path = Path(path)
+    if _document_head(path):
+        found = swebench.detect(path)
+        if found:
+            return found
     try:
         handle = path.open(encoding="utf-8", errors="replace")
     except OSError:

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 22 | actions: 17 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(4: succeeded) -> repair(8: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> localization(1: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(7: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:20:46.845Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the Wi‑Fi connection flow, patch input/error handling, then run t
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:20:50.536Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:20:51.508Z_
 
 **Thought** (narration):
@@ -81,7 +81,7 @@ drwxr-xr-x@  7 sage  staff    224 Sep  9 11:54 .github
 -rw-r--r--@  1 sage  staff     47 Sep  9 11:5
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:20:54.517Z_
 
 **Thought** (none):
@@ -114,7 +114,7 @@ import android.view.ViewGroup;
 import and
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-25T05:20:58.977Z_
 
 **Thought** (narration):
@@ -132,7 +132,7 @@ The crash is confirmed: OkHttp rejects malformed hosts with `IllegalArgumentExce
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:21:01.668Z_
 
 **Thought** (none):
@@ -157,7 +157,7 @@ app/src/main/java/io/pslab/communication/HttpHandler.java:71:        Request req
 app/src/main/java/io/pslab/fragment/DustS
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-25T05:21:04.969Z_
 
 **Thought** (narration):
@@ -175,7 +175,7 @@ The focused fix is to treat OkHttp URL-validation failures like connection failu
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-25T05:21:07.492Z_
 
 **Thought** (none):
@@ -206,7 +206,7 @@ Success. Updated the following files:
 M app/src/main/java/io/pslab/fragment/ESPFragment.java
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-25T05:21:08.520Z_
 
 **Thought** (narration):
@@ -224,7 +224,7 @@ The exception path is patched. I’m now running the exact required clean debug 
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-25T05:21:10.874Z_
 
 **Thought** (none):
@@ -249,7 +249,7 @@ Starting a Gradle Daemon (subsequent builds will be faster)
 [2A[1B[1m> Starting Daemon[m[17D[1B[1A> IDLE[0K[6D[1B[2A[1m<[0;1m-------------> 0% INITIALIZING [35ms][m[38D[2B
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-25T05:21:12.969Z_
 
 **Thought** (none):
@@ -270,7 +270,7 @@ Output:
 [2A[1m<[0;1m-------------> 0% INITIALIZING [132ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [230ms][m[39D[2B[2A[1m<[0;1m-------------> 0% INITIALIZING [335ms][m[39D[1B[1m> Running init scripts[m[22D[1B[2A[1m<[0;1m-------------> 0% INITIALIZING [435ms
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-25T05:21:19.019Z_
 
 **Thought** (none):
@@ -295,7 +295,7 @@ This Android Gradle plugin (8.4.1) was tested up to compileSdk = 34.
 You are strongly encouraged
 ```
 
-## 13. wait_process / repair  (write_stdin)
+## 13. other / validation  (write_stdin)
 _step 17 | 2026-09-25T05:21:24.842Z_
 
 **Thought** (none):
@@ -318,7 +318,7 @@ Output:
 Note: Proc
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-25T05:21:30.799Z_
 
 **Thought** (none):
@@ -339,7 +339,7 @@ Output:
 [6A[1m<[0;32;1m==========[0;39;1m---> 79% EXECUTING [18s][m[35D[6B[6A[1m<[0;32;1m==========[0;39;1m---> 79% EXECUTING [19s][m[35D[6B[6A[1m<[0;32;1m==========[0;39;1m---> 79% EXECUTING [20s][m[35D[6B[6A[1m<[0;32;1m==========[0;39;1m---> 79% EXECUTING [21s][m[
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T05:21:36.713Z_
 
 **Thought** (none):
@@ -360,7 +360,7 @@ Output:
 [6A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [24s][m[35D[6B[6A[1m<[0;32;1m==========[0;39;1m---> 81% EXECUTING [25s][m[35D[6B[6A[1m<[0;32;1m===========[0;39;1m--> 86% EXECUTING [25s][m[35D[2B[1m> :app:processDebugJavaRes[m[26D[4B[6A[1m<[0;32;1m===========[0;39
 ```
 
-## 16. diff / validation  (exec_command)
+## 16. read / validation  (exec_command)
 _step 20 | 2026-09-25T05:21:41.324Z_
 
 **Thought** (narration):
@@ -389,7 +389,7 @@ Output:
     99	                OkHttpClient client = ne
 ```
 
-## 17. plan / validation  (update_plan)
+## 17. plan / planning  (update_plan)
 _step 21 | 2026-09-25T05:21:44.954Z_
 
 **Thought** (none):

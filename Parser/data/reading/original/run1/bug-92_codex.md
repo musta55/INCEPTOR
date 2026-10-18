@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 23 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(3: succeeded) -> repair(4: failed) -> localization(1: succeeded) -> validation(8: succeeded) -> localization(3: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(4: failed) -> validation(4: succeeded) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:57:04.515Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the vendor-search path, patch its matching logic, then run the requ
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:57:07.900Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:57:10.351Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:55 .github
 -rw-r--r--@  1 sa
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T09:57:14.288Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:57:16.901Z_
 
 **Thought** (narration):
@@ -130,7 +130,7 @@ Total output lines: 422
  * the Free Softwar
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-23T09:57:24.481Z_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ Total output lines: 287
  * the Free Softwar
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-23T09:57:35.974Z_
 
 **Thought** (narration):
@@ -177,7 +177,7 @@ The defect is the shared `String.contains` predicate: stored OUIs are uppercase,
 Plan updated
 ```
 
-## 8. run_test / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-23T09:57:44.108Z_
 
 **Thought** (none):
@@ -211,7 +211,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds w
 ```
 
-## 9. wait_process / repair  (write_stdin)
+## 9. other / repair  (write_stdin)
 _step 13 | 2026-09-23T09:57:46.597Z_
 
 **Thought** (narration):
@@ -238,7 +238,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/
 ```
 
-## 10. wait_process / repair  (write_stdin)
+## 10. other / repair  (write_stdin)
 _step 14 | 2026-09-23T09:57:53.540Z_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: /Users/sage/APR_with_high_quality_bug_reports/
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / repair  (write_stdin)
 _step 15 | 2026-09-23T09:58:00.209Z | **FAILED**_
 
 **Thought** (none):
@@ -287,7 +287,7 @@ com.vrem.wifianalyzer.vendor.model.VendorDBTest > testFindMacAddresses STANDARD_
     [Robol
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / validation  (exec_command)
 _step 16 | 2026-09-23T09:58:05.404Z_
 
 **Thought** (narration):
@@ -311,7 +311,7 @@ app/build/test-results/testDebugUnitTest/TEST-com.vrem.wifianalyzer.vendor.model
 app/build/test-results/testDebugUnitTest/TEST-com.vrem.wifianalyzer.vend
 ```
 
-## 13. run_test / validation  (exec_command)
+## 13. edit / validation  (exec_command)
 _step 17 | 2026-09-23T09:58:12.712Z_
 
 **Thought** (none):
@@ -343,7 +343,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 ```
 
-## 14. wait_process / validation  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-23T09:58:17.125Z_
 
 **Thought** (none):
@@ -368,7 +368,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/
 ```
 
-## 15. wait_process / validation  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-23T09:58:23.760Z_
 
 **Thought** (none):
@@ -394,7 +394,7 @@ com.vrem.wifianalyzer.vendor.model.VendorDBTest > testFindMacAddresses STANDARD_
     [Robol
 ```
 
-## 16. plan / validation  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:58:27.459Z_
 
 **Thought** (none):
@@ -434,7 +434,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 18. wait_process / validation  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-23T09:58:34.279Z_
 
 **Thought** (none):
@@ -459,7 +459,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/
 ```
 
-## 19. wait_process / validation  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-23T09:58:41.176Z_
 
 **Thought** (none):
@@ -488,7 +488,7 @@ Output:
 :app:tran
 ```
 
-## 20. diff / validation  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-23T09:58:46.224Z_
 
 **Thought** (narration):
@@ -522,7 +522,7 @@ Output:
    122
 ```
 
-## 21. vcs / localization  (exec_command)
+## 21. vcs / validation  (exec_command)
 _step 25 | 2026-09-23T09:58:52.545Z_
 
 **Thought** (narration):
@@ -550,7 +550,7 @@ fatal: path 'app/src/main/java/com/vrem/wifianalyzer/vendor/model/VendorDB.java'
 fatal: path 'app/src/test/java/com/vrem/wifianalyzer/vendor/model/VendorDBTest.java' exists on disk, but not in 'HEAD'
 ```
 
-## 22. vcs / localization  (exec_command)
+## 22. diff / validation  (exec_command)
 _step 26 | 2026-09-23T09:58:58.689Z_
 
 **Thought** (none):
@@ -580,7 +580,7 @@ HARNESS
 /var/folders/28/_9_mht7s10d5tf_cw0nmz8tc0000gn/T/uiab-read-guard/original_run1/bug-92/git-stub.git
 ```
 
-## 23. plan / localization  (update_plan)
+## 23. plan / planning  (update_plan)
 _step 27 | 2026-09-23T09:59:10.232Z_
 
 **Thought** (none):

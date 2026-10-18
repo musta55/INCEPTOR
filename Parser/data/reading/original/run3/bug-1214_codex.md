@@ -7,9 +7,9 @@
 - steps (LLM inferences): 33 | actions: 28 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(2: failed) -> understanding(9: unchecked) -> repair(1: unchecked) -> validation(12: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(10: succeeded) -> planning(1: unchecked) -> repair(1: unchecked) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(6: unchecked) -> planning(1: unchecked) -> validation(1: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:35:08.438Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the password setup UI and visibility handling, patch the shared sta
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:35:10.456Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@ 54 sage  staff   1728 Sep 25 14:57 ..
 -rw-r--
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:35:11.118Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/main/res/values-sv-rSE/strings_backup.xml
 app/src/main/res/values-sv-rSE/strings_main.
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T16:35:13.321Z_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T16:35:14.843Z_
 
 **Thought** (none):
@@ -130,7 +130,7 @@ Total output lines: 269
     android:clipToP
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T16:35:16.393Z_
 
 **Thought** (narration):
@@ -166,7 +166,7 @@ android {
         versio
 ```
 
-## 7. search_code / understanding  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T16:35:18.568Z_
 
 **Thought** (none):
@@ -192,7 +192,7 @@ Total output lines: 256
 245:        private TextInputLa
 ```
 
-## 8. wait_process / understanding  (write_stdin)
+## 8. other / localization  (write_stdin)
 _step 12 | 2026-09-26T16:35:30.445Z_
 
 **Thought** (none):
@@ -215,7 +215,7 @@ Output:
 /Users/sage/.gradle/caches/transforms-2/
 ```
 
-## 9. read_file / understanding (own phase localization)  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-26T16:35:46.805Z_
 
 **Thought** (none):
@@ -244,7 +244,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 104:  pu
 ```
 
-## 10. search_code / understanding  (exec_command)
+## 10. read / localization  (exec_command)
 _step 14 | 2026-09-26T16:35:50.798Z_
 
 **Thought** (none):
@@ -272,7 +272,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 3460-    Code:
 ```
 
-## 11. read_file / understanding  (exec_command)
+## 11. other / localization  (exec_command)
 _step 15 | 2026-09-26T16:35:55.151Z_
 
 **Thought** (narration):
@@ -296,7 +296,7 @@ Output:
 --- issue events ---
 ```
 
-## 12. vcs / understanding  (exec_command)
+## 12. vcs / localization  (exec_command)
 _step 16 | 2026-09-26T16:35:57.278Z_
 
 **Thought** (none):
@@ -319,7 +319,7 @@ fatal: unable to access 'https://github.com/andOTP/andOTP.git/': CONNECT tunnel 
 * main
 ```
 
-## 13. read_file / understanding (own phase localization)  (exec_command)
+## 13. read / localization  (exec_command)
 _step 17 | 2026-09-26T16:36:00.219Z_
 
 **Thought** (none):
@@ -347,7 +347,7 @@ Total output lines: 169
  * in the Software without restriction, including without limitatio
 ```
 
-## 14. read_file / understanding  (exec_command)
+## 14. read / localization  (exec_command)
 _step 18 | 2026-09-26T16:36:01.564Z_
 
 **Thought** (none):
@@ -371,7 +371,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate$4 impl
   final com.google.android.material.textfield.PasswordToggleE
 ```
 
-## 15. plan / understanding  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T16:36:05.442Z_
 
 **Thought** (narration):
@@ -389,7 +389,7 @@ I’ve confirmed the compatible fix: replace the intro toggle’s click handler 
 Plan updated
 ```
 
-## 16. edit_file / repair  (exec_command)
+## 16. edit / repair  (exec_command)
 _step 20 | 2026-09-26T16:36:08.579Z_
 
 **Thought** (none):
@@ -421,7 +421,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScreenActivity.java
 ```
 
-## 17. search_code / validation  (exec_command)
+## 17. search / validation  (exec_command)
 _step 21 | 2026-09-26T16:36:09.641Z_
 
 **Thought** (narration):
@@ -451,7 +451,7 @@ Output:
 322-            int confirmSelection = passw
 ```
 
-## 18. read_file / validation  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-26T16:36:12.098Z_
 
 **Thought** (none):
@@ -473,7 +473,7 @@ HARNESS
 ls: .git: No such file or directory
 ```
 
-## 19. plan / validation  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-26T16:36:13.845Z_
 
 **Thought** (none):
@@ -513,7 +513,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 21. wait_process / validation  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-26T16:36:17.168Z_
 
 **Thought** (none):
@@ -541,7 +541,7 @@ Output:
 > Task :
 ```
 
-## 22. wait_process / validation  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-26T16:36:22.875Z_
 
 **Thought** (narration):
@@ -570,7 +570,7 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xli
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-26T16:36:29.097Z_
 
 **Thought** (none):
@@ -597,7 +597,7 @@ Output:
 > Task :app:checkP
 ```
 
-## 24. search_code / validation  (exec_command)
+## 24. search / validation  (exec_command)
 _step 28 | 2026-09-26T16:36:36.263Z_
 
 **Thought** (none):
@@ -621,7 +621,7 @@ public class com.google.android.material.internal.CheckableImageButton extends a
   private static final int[]
 ```
 
-## 25. read_file / validation  (exec_command)
+## 25. read / validation  (exec_command)
 _step 29 | 2026-09-26T16:36:38.760Z_
 
 **Thought** (none):
@@ -646,7 +646,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate$1 impl
   final com.google.android.material.textfield.Passwor
 ```
 
-## 26. plan / validation  (update_plan)
+## 26. plan / planning  (update_plan)
 _step 30 | 2026-09-26T16:36:42.819Z_
 
 **Thought** (narration):
@@ -664,7 +664,7 @@ Both `fdroidDebug` and `playDebug` now compile and package successfully. I’m d
 Plan updated
 ```
 
-## 27. read_file / validation  (exec_command)
+## 27. read / validation  (exec_command)
 _step 31 | 2026-09-26T16:36:44.534Z_
 
 **Thought** (none):
@@ -692,7 +692,7 @@ Output:
    317	            return passwordInput.getText().toStr
 ```
 
-## 28. plan / validation  (update_plan)
+## 28. plan / planning  (update_plan)
 _step 32 | 2026-09-26T16:36:45.703Z_
 
 **Thought** (none):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 32 | actions: 27 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(5: succeeded) -> understanding(10: unchecked) -> repair(9: succeeded)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> localization(11: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(2: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:40:44.412Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the password setup UI and visibility-toggle wiring, then patch and 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:40:48.466Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@ 54 sage  staff   1728 Sep 23 14:57 ..
 -rw-r--
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:40:50.104Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/debug/res/mipmap-xhdpi/ic_launcher_round.png
 app/src/debug/res/mipmap-xhdpi/ic_laun
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T04:40:52.714Z_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ Total output lines: 814
  * in the Software without restriction, including without limi
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:40:56.298Z_
 
 **Thought** (none):
@@ -145,7 +145,7 @@ Total output lines: 497
     69
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-25T04:41:00.422Z_
 
 **Thought** (narration):
@@ -163,7 +163,7 @@ I found the defect pattern: the visibility icon belongs only to the primary `Tex
 Plan updated
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T04:41:04.931Z_
 
 **Thought** (none):
@@ -191,7 +191,7 @@ Total output lines: 622
  * in the Software without restriction, including without limi
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T04:41:08.382Z_
 
 **Thought** (none):
@@ -216,7 +216,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScreenActivity.jav
 app/src/main/java/
 ```
 
-## 9. search_code / understanding  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T04:41:20.366Z_
 
 **Thought** (none):
@@ -236,7 +236,7 @@ Original token count: 0
 Output:
 ```
 
-## 10. wait_process / understanding  (write_stdin)
+## 10. other / localization  (write_stdin)
 _step 14 | 2026-09-25T04:41:35.265Z_
 
 **Thought** (none):
@@ -252,7 +252,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 11. wait_process / understanding  (write_stdin)
+## 11. other / localization  (write_stdin)
 _step 15 | 2026-09-25T04:41:37.156Z_
 
 **Thought** (none):
@@ -272,7 +272,7 @@ Original token count: 0
 Output:
 ```
 
-## 12. search_code / understanding  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-25T04:41:43.124Z_
 
 **Thought** (none):
@@ -298,7 +298,7 @@ d61ed3259ed48bb0db311d73ab9f358554987b2
    288	        private void u
 ```
 
-## 13. env_setup / understanding  (exec_command)
+## 13. read / localization  (exec_command)
 _step 17 | 2026-09-25T04:41:48.520Z_
 
 **Thought** (narration):
@@ -326,7 +326,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
   public
 ```
 
-## 14. env_setup / understanding  (exec_command)
+## 14. read / localization  (exec_command)
 _step 18 | 2026-09-25T04:41:56.405Z_
 
 **Thought** (none):
@@ -353,7 +353,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 3799:  public void passwo
 ```
 
-## 15. search_code / understanding (own phase localization)  (exec_command)
+## 15. search / localization  (exec_command)
 _step 19 | 2026-09-25T04:42:00.092Z_
 
 **Thought** (none):
@@ -375,7 +375,7 @@ UIHelper.java
 app/src/main/java/org/shadowice/flocke/andotp/Utilities/UIHelper.java
 ```
 
-## 16. env_setup / understanding  (exec_command)
+## 16. read / localization  (exec_command)
 _step 20 | 2026-09-25T04:42:12.777Z_
 
 **Thought** (none):
@@ -402,7 +402,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate$4 impl
   com.googl
 ```
 
-## 17. env_setup / understanding  (exec_command)
+## 17. read / localization  (exec_command)
 _step 21 | 2026-09-25T04:42:18.732Z_
 
 **Thought** (none):
@@ -427,7 +427,7 @@ class com.google.android.material.textfield.PasswordToggleEndIconDelegate$1 impl
   final com.google.android.material.textfield.PasswordToggleEndI
 ```
 
-## 18. plan / understanding  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-25T04:42:28.063Z_
 
 **Thought** (narration):
@@ -445,7 +445,7 @@ I’ll centralize the toggle behavior in `UIHelper`, preserving cursor position 
 Plan updated
 ```
 
-## 19. edit_file / repair  (exec_command)
+## 19. edit / repair  (exec_command)
 _step 23 | 2026-09-25T04:42:39.275Z_
 
 **Thought** (none):
@@ -480,7 +480,7 @@ M app/src/main/java/org/shadowice/flocke/andotp/Preferences/CredentialsPreferenc
 M app/src/main/j
 ```
 
-## 20. diff / repair  (exec_command)
+## 20. search / validation  (exec_command)
 _step 24 | 2026-09-25T04:42:42.702Z_
 
 **Thought** (narration):
@@ -504,7 +504,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScreenActivity.jav
 app/src/main/java/org/shadowice/flocke/andotp/Utilities/UIHelper.java:71:    public static void syncPasswordVisibility(TextInputLay
 ```
 
-## 21. vcs / repair  (exec_command)
+## 21. diff / validation  (exec_command)
 _step 25 | 2026-09-25T04:42:48.327Z_
 
 **Thought** (none):
@@ -527,7 +527,7 @@ HARNESS
 ls: .git: No such file or directory
 ```
 
-## 22. plan / repair  (update_plan)
+## 22. plan / planning  (update_plan)
 _step 26 | 2026-09-25T04:42:50.271Z_
 
 **Thought** (none):
@@ -543,7 +543,7 @@ _(none)_
 Plan updated
 ```
 
-## 23. build / repair  (exec_command)
+## 23. build / validation  (exec_command)
 _step 27 | 2026-09-25T04:42:52.098Z_
 
 **Thought** (none):
@@ -565,7 +565,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 24. wait_process / repair  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-25T04:42:58.149Z_
 
 **Thought** (narration):
@@ -595,7 +595,7 @@ Output:
 > Task :app:pre
 ```
 
-## 25. wait_process / repair  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-25T04:43:04.823Z_
 
 **Thought** (none):
@@ -623,7 +623,7 @@ Output:
 > Task :a
 ```
 
-## 26. wait_process / repair  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-25T04:43:11.497Z_
 
 **Thought** (none):
@@ -650,7 +650,7 @@ BUILD SUCCESSFUL in 18s
 64 actionable tasks: 62 executed, 2 up-to-date
 ```
 
-## 27. plan / repair  (update_plan)
+## 27. plan / planning  (update_plan)
 _step 31 | 2026-09-25T04:43:13.215Z_
 
 **Thought** (none):

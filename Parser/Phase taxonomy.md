@@ -1,36 +1,39 @@
-# Phase taxonomy v3: phases with outcome subphases
+# Phase taxonomy v5: phases from the Final lookup tables, with outcome subphases
 
-**Status.** Implemented and tested, 2026-10-10; G7 changed on 2026-10-11 (§10). Not frozen yet: the constants are frozen
-before test-set labelling starts (§9).
+**Status.** Implemented and tested. Version 3 (2026-10-10) assigned phases with a table and
+grouping rules; version 4 (2026-10-14) with the codebook's lookup tables alone; version 5
+(2026-10-17) with the **Final lookup tables** (§3, §6): the tab "Final lookup table" of
+`Ground Truth/annotation_workbook.xlsx`, drafted by two authors on the pilot (T01, T03, T05) and
+expanded on the 339 development trajectories, with two development steps for every entry in
+the tab "Lookup justification". The tables are frozen before evaluation-set labelling (§9).
 
 **Code.**
-- `atif/phase.py`: phases, subphases, metrics and invariants;
-- `atif/taxonomy.py`: `category`, `object_role`, `CATEGORIES`, `CATEGORY_FAMILY`;
-- `atif/baselines.py`: baselines B1 and B3;
-- `atif/codebook.py`: the codebook's lookup tables, quoted by the workbooks and the viewer;
-- `atif/view.py` and `viewer/`: the viewer draws phases → subphases, attempts and the first
-  fix ([View data contract.md](View%20data%20contract.md), `trajview/3`);
+- `atif/lookup.py`: the three tables word for word (action, target, phase) and the code that
+  applies them (`classify`, `target`, `rows`);
+- `atif/phase.py`: the anchor, the phase table (`table`, `follow`), subphases, metrics and
+  invariants;
+- `atif/taxonomy.py`: the finer action *kinds* (`kind`, `KINDS`) that the verdicts, outcomes,
+  flags and baselines read;
+- `atif/codebook.py`: codebook version 4 in its words: Tables 1–4 (now baseline B5), Table 5
+  (outcomes) and Table 6 (flags), which still apply;
+- `atif/rules.py`: the viewer's Lookup tables page: the built-in rows (L1–L15, the general
+  rule LG, F1), the ready-made rows and the user's own rows (`trajectiers-tables/1`);
+- `atif/baselines.py`: baselines B1, B3, B4 (the grouping rules of version 3) and B5 (Table 4
+  of version 4);
+- `atif/view.py` and `viewer/`: the viewer draws phases → subphases, attempts, the first fix,
+  each action's category with the table entry that gave it, and its phase-table row
+  ([View data contract.md](View%20data%20contract.md), `trajview/3`);
 - `atif/agreement.py` and `score_ground_truth.py`: the evaluation of §9;
-- `tests/test_phase.py`, `tests/test_view.py`, `tests/test_agreement.py`.
+- `tests/test_phase.py`, `tests/test_rules.py`, `tests/test_view.py`, `tests/test_agreement.py`.
 
 Run `python3 -m atif.cli phases 18 --runs 1` for an outline.
 
 **Replaces:**
 - §6–11 of `Technical report v2 (draft).md` (archived in `../Inspection/plans-and-reports-before-phase-taxonomy-2026-10-11.tar.gz`).
 
-**Annotator-facing version.** [Annotation Codebook.docx](Annotation%20Codebook.docx) (v3.0)
-holds the same lookup tables and grouping rules in plain words. It is the master for the
-annotators; this file is the tool spec. Rule names correspond as follows:
-
-| Codebook rule | Tool rule |
-|---|---|
-| G1 | the anchor |
-| G2 | P1 table |
-| G3 | T6 |
-| G4 | K1 |
-| G5 | P3 |
-| G6 | T9 / K2 and T8 / K3 |
-| G7 | A1 |
+**Annotator-facing version.** The workbook tab "Final lookup table" is the master; this file
+is the tool spec, and `atif/lookup.py` holds the tables word for word. [Annotation
+Codebook.docx](Annotation%20Codebook.docx) (v4.0) still describes the tables of version 4.
 
 `atif/segment.py` (segments and purposes) is kept unchanged as baseline B3.
 
@@ -91,100 +94,124 @@ The nesting is strict. Every action is in exactly one subphase, and every subpha
 exactly one phase span. Every action also keeps `own_phase`, its phase before smoothing (P4),
 so a lookup inside a fix loop stays visible as *nested*.
 
-## 3. L1: action categories
+## 3. L1: action categories (the action table)
 
-`mid_level` (15 labels) is unchanged. `category` refines it, without changing it, through
-`taxonomy.category`:
+Every tool call gets one of 11 categories from the action table (`lookup.classify`): search,
+read, orient, edit, build, test, diff, vcs, plan, sub-agent, other. A **native tool** gives its
+category directly (Claude's Read, Edit, Write, Agent; Codex's update_plan, write_stdin; Qwen's
+read_file, grep_search, glob, edit, write_file, agent and its coordination tools). An edit tool
+on a file outside the repository is other. A **shell runner** (Bash, exec_command,
+run_shell_command) has its command line split into simple commands at `;`, `&&`, `||`, `|`,
+`&` and line breaks (heredoc bodies, `bash -c '…'` and wrappers such as `timeout` are looked
+through). Each simple command is looked up in the Shell Commands column, and the programs of
+the "(ignored)" row are skipped (`cd`, `echo`, a program after a pipe, `mkdir`, writes to
+`/tmp`, …). The line takes the highest category on it: edit > build > test > search > read >
+diff > vcs > orient > other. A line of ignored programs only is other.
 
-| Family | Categories | Refinement of `mid_level` |
-|---|---|---|
-| inspect | read_file, search_code, orient, vcs, diff, web | `diff` = `git diff`, `diff`, `cmp`. A git call that also reads or searches (Codex chains `sed -n '1,330p' F.java; git log`) takes the read/search label. `vcs` = the remaining git inspection (status, log, show, blame, ls-files, …) |
-| modify | edit_file, shell_edit | `shell_edit` = an edit made by a plain shell command (`sed -i`, `perl -i`, a redirect or Python write into a project file, `git apply`, `patch`), and `git checkout/restore/stash/reset/clean/revert` (with `reverts = True`). `edit_file` = editor tools and Codex's `apply_patch` (replayable) |
-| execute | build, run_test, device_ops, run_shell | none |
-| configure | env_setup | none |
-| coordinate | plan, delegate, wait_process | none |
-| other | other | none |
+The table's own entries (`lookup.ACTION_TABLE`) decide; a few distinctions they make:
+`./gradlew` with a test, check, lint or checkstyle task is test, with `tasks` or `--version`
+orient, with any other task build; `javac` alone is build, `javac` with `java`, `java <class>`,
+`jshell`, `xmllint`, `adb`, `patch --dry-run` and `git apply --check` are test; `git status`
+is diff; `git checkout/restore/reset/stash` (not `stash list`), `cp`/`mv` onto a repository
+file, `rm` of one, and a Python script that writes one are edit; `curl`, `sleep`, `ps` and any
+other Python script are other.
 
-In a pipeline, stages after the first (`git log | head`) are output filters. They are not
-reads of a file.
+Each action keeps the entry that decided it (`lookup_item`, the viewer's "Why <category>").
 
-**Admission rule.** A category exists only if some phase rule, outcome rule or RQ metric
-separates it from every other category. Two categories that no rule and no metric separates
-are merged. Every category belongs to one family, and the phase rules read only the category
-or family, the file role and the verdict. So a new category never needs a new phase rule.
+**Kinds.** The taxonomy's finer labels (`mid_level`, 15, and `kind`, 17: read_file,
+search_code, …, run_test, device_ops, wait_process) stay underneath. The verdict parser, the
+polls of background runs, the attempts' judging runs, the outcomes, the flags and the baselines
+read them, because they say what a run reported (a test run, a build, a poll of either). The
+category decides only the phase. A user's category row sets both.
 
-**Adding an agent** means adding rows to the tool registry (`taxonomy.TOOL_MAP`, plus the
-argument keys in "Agent vocabularies"). A tool that is not listed becomes `other`. Two gates
-apply per agent:
-- at most 1% of actions are `other` (`atif.cli phases` prints the share);
-- leave-one-agent-out agreement with the full registry is at least 95%.
+**Beyond the table** (for logs the corpus does not have). The shell tools of other agents
+(OpenHands' `execute_bash`, mini-swe-agent's `bash`) are shell runners. A tool the table does
+not name, and that the corpus agents never called, gets the category of what the taxonomy says
+it does (Claude Code's `Grep`: search; OpenHands' `str_replace_editor`: edit or read). The four
+tools the corpus agents called that the table leaves out (`update_goal`, `get_goal`,
+`record_artifact`, a made-up `run_shell`) are other, the table's "any other tool". In a
+SWE-bench project, a program the Android table sends to other takes the taxonomy's kind
+(`pytest`, `python reproduce.py`: test).
+
+**Gate.** At most 1% of each agent's actions may fall to the catch-all entries "any other
+tool" or "any other program" (`tests/test_phase.py`); other itself is a category of the table.
 
 ## 4. Terms
 
 | Term | Definition |
 |---|---|
-| file role (`taxonomy.object_role`) | `harness` (the benchmark's check script, `run_pipeline.sh`), `docs` (README, CHANGELOG, LICENSE, `*.md`, `*.txt`, …), then `file_role`: `toolchain` (`*.gradle`, `*.kts`, `*.properties`, wrapper files), `test` (`test/`, `androidTest/`, `reproducing_script_project/`), `source` (everything else) |
-| source edit | an action whose `edit_role` is source: an edit tool, a shell write, or a command that writes source on its way to a run (`apply_patch … && ./gradlew test`) |
-| anchor | the first source edit; if it lies inside an edit delegation, the delegating call. Actions before it are *pre-fix*, the rest *post-fix* |
+| target (`lookup.target`) | the target table, checked in this order: outside the repository (`/tmp`, `~/.gradle`, the SDK, the JDK); other repository file (patches, screenshots, logs, `build/` outputs, the agent's own hidden folders, a program at the repository root); docs (README, AGENTS.md, `*.md`, `*.txt` outside `src/`); build file (`*.gradle`, `*.kts`, `*.properties`, `gradlew`, proguard rules); test file (`src/test/`, `src/androidTest/`, `*Test.java`); source file (everything under a module's `src/` or `res/`, `AndroidManifest.xml`, also under a wrong root) |
+| repository | the folder the run was started in (the log's `extra.cwd`, `project.Project.checkout`); a log that records none: any `bug-<id>` folder outside `/tmp`; a SWE-bench project: its repository roots |
+| an action's targets | the files of the table entry that decided its category (or the native tool's file); else every path it names |
+| source edit | an action of category edit with a source-file target (an edit whose file is unknown counts as source) |
+| anchor | the first source edit, the first fix. Actions before it are *pre-fix*, the rest *post-fix* |
 | run result (`phase.run_result`) | of a build or test run, or of a poll of one: `pass` (a test run passed), `test_fail` (a test executed and failed), `build_fail` (compile error), `blocked` (environment or other failure), `build_pass` (a build passed: **weak**, it shows the code compiles, not that the bug is fixed) |
 | decisive run | a run whose result is `pass`, `test_fail`, `build_fail` or `blocked` |
-| execution stretch | consecutive execution, configure and wait actions, toolchain/harness/test edits, harness or log reads (R2 of `segment.enrich`; a `/dev/null` redirect is not a toolchain path), and interleaved orient/plan/git actions |
 | attempt (K1) | a block of source edits checked by one run. Its judging run is the first decisive run at or after its first edit. A passing build judges it weakly when the agent edits again before any decisive run, so edit → build → edit is two attempts, and edit → build → test is one |
 
 ## 5. The five phases
 
 | Phase | Definition | Where |
 |---|---|---|
-| **Understanding** | getting oriented before the work: the opening listing, planning, git status/log and reading of docs or build files, and pre-fix builds that check the project compiles | pre-fix only |
-| **Localization** | finding the code to change: reading and searching source and test code (including `git blame`/`show` of code), and read-only delegation | anywhere |
-| **Reproduction** | trying to observe the failure before the fix: a test or device run, with the builds, environment commands and test or toolchain edits that get it running | pre-fix only |
-| **Repair** | changing application source and judging each change: every attempt, from its first edit to its judging run | post-fix |
-| **Validation** | checking the patch outside an attempt: further builds and tests, writing regression tests, reading back the diff and one's own files, and cleanup | post-fix only |
+| **Planning** | getting ready: a plan; the opening steps (ls, pwd, git status); reading only docs, or building the untouched project, before the first fix. Codebook versions 3 and 4 called it Understanding | pre-fix, and a plan anywhere |
+| **Localization** | finding the code to change: searching and reading code (and a sub-agent) before the first fix; after it, reading a source file the agent has not changed when it changes code again before the next build, test or diff | anywhere |
+| **Reproduction** | trying to see the bug before changing the code: running tests, a program or the app, or writing a test | pre-fix only |
+| **Repair** | changing the app's code: every edit of a source file | post-fix |
+| **Validation** | checking the patch: every build, test, diff and git command after the first fix; re-reading changed or non-source files; reading unchanged code before a build, test or diff; editing a non-source file | post-fix only |
 
-## 6. Phase assignment: four deterministic passes
+## 6. Phase assignment: the phase table
 
-**P1. Table** (`phase.table`, `phase.resolve_markers`):
+**The phase table** (`lookup.rows`, `phase.table`). Each action gets the phase of the **first**
+row that matches its category, its targets and its position:
 
-| # | Action | Pre-fix | Post-fix |
-|---|---|---|---|
-| T1 | source edit | Repair (the anchor) | Repair |
-| T2 | run_test, device_ops | Reproduction | Validation |
-| T3 | test-file edit | Reproduction | Validation |
-| T4 | read/search of source or test code (or naming no path); vcs/orient touching code | Localization | Localization; **Validation** when it comes after the last source edit and touches only files the agent edited |
-| T5 | diff | neutral | Validation |
-| T6 | preparatory: build, env_setup, toolchain/harness edit, R2 probe or a look into a toolchain location (`~/.gradle`, `~/.m2`, the SDK, the JDK) | the phase of the next T2 run in its execution stretch; if none, Understanding | the same; if none, Validation |
-| T7 | orient, plan, vcs, web, run_shell, other; read/search of docs, build files or paths outside the checkout; a pre-fix revert | neutral | neutral |
-| T8 | wait_process (K3) | the phase of the run it polls; else of the action before it | the same (a run started pre-fix and polled post-fix → Validation) |
-| T9 | delegate call + its spliced sub-agent actions, as one block (K2) | Repair if a sub-agent action edits source or the instruction asks for a change (`segment.delegated_edit`), else Localization | the same |
+| Row | Phase | Category | Target file | Position / rules |
+|---|---|---|---|---|
+| L1 | Planning | plan | any | anywhere |
+| L2 | Planning | orient, other, vcs, diff | any | at the start of the trajectory (the first action) |
+| L3 | Planning | read, search | docs only | before the first fix |
+| L4 | Planning | build | any | before the first fix |
+| L5 | Localization | search, read, sub-agent | any (not docs only) | before the first fix |
+| L6 | Reproduction | test | any | before the first fix |
+| L7 | Reproduction | edit | test file | before the first fix |
+| L8 | Repair | edit | source file | anywhere (the first one is the anchor) |
+| L9 | Localization | search, read | source file the agent has not changed | after the first fix, when the next source edit comes before the next build, test or diff |
+| L10 | Validation | search, read | source file the agent has not changed | after the first fix, when a build, test or diff (or the end) comes before the next source edit |
+| L11 | Validation | search, read | a file the agent has changed, or not a source file | after the first fix |
+| L12 | Validation | build, test, diff, vcs | any | after the first fix |
+| L13 | Validation | edit | a repository file that is not a source file | after the first fix |
+| L14 | previous step's phase | orient, other | any | after the start |
+| L15 | previous step's phase | vcs, diff | any | before the first fix, after the start |
 
-**P2. K1.** Every action from an attempt's first edit to its judging run is Repair, except
-lookups (Localization or neutral), which keep their phase.
+**General rule** (LG). A step no row matches takes the phase of the previous step (an edit of
+a build file or docs before the first fix; a sub-agent after it). The very first step, with no
+previous step, is Planning.
 
-**P3. Neutral actions.** A neutral action takes the phase of the action before it. The
-neutral actions that open the trajectory are Understanding. So planning calls interleaved
-with searches (Codex calls `update_plan` 690 times in 150 runs) stay in Localization.
+Rows 9 and 10 look ahead to the next decisive step; every other row reads only the action and
+what came before it. On the 339 development trajectories the split agrees with the purpose the
+agent's thought states on 90% of 118 hand-labelled reads.
 
-**P4. Smoothing** (`phase.smooth`), to a fixed point:
-- **A1.** A span of `ABSORB_MAX` = 1 action between two spans of the same phase joins them.
-  Two spans are never absorbed: a Repair span (every source edit stays in Repair) and a
-  span holding a decisive run (its check would vanish from the subphases). Any span of two
-  or more actions keeps its phase.
+**Nothing else.** No rule moves an action after the table: there is no attempt rule (the build
+or test right after an edit is Validation, and it still decides the attempt's outcome, §7), no
+delegation block (a sub-agent's spliced actions are looked up like any other, so its first
+source edit is the first fix), no wait rule (a poll is other and takes the previous step's
+phase, normally its run's) and no smoothing (a single action can form a span). The grouping
+rules of version 3 are baseline B4 (`baselines.grouping_rules`) and the phase lookup of version
+4 (P1–P11 and follow) is baseline B5 (`baselines.table_v4`), which reproduces the version-4
+engine on all 10,796 actions of the pilot, development and evaluation sets.
 
-So a lookup of two or more actions inside an attempt is a Localization span between two
-Repair spans, and the attempt's outcome appears in both (the subphases of both Repair spans
-carry it).
-
-**Constant.** It is named and swept in §11, and frozen before test-set labelling. Nothing
-is fitted. Two constants were dropped:
-- `K1_GAP_MAX` (from the plan): no value of it, from 0 to 5, changed any final phase.
-- `REPAIR_GAP_MAX` = 10, with its rule A2 (the spans between two Repair spans joined Repair
-  when they held at most 10 actions), was removed on 2026-10-11, and `ABSORB_MAX` went from
-  3 to 1 (§10).
+**User rows** (`atif/rules.py`). The viewer's Lookup tables page adds rows to the three tables:
+a category row counts matching steps as a category (and reads their runs as that category's),
+a target row gives matching paths a target, and a phase row replaces the table's value for
+matching steps (or gives them the previous step's phase). A row never breaks an invariant
+(`phase.override_problem`): such a match is reported as skipped. Files written for version 4
+are read with their values mapped (run_test → test, toolchain → build, understanding →
+planning); their Table 4 ids are ignored.
 
 **Invariants** (`phase.check_hierarchy`, raised as errors):
 - phase spans and subphases are contiguous and cover every action exactly once;
 - every source edit is in Repair;
-- Understanding and Reproduction occur only pre-fix;
+- Reproduction occurs only pre-fix (Planning occurs anywhere: a plan is Planning wherever it
+  comes);
 - Repair and Validation occur only post-fix;
 - adjacent subphases of a span never share an outcome;
 - every phase, outcome and flag is in the vocabulary.
@@ -207,7 +234,7 @@ The **evidence** attribute records the strongest check behind an outcome: `test`
 
 | Phase | The check | succeeded | failed | blocked | unchecked |
 |---|---|---|---|---|---|
-| Understanding | a build of the untouched project (optional) | it builds | — | the build was stopped (any pre-fix build failure: not the agent's doing) | no build |
+| Planning | a build of the untouched project (optional) | it builds | — | the build was stopped (any pre-fix build failure: not the agent's doing) | no build |
 | Localization | reading a target file (a file the agent's own patch changes) | a target file was read | the agent changed files but read none of them in this span | — | the agent changed no app file |
 | Reproduction | a test or device run before the fix | test fails (bug seen) | test passes | the run stopped before the test executed | no run gave a result |
 | Repair | the attempt's judging run | test passes (test) or build passes (build) | test fails (test) or the change does not compile (build) | environment stopped the run | the change was never run |
@@ -259,7 +286,7 @@ Polls are excluded from every count.
 | Metric | Definition |
 |---|---|
 | tool_actions | actions without polls |
-| understanding_actions … validation_actions | per phase; together they equal `tool_actions` (V2's names; V2's cleanup is part of validation, and reproduction is new) |
+| planning_actions … validation_actions | per phase; together they equal `tool_actions` (V2's names; V2's cleanup is part of validation, and reproduction is new) |
 | env_actions | env_setup, R2 probes, toolchain edits and runs failed by the environment, wherever they are |
 | n_attempts, n_failed_attempts, n_blocked_attempts | from K1, by attempt outcome |
 | attempts_to_first_pass | the first attempt that succeeded with test evidence |
@@ -287,9 +314,9 @@ The draw uses seed 20261010, never gives one agent two bugs of the same app or r
 and excludes bug 18 (the worked example). It yields 15 trajectories and 630 actions.
 
 **Rounds.**
-- Round 1 is T01–T06: one pass and one fail per agent, 255 actions. The lookup tables and
-  rules may change in this round.
-- The codebook is then frozen (v3.1).
+- Round 1 is T01–T06: one pass and one fail per agent, 255 actions. The lookup tables may
+  change in this round (version 4 is such a change, 2026-10-14).
+- The codebook is then frozen (v4.1).
 - Round 2 is T07–T15: 375 actions. The tool is scored on round 2 only, so the score is not
   circular.
 
@@ -316,15 +343,15 @@ computes all of them and writes `data/ground_truth/`.
 
 **Baselines** (`atif/baselines.py`):
 - **B1:** V2's first-edit split;
-- **B2:** the P1 table alone, `phase.assign(..., keep_rules=False, smoothing=False)`,
-  Graphectory-style per-action tags;
 - **B3:** the old purposes, mapped to phases. Review becomes Validation, and Environment has
   no counterpart;
+- **B4:** the grouping rules of codebook version 3 (`baselines.grouping_rules`): the
+  version-3 table, then preparation, attempts, delegation blocks, polls, neutral actions and
+  single-action smoothing. B2 (version 3's table alone) and the ablations without K1 and
+  without P4 are gone: the tool itself is now a table, and B4 holds every version-3 rule;
 - optionally, an LLM condition.
 
-**Ablations:** without K1, and without P4.
-
-**Subphases** follow mechanically from L1, the verdicts and K1. One author checks every
+**Subphases** follow mechanically from L1, the verdicts and the attempts. One author checks every
 subphase of the 15 trajectories against the verdict columns and reports precision per
 outcome.
 
@@ -345,9 +372,45 @@ Each change came from reading real trajectories.
 | A look into `~/.gradle`, `~/.m2` or the SDK counts as preparation (T6) even when R2 misses it | the codebook's worked example (bug-18 Claude, row 16) showed rule G3 and the tool disagreeing |
 | 2026-10-11, after the round-1 manual check: A1 absorbs only a single action (`ABSORB_MAX` 3 → 1), and A2 (repair gaps up to 10 actions join Repair) is removed; codebook G7 says the same | A2 hid validation and localization work inside Repair (re-reading the diff and checking git status between two attempts); 7.3% of actions change phase, and phase spans per trajectory go from 3.84 to 5.18 (450 trajectories) |
 
-## 11. Evidence (2026-10-11, with the single-action G7)
+## 11. Evidence
 
-**Scope.** All 7,650 trajectories with an outcome (17 configs × 3 runs × 3 agents), parsed
+### 11.0b Version 5 (2026-10-17, the Final lookup tables)
+
+- **Fidelity.** The engine reproduces the reference implementation of the tables (the scripts
+  that built the tab, run on the workbook rows) on all 10,425 pilot and development actions:
+  category, phase-table row and phase.
+- **Pilot.** 73/73 Final Phase labels and 73/73 categories of T01, T03, T05 (the tables were
+  built on them, so this is a consistency check, not an accuracy estimate). On the same
+  actions B5 (version 4) gets 62/73 and B4 (version 3) 46/73.
+- **Annotator 1's labels** (630 actions of T01–T15, made under codebook version 4 before the
+  tables): the Final tables agree on 547 (86.8%), B5 on 576 (91.4%). The differences are the
+  tables' deliberate choices: a plan is Planning anywhere (13), reads of changed or non-source
+  files and git commands after the first fix are Validation (23), searches before the fix are
+  Localization (8). Only the held-out evaluation set (E01–E12) can show which agrees better
+  with labels made under the Final tables.
+- **Change against version 4** (pilot, development and evaluation sets, 10,796 actions): 16.5%
+  of actions change phase, mostly localization → validation (922) and between localization and
+  planning (432). Phase shares: Planning 4.0 → 5.7%, Localization 48.7 → 40.5%, Repair 15.0 →
+  13.0%, Validation 32.1 → 40.5%. Mean phase spans per trajectory: Claude 7.5 → 6.7, Qwen 8.2 →
+  5.1, Codex 4.9 → 9.3, of which 4.5 are Planning spans (Codex calls `update_plan` between
+  steps, and row 1 makes each call Planning).
+
+### 11.0 Version 4 (2026-10-14, lookup tables; `original`, runs 1–3, 450 trajectories)
+
+| Agent | Understanding | Localization | Reproduction | Repair | Validation | Spans per trajectory |
+|---|---|---|---|---|---|---|
+| Claude | 0.9% | 56.6% | 0.4% | 19.3% | 22.8% | 6.97 |
+| Codex | 17.8% | 45.0% | 0.0% | 10.0% | 27.1% | 4.77 |
+| Qwen | 0.8% | 52.1% | 0.0% | 12.2% | 34.9% | 7.91 |
+| All | 4.6% | 52.4% | 0.2% | 14.7% | 28.1% | 6.55 (B4: 5.18) |
+
+Shares of tool actions, polls excluded. The tables give the same phase as the version-3 grouping
+rules (B4) on 80.1% of actions; most of the difference is the build or test right after an edit
+(Repair → Validation, 458 run-1 actions). The categories, verdicts and the anchor are unchanged.
+Against annotator 1's round-1 labels (T01–T05, 213 actions, labelled with version 3): the tables
+93.9% (κ 0.91), B4 90.1% (κ 0.85). The subsections below are the version-3 evidence.
+
+**Version 3 (2026-10-11, grouping rules with the single-action G7).** **Scope.** All 7,650 trajectories with an outcome (17 configs × 3 runs × 3 agents), parsed
 from the raw logs:
 - **0 invariant violations.** 3 logs contain no tool call.
 - **Registry coverage:** `other` is 0.00% of actions for Claude, 0.31% for Codex and 0.11%

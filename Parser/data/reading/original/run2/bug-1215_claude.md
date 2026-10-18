@@ -7,9 +7,9 @@
 - steps (LLM inferences): 21 | actions: 21 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(4: succeeded) -> repair(2: blocked) -> localization(3: failed) -> repair(2: blocked) -> localization(2: succeeded) -> repair(4: blocked) -> validation(4: blocked, succeeded)
+Phases: localization(4: succeeded) -> repair(2: blocked) -> localization(3: failed) -> repair(2: blocked) -> localization(2: succeeded) -> repair(2: blocked) -> validation(6: blocked, succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -55,7 +55,7 @@ README.md
 settings.gradle
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2_
 
 **Thought** (none):
@@ -78,7 +78,7 @@ _(none)_
 8	 * copies of the So
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3_
 
 **Thought** (narration):
@@ -106,7 +106,7 @@ grep -n -A8 "manual_counter\|manual_period\|manual_digits" app/src/main/res/layo
 190:                    android:id="@+id/manual_pe
 ```
 
-## 5. edit_file / repair  (Edit)
+## 5. edit / repair  (Edit)
 _step 4_
 
 **Thought** (narration):
@@ -124,7 +124,7 @@ Now I'll implement the fix:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 6. edit_file / repair  (Edit)
+## 6. edit / repair  (Edit)
 _step 5_
 
 **Thought** (narration):
@@ -142,7 +142,7 @@ Now the `afterTextChanged` validation:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 6 | **FAILED**_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ Exit code 2
 grep: app/src/main/res/values/strings.xml: No such file or directory
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 7_
 
 **Thought** (none):
@@ -183,7 +183,7 @@ app/src/main/res/values-bg-rBG/strings_about.xml
 app
 ```
 
-## 9. search_code / localization  (Bash)
+## 9. search / localization  (Bash)
 _step 8_
 
 **Thought** (none):
@@ -202,7 +202,7 @@ grep -n "DEFAULT_PERIOD\|DEFAULT_DIGITS\|INITIAL_COUNTER" app/src/main/java/org/
 37:    public static final int STEAM_DEFAULT_DIGITS = 5;
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 9_
 
 **Thought** (none):
@@ -218,7 +218,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 10_
 
 **Thought** (none):
@@ -234,7 +234,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/Dialogs/ManualEntryDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. search_code / localization  (Bash)
+## 12. search / localization  (Bash)
 _step 11_
 
 **Thought** (none):
@@ -253,7 +253,7 @@ app/src/main/java/org/shadowice/flocke/andotp/Database/Entry.java:161:          
 app/src/main/java/org/shad
 ```
 
-## 13. read_file / localization  (Read)
+## 13. read / localization  (Read)
 _step 12_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ _(none)_
 425	        int marginMedium = context.getResources
 ```
 
-## 14. edit_file / repair  (Edit)
+## 14. edit / repair  (Edit)
 _step 13_
 
 **Thought** (none):
@@ -295,7 +295,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/View/EntriesCardAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 15. edit_file / repair  (Edit)
+## 15. edit / repair  (Edit)
 _step 14_
 
 **Thought** (none):
@@ -311,7 +311,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-1215/app/src/main/java/org/shadowice/flocke/andotp/View/EntriesCardAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 16. read_file / repair  (Read)
+## 16. read / validation  (Read)
 _step 15_
 
 **Thought** (narration):
@@ -336,7 +336,7 @@ Now let me verify the final dialog code and build:
 64	     * Values that are empty, not a number at all or too large to fit
 ```
 
-## 17. build / repair  (Bash)
+## 17. build / validation  (Bash)
 _step 16_
 
 **Thought** (none):
@@ -356,7 +356,7 @@ Caused by: java.lang.ExceptionInInitializerError: Exception org.codehaus.groovy.
 	a
 ```
 
-## 18. env_setup / validation  (Bash)
+## 18. search / validation  (Bash)
 _step 17_
 
 **Thought** (none):
@@ -427,7 +427,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task
 ```
 
-## 21. read_file / validation  (Read)
+## 21. read / validation  (Read)
 _step 20_
 
 **Thought** (none):

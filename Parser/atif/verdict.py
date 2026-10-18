@@ -12,7 +12,8 @@ fail_kind  test   the test executed and failed (or the app crashed under it)
            exit   a non-zero exit with no recognisable signature
            None   unless verdict == fail
 evidence   which marker decided it (``results``, ``script``, ``junit_ok``,
-           ``gradle_tests``, ``build_ok``, ``exit``, ...), for auditing
+           ``gradle_tests``, ``build_ok``, ``exit``, ...), for auditing; ``evidence_line``
+           gives the result's line with that marker (``BUILD SUCCESSFUL in 1m 55s``)
 
 Rules, in order (first match wins):
 
@@ -34,6 +35,13 @@ Rules, in order (first match wins):
    give ``pass``.
 6. A background run still in progress, and anything unrecognised, give ``none``.
 
+SWE-bench projects (``atif.project``): a test run (``run_test``: pytest, unittest, or a
+script the agent wrote to reproduce the issue) is first read for pytest's summary line
+(``2 failed, 10 passed in 1.2s``), unittest's ``FAILED (failures=N)`` / ``OK`` after
+``Ran N tests``, and a Python traceback, whose last exception decides the kind: a
+``SyntaxError`` is ``build`` (the code does not compile), ``No module named`` is ``env``,
+anything else is ``test`` (before the fix: the issue reproduced).  Otherwise the rules above.
+
 Known deviations: the markers are Gradle's and JUnit's, plus those of the earlier corpus's
 harness (run_pipeline.sh, AndroidJUnitRunner), which this corpus no longer runs; another
 harness needs its own.  A run in progress is recognised by Codex's ``Process running with
@@ -46,6 +54,8 @@ from __future__ import annotations
 
 import re
 from typing import Dict, List, Optional, Tuple
+
+from . import project
 
 VERDICTS = ("pass", "fail", "none")
 FAIL_KINDS = ("test", "build", "env", "exit")
@@ -82,14 +92,28 @@ RE_WRONG = re.compile(r"What went wrong:\s*(.{0,500})", re.S)
 RE_RUNNING = re.compile(r"Process running with session ID")
 #: exit-status lines: Codex's ``Process exited with code N``, Qwen Code's ``Exit Code: N``
 #: footer and ``Command exited with code: N``; Claude Code prints ``Exit code N`` only on
-#: failure, where the result's error flag already says so
-RE_EXIT = re.compile(r"(?:Process exited with code|exited with code:?|Exit Code:)\s*(\d+)")
+#: failure, where the result's error flag already says so.  Beyond the corpus: OpenHands'
+#: ``[The command completed with exit code N.]`` and mini-swe-agent's ``<returncode>N``
+RE_EXIT = re.compile(r"(?:Process exited with code|exited with code:?|Exit Code:"
+                     r"|completed with exit code|<returncode>)\s*(\d+)")
 RE_TESTS_FAILED = re.compile(r"There were failing tests")
 #: a Gradle failure counts as a *code* build failure only with a compiler signature
 RE_COMPILE = re.compile(r"Compilation failed|Compilation error|\.(?:java|kt):\d+: error:"
                         r"|error: cannot find symbol|^e: .*\.kt", re.M)
 RE_COMPILE_BUT_ENV = re.compile(r"javax/xml/bind|JAXBException|Unable to make field"
                                 r"|Unsupported class file major version")
+
+#: SWE-bench: pytest's summary (``=== 2 failed, 10 passed in 1.23s ===``, or without the
+#: rule under ``-q``), unittest's ``Ran N tests`` footer, and a Python traceback
+RE_PYTEST = re.compile(r"^=*\s*((?:\d+ (?:failed|passed|errors?|skipped|xfailed|xpassed"
+                       r"|warnings?|deselected|rerun)(?:, )?)+) in [\d.]+s", re.M)
+RE_PYTEST_COUNT = re.compile(r"(\d+) (failed|passed|errors?)\b")
+RE_PYTEST_NONE = re.compile(r"^=+ no tests ran\b", re.M)
+RE_UNITTEST = re.compile(r"^Ran (\d+) tests? in [\d.]+s\s*\n\s*\n?(OK|FAILED)\b", re.M)
+RE_TRACEBACK = re.compile(r"^Traceback \(most recent call last\):", re.M)
+RE_EXCEPTION_LINE = re.compile(r"^([A-Za-z_][\w.]*(?:Error|Exception|Exit|Failure))\b(.*)$",
+                               re.M)
+_PY_BUILD = ("SyntaxError", "IndentationError", "TabError")
 
 #: evidence labels that do not show a test result
 _NO_TEST_EVIDENCE = ("build_ok", "exit")
@@ -151,6 +175,44 @@ def _read(text: str, failed: bool, command: str) -> Tuple[str, Optional[str], st
     return "none", None, ""
 
 
+def _python_kind(text: str) -> str:
+    """test, build or env of a failing Python run, from its last exception."""
+    names = RE_EXCEPTION_LINE.findall(text)
+    name, rest = names[-1] if names else ("", "")
+    if name.rsplit(".", 1)[-1] in _PY_BUILD:
+        return "build"
+    if name.endswith(("ModuleNotFoundError", "ImportError")) and "No module named" in rest:
+        return "env"
+    return "test"
+
+
+def _read_python(text: str) -> Optional[Tuple[str, Optional[str], str]]:
+    """(verdict, fail_kind, evidence) of a SWE-bench test run from Python's own markers, or
+    None when it shows none of them."""
+    summaries = RE_PYTEST.findall(text)
+    if summaries:
+        counts: Dict[str, int] = {}
+        for number, word in RE_PYTEST_COUNT.findall(summaries[-1]):
+            key = "error" if word.startswith("error") else word
+            counts[key] = counts.get(key, 0) + int(number)
+        if counts.get("failed") or counts.get("error"):
+            return "fail", ("build" if any(e in text for e in _PY_BUILD) and not
+                            counts.get("passed") else "test"), "pytest"
+        if counts.get("passed"):
+            return "pass", None, "pytest"
+    if RE_PYTEST_NONE.search(text):
+        return "fail", "env", "pytest_empty"
+    runs = RE_UNITTEST.findall(text)
+    if runs:
+        ran, status = runs[-1]
+        if status == "FAILED":
+            return "fail", "test", "unittest"
+        return ("pass", None, "unittest") if int(ran) else ("fail", "env", "unittest_empty")
+    if RE_TRACEBACK.search(text):
+        return "fail", _python_kind(text), "traceback"
+    return None
+
+
 def verdict(mid: str, text: str, failed: Optional[bool] = False, command: str = "",
             effective_mid: Optional[str] = None) -> Tuple[str, Optional[str], str]:
     """(verdict, fail_kind, evidence) for one action.
@@ -159,11 +221,70 @@ def verdict(mid: str, text: str, failed: Optional[bool] = False, command: str = 
     command it polls when it is a ``wait_process`` on a background session."""
     if mid not in EXEC_MIDS:
         return "none", None, ""
+    if (effective_mid or mid) == "run_test" and project.current().swebench:
+        found = _read_python(strip_echo(text or ""))
+        if found:
+            return found
     result, kind, evidence = _read(strip_echo(text or ""), bool(failed), command or "")
     if result == "pass" and (effective_mid or mid) == "run_test" \
             and evidence in _NO_TEST_EVIDENCE:
         return "none", None, "no_test_evidence"
     return result, kind, evidence
+
+
+#: evidence label -> the markers it was read from, in the order ``_read`` tries them; the
+#: line of the last match is the one the viewer shows next to the verdict
+_EVIDENCE_MARKERS: Dict[str, Tuple["re.Pattern[str]", ...]] = {
+    "results": (RE_RESULTS,), "results_empty": (RE_RESULTS,), "script": (RE_SCRIPT,),
+    "junit_fail": (RE_JUNIT_FAIL,), "build_fail": (RE_COMPILE, RE_BUILD_FAIL),
+    "junit_ok": (RE_JUNIT_OK, RE_JUNIT_RUN_OK), "running": (RE_RUNNING,),
+    "gradle_tests": (RE_GRADLE_TEST_FAILED, RE_GRADLE_TEST_PASSED, RE_GRADLE_TEST_TASK),
+    "build_ok": (RE_BUILD_OK,), "no_test_evidence": (RE_BUILD_OK, RE_EXIT),
+    "env_head": (RE_ENV_FAIL,), "exit": (RE_EXIT, RE_ENV_FAIL),
+    "pytest": (RE_PYTEST,), "pytest_empty": (RE_PYTEST_NONE,), "unittest": (RE_UNITTEST,),
+    "unittest_empty": (RE_UNITTEST,), "traceback": (RE_EXCEPTION_LINE, RE_TRACEBACK),
+}
+EVIDENCE_LINE_CHARS = 200
+
+
+def evidence_line(text: str, evidence: str) -> str:
+    """The line of a result that decided its verdict (``evidence``, from ``verdict``), cut to
+    200 characters: the last line with the evidence's first marker that occurs (a failed
+    Gradle run: the first failing test, else the first compiler error, else the first line
+    of the "What went wrong:" block, else the first failure marker); "" when no marker line
+    shows (an ``exit`` read from the log's error flag alone)."""
+    body = strip_echo((text or "").replace("\r\n", "\n"))
+    if evidence == "build_fail":
+        failing = RE_GRADLE_TEST_FAILED.search(body)
+        if failing:                      # "There were failing tests": the first one
+            return _line(body, failing.start())[:EVIDENCE_LINE_CHARS]
+        compiled = RE_COMPILE.search(body)
+        wrong = RE_WRONG.search(body)
+        if not compiled and wrong:
+            first = next((x.strip() for x in wrong.group(1).splitlines() if x.strip()), "")
+            if first:
+                return ("What went wrong: " + first)[:EVIDENCE_LINE_CHARS]
+        found = [compiled] if compiled else list(RE_BUILD_FAIL.finditer(body))[:1]
+    elif evidence == "gradle_tests" and not RE_GRADLE_TEST_FAILED.search(body) \
+            and not RE_GRADLE_TEST_PASSED.search(body):
+        task, ok = list(RE_GRADLE_TEST_TASK.finditer(body)), list(RE_BUILD_OK.finditer(body))
+        if task and ok:                  # the test task ran, and the build after it passed
+            return (_line(body, task[-1].start()) + " … "
+                    + _line(body, ok[-1].start()))[:EVIDENCE_LINE_CHARS]
+        found = task[-1:]
+    else:
+        found = []
+        for pattern in _EVIDENCE_MARKERS.get(evidence or "", ()):
+            found = list(pattern.finditer(body[:400] if evidence == "env_head" else body))[-1:]
+            if found:
+                break
+    return _line(body, found[0].start())[:EVIDENCE_LINE_CHARS] if found else ""
+
+
+def _line(body: str, at: int) -> str:
+    """The stripped line of ``body`` that holds position ``at``."""
+    end = body.find("\n", at)
+    return body[body.rfind("\n", 0, at) + 1:end if end >= 0 else len(body)].strip()
 
 
 def attach(rows: List[dict]) -> List[dict]:

@@ -9,7 +9,10 @@ page has to load the whole corpus:
                                     every bug x agent, summaries only (no per-action text),
                                     plus every bug's pass/fail in each run from the outcome CSVs;
 ``viewer/data/bugs/bug-<id>.js``    ``window.TRAJ_BUG = {...};`` -- the bug's trajectories in
-                                    full (3 agents x 3 runs), for ``viewer/bug.html``.
+                                    full (3 agents x 3 runs), for ``viewer/bug.html``;
+``viewer/data/atif/run<k>/bug-<id>.json.gz``  the same trajectories as converted ATIF
+                                    (``write_packs``), which the viewer re-runs when the user
+                                    sets rules of their own.
 
 Both are JavaScript statements, not JSON, so the pages work from ``file://`` (where
 ``fetch()`` of a local file is blocked): ``bug.html`` loads a bug by injecting a
@@ -21,32 +24,46 @@ quotes in its tooltips.
 Fields beyond the contract (the viewer must ignore what it does not know): ``model``,
 ``outcome.by_config``, ``badges.self_report``, ``badge_steps``, ``stats.reported_duration_s``
 (the log's own ``duration_ms``; Claude and Qwen steps carry no timestamps, so ``duration_s``
-is null for them), and the actions' ``thought_source``, ``edits`` and ``cmd``.
+is null for them), the actions' ``thought_source``, ``edits`` and ``cmd``, the
+``evidence`` and ``evidence_line`` of an action with a verdict (which marker decided it, and
+the result's line with that marker: ``BUILD SUCCESSFUL in 1m 55s``), and the subphases'
+``checks`` (the action indexes that decided the outcome; a repair attempt's judging run may
+come after the subphase).
 
 Text policy: ``thought`` and ``result`` are whitespace-collapsed and cut to 300 characters,
 ``target`` to 200.  ``thought`` is the reasoning or narration of the LLM step that issued
-the call, so parallel calls of one step repeat it.
+the call, so parallel calls of one step repeat it.  The full texts stay in the ATIF (the
+corpus packs, ``write_packs``), which the viewer's details panel reads on demand.
 """
 from __future__ import annotations
 
 import collections
+import gzip
 import json
+import os
 import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-from . import codebook, corpus, outcomes, phase, rules, schema, taxonomy, verdict
+from . import codebook, corpus, lookup, outcomes, phase, project, rules, schema, segment, taxonomy, \
+    verdict
 from .corpus import Key
 
 SCHEMA = "trajview/3"
 OVERVIEW_SCHEMA = "trajview-overview/3"
+#: one bug's converted ATIF in one run, for the viewer to re-run under the user's rules
+PACK_SCHEMA = "trajectiers-pack/1"
 THOUGHT_CHARS = 300
 RESULT_CHARS = 300
 TARGET_CHARS = 200
+#: the files an action names, and the files a search's output lists (``files``, ``found``)
+FILES_MAX = 12
+FOUND_MAX = 20
 BUG_VAR = "window.TRAJ_BUG"
 OVERVIEW_VAR = "window.TRAJ_OVERVIEW"
-FILE_ROLES = taxonomy.OBJECT_ROLES + ("outside",)
+#: the targets of the files an action works on (the target table), the actions' file_role
+FILE_ROLES = lookup.TARGETS
 _APP = re.compile(r"App package: ([A-Za-z_][\w.]*)")
 _APP_ID = re.compile(r"applicationId\s*[=:]?\s*\\?[\"']([A-Za-z_][\w.]*)")
 _MANIFEST = re.compile(r"<manifest[^>]*?\spackage=\\?\"([A-Za-z_][\w.]*)")
@@ -93,16 +110,69 @@ def app_package(trajectories: List[dict]) -> Optional[str]:
     return None
 
 
-def _actions(result: Dict[str, Any]) -> List[dict]:
-    """One view action per prepared row, with its final phase (and its own phase, the
-    phase before smoothing, when the two differ)."""
+def _named_files(row: dict) -> List[str]:
+    """The repository files an action names (``segment.enrich``), without folders."""
+    return [_clip(f, TARGET_CHARS) for f in row.get("files") or []
+            if os.path.basename(f.rstrip("/")) not in ("", ".", "..")][:FILES_MAX]
+
+
+def _found_files(row: dict, bug: str) -> Tuple[List[str], int]:
+    """(the repository files a search's output lists, how many there are): grep, find and
+    glob results, as paths relative to the repository.  Only a path that starts its line
+    counts (``grep -rn`` / ``rg`` / ``find`` / ``grep -l`` output), so paths inside matched
+    source lines are left out."""
+    found: List[str] = []
+    for line in (row.get("result") or "").splitlines():
+        m = segment.PATH_RE.match(line.strip())
+        if not m:
+            continue
+        rel = segment.repo_rel(m.group(0), bug)
+        if rel and rel != "." and "*" not in rel and rel not in found:
+            found.append(rel)
+    return [_clip(f, TARGET_CHARS) for f in found[:FOUND_MAX]], len(found)
+
+
+_TEST_FILTER = re.compile(r"--tests[ =]+[\"']?([^\s\"']+)|-e\s+class\s+([\w.$#,]+)")
+_TEST_TASK = re.compile(r"\b((?:test|connected)\w*(?:UnitTest|AndroidTest)|test|check|checkstyle"
+                        r"|lint\w*)\b")
+_PATCH_FILE = re.compile(r"[\w.\-]+\.(?:patch|diff)\b")
+
+
+def _test_names(row: dict) -> List[str]:
+    """What a test run tests, by name: its test filters (``--tests``, ``-e class``), else the
+    test or scratch source files it names, else its gradle test tasks (the whole suite), a
+    patch it applies on trial, or the app on a device (``adb``)."""
+    cmd = row.get("cmd") or row.get("target") or ""
+    names = [n for m in _TEST_FILTER.finditer(cmd) for g in m.groups() if g for n in g.split(",")]
+    if not names:
+        names = [os.path.basename(p) for p in segment.PATH_RE.findall(cmd)
+                 if p.endswith((".java", ".kt", ".py", ".sh"))]
+    if not names and re.search(r"gradlew?\b", cmd):
+        names = ["task " + t for t in _TEST_TASK.findall(cmd.split("|")[0])]
+    if not names and re.search(r"--dry-run|apply --check", cmd):
+        names = ["dry run of " + f for f in _PATCH_FILE.findall(cmd)] or ["patch dry run"]
+    if not names and re.search(r"\badb\b|\$ADB\b", cmd):
+        names = ["the app on a device (adb)"]
+    return list(dict.fromkeys(_clip(n, 80) for n in names))[:6]
+
+
+def _actions(result: Dict[str, Any], bug: str) -> List[dict]:
+    """One view action per prepared row: its category and the action table's entry that gave
+    it (``item``), the targets of its files (``file_role``), its phase and the phase table's
+    row that gave it (``row``: L1-L15, LG for the general rule, or ``user`` for the user's
+    own phase row), and ``own_patch`` when it reads back files the agent already changed;
+    the files it names (``files``), those a search lists (``found``), what a test run tests
+    (``tests``) and the outcome its own step shows (``step_outcome``, ``step_evidence``:
+    ``phase.step_outcomes``; absent = unchecked).  Call it under ``project.use`` of the
+    trajectory."""
     out: List[dict] = []
+    steps = phase.step_outcomes(result)
     for x, row in enumerate(result["actions"]):
         item = {
             "i": row["action_index"], "step": row["step_id"], "scope": row["scope"],
             "tool": row["tool"], "category": row["category"], "phase": result["phase"][x],
             "target": _clip(row["target"], TARGET_CHARS),
-            "file_role": row.get("file_roles", taxonomy.action_roles(row)),
+            "file_role": lookup.action_targets(row),
             "verdict": row["verdict"], "fail_kind": row["fail_kind"],
             "failed_raw": bool(row["failed"]),
             "ts": row["timestamp"] or None,
@@ -111,16 +181,41 @@ def _actions(result: Dict[str, Any]) -> List[dict]:
             "result": _clip(row["result"], RESULT_CHARS),
             "call_id": row["call_id"],
         }
-        if result["own_phase"][x] != result["phase"][x]:
-            item["own_phase"] = result["own_phase"][x]
+        if result.get("table_row"):
+            item["row"] = result["table_row"][x]
+        if row.get("lookup_item"):
+            item["item"] = row["lookup_item"]
+        if row.get("own_patch"):
+            item["own_patch"] = True
         command = _clip(row.get("cmd"), TARGET_CHARS)
         if command and command != item["target"]:
             item["cmd"] = command            # the shell command, when the target is not it
         if row.get("reverts"):
             item["reverts"] = True
+        if row.get("verdict_evidence") and (row["verdict"] != "none"
+                                             or row["verdict_evidence"] == "no_test_evidence"):
+            item["evidence"] = row["verdict_evidence"]
+            line = verdict.evidence_line(row.get("result") or "", row["verdict_evidence"])
+            if line:
+                item["evidence_line"] = line
         edits = [_clip(f, TARGET_CHARS) for f in (row.get("edit_files") or [])][:6]
         if edits:
             item["edits"] = edits
+        files = _named_files(row)
+        if files:
+            item["files"] = files
+        if row["category"] == "search":
+            found, n_found = _found_files(row, bug)
+            if found:
+                item["found"] = found
+            if n_found > len(found):
+                item["n_found"] = n_found
+        if steps[x]:
+            item["step_outcome"], item["step_evidence"] = steps[x]
+        if row["category"] == "test":
+            tests = _test_names(row)
+            if tests:
+                item["tests"] = tests
         out.append(item)
     return out
 
@@ -134,8 +229,9 @@ def _spans(result: Dict[str, Any]) -> List[dict]:
 
 
 def _attempts(result: Dict[str, Any]) -> List[dict]:
-    """Repair attempts (rule K1) by action index: first edit, edits, judging run, last
-    action, outcome and evidence; ``judge`` is null for an attempt never run."""
+    """Repair attempts by action index: first edit, edits, the run that judges them (the
+    first decisive run after the edits, in the validation span that follows), last action,
+    outcome and evidence; ``judge`` is null for an attempt never run."""
     index = [a["action_index"] for a in result["actions"]]
     return [{"id": at["id"], "start": index[at["start"]], "end": index[at["end"]],
              "edits": [index[x] for x in at["edits"]],
@@ -185,7 +281,9 @@ def build_view(trajectory: dict, result: Dict[str, Any], *, traj_id: str, bug: s
     """The ``trajview/3`` trajectory of a phase result (``phase.phases`` or
     ``rules.phases``); ``outcome`` is the trajectory's ``outcome`` object."""
     badges, badge_steps = outcomes.phase_badges(trajectory, result)
-    actions = _actions(result)
+    with project.use(trajectory):
+        actions = _actions(result, str(bug))
+    ctx = result.get("context") or {}
     obj = {
         "id": traj_id, "bug": str(bug), "agent": agent,
         "config": config, "run": int(run), "app": app,
@@ -200,6 +298,8 @@ def build_view(trajectory: dict, result: Dict[str, Any], *, traj_id: str, bug: s
         "actions": actions,
         "phases": _spans(result),
         "attempts": _attempts(result),
+        "targets": {"source": ctx.get("target_source") or "none",
+                    "files": sorted(ctx.get("targets") or [])[:FILES_MAX]},
     }
     check_view(obj, name=obj["id"])
     return obj
@@ -227,6 +327,8 @@ def check_view(obj: Dict[str, Any], name: str = "") -> None:
                     or sp["evidence"] not in phase.EVIDENCE \
                     or set(sp["flags"]) - set(phase.FLAGS):
                 problems.append(f"{sp['id']} has a value outside the vocabulary")
+            if any(not 1 <= c <= n for c in sp.get("checks", [])):
+                problems.append(f"{sp['id']} names a deciding action out of range")
             if k and s["subphases"][k - 1]["outcome"] == sp["outcome"]:
                 problems.append(f"{sp['id']} repeats the outcome before it")
         if inner != s["end"] + 1:
@@ -239,7 +341,7 @@ def check_view(obj: Dict[str, Any], name: str = "") -> None:
     if pos != n + 1:
         problems.append(f"phases cover #1..#{pos - 1} of {n} actions")
     for a in acts:
-        if a["category"] not in taxonomy.CATEGORIES or a.get("own_phase", a["phase"]) \
+        if a["category"] not in lookup.CATEGORIES or a.get("own_phase", a["phase"]) \
                 not in phase.PHASES:
             problems.append(f"action #{a['i']} has a value outside the vocabulary")
     for at in obj["attempts"]:
@@ -284,8 +386,8 @@ def vocab(ruleset: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rules, when any."""
     checked = rules.normalize(ruleset)
     return {
-        "categories": list(taxonomy.CATEGORIES),
-        "category_family": {c: taxonomy.CATEGORY_FAMILY[c] for c in taxonomy.CATEGORIES},
+        "categories": list(lookup.CATEGORIES),
+        "category_family": dict(lookup.CATEGORY_FAMILY),
         "phases": list(phase.PHASES),
         "outcomes": list(phase.OUTCOMES),
         "phase_outcomes": {p: list(v) for p, v in phase.PHASE_OUTCOMES.items()},
@@ -295,14 +397,18 @@ def vocab(ruleset: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         "file_roles": list(FILE_ROLES),
         "text": {
             "phases": {p: {"doing": v[0], "typical": v[1], "where": v[2]}
-                       for p, v in codebook.PHASE_TEXT.items()},
-            "categories": {c: {"family": v[0], "does": v[1], "tools": v[2]}
-                           for c, v in codebook.CATEGORY_TEXT.items()},
+                       for p, v in lookup.PHASE_TEXT.items()},
+            "categories": {c: {"family": lookup.CATEGORY_FAMILY[c],
+                               "does": lookup.CATEGORY_TEXT[c],
+                               "tools": "; ".join(x for x in (shell, native) if x)}
+                           for c, shell, native in lookup.ACTION_TABLE},
             "outcomes": {row[0]: dict(zip(("check",) + phase.OUTCOMES, row[1:]))
                          for row in codebook.OUTCOME_ROWS},
             "flags": dict(codebook.FLAG_TEXT),
         },
         "rules": rules.builtin(checked),
+        "tables": rules.tables(),
+        "lookup": rules.contents(),
         **({"custom_rules": [{**r, "sentence": rules.describe(r)} for r in checked["custom"]]}
            if checked["custom"] else {}),
     }
@@ -399,6 +505,37 @@ def read_js(path: Path, variable: Optional[str] = None) -> Dict[str, Any]:
 
 def bug_file(viewer_dir: Path, bug: str) -> Path:
     return Path(viewer_dir) / "data" / "bugs" / f"bug-{bug}.js"
+
+
+def pack_file(viewer_dir: Path, run: int, bug: str) -> Path:
+    return Path(viewer_dir) / "data" / "atif" / f"run{int(run)}" / f"bug-{bug}.json.gz"
+
+
+def write_packs(out_dir: Path, viewer_dir: Path, *, config: str = corpus.DEFAULT_CONFIG,
+                runs: Iterable[int] = corpus.RUNS, bug_ids: Iterable[str] = (),
+                agents: Sequence[str] = corpus.AGENTS) -> Dict[str, Any]:
+    """Write ``viewer/data/atif/run<k>/bug-<id>.json.gz``: the converted ATIF of one bug's
+    agents in one run (``PACK_SCHEMA``), gzipped.  The viewer re-runs them in the browser
+    when the user's rule set is not the default one (``atif.upload.reanalyze``).  The
+    gzip stream has no timestamp, so an unchanged corpus rewrites every file byte for byte."""
+    out_dir, viewer_dir = Path(out_dir), Path(viewer_dir)
+    files, size = 0, 0
+    for run in [int(r) for r in runs]:
+        for bug in bug_ids:
+            bug = str(bug).replace("bug-", "")
+            found = {agent: _load(out_dir, Key(agent, config, run, bug)) for agent in agents}
+            found = {a: t for a, t in found.items() if t is not None}
+            if not found:
+                continue
+            body = json.dumps({"schema": PACK_SCHEMA, "bug": bug, "config": config, "run": run,
+                               "trajectories": found}, ensure_ascii=False,
+                              separators=(",", ":")).encode("utf-8")
+            path = pack_file(viewer_dir, run, bug)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(gzip.compress(body, compresslevel=9, mtime=0))
+            files += 1
+            size += path.stat().st_size
+    return {"files": files, "bytes": size}
 
 
 def overview_file(viewer_dir: Path) -> Path:

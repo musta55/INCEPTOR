@@ -7,9 +7,9 @@
 - steps (LLM inferences): 12 | actions: 15 | failed actions: 0
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(8: succeeded) -> repair(6: succeeded) -> validation(1: unchecked)
+Phases: localization(8: succeeded) -> repair(5: succeeded) -> validation(2: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -44,7 +44,7 @@ settings.gradle
 ./app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 1 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -60,7 +60,7 @@ grep -ril "new_file" --include=*.java --include=*.kt --include=*.xml . | head -3
 (eval):1: no matches found: --include=*.java
 ```
 
-## 3. read_file / localization  (Read)
+## 3. read / localization  (Read)
 _step 2_
 
 **Thought** (none):
@@ -87,7 +87,7 @@ _(none)_
 12	import android.annotation.Supp
 ```
 
-## 4. search_code / localization  (Bash)
+## 4. search / localization  (Bash)
 _step 3 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -109,7 +109,7 @@ app/src/main/res/values/arrays.xml:76:    <string-array name="new_file_types__fi
     *   https://gsantner.net/
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 3 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -127,7 +127,7 @@ app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java:96:        fileExtEd
 app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java:141:            appSettings.setNewFileDialogLa
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -148,7 +148,7 @@ sed -n '50,100p' app/src/main/res/values/arrays.xml; sed -n '690,720p' app/src/m
         <item translatable="false">@string/select_current_line</item>
 ```
 
-## 7. search_code / localization  (Bash)
+## 7. search / localization  (Bash)
 _step 5_
 
 **Thought** (none):
@@ -166,7 +166,7 @@ app/src/main/res/values/string-not_translatable.xml:288:    <string name="pref_k
 271:
 ```
 
-## 8. read_file / localization  (Read)
+## 8. read / localization  (Read)
 _step 6_
 
 **Thought** (narration):
@@ -187,7 +187,7 @@ Now I'll add a preference key and accessors, then fix the dialog.
 288	    <string name="pref_key__new_file_dialog_l
 ```
 
-## 9. edit_file / repair  (Edit)
+## 9. edit / repair  (Edit)
 _step 7 | call 1/2 of this inference_
 
 **Thought** (none):
@@ -203,7 +203,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-53/app/src/main/res/values/string-not_translatable.xml has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 7 | call 2/2 of this inference_
 
 **Thought** (none):
@@ -219,7 +219,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-53/app/src/main/java/net/gsantner/markor/util/AppSettings.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 8_
 
 **Thought** (none):
@@ -235,7 +235,7 @@ _(none)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-53/app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 9 | call 1/2 of this inference_
 
 **Thought** (narration):
@@ -253,7 +253,7 @@ Now save the type on OK and add the helper method:
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-53/app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. edit_file / repair  (Edit)
+## 13. edit / repair  (Edit)
 _step 9 | call 2/2 of this inference_
 
 **Thought** (narration):
@@ -269,7 +269,7 @@ _(same inference as the previous action)_
 The file /Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run2/bug-53/app/src/main/java/net/gsantner/markor/ui/NewFileDialog.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 14. build / repair  (Bash)
+## 14. build / validation  (Bash)
 _step 10_
 
 **Thought** (none):
@@ -289,7 +289,7 @@ Gradle may disable incremental compilation as the following annotation processor
 Consider setting the experimental feature flag android.enableSeparateAnnotationProcessing=true in the gradle.properties file to run a
 ```
 
-## 15. read_file / validation  (Bash)
+## 15. read / validation  (Bash)
 _step 11_
 
 **Thought** (narration):

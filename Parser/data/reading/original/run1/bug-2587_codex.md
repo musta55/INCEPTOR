@@ -7,9 +7,9 @@
 - steps (LLM inferences): 18 | actions: 13 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(2: succeeded) -> repair(2: unchecked) -> validation(6: unchecked)
+Phases: planning(1: unchecked) -> localization(4: succeeded) -> repair(1: unchecked) -> planning(1: unchecked) -> validation(5: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:23:31.698Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the connection flow, patch input/error handling, then build the app
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:23:35.008Z | **FAILED**_
 
 **Thought** (none):
@@ -63,7 +63,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:23:36.472Z_
 
 **Thought** (narration):
@@ -92,7 +92,7 @@ app/src/main/java/io/pslab/communication/HttpHandler.java:71:        Request req
 app/src/main/java/
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:23:39.847Z_
 
 **Thought** (none):
@@ -125,7 +125,7 @@ import android.view.ViewGroup;
 import and
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:23:47.086Z_
 
 **Thought** (narration):
@@ -161,7 +161,7 @@ android {
     default
 ```
 
-## 6. edit_file / repair  (exec_command)
+## 6. edit / repair  (exec_command)
 _step 10 | 2026-09-23T09:23:56.609Z_
 
 **Thought** (narration):
@@ -194,7 +194,7 @@ Success. Updated the following files:
 M app/src/main/java/io/pslab/fragment/ESPFragment.java
 ```
 
-## 7. plan / repair  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-23T09:24:02.037Z_
 
 **Thought** (none):
@@ -234,7 +234,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 9. wait_process / validation  (write_stdin)
+## 9. other / validation  (write_stdin)
 _step 13 | 2026-09-23T09:24:08.589Z_
 
 **Thought** (none):
@@ -262,7 +262,7 @@ Android Gradle plugin that has been tested with compileSdk = 35.
 If
 ```
 
-## 10. wait_process / validation  (write_stdin)
+## 10. other / validation  (write_stdin)
 _step 14 | 2026-09-23T09:24:15.143Z_
 
 **Thought** (none):
@@ -291,7 +291,7 @@ Note: Processing class MultimeterData
 Note:
 ```
 
-## 11. wait_process / validation  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-23T09:24:25.690Z_
 
 **Thought** (narration):
@@ -323,7 +323,7 @@ Output:
 > Tas
 ```
 
-## 12. diff / validation  (exec_command)
+## 12. read / validation  (exec_command)
 _step 16 | 2026-09-23T09:24:32.414Z_
 
 **Thought** (narration):
@@ -349,7 +349,7 @@ Output:
     48	        espConnectProgressBar = root
 ```
 
-## 13. plan / validation  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-23T09:24:37.775Z_
 
 **Thought** (none):

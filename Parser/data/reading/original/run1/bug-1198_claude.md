@@ -7,9 +7,9 @@
 - steps (LLM inferences): 19 | actions: 18 | failed actions: 1
 - known gaps: no_per_step_timestamps, no_initial_user_prompt, per_step_completion_tokens_unavailable, thinking_content_omitted
 
-Phases: localization(9: succeeded) -> repair(4: succeeded) -> validation(5: unchecked)
+Phases: localization(9: succeeded) -> repair(3: succeeded) -> validation(6: succeeded)
 
-## 1. search_code / localization  (Bash)
+## 1. search / localization  (Bash)
 _step 1_
 
 **Thought** (narration):
@@ -34,7 +34,7 @@ drwxr-xr-x@  3 splash  staff     96 Sep 14 00:36 .github
 drwxr-xr-x@  6 splash  staff    192 Sep 14 00
 ```
 
-## 2. search_code / localization  (Bash)
+## 2. search / localization  (Bash)
 _step 2_
 
 **Thought** (none):
@@ -50,7 +50,7 @@ cat bug-1198_output.txt; grep -rn "encrypted" --include=*.java --include=*.xml a
 SystemMessage(subtype='init', data={'type': 'system', 'subtype': 'init', 'cwd': '/Volumes/Dumpy/Research/automated_program_repair_for_ui_bugs/runs/claude_original_run1/bug-1198', 'session_id': '41409d89-e65e-42fb-8d04-6ac5d3a774bf', 'tools': ['Task', 'AskUserQuestion', 'Bash', 'CronCreate', 'CronDelete', 'CronList', 'DesignSync', 'Edit', 'EnterPlanMode', 'EnterWorktree', 'ExitPlanMode', 'ExitWorkt
 ```
 
-## 3. search_code / localization  (Bash)
+## 3. search / localization  (Bash)
 _step 3_
 
 **Thought** (narration):
@@ -72,7 +72,7 @@ app/src/main/res/values-es/strings.xml:95:    <string name="encrypted_file">_enc
 ap
 ```
 
-## 4. read_file / localization  (Bash)
+## 4. read / localization  (Bash)
 _step 4_
 
 **Thought** (none):
@@ -101,7 +101,7 @@ sed -n 320,470p app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.
         TextView mFilesize;
 ```
 
-## 5. search_code / localization  (Bash)
+## 5. search / localization  (Bash)
 _step 5_
 
 **Thought** (narration):
@@ -125,7 +125,7 @@ app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java:214:       
 app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java:237:            if (fdelete.exist
 ```
 
-## 6. read_file / localization  (Bash)
+## 6. read / localization  (Bash)
 _step 6_
 
 **Thought** (none):
@@ -152,7 +152,7 @@ sed -n 390,440p app/src/main/java/swati4star/createpdf/fragment/HomeFragment.jav
             mPath = Environment.get
 ```
 
-## 7. read_file / localization  (Read)
+## 7. read / localization  (Read)
 _step 7_
 
 **Thought** (none):
@@ -179,7 +179,7 @@ app/src/main/java/swati4star/createpdf/util/FileUtils.java
 12	import android.print.PrintAttribu
 ```
 
-## 8. search_code / localization  (Bash)
+## 8. search / localization  (Bash)
 _step 8_
 
 **Thought** (narration):
@@ -204,7 +204,7 @@ checkstyle.gradle
 102:        holder.mFilesize.setText(FileUtils.getFormattedSize(mFileList.get(posit
 ```
 
-## 9. read_file / localization  (Read)
+## 9. read / localization  (Read)
 _step 9_
 
 **Thought** (none):
@@ -227,7 +227,7 @@ app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java
 262	                    public void onInput(@
 ```
 
-## 10. edit_file / repair  (Edit)
+## 10. edit / repair  (Edit)
 _step 10_
 
 **Thought** (narration):
@@ -247,7 +247,7 @@ app/src/main/java/swati4star/createpdf/util/FileUtils.java
 The file app/src/main/java/swati4star/createpdf/util/FileUtils.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 11. edit_file / repair  (Edit)
+## 11. edit / repair  (Edit)
 _step 11_
 
 **Thought** (none):
@@ -263,7 +263,7 @@ app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java
 The file app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 12. edit_file / repair  (Edit)
+## 12. edit / repair  (Edit)
 _step 12_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java
 The file app/src/main/java/swati4star/createpdf/adapter/ViewFilesAdapter.java has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
-## 13. build / repair  (Bash)
+## 13. build / validation  (Bash)
 _step 13_
 
 **Thought** (narration):
@@ -307,7 +307,7 @@ Note: Recompile with -Xlint:deprecation for details.
 :app:transformClassesWithMultidexlistForDebugWarning: The rule `
 ```
 
-## 14. build / validation  (Bash)
+## 14. test / validation  (Bash)
 _step 14_
 
 **Thought** (narration):
@@ -339,7 +339,7 @@ public class Harness {
 === Old buggy behaviour for same steps =
 ```
 
-## 15. env_setup / validation  (Bash)
+## 15. diff / validation  (Bash)
 _step 15_
 
 **Thought** (narration):
@@ -391,7 +391,7 @@ true
 ls: .git: No such file or directory
 ```
 
-## 18. search_code / validation  (Bash)
+## 18. search / validation  (Bash)
 _step 18_
 
 **Thought** (narration):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 26 | actions: 21 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(11: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(5: failed) -> planning(1: unchecked) -> localization(6: succeeded) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(4: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:36:09.286Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace server-setting persistence into the API client, patch the root caus
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:36:11.850Z_
 
 **Thought** (none):
@@ -71,7 +71,7 @@ ultrasonic
 ultrasonic
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:36:12.848Z_
 
 **Thought** (narration):
@@ -102,7 +102,7 @@ find: ..: Operation not permitted
  the Free Software Foundation, either version 3 of the License,
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T17:36:15.579Z_
 
 **Thought** (none):
@@ -130,7 +130,7 @@ Total output lines: 437
 45:    private
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:36:19.073Z_
 
 **Thought** (none):
@@ -159,7 +159,7 @@ Total output lines: 329
         final ServerSettingsFragment fragment = new ServerSettingsFragment(
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:36:21.230Z_
 
 **Thought** (none):
@@ -191,7 +191,7 @@ Total output lines: 388
     public boolean onP
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-26T17:36:24.297Z_
 
 **Thought** (narration):
@@ -209,7 +209,7 @@ Server values are persisted correctly. The connection test changes the active se
 Plan updated
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T17:36:27.749Z_
 
 **Thought** (none):
@@ -237,7 +237,7 @@ Output:
         ModalBackgroundTask<Boolean> task = new ModalBac
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-26T17:36:30.587Z_
 
 **Thought** (none):
@@ -265,7 +265,7 @@ Output:
         addServerPreference.setKey(Constants.PREFERENCES_K
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-26T17:36:32.806Z_
 
 **Thought** (none):
@@ -294,7 +294,7 @@ Output:
                 Preference addServerPreference = findPreference(Constants.PREFERENCES_K
 ```
 
-## 11. search_code / localization  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-26T17:36:37.406Z_
 
 **Thought** (none):
@@ -325,7 +325,7 @@ Output:
 	public stati
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-26T17:36:40.583Z | **FAILED**_
 
 **Thought** (none):
@@ -354,7 +354,7 @@ Output:
 		return context.getSharedPreferences(Constants.PREFERENCES_FILE_NAME,
 ```
 
-## 13. search_code / localization  (exec_command)
+## 13. search / localization  (exec_command)
 _step 17 | 2026-09-26T17:36:42.320Z_
 
 **Thought** (none):
@@ -376,7 +376,7 @@ ultrasonic/src/main/java/org/moire/ultrasonic/util/Constants.java:135:	public st
 ultrasonic/src/main/java/org/moire/ultrasonic/util/Util.java:403:		return context.getSharedPreferences(Constants.PREFERENCES_FILE_NAME, 0)
 ```
 
-## 14. edit_file / repair  (exec_command)
+## 14. edit / repair  (exec_command)
 _step 18 | 2026-09-26T17:36:48.461Z_
 
 **Thought** (narration):
@@ -412,7 +412,7 @@ Success. Updated the following files:
 M ultrasonic/src/main/java/org/moire/ultrasonic/util/Util.java
 ```
 
-## 15. diff / repair  (exec_command)
+## 15. read / validation  (exec_command)
 _step 19 | 2026-09-26T17:36:51.596Z_
 
 **Thought** (none):
@@ -443,7 +443,7 @@ Output:
 fatal: path 'ultrasonic/src/main/java/org/moire/ultrasonic/util/Ut
 ```
 
-## 16. plan / repair  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-26T17:36:54.503Z_
 
 **Thought** (narration):
@@ -461,7 +461,7 @@ The patch is minimal and directly addresses debug/release preference divergence.
 Plan updated
 ```
 
-## 17. build / repair  (exec_command)
+## 17. build / validation  (exec_command)
 _step 21 | 2026-09-26T17:36:56.909Z_
 
 **Thought** (none):
@@ -483,7 +483,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:36:58.806Z_
 
 **Thought** (none):
@@ -510,7 +510,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns h
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:37:04.773Z_
 
 **Thought** (none):
@@ -535,7 +535,7 @@ Output:
 > Task :ultrasonic:transformResourcesWithMe
 ```
 
-## 20. search_code / validation  (exec_command)
+## 20. search / validation  (exec_command)
 _step 24 | 2026-09-26T17:37:12.110Z_
 
 **Thought** (narration):
@@ -566,7 +566,7 @@ Output:
 -rw-r--r--@ 1 sage  staff   4.8M Sep 26 13
 ```
 
-## 21. plan / validation  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-26T17:37:14.766Z_
 
 **Thought** (none):

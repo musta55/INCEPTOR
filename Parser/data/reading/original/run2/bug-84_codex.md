@@ -7,9 +7,9 @@
 - steps (LLM inferences): 29 | actions: 24 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(13: succeeded) -> repair(7: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(13: succeeded) -> planning(1: unchecked) -> localization(1: failed) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:54:02.332Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace server-setting persistence into API client construction, then patch
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:54:04.261Z | **FAILED**_
 
 **Thought** (none):
@@ -72,7 +72,7 @@ AGENTS:
 find
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:54:05.242Z_
 
 **Thought** (narration):
@@ -100,7 +100,7 @@ Relevant files:
 ./subsonic-api/src/integrationTest/kotlin/org/moire/ultrasonic/api/subsonic/SubsonicApiGetArtistsTest.kt:12: * Integ
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:54:07.359Z_
 
 **Thought** (none):
@@ -130,7 +130,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 ```
 
-## 5. read_file / localization  (exec_command)
+## 5. read / localization  (exec_command)
 _step 9 | 2026-09-25T05:54:09.678Z_
 
 **Thought** (none):
@@ -161,7 +161,7 @@ Total output lines: 422
     93	        if (preference
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:54:11.704Z_
 
 **Thought** (narration):
@@ -191,7 +191,7 @@ Total output lines: 282
    195	        serverPasswordPref.setText
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:54:14.722Z_
 
 **Thought** (none):
@@ -220,7 +220,7 @@ Total output lines: 248
  (at your option) any later ver
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-25T05:54:18.346Z_
 
 **Thought** (none):
@@ -246,7 +246,7 @@ ultrasonic/src/main/java/org/moire/ultrasonic/util/Util.java-125-	private Util()
 ultrasonic/src/main/jav
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T05:54:21.679Z_
 
 **Thought** (none):
@@ -273,7 +273,7 @@ Total output lines: 214
    184	                    (PreferenceCategory) findPreference
 ```
 
-## 10. read_file / localization (own phase understanding)  (exec_command)
+## 10. other / localization  (exec_command)
 _step 14 | 2026-09-25T05:54:26.398Z_
 
 **Thought** (narration):
@@ -297,7 +297,7 @@ Output:
 --- issue events/comments ---
 ```
 
-## 11. read_file / localization  (exec_command)
+## 11. other / localization  (exec_command)
 _step 15 | 2026-09-25T05:54:29.362Z_
 
 **Thought** (none):
@@ -317,7 +317,7 @@ Original token count: 0
 Output:
 ```
 
-## 12. read_file / localization (own phase understanding)  (exec_command)
+## 12. other / localization  (exec_command)
 _step 16 | 2026-09-25T05:54:30.935Z_
 
 **Thought** (none):
@@ -340,7 +340,7 @@ Output:
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:
 ```
 
-## 13. search_code / localization  (exec_command)
+## 13. search / localization  (exec_command)
 _step 17 | 2026-09-25T05:54:32.641Z_
 
 **Thought** (none):
@@ -371,7 +371,7 @@ Output:
 406-	public stati
 ```
 
-## 14. search_code / localization  (exec_command)
+## 14. search / localization  (exec_command)
 _step 18 | 2026-09-25T05:54:34.711Z_
 
 **Thought** (none):
@@ -393,7 +393,7 @@ ultrasonic/src/main/java/org/moire/ultrasonic/util/Constants.java:135:	public st
 ultrasonic/src/main/java/org/moire/ultrasonic/fragment/SettingsFragment.java:79:        settings = PreferenceManager.getDefaultSharedPrefe
 ```
 
-## 15. plan / localization  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-25T05:54:39.161Z_
 
 **Thought** (narration):
@@ -411,7 +411,7 @@ The debug application ID changes PreferenceManager’s default filename, but Uti
 Plan updated
 ```
 
-## 16. search_code / localization  (exec_command)
+## 16. search / localization  (exec_command)
 _step 20 | 2026-09-25T05:54:41.525Z_
 
 **Thought** (none):
@@ -441,7 +441,7 @@ android {
     def
 ```
 
-## 17. edit_file / repair  (exec_command)
+## 17. edit / repair  (exec_command)
 _step 21 | 2026-09-25T05:54:47.080Z_
 
 **Thought** (none):
@@ -475,7 +475,7 @@ Success. Updated the following files:
 M ultrasonic/src/main/java/org/moire/ultrasonic/util/Util.java
 ```
 
-## 18. diff / repair  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-25T05:54:49.960Z_
 
 **Thought** (none):
@@ -505,7 +505,7 @@ fatal: path 'ultrasonic/src/main/java/org/moire/ultrasonic/util/Util.java' exist
 	public static int
 ```
 
-## 19. plan / repair  (update_plan)
+## 19. plan / planning  (update_plan)
 _step 23 | 2026-09-25T05:54:54.562Z_
 
 **Thought** (narration):
@@ -523,7 +523,7 @@ The fix is a one-line central preference-store correction. Existing local unit t
 Plan updated
 ```
 
-## 20. build / repair  (exec_command)
+## 20. build / validation  (exec_command)
 _step 24 | 2026-09-25T05:54:59.512Z_
 
 **Thought** (none):
@@ -545,7 +545,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-25T05:55:01.682Z_
 
 **Thought** (narration):
@@ -574,7 +574,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new
 ```
 
-## 22. wait_process / repair  (write_stdin)
+## 22. other / validation  (write_stdin)
 _step 26 | 2026-09-25T05:55:08.468Z_
 
 **Thought** (none):
@@ -599,7 +599,7 @@ Output:
 > Task :ultrasonic:transformNativeLibsWithMergeJ
 ```
 
-## 23. plan / repair  (update_plan)
+## 23. plan / planning  (update_plan)
 _step 27 | 2026-09-25T05:55:15.239Z_
 
 **Thought** (narration):
@@ -617,7 +617,7 @@ The debug APK builds successfully. I’m doing a final diff and artifact sanity 
 Plan updated
 ```
 
-## 24. read_file / validation  (exec_command)
+## 24. read / validation  (exec_command)
 _step 28 | 2026-09-25T05:55:17.422Z_
 
 **Thought** (none):

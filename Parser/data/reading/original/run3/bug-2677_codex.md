@@ -7,9 +7,9 @@
 - steps (LLM inferences): 28 | actions: 23 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(3: succeeded) -> understanding(6: unchecked) -> repair(8: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(9: succeeded) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(7: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T17:10:54.217Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the robotic-arm input path, reproduce the rounding logic in code, t
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T17:10:57.121Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T17:10:58.469Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  8 sage  staff    256 Sep  9 11:54 .github
 -rw-r--r--@  1 sage
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-26T17:11:01.005Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T17:11:04.540Z_
 
 **Thought** (none):
@@ -124,7 +124,7 @@ app/src/main/java/io/pslab/activity/RoboticArmActivity.java:67:    private EditT
 app/src/main/java/io/pslab
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T17:11:05.992Z_
 
 **Thought** (none):
@@ -155,7 +155,7 @@ public class RoboticArmActivity extends GuideActivity {
             .add("Servo3")
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T17:11:09.477Z_
 
 **Thought** (none):
@@ -181,7 +181,7 @@ Output:
         servo2Title.setText(getResources().getString(R.string.s
 ```
 
-## 8. search_code / understanding  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T17:11:17.257Z_
 
 **Thought** (narration):
@@ -203,7 +203,7 @@ Original token count: 0
 Output:
 ```
 
-## 9. wait_process / understanding  (write_stdin)
+## 9. other / localization  (write_stdin)
 _step 13 | 2026-09-26T17:11:31.506Z_
 
 **Thought** (none):
@@ -219,7 +219,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 10. wait_process / understanding  (write_stdin)
+## 10. other / localization  (write_stdin)
 _step 14 | 2026-09-26T17:11:33.645Z_
 
 **Thought** (none):
@@ -239,7 +239,7 @@ Original token count: 0
 Output:
 ```
 
-## 11. search_code / understanding  (exec_command)
+## 11. search / localization  (exec_command)
 _step 15 | 2026-09-26T17:11:41.691Z_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ Output:
    476	            ((TextView) servo2TimeLine.getChildAt(i).findViewById(R.id.timeline_box_degr
 ```
 
-## 12. env_setup / understanding  (exec_command)
+## 12. read / localization  (exec_command)
 _step 16 | 2026-09-26T17:11:47.156Z_
 
 **Thought** (none):
@@ -292,7 +292,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
   public void se
 ```
 
-## 13. env_setup / understanding  (exec_command)
+## 13. read / localization  (exec_command)
 _step 17 | 2026-09-26T17:11:50.432Z_
 
 **Thought** (none):
@@ -322,7 +322,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
        8: aload
 ```
 
-## 14. edit_file / repair  (exec_command)
+## 14. edit / repair  (exec_command)
 _step 18 | 2026-09-26T17:11:54.222Z_
 
 **Thought** (narration):
@@ -355,7 +355,7 @@ Success. Updated the following files:
 M app/src/main/java/io/pslab/activity/RoboticArmActivity.java
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T17:11:59.475Z_
 
 **Thought** (none):
@@ -371,7 +371,7 @@ _(none)_
 Plan updated
 ```
 
-## 16. build / repair  (exec_command)
+## 16. build / validation  (exec_command)
 _step 20 | 2026-09-26T17:12:01.934Z_
 
 **Thought** (narration):
@@ -395,7 +395,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T17:12:05.184Z_
 
 **Thought** (none):
@@ -415,7 +415,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T17:12:11.540Z_
 
 **Thought** (none):
@@ -443,7 +443,7 @@ Output:
 > Task :app:generateDebugResValu
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T17:12:18.082Z_
 
 **Thought** (none):
@@ -472,7 +472,7 @@ Output:
 > Task
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-26T17:12:24.702Z_
 
 **Thought** (none):
@@ -498,7 +498,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :app:compileDebugJavaWithJavac
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-26T17:12:32.462Z_
 
 **Thought** (none):
@@ -528,7 +528,7 @@ Output:
 > Task :app:as
 ```
 
-## 22. env_setup / validation  (exec_command)
+## 22. read / validation  (exec_command)
 _step 26 | 2026-09-26T17:12:38.514Z_
 
 **Thought** (narration):
@@ -557,7 +557,7 @@ fatal: path 'app/src/main/java/io/pslab/activity/RoboticArmActivity.java' exists
         if (degree > 3
 ```
 
-## 23. plan / validation  (update_plan)
+## 23. plan / planning  (update_plan)
 _step 27 | 2026-09-26T17:12:42.216Z_
 
 **Thought** (none):

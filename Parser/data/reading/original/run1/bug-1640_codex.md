@@ -7,9 +7,9 @@
 - steps (LLM inferences): 20 | actions: 15 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(3: succeeded) -> repair(6: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(2: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(1: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:08:55.769Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the Info page content, identify the truncated license source, patch
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:08:59.330Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Guidance files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:09:01.011Z_
 
 **Thought** (narration):
@@ -81,7 +81,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rwxr-xr-x@  1 sage  staff   2096 Sep  9
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-23T09:09:04.884Z_
 
 **Thought** (none):
@@ -97,7 +97,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:09:08.305Z_
 
 **Thought** (none):
@@ -127,7 +127,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-23T09:09:09.612Z_
 
 **Thought** (narration):
@@ -159,7 +159,7 @@ Total output lines: 224
      8	    <string
 ```
 
-## 7. plan / localization  (update_plan)
+## 7. plan / planning  (update_plan)
 _step 11 | 2026-09-23T09:09:27.224Z_
 
 **Thought** (none):
@@ -175,7 +175,7 @@ _(none)_
 Plan updated
 ```
 
-## 8. edit_file / repair  (exec_command)
+## 8. edit / repair  (exec_command)
 _step 12 | 2026-09-23T09:09:34.413Z_
 
 **Thought** (narration):
@@ -215,7 +215,7 @@ M app/src/main/res/layout/content_info.xml
 M app/src/main/res/values/strings.xml
 ```
 
-## 9. plan / repair  (update_plan)
+## 9. plan / planning  (update_plan)
 _step 13 | 2026-09-23T09:09:52.313Z_
 
 **Thought** (none):
@@ -231,7 +231,7 @@ _(none)_
 Plan updated
 ```
 
-## 10. build / repair  (exec_command)
+## 10. build / validation  (exec_command)
 _step 14 | 2026-09-23T09:09:54.826Z_
 
 **Thought** (narration):
@@ -255,7 +255,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 11. wait_process / repair  (write_stdin)
+## 11. other / validation  (write_stdin)
 _step 15 | 2026-09-23T09:09:57.856Z_
 
 **Thought** (none):
@@ -279,7 +279,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository/
 ```
 
-## 12. wait_process / repair  (write_stdin)
+## 12. other / validation  (write_stdin)
 _step 16 | 2026-09-23T09:10:04.703Z_
 
 **Thought** (none):
@@ -308,7 +308,7 @@ Output:
 :app
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-23T09:10:09.340Z_
 
 **Thought** (none):
@@ -324,7 +324,7 @@ _(none)_
 Plan updated
 ```
 
-## 14. diff / validation  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-23T09:10:12.513Z_
 
 **Thought** (narration):
@@ -358,7 +358,7 @@ Relevant lines:
      4	import android.support.des
 ```
 
-## 15. plan / validation  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-23T09:10:18.629Z_
 
 **Thought** (none):

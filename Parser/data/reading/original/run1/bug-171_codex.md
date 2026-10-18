@@ -7,9 +7,9 @@
 - steps (LLM inferences): 31 | actions: 26 | failed actions: 3
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(13: succeeded) -> repair(3: succeeded) -> localization(2: failed) -> repair(4: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(4: failed) -> planning(1: unchecked) -> localization(3: succeeded) -> planning(2: unchecked) -> localization(4: failed) -> planning(1: unchecked) -> repair(1: succeeded) -> validation(3: unchecked) -> planning(1: unchecked) -> validation(3: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-23T09:13:50.396Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace comment rendering and the select-text view, then patch and build.
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-23T09:13:53.600Z | **FAILED**_
 
 **Thought** (none):
@@ -60,7 +60,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-23T09:13:54.879Z_
 
 **Thought** (narration):
@@ -90,7 +90,7 @@ app/src/main/assets/pdf/vendor/pdf.js/1.9.658/pdf.worker.js
 app/src/main/assets/pdf/vendor/pdf.js/1.9.658/images/shadow
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-23T09:13:59.146Z_
 
 **Thought** (none):
@@ -115,7 +115,7 @@ app/src/main/java/com/simon/harmonichackernews/StoriesFragment.java:232:        
 app/src/main/res/menu/share_menu.xml
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-23T09:14:02.684Z_
 
 **Thought** (none):
@@ -146,7 +146,7 @@ import android.content.Context;
 import android.content.SharedPreferences
 ```
 
-## 6. plan / localization  (update_plan)
+## 6. plan / planning  (update_plan)
 _step 10 | 2026-09-23T09:14:06.990Z_
 
 **Thought** (narration):
@@ -164,7 +164,7 @@ I found the dedicated selection dialog. Next I’m comparing its HTML pipeline w
 Plan updated
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-23T09:14:11.701Z_
 
 **Thought** (none):
@@ -196,7 +196,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.dialog.Materia
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-23T09:14:13.507Z_
 
 **Thought** (none):
@@ -224,7 +224,7 @@ Total output lines: 679
             headerViewHolder.co
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-23T09:14:21.422Z_
 
 **Thought** (none):
@@ -251,7 +251,7 @@ Dialog section exact:
             public void onClick(DialogInterface dial
 ```
 
-## 10. read_file / localization  (exec_command)
+## 10. read / planning  (exec_command)
 _step 14 | 2026-09-23T09:14:26.133Z_
 
 **Thought** (narration):
@@ -279,7 +279,7 @@ Output:
 Harmonic for Hacker News is an Android Hacker News client which is meant to be m
 ```
 
-## 11. env_setup / localization (own phase understanding)  (exec_command)
+## 11. vcs / planning  (exec_command)
 _step 15 | 2026-09-23T09:14:29.409Z | **FAILED**_
 
 **Thought** (none):
@@ -300,7 +300,7 @@ Output:
 fatal: unable to access 'https://github.com/SimonHalvdansson/Harmonic-HN.git/': CONNECT tunnel failed, response 403
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-23T09:14:39.384Z_
 
 **Thought** (none):
@@ -328,7 +328,7 @@ Output:
                     oldCom
 ```
 
-## 13. search_code / localization  (exec_command)
+## 13. search / localization  (exec_command)
 _step 17 | 2026-09-23T09:14:42.345Z_
 
 **Thought** (none):
@@ -358,7 +358,7 @@ Total output lines: 333
 14
 ```
 
-## 14. search_code / localization  (exec_command)
+## 14. search / localization  (exec_command)
 _step 18 | 2026-09-23T09:14:49.147Z_
 
 **Thought** (none):
@@ -391,7 +391,7 @@ Total output lines: 332
     private sta
 ```
 
-## 15. search_code / localization  (exec_command)
+## 15. search / localization  (exec_command)
 _step 19 | 2026-09-23T09:14:52.268Z_
 
 **Thought** (none):
@@ -417,7 +417,7 @@ Output:
 114-    private static final BulletSpan defaultBullet = new BulletSpan(defaultInde
 ```
 
-## 16. plan / localization  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-23T09:15:02.282Z_
 
 **Thought** (narration):
@@ -435,7 +435,7 @@ The defect is isolated to `DialogUtils`: it reparses the same shortened anchor l
 Plan updated
 ```
 
-## 17. edit_file / repair  (exec_command)
+## 17. edit / repair  (exec_command)
 _step 21 | 2026-09-23T09:15:09.378Z_
 
 **Thought** (none):
@@ -469,7 +469,7 @@ Success. Updated the following files:
 M app/src/main/java/com/simon/harmonichackernews/utils/DialogUtils.java
 ```
 
-## 18. diff / repair  (exec_command)
+## 18. read / validation  (exec_command)
 _step 22 | 2026-09-23T09:15:12.420Z_
 
 **Thought** (none):
@@ -500,7 +500,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 impor
 ```
 
-## 19. read_file / repair  (exec_command)
+## 19. diff / validation  (exec_command)
 _step 23 | 2026-09-23T09:15:16.104Z_
 
 **Thought** (none):
@@ -524,7 +524,7 @@ HARNESS
  1 file changed, 2 insertions(+)
 ```
 
-## 20. read_file / localization  (exec_command)
+## 20. read / validation  (exec_command)
 _step 24 | 2026-09-23T09:15:21.022Z | **FAILED**_
 
 **Thought** (none):
@@ -551,7 +551,7 @@ drwxr-xr-x@  3 sage  staff     96 Sep  9 11:54 .github
 -rw-r--r--@  1 sage
 ```
 
-## 21. plan / localization  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-23T09:15:23.786Z_
 
 **Thought** (narration):
@@ -569,7 +569,7 @@ The patch now expands only genuinely truncated URL labels in the selection dialo
 Plan updated
 ```
 
-## 22. build / repair  (exec_command)
+## 22. build / validation  (exec_command)
 _step 26 | 2026-09-23T09:15:27.964Z_
 
 **Thought** (none):
@@ -591,7 +591,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 23. wait_process / repair  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-23T09:15:30.372Z_
 
 **Thought** (none):
@@ -618,7 +618,7 @@ Calculating task graph as no configuration cache is available for tasks: clean a
 > Task :app:proce
 ```
 
-## 24. wait_process / repair  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-23T09:15:37.974Z_
 
 **Thought** (none):
@@ -646,7 +646,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files use unchecked or unsafe opera
 ```
 
-## 25. plan / repair  (update_plan)
+## 25. plan / planning  (update_plan)
 _step 29 | 2026-09-23T09:15:47.849Z_
 
 **Thought** (narration):
@@ -664,7 +664,7 @@ The required build passes. I’m doing a final source check and recording the ex
 Plan updated
 ```
 
-## 26. read_file / validation  (exec_command)
+## 26. read / validation  (exec_command)
 _step 30 | 2026-09-23T09:15:50.243Z_
 
 **Thought** (none):

@@ -7,9 +7,9 @@
 - steps (LLM inferences): 27 | actions: 22 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(6: succeeded) -> validation(6: unchecked)
+Phases: planning(1: unchecked) -> localization(8: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(9: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:33:01.928Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the manual-entry validation and OTP construction, then patch and bu
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:33:04.733Z | **FAILED**_
 
 **Thought** (none):
@@ -61,7 +61,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:33:05.441Z_
 
 **Thought** (narration):
@@ -88,7 +88,7 @@ Relevant files:
 ./app/src/main/java/org/shadowice/f
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:33:09.122Z_
 
 **Thought** (none):
@@ -116,7 +116,7 @@ Total output lines: 729
  * in the Software without restriction, including without limitatio
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T16:33:09.907Z_
 
 **Thought** (none):
@@ -147,7 +147,7 @@ Total output lines: 325
     5
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-26T16:33:11.741Z_
 
 **Thought** (none):
@@ -176,7 +176,7 @@ Output:
             }
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-26T16:33:16.684Z_
 
 **Thought** (narration):
@@ -212,7 +212,7 @@ public class TokenCalculator {
     public static final int
 ```
 
-## 8. vcs / localization  (exec_command)
+## 8. other / localization  (exec_command)
 _step 12 | 2026-09-26T16:33:20.577Z_
 
 **Thought** (none):
@@ -232,7 +232,7 @@ Original token count: 0
 Output:
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-26T16:33:24.586Z_
 
 **Thought** (none):
@@ -261,7 +261,7 @@ Output:
     private static final
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-26T16:33:29.272Z_
 
 **Thought** (narration):
@@ -279,7 +279,7 @@ Confirmed both failures originate in ManualEntryDialog: numeric fields are not i
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-26T16:33:33.607Z_
 
 **Thought** (none):
@@ -312,7 +312,7 @@ M app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialog.java
                         Entry.OTPType type = (Entry.OTPType) typeInput
 ```
 
-## 12. plan / repair  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-26T16:33:34.961Z_
 
 **Thought** (narration):
@@ -330,7 +330,7 @@ The focused patch is in place and passes diff checks. Next I’m running the req
 Plan updated
 ```
 
-## 13. build / repair  (exec_command)
+## 13. build / validation  (exec_command)
 _step 17 | 2026-09-26T16:33:36.580Z_
 
 **Thought** (none):
@@ -352,7 +352,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 stopped Daemon could not be reused, use --status for details
 ```
 
-## 14. wait_process / repair  (write_stdin)
+## 14. other / validation  (write_stdin)
 _step 18 | 2026-09-26T16:33:38.401Z_
 
 **Thought** (none):
@@ -377,7 +377,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-26T16:33:45.253Z_
 
 **Thought** (none):
@@ -406,7 +406,7 @@ Output:
 Note: Recompi
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-26T16:33:51.214Z_
 
 **Thought** (none):
@@ -431,7 +431,7 @@ BUILD SUCCESSFUL in 13s
 28 actionable tasks: 26 executed, 2 up-to-date
 ```
 
-## 17. diff / validation  (exec_command)
+## 17. read / validation  (exec_command)
 _step 21 | 2026-09-26T16:33:52.527Z_
 
 **Thought** (narration):
@@ -485,7 +485,7 @@ fatal: path 'app/src/main/java/org/shadowice/flocke/andotp/View/ManualEntryDialo
 stat:
 ```
 
-## 19. search_code / validation (own phase localization)  (exec_command)
+## 19. search / validation  (exec_command)
 _step 23 | 2026-09-26T16:33:58.552Z_
 
 **Thought** (narration):
@@ -509,7 +509,7 @@ HARNESS
        1
 ```
 
-## 20. vcs / validation  (exec_command)
+## 20. diff / validation  (exec_command)
 _step 24 | 2026-09-26T16:34:01.229Z_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ Stand-in repository so `git rev-parse HEAD` answers during a build.
 Not the project's history. See f_apr_agents/read_guard.py.
 ```
 
-## 21. vcs / validation  (exec_command)
+## 21. diff / validation  (exec_command)
 _step 25 | 2026-09-26T16:34:04.405Z_
 
 **Thought** (none):
@@ -558,7 +558,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep 26 12:33 .gradle
 -rw-r--r--@  1 s
 ```
 
-## 22. plan / validation  (update_plan)
+## 22. plan / planning  (update_plan)
 _step 26 | 2026-09-26T16:34:05.971Z_
 
 **Thought** (none):

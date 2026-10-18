@@ -7,9 +7,9 @@
 - steps (LLM inferences): 27 | actions: 22 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(2: unchecked) -> localization(10: succeeded) -> repair(9: succeeded) -> validation(1: unchecked)
+Phases: planning(1: unchecked) -> localization(8: succeeded) -> planning(3: unchecked) -> repair(1: succeeded) -> validation(1: unchecked) -> planning(1: unchecked) -> validation(5: succeeded) -> planning(1: unchecked) -> validation(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-26T16:46:46.232Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the onboarding state flow, patch the initialization/validation mism
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-26T16:46:48.607Z | **FAILED**_
 
 **Thought** (none):
@@ -54,7 +54,7 @@ drwxr-xr-x@ 54 sage  staff   1728 Sep 25 14:57 ..
 -rw-r--
 ```
 
-## 3. search_code / localization  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-26T16:46:49.367Z_
 
 **Thought** (narration):
@@ -85,7 +85,7 @@ app/src/debug/res/mipmap-xhdpi/ic_launcher.png
 app/src/de
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-26T16:46:51.066Z_
 
 **Thought** (none):
@@ -113,7 +113,7 @@ Total output lines: 389
  * in the Software without restriction, including without limitatio
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-26T16:46:52.415Z_
 
 **Thought** (none):
@@ -141,7 +141,7 @@ Total output lines: 629
      6	 * in the Software withou
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-26T16:46:54.306Z_
 
 **Thought** (none):
@@ -170,7 +170,7 @@ Total output lines: 466
    111	                .backgroundDark(R.color.colorPrimaryDa
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-26T16:46:55.914Z_
 
 **Thought** (none):
@@ -196,7 +196,7 @@ Output:
    195	            View root = inflater.inflate(R.layout.component_intro_encrypti
 ```
 
-## 8. search_code / localization  (exec_command)
+## 8. search / localization  (exec_command)
 _step 12 | 2026-09-26T16:46:57.942Z_
 
 **Thought** (none):
@@ -224,7 +224,7 @@ Total output lines: 299
    355	            selection.setOnItemSelectedListener(new
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-26T16:46:58.964Z_
 
 **Thought** (none):
@@ -252,7 +252,7 @@ Output:
    432	            passwordConfirm.addTextChangedListene
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-26T16:47:06.131Z_
 
 **Thought** (narration):
@@ -270,7 +270,7 @@ The defect is a state-initialization mismatch: encryption defaults to password, 
 Plan updated
 ```
 
-## 11. vcs / localization  (exec_command)
+## 11. diff / planning  (exec_command)
 _step 15 | 2026-09-26T16:47:08.191Z_
 
 **Thought** (none):
@@ -291,7 +291,7 @@ Output:
 * main
 ```
 
-## 12. plan / localization  (update_plan)
+## 12. plan / planning  (update_plan)
 _step 16 | 2026-09-26T16:47:14.471Z_
 
 **Thought** (narration):
@@ -309,7 +309,7 @@ History provides no upstream reference. I’ll make the authentication slide der
 Plan updated
 ```
 
-## 13. edit_file / repair  (exec_command)
+## 13. edit / repair  (exec_command)
 _step 17 | 2026-09-26T16:47:19.368Z_
 
 **Thought** (none):
@@ -339,7 +339,7 @@ Success. Updated the following files:
 M app/src/main/java/org/shadowice/flocke/andotp/Activities/IntroScreenActivity.java
 ```
 
-## 14. diff / repair  (exec_command)
+## 14. read / validation  (exec_command)
 _step 18 | 2026-09-26T16:47:20.279Z_
 
 **Thought** (none):
@@ -369,7 +369,7 @@ Output:
         pr
 ```
 
-## 15. plan / repair  (update_plan)
+## 15. plan / planning  (update_plan)
 _step 19 | 2026-09-26T16:47:23.744Z_
 
 **Thought** (narration):
@@ -387,7 +387,7 @@ The project has no existing test source set or test dependencies, so no focused 
 Plan updated
 ```
 
-## 16. build / repair  (exec_command)
+## 16. build / validation  (exec_command)
 _step 20 | 2026-09-26T16:47:27.736Z_
 
 **Thought** (none):
@@ -409,7 +409,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-26T16:47:29.515Z_
 
 **Thought** (none):
@@ -433,7 +433,7 @@ Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns
 Mapping new ns http://schemas.android.com/repository/android/generic/02 to old ns http://schemas.android.com/repository
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-26T16:47:35.312Z_
 
 **Thought** (none):
@@ -459,7 +459,7 @@ Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files use unchec
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-26T16:47:41.188Z_
 
 **Thought** (none):
@@ -487,7 +487,7 @@ Output:
 :app:pac
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-26T16:47:46.942Z_
 
 **Thought** (none):
@@ -514,7 +514,7 @@ Output:
 :app:transformResourcesWithMergeJavaResForPlayDebug
 ```
 
-## 21. plan / repair  (update_plan)
+## 21. plan / planning  (update_plan)
 _step 25 | 2026-09-26T16:47:49.930Z_
 
 **Thought** (narration):
@@ -532,7 +532,7 @@ Both debug flavors compile successfully. I’m doing one final source check to c
 Plan updated
 ```
 
-## 22. search_code / validation  (exec_command)
+## 22. search / validation  (exec_command)
 _step 26 | 2026-09-26T16:47:51.771Z_
 
 **Thought** (none):

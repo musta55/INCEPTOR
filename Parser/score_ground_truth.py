@@ -9,10 +9,12 @@ files the annotators read), and reports:
   1. agreement between the annotators, the ceiling: per-row accuracy and Cohen's kappa on
      the phase, boundary F1 exact and within one row, WindowDiff, and the Levenshtein
      distance between the phase sequences (the order of the stretches; ``atif/agreement.py``);
-  2. the tool against the reference (or, before adjudication, against each annotator), with
-     the baselines B1-B3 and the ablations without K1 and without P4; round 2 is the scored
-     set, round 1 the development set the codebook was tuned on;
-  3. the accuracy of the action categories (Table 2): the share of rows without a category_fix;
+  2. the tool (the Final lookup tables) against the reference (or, before adjudication,
+     against each annotator), with the baselines B1, B3, B4 (the grouping rules of codebook
+     version 3) and B5 (the phase lookup of codebook version 4, rows P1-P11); round 2 is the
+     scored set, round 1 the development set the codebook was tuned on;
+  3. the accuracy of the action categories (the action table): the share of rows without a
+     category_fix;
   4. the subphase outcomes: precision per outcome, from the audit sheet this script writes
      on its first run (one row per tool subphase; fill in ``correct``).
 
@@ -34,8 +36,14 @@ files the annotators see:
   report.md            the report (also printed)
   subphase_audit.xlsx  the outcome audit sheet; written only when missing, never overwritten
 
+The workbook is the one-sheet workbook of codebook version 4 (an Annotation sheet holding
+every trajectory, with the columns A1 ... and A2 ...): the k-th ``--annotator`` file gives
+annotator k's labels from its Ak columns, so each annotator's own copy, or one merged copy
+given twice, both work.  The reference is a copy with the agreed labels in its A1 columns.
+Version 3 workbooks (one tab per trajectory) are still read.
+
 Usage: python3 score_ground_truth.py [--annotator PATH ...] [--reference PATH] [--out DIR]
-       (defaults: Ground Truth/annotator_1.xlsx and annotator_2.xlsx, no reference)
+       (defaults: Ground Truth/annotation_workbook.xlsx for both annotators, no reference)
 """
 import argparse
 import csv
@@ -49,15 +57,21 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from atif import agreement, baselines, phase, segment, taxonomy
+from atif import agreement, baselines, lookup, phase, project, segment, taxonomy
 
 HERE = Path(__file__).resolve().parent
 KIT = HERE / "Ground Truth"
 SAMPLE = HERE / "ground_truth_sample.csv"
 OUT = HERE / "data" / "ground_truth"
-METHODS = [("tool", "phase taxonomy (P1-P4)"), ("B1", "B1 V2 first-edit split"),
-           ("B2", "B2 P1 table only"), ("B3", "B3 old purposes"),
-           ("no_K1", "ablation: without K1"), ("no_P4", "ablation: without P4")]
+METHODS = [("tool", "Final lookup tables"), ("B1", "B1 V2 first-edit split"),
+           ("B3", "B3 old purposes"), ("B4", "B4 grouping rules (codebook v3, G1-G7)"),
+           ("B5", "B5 phase lookup (codebook v4, P1-P11)")]
+#: phase names the workbooks use for planning: the codebook's earlier name, and the lookup
+#: table's "Understanding/Plan" and "Plan"
+PHASE_ALIASES = {"understanding": "planning", "plan": "planning",
+                 "understanding/plan": "planning"}
+#: what a category_fix may name: a category of the Final tables, or a kind of codebook v4
+FIX_VALUES = set(lookup.CATEGORIES) | set(taxonomy.KINDS)
 ROUND_NAME = {"2": "round 2 (scored)", "1": "round 1 (development)"}
 AUDIT_COLUMNS = ["tab", "agent", "bug", "round", "phase", "subphase", "first action",
                  "last action", "outcome", "evidence", "checks in it", "correct", "should be",
@@ -90,12 +104,11 @@ def tool_labels(sample: List[dict]) -> Dict[str, dict]:
         labels = {
             "tool": [r["phase"] for r in rows],
             "B1": baselines.first_edit_split(segment.prepare(traj, bug)),
-            "B2": phase.assign(segment.prepare(traj, bug), keep_rules=False,
-                               smoothing=False)["phase"],
             "B3": baselines.old_purposes(seg["actions"], seg["hierarchy"]),
-            "no_K1": phase.assign(segment.prepare(traj, bug), keep_rules=False)["phase"],
-            "no_P4": phase.assign(segment.prepare(traj, bug), smoothing=False)["phase"],
+            "B4": baselines.grouping_rules(segment.prepare(traj, bug)),
         }
+        with project.use(traj):
+            labels["B5"] = baselines.table_v4(segment.prepare(traj, bug))
         for name, values in labels.items():
             if len(values) != entry["actions"]:
                 raise SystemExit(f"{entry['tab']}: {name} labels {len(values)} actions, the sample "
@@ -111,9 +124,82 @@ def _sheet(wb, tab: str):
     return None
 
 
-def read_workbook(path: Path, sample: List[dict]) -> Tuple[Dict[str, dict], List[str]]:
-    """({tab: {"status", "phase" (forward-filled), "category_fix", "notes"}}, problems)."""
+def _annotation_sheet(ws, sample: List[dict], annotator: int
+                      ) -> Tuple[Dict[str, dict], List[str]]:
+    """The one-sheet workbook (codebook version 4): every trajectory on the Annotation sheet,
+    the rows of a trajectory in action order, and annotator k's labels in the columns
+    ``Ak phase``, ``Ak category_fix`` and ``Ak notes``."""
+    head = {str(c.value).strip(): c.column for c in ws[1] if c.value is not None}
+    prefix = f"A{annotator} "
+    needed = {"trajectory", "action", "category", prefix + "phase", prefix + "category_fix"}
+    if not needed <= set(head):
+        missing = ", ".join(sorted(needed - set(head)))
+        return {e["tab"]: {"status": "invalid"} for e in sample}, [f"Annotation: no column {missing}"]
+    rows: Dict[str, List[int]] = {}
+    for r in range(2, ws.max_row + 1):
+        tab = ws.cell(row=r, column=head["trajectory"]).value
+        if tab not in (None, ""):
+            rows.setdefault(str(tab).strip(), []).append(r)
+
+    def cell(r: int, name: str) -> str:
+        return str(ws.cell(row=r, column=head[name]).value or "").strip() if name in head else ""
+
+    tabs: Dict[str, dict] = {}
+    problems: List[str] = []
+    for entry in sample:
+        tab, n = entry["tab"], int(entry["actions"])
+        lines = rows.get(tab, [])
+        numbers = [cell(r, "action") for r in lines]
+        if len(lines) != n or numbers != [str(k) for k in range(1, n + 1)]:
+            problems.append(f"{tab}: {len(lines)} rows, the trajectory has {n} actions "
+                            f"(rows inserted, deleted or sorted?)")
+            tabs[tab] = {"status": "invalid"}
+            continue
+        tabs[tab] = _labels(tab, [cell(r, prefix + "phase") for r in lines],
+                            [cell(r, prefix + "category_fix") for r in lines],
+                            [cell(r, prefix + "notes") for r in lines], problems)
+        tabs[tab]["sheet_lines"] = lines
+    return tabs, problems
+
+
+def _labels(tab: str, marks: List[str], fixes: List[str], notes: List[str],
+            problems: List[str]) -> dict:
+    """Forward-fill the phase marks of one trajectory and check the values."""
+    filled: List[Optional[str]] = []
+    current: Optional[str] = None
+    bad = False
+    for k, mark in enumerate(marks, 1):
+        if mark:
+            name = PHASE_ALIASES.get(mark.strip().lower(), mark.strip().lower())
+            if name in phase.PHASES:
+                current = name
+            else:
+                problems.append(f"{tab} row {k}: '{mark}' is not a phase")
+                bad = True
+        filled.append(current)
+    for k, fix in enumerate(fixes, 1):
+        if fix and fix not in FIX_VALUES and fix != "NEW":
+            problems.append(f"{tab} row {k}: category_fix '{fix}' is not a category")
+    if not any(marks):
+        status = "empty"
+    elif bad or not marks[0]:
+        status = "incomplete"
+        if not marks[0]:
+            problems.append(f"{tab}: the first row has no phase")
+    else:
+        status = "complete"
+    return {"status": status, "phase": filled, "category_fix": fixes, "notes": notes}
+
+
+def read_workbook(path: Path, sample: List[dict], annotator: int = 1
+                  ) -> Tuple[Dict[str, dict], List[str]]:
+    """({tab: {"status", "phase" (forward-filled), "category_fix", "notes"}}, problems).
+
+    Reads the one-sheet workbook (an Annotation sheet; ``annotator`` picks the A1 or A2
+    columns) or a version 3 workbook with one tab per trajectory."""
     wb = load_workbook(path, data_only=True)
+    if "Annotation" in wb.sheetnames:
+        return _annotation_sheet(wb["Annotation"], sample, annotator)
     tabs: Dict[str, dict] = {}
     problems: List[str] = []
     for entry in sample:
@@ -142,30 +228,8 @@ def read_workbook(path: Path, sample: List[dict]) -> Tuple[Dict[str, dict], List
             return [str(ws.cell(row=r, column=head[name]).value or "").strip()
                     for r in range(2, n + 2)]
 
-        marks, fixes, notes = column("phase"), column("category_fix"), column("notes")
-        filled: List[Optional[str]] = []
-        current: Optional[str] = None
-        bad = False
-        for k, mark in enumerate(marks, 1):
-            if mark:
-                if mark.lower() in phase.PHASES:
-                    current = mark.lower()
-                else:
-                    problems.append(f"{tab} row {k}: '{mark}' is not a phase")
-                    bad = True
-            filled.append(current)
-        for k, fix in enumerate(fixes, 1):
-            if fix and fix not in taxonomy.CATEGORIES:
-                problems.append(f"{tab} row {k}: category_fix '{fix}' is not a category")
-        if not any(marks):
-            status = "empty"
-        elif bad or not marks[0]:
-            status = "incomplete"
-            if not marks[0]:
-                problems.append(f"{tab}: the first row has no phase")
-        else:
-            status = "complete"
-        tabs[tab] = {"status": status, "phase": filled, "category_fix": fixes, "notes": notes}
+        tabs[tab] = _labels(tab, column("phase"), column("category_fix"), column("notes"),
+                            problems)
     return tabs, problems
 
 
@@ -307,13 +371,14 @@ def read_audit(path: Path, tool: Dict[str, dict]) -> Tuple[Dict[str, Any], List[
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--annotator", action="append", metavar="PATH",
-                    help="an annotator's filled workbook; give it once per annotator "
-                         "(default: Ground Truth/annotator_1.xlsx and annotator_2.xlsx)")
+                    help="an annotator's filled workbook; give it once per annotator, the "
+                         "k-th for annotator k (default: Ground Truth/annotation_workbook.xlsx "
+                         "for both)")
     ap.add_argument("--reference", metavar="PATH",
                     help="the adjudicated workbook with the agreed labels")
     ap.add_argument("--out", default=str(OUT))
     args = ap.parse_args(argv)
-    paths = [Path(p) for p in (args.annotator or [KIT / "annotator_1.xlsx", KIT / "annotator_2.xlsx"])]
+    paths = [Path(p) for p in (args.annotator or [KIT / "annotation_workbook.xlsx"] * 2)]
     out = Path(args.out)
     if out.resolve() == KIT.resolve() or KIT.resolve() in out.resolve().parents:
         raise SystemExit("--out must not be inside Ground Truth/: the annotators read that folder")
@@ -325,7 +390,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     books: Dict[str, Dict[str, dict]] = {}
     problems: List[str] = []
     for k, path in enumerate(paths, 1):
-        books[f"A{k}"], issues = read_workbook(path, sample)
+        books[f"A{k}"], issues = read_workbook(path, sample, k)
         problems += [f"A{k} ({path.name}): {p}" for p in issues]
     if args.reference:
         books["reference"], issues = read_workbook(Path(args.reference), sample)
@@ -341,7 +406,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                               "complete_tabs": done}
     lines = [f"# Ground-truth scores ({scores['generated']})", ""]
     lines += ["Labelled tabs: " + "; ".join(f"{name} {len(done[name])}/{len(sample)}" for name in books),
-              "", "Tool: `atif.phase` with ABSORB_MAX=%d, on `Ground Truth/atif/`." % phase.ABSORB_MAX,
+              "", "Tool: `atif.phase` (the lookup tables of codebook version 4), on "
+              "`Ground Truth/atif/`.",
               "", "Sequence distance: Levenshtein distance between the phase sequences (the order "
               "of the stretches, ignoring their lengths), divided by the longer sequence, mean over "
               "trajectories (0 = same order); the mean number of edits is in brackets. Same sequence: "
@@ -437,7 +503,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 if fix == given:
                     problems.append(f"{name} {t} row {k + 1}: category_fix repeats the given "
                                     f"category {given}; not counted as a fix")
-                elif fix in taxonomy.CATEGORIES:
+                elif fix in FIX_VALUES:
                     fixes_of[name][(t, k)] = fix
         fixed = len(fixes_of[name])
         acc = 1 - fixed / rows if rows else float("nan")
@@ -526,7 +592,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                 for k, act in enumerate(tool[t]["acts"]):
                     if ba["phase"][k] != bb["phase"][k] or ba["category_fix"][k] != bb["category_fix"][k]:
                         n_disagree += 1
-                        w.writerow([t, k + 1, k + 2, act["category"], " ".join(str(act["target"]).split())[:200],
+                        line = (ba.get("sheet_lines") or [None] * (k + 1))[k] or k + 2
+                        w.writerow([t, k + 1, line, act["category"], " ".join(str(act["target"]).split())[:200],
                                     ba["phase"][k], bb["phase"][k], ba["category_fix"][k],
                                     bb["category_fix"][k], ba["notes"][k], bb["notes"][k]])
         lines.insert(lines.index("## 2. The tool against the reference") if "## 2. The tool against the reference" in lines

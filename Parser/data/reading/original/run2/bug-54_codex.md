@@ -7,9 +7,9 @@
 - steps (LLM inferences): 33 | actions: 28 | failed actions: 2
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(12: succeeded) -> repair(5: blocked) -> validation(7: succeeded)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(11: succeeded) -> planning(1: unchecked) -> repair(1: blocked) -> planning(1: unchecked) -> validation(9: blocked, succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:47:20.649Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the note editor’s save/back flow, patch the root cause, then run 
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:47:22.882Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ Output:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:47:24.256Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  4 sage  staff    128 Sep  9 11:55 .github
 -rw-r--r--@  1 sage
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T05:47:26.251Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T05:47:28.156Z_
 
 **Thought** (narration):
@@ -126,7 +126,7 @@ app/src/main/res/menu/document__edit__menu.xml:37:        android:id="@+id/actio
 app
 ```
 
-## 6. read_file / localization  (exec_command)
+## 6. read / localization  (exec_command)
 _step 10 | 2026-09-25T05:47:32.013Z_
 
 **Thought** (none):
@@ -157,7 +157,7 @@ Total output lines: 1171
  *
 ```
 
-## 7. read_file / localization  (exec_command)
+## 7. read / localization  (exec_command)
 _step 11 | 2026-09-25T05:47:32.968Z_
 
 **Thought** (none):
@@ -186,7 +186,7 @@ Total output lines: 1013
     86	    private TextFormat _textFormat;
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-25T05:47:35.256Z_
 
 **Thought** (none):
@@ -215,7 +215,7 @@ Total output lines: 652
    181	        switch (item.getIte
 ```
 
-## 9. read_file / localization  (exec_command)
+## 9. read / localization  (exec_command)
 _step 13 | 2026-09-25T05:47:37.133Z_
 
 **Thought** (none):
@@ -248,7 +248,7 @@ Total output lines: 439
    2
 ```
 
-## 10. search_code / localization  (exec_command)
+## 10. search / localization  (exec_command)
 _step 14 | 2026-09-25T05:47:43.345Z_
 
 **Thought** (narration):
@@ -279,7 +279,7 @@ Total output lines: 375
     86	        _contextUt
 ```
 
-## 11. read_file / localization  (exec_command)
+## 11. read / localization  (exec_command)
 _step 15 | 2026-09-25T05:47:49.036Z_
 
 **Thought** (none):
@@ -310,7 +310,7 @@ Total output lines: 294
             case an
 ```
 
-## 12. search_code / localization  (exec_command)
+## 12. search / localization  (exec_command)
 _step 16 | 2026-09-25T05:47:58.499Z_
 
 **Thought** (none):
@@ -339,7 +339,7 @@ Total output lines: 395
                     _document.setFormat(item.getItemId());
 ```
 
-## 13. read_file / localization  (exec_command)
+## 13. read / localization  (exec_command)
 _step 17 | 2026-09-25T05:48:09.661Z_
 
 **Thought** (narration):
@@ -369,7 +369,7 @@ Total output lines: 283
      4	 * with it. If we meet some day, and you think it is worth i
 ```
 
-## 14. read_file / localization (own phase understanding)  (exec_command)
+## 14. other / localization  (exec_command)
 _step 18 | 2026-09-25T05:48:13.553Z_
 
 **Thought** (none):
@@ -391,7 +391,7 @@ Output:
 --- save button search ---
 ```
 
-## 15. search_code / localization  (exec_command)
+## 15. search / localization  (exec_command)
 _step 19 | 2026-09-25T05:48:24.056Z_
 
 **Thought** (none):
@@ -416,7 +416,7 @@ Output:
 56:    public static final String[] MD
 ```
 
-## 16. plan / localization  (update_plan)
+## 16. plan / planning  (update_plan)
 _step 20 | 2026-09-25T05:48:37.617Z_
 
 **Thought** (narration):
@@ -434,7 +434,7 @@ Root cause confirmed: after the delayed model update, save treats matching in-me
 Plan updated
 ```
 
-## 17. edit_file / repair  (exec_command)
+## 17. edit / repair  (exec_command)
 _step 21 | 2026-09-25T05:48:51.256Z_
 
 **Thought** (none):
@@ -465,7 +465,7 @@ M app/src/main/java/net/gsantner/markor/util/DocumentIO.java
 M app/src/test/java/net/gsantner/markor/model/DocumentTest.java
 ```
 
-## 18. plan / repair  (update_plan)
+## 18. plan / planning  (update_plan)
 _step 22 | 2026-09-25T05:48:53.434Z_
 
 **Thought** (narration):
@@ -483,7 +483,7 @@ The persistence guard and regression test are in place. I’ll run the focused u
 Plan updated
 ```
 
-## 19. run_test / repair  (exec_command)
+## 19. test / validation  (exec_command)
 _step 23 | 2026-09-25T05:48:56.063Z_
 
 **Thought** (none):
@@ -505,7 +505,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-25T05:48:59.121Z_
 
 **Thought** (none):
@@ -531,7 +531,7 @@ Parallel execution with configuration on demand is an incubating feature.
 WARNING: The specified Android SDK Build Tools version (27.0.3) is ignored, as it is below the minimum supported version (28.0.3) for Android Gradle Plugin 3
 ```
 
-## 21. wait_process / repair  (write_stdin)
+## 21. other / validation  (write_stdin)
 _step 25 | 2026-09-25T05:49:05.368Z | **FAILED**_
 
 **Thought** (none):
@@ -583,7 +583,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-25T05:49:11.378Z_
 
 **Thought** (none):
@@ -609,7 +609,7 @@ Parallel execution with configuration on demand is an incubating feature.
 WARNING: The specified Android SDK Build Tools version (27.0.3) is ignored, as it is below the minimum supported version (28.0.3) for Android Gradle Plugin 3
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-25T05:49:18.971Z_
 
 **Thought** (none):
@@ -637,7 +637,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeFlavorDef
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-25T05:49:25.448Z_
 
 **Thought** (none):
@@ -662,7 +662,7 @@ Output:
 > Task :app:transformNativeLibsWithMergeJniLibs
 ```
 
-## 26. diff / validation  (exec_command)
+## 26. read / validation  (exec_command)
 _step 30 | 2026-09-25T05:49:31.071Z_
 
 **Thought** (narration):
@@ -695,7 +695,7 @@ Output:
    140	        if (!document.getFile().exists() ||
 ```
 
-## 27. vcs / validation  (exec_command)
+## 27. diff / validation  (exec_command)
 _step 31 | 2026-09-25T05:49:34.754Z_
 
 **Thought** (none):
@@ -718,7 +718,7 @@ fatal: path 'app/src/main/java/net/gsantner/markor/util/DocumentIO.java' exists 
 fatal: path 'app/src/test/java/net/gsantner/markor/model/DocumentTest.ja
 ```
 
-## 28. plan / validation  (update_plan)
+## 28. plan / planning  (update_plan)
 _step 32 | 2026-09-25T05:49:36.573Z_
 
 **Thought** (none):

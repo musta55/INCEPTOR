@@ -7,9 +7,9 @@
 - steps (LLM inferences): 27 | actions: 22 | failed actions: 1
 - known gaps: reasoning_encrypted
 
-Phases: understanding(4: unchecked) -> localization(7: succeeded) -> repair(9: succeeded) -> validation(2: unchecked)
+Phases: planning(1: unchecked) -> localization(2: failed) -> planning(1: unchecked) -> localization(6: succeeded) -> planning(1: unchecked) -> repair(1: succeeded) -> planning(1: unchecked) -> validation(6: succeeded) -> planning(1: unchecked) -> validation(1: unchecked) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T04:44:29.993Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the custom-study rename flow, patch the UI behavior, then run the r
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T04:44:32.354Z | **FAILED**_
 
 **Thought** (none):
@@ -51,7 +51,7 @@ AGENTS files:
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T04:44:33.522Z_
 
 **Thought** (narration):
@@ -83,7 +83,7 @@ drwxr-xr-x@  7 sage  staff    224 Sep  9 11:54 .github
 -rw-r--r--@  1 s
 ```
 
-## 4. plan / understanding  (update_plan)
+## 4. plan / planning  (update_plan)
 _step 8 | 2026-09-25T04:44:36.624Z_
 
 **Thought** (none):
@@ -99,7 +99,7 @@ _(none)_
 Plan updated
 ```
 
-## 5. search_code / localization  (exec_command)
+## 5. search / localization  (exec_command)
 _step 9 | 2026-09-25T04:44:38.097Z_
 
 **Thought** (narration):
@@ -125,7 +125,7 @@ AnkiDroid/src/main/res/values-zu/03-dialogs.xml:108:    <string name="custom_stu
 AnkiDroid/src/main/res/values-ky/03-dialogs.xml:108:    <string name="custom_study_rebuild_deck_corrupt">Could not rebui
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T04:44:40.697Z_
 
 **Thought** (none):
@@ -150,7 +150,7 @@ Total output lines: 534
  *                                                                                      *
 ```
 
-## 7. search_code / localization  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T04:44:43.312Z_
 
 **Thought** (none):
@@ -174,7 +174,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java-432-      
 AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java-433-        String customStudyDeck = getResources(
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-25T04:44:45.368Z_
 
 **Thought** (none):
@@ -207,7 +207,7 @@ import androidx.core.content.ContextCompat;
 import android.vi
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T04:44:48.215Z_
 
 **Thought** (narration):
@@ -234,7 +234,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/VideoPlayer.java:59:            UIUtils.s
 AnkiDroid/src/main/ja
 ```
 
-## 10. vcs / localization  (exec_command)
+## 10. diff / localization  (exec_command)
 _step 14 | 2026-09-25T04:44:51.413Z_
 
 **Thought** (none):
@@ -256,7 +256,7 @@ Output:
 aa8005d harness baseline
 ```
 
-## 11. plan / localization  (update_plan)
+## 11. plan / planning  (update_plan)
 _step 15 | 2026-09-25T04:44:53.624Z_
 
 **Thought** (narration):
@@ -274,7 +274,7 @@ The project already standardizes transient errors through `UIUtils.showThemedToa
 Plan updated
 ```
 
-## 12. edit_file / repair  (exec_command)
+## 12. edit / repair  (exec_command)
 _step 16 | 2026-09-25T04:44:58.244Z_
 
 **Thought** (none):
@@ -304,7 +304,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/java/com/ichi2/anki/dialogs/CustomStudyDialog.java
 ```
 
-## 13. plan / repair  (update_plan)
+## 13. plan / planning  (update_plan)
 _step 17 | 2026-09-25T04:44:59.381Z_
 
 **Thought** (none):
@@ -320,7 +320,7 @@ _(none)_
 Plan updated
 ```
 
-## 14. build / repair  (exec_command)
+## 14. build / validation  (exec_command)
 _step 18 | 2026-09-25T04:45:01.144Z_
 
 **Thought** (narration):
@@ -344,7 +344,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (subsequent builds will be faster)
 ```
 
-## 15. wait_process / repair  (write_stdin)
+## 15. other / validation  (write_stdin)
 _step 19 | 2026-09-25T04:45:03.593Z_
 
 **Thought** (narration):
@@ -374,7 +374,7 @@ Watching the file system is not supported on this operating system.
 > T
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T04:45:09.985Z_
 
 **Thought** (none):
@@ -399,7 +399,7 @@ Output:
 > Task :AnkiDroid:processDebugManifestForPackage FROM-CACHE
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T04:45:16.012Z_
 
 **Thought** (none):
@@ -427,7 +427,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :AnkiDroid:comp
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T04:45:22.182Z_
 
 **Thought** (narration):
@@ -452,7 +452,7 @@ Output:
 > Task :AnkiDroid:multiDexListDebug
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T04:45:29.390Z_
 
 **Thought** (none):
@@ -479,7 +479,7 @@ Use '--warning-mode all' to show the individual deprecation warnings.
 See https://docs.gradle.org/6.7/
 ```
 
-## 20. plan / repair  (update_plan)
+## 20. plan / planning  (update_plan)
 _step 24 | 2026-09-25T04:45:36.263Z_
 
 **Thought** (none):
@@ -495,7 +495,7 @@ _(none)_
 Plan updated
 ```
 
-## 21. search_code / validation  (exec_command)
+## 21. search / validation  (exec_command)
 _step 25 | 2026-09-25T04:45:39.665Z_
 
 **Thought** (narration):
@@ -522,7 +522,7 @@ Output:
    432	        String deckToStudyName = col.getDecks().get(did).getSt
 ```
 
-## 22. plan / validation  (update_plan)
+## 22. plan / planning  (update_plan)
 _step 26 | 2026-09-25T04:45:41.707Z_
 
 **Thought** (none):

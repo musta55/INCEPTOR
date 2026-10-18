@@ -7,9 +7,9 @@
 - steps (LLM inferences): 52 | actions: 47 | failed actions: 5
 - known gaps: reasoning_encrypted
 
-Phases: understanding(3: unchecked) -> localization(7: succeeded) -> repair(10: failed) -> validation(27: blocked, failed, succeeded)
+Phases: planning(1: unchecked) -> localization(3: succeeded) -> planning(1: unchecked) -> localization(4: succeeded) -> planning(1: unchecked) -> repair(1: failed) -> validation(25: failed, blocked, failed) -> planning(1: unchecked) -> validation(9: succeeded) -> planning(1: unchecked)
 
-## 1. plan / understanding  (update_plan)
+## 1. plan / planning  (update_plan)
 _step 5 | 2026-09-25T05:30:05.328Z_
 
 **Thought** (narration):
@@ -27,7 +27,7 @@ I’ll trace the preview activity’s rotation lifecycle, patch state restoratio
 Plan updated
 ```
 
-## 2. search_code / understanding  (exec_command)
+## 2. search / localization  (exec_command)
 _step 6 | 2026-09-25T05:30:07.809Z | **FAILED**_
 
 **Thought** (none):
@@ -62,7 +62,7 @@ tools
 find: ..: Operation not permitted
 ```
 
-## 3. search_code / understanding  (exec_command)
+## 3. search / localization  (exec_command)
 _step 7 | 2026-09-25T05:30:08.807Z_
 
 **Thought** (narration):
@@ -91,7 +91,7 @@ AnkiDroid/src/main/java/com/ichi2/libanki/Collection.java:833:     * @param type
 AnkiDro
 ```
 
-## 4. search_code / localization  (exec_command)
+## 4. search / localization  (exec_command)
 _step 8 | 2026-09-25T05:30:11.323Z_
 
 **Thought** (none):
@@ -115,7 +115,7 @@ Output:
  * Copyright (c) 2014 Brun
 ```
 
-## 5. plan / localization  (update_plan)
+## 5. plan / planning  (update_plan)
 _step 9 | 2026-09-25T05:30:14.422Z_
 
 **Thought** (narration):
@@ -133,7 +133,7 @@ The defect is localized: `Previewer` always reloads the intent’s starting inde
 Plan updated
 ```
 
-## 6. search_code / localization  (exec_command)
+## 6. search / localization  (exec_command)
 _step 10 | 2026-09-25T05:30:18.336Z_
 
 **Thought** (none):
@@ -164,7 +164,7 @@ Output:
         @Ove
 ```
 
-## 7. search_code / localization (own phase understanding)  (exec_command)
+## 7. search / localization  (exec_command)
 _step 11 | 2026-09-25T05:30:19.820Z_
 
 **Thought** (none):
@@ -199,7 +199,7 @@ import static org.junit.Assert.*;
 @RunWith(And
 ```
 
-## 8. read_file / localization  (exec_command)
+## 8. read / localization  (exec_command)
 _step 12 | 2026-09-25T05:30:23.160Z_
 
 **Thought** (none):
@@ -223,7 +223,7 @@ Output:
  * This program is free s
 ```
 
-## 9. search_code / localization  (exec_command)
+## 9. search / localization  (exec_command)
 _step 13 | 2026-09-25T05:30:27.742Z_
 
 **Thought** (none):
@@ -246,7 +246,7 @@ AnkiDroid/src/test/java/com/ichi2/libanki/ClozeTest.java:40:        assertTrue(d
 AnkiDroid/src/test/java/com/ichi2/libanki/ClozeTest.java:42:        f = d.newNo
 ```
 
-## 10. plan / localization  (update_plan)
+## 10. plan / planning  (update_plan)
 _step 14 | 2026-09-25T05:30:34.627Z_
 
 **Thought** (narration):
@@ -264,7 +264,7 @@ State semantics are clear: both the current card index and question/answer side 
 Plan updated
 ```
 
-## 11. edit_file / repair  (exec_command)
+## 11. edit / repair  (exec_command)
 _step 15 | 2026-09-25T05:30:40.450Z_
 
 **Thought** (none):
@@ -297,7 +297,7 @@ Success. Updated the following files:
 M AnkiDroid/src/main/java/com/ichi2/anki/Previewer.java
 ```
 
-## 12. diff / repair  (exec_command)
+## 12. read / validation  (exec_command)
 _step 16 | 2026-09-25T05:30:42.203Z_
 
 **Thought** (none):
@@ -325,7 +325,7 @@ public class Previewer extends AbstractFlashcardViewer {
     privat
 ```
 
-## 13. diff / repair  (exec_command)
+## 13. diff / validation  (exec_command)
 _step 17 | 2026-09-25T05:30:44.698Z_
 
 **Thought** (none):
@@ -349,7 +349,7 @@ HARNESS
 /private/var/folders/28/_9_mht7s10d5tf_cw0nmz8tc0000gn/T/uiab-read-guard/codex_original_run2/bug-273/git-stub-worktree
 ```
 
-## 14. search_code / repair (own phase localization)  (exec_command)
+## 14. search / validation  (exec_command)
 _step 18 | 2026-09-25T05:30:51.521Z_
 
 **Thought** (narration):
@@ -375,7 +375,7 @@ AnkiDroid/src/main/java/com/ichi2/anki/CardBrowser.java:412:        startLoading
 AnkiDroid
 ```
 
-## 15. run_test / repair  (exec_command)
+## 15. edit / validation  (exec_command)
 _step 19 | 2026-09-25T05:31:01.557Z_
 
 **Thought** (none):
@@ -413,7 +413,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon (
 ```
 
-## 16. wait_process / repair  (write_stdin)
+## 16. other / validation  (write_stdin)
 _step 20 | 2026-09-25T05:31:10.298Z_
 
 **Thought** (none):
@@ -441,7 +441,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.a
 ```
 
-## 17. wait_process / repair  (write_stdin)
+## 17. other / validation  (write_stdin)
 _step 21 | 2026-09-25T05:31:16.303Z_
 
 **Thought** (none):
@@ -461,7 +461,7 @@ Original token count: 0
 Output:
 ```
 
-## 18. wait_process / repair  (write_stdin)
+## 18. other / validation  (write_stdin)
 _step 22 | 2026-09-25T05:31:22.728Z_
 
 **Thought** (none):
@@ -481,7 +481,7 @@ Original token count: 0
 Output:
 ```
 
-## 19. wait_process / repair  (write_stdin)
+## 19. other / validation  (write_stdin)
 _step 23 | 2026-09-25T05:31:30.747Z_
 
 **Thought** (none):
@@ -510,7 +510,7 @@ Output:
 >
 ```
 
-## 20. wait_process / repair  (write_stdin)
+## 20. other / validation  (write_stdin)
 _step 24 | 2026-09-25T05:31:37.046Z | **FAILED**_
 
 **Thought** (none):
@@ -538,7 +538,7 @@ Output:
 > Task :AnkiDroi
 ```
 
-## 21. run_test / validation  (exec_command)
+## 21. test / validation  (exec_command)
 _step 25 | 2026-09-25T05:31:40.880Z | **FAILED**_
 
 **Thought** (narration):
@@ -566,7 +566,7 @@ Exception in thread "main" java.net.SocketException: Operation not permitted (co
 	at jav
 ```
 
-## 22. run_test / validation  (exec_command)
+## 22. test / validation  (exec_command)
 _step 26 | 2026-09-25T05:31:43.767Z_
 
 **Thought** (none):
@@ -588,7 +588,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 ```
 
-## 23. wait_process / validation  (write_stdin)
+## 23. other / validation  (write_stdin)
 _step 27 | 2026-09-25T05:31:46.935Z_
 
 **Thought** (none):
@@ -616,7 +616,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.an
 ```
 
-## 24. wait_process / validation  (write_stdin)
+## 24. other / validation  (write_stdin)
 _step 28 | 2026-09-25T05:31:56.138Z_
 
 **Thought** (none):
@@ -636,7 +636,7 @@ Original token count: 0
 Output:
 ```
 
-## 25. wait_process / validation  (write_stdin)
+## 25. other / validation  (write_stdin)
 _step 29 | 2026-09-25T05:32:02.106Z_
 
 **Thought** (none):
@@ -656,7 +656,7 @@ Original token count: 0
 Output:
 ```
 
-## 26. wait_process / validation  (write_stdin)
+## 26. other / validation  (write_stdin)
 _step 30 | 2026-09-25T05:32:08.982Z | **FAILED**_
 
 **Thought** (none):
@@ -685,7 +685,7 @@ Output:
 > Task :Ank
 ```
 
-## 27. run_test / validation  (exec_command)
+## 27. test / validation  (exec_command)
 _step 31 | 2026-09-25T05:32:13.435Z_
 
 **Thought** (none):
@@ -707,7 +707,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true -Duser.home=/Users/
 Starting a Gradle Daemon, 1 incompatible and 2 stopped Daemons could not be reused, use --status for details
 ```
 
-## 28. wait_process / validation  (write_stdin)
+## 28. other / validation  (write_stdin)
 _step 32 | 2026-09-25T05:32:15.913Z_
 
 **Thought** (none):
@@ -735,7 +735,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.a
 ```
 
-## 29. wait_process / validation  (write_stdin)
+## 29. other / validation  (write_stdin)
 _step 33 | 2026-09-25T05:32:22.088Z_
 
 **Thought** (none):
@@ -755,7 +755,7 @@ Original token count: 0
 Output:
 ```
 
-## 30. wait_process / validation  (write_stdin)
+## 30. other / validation  (write_stdin)
 _step 34 | 2026-09-25T05:32:28.267Z_
 
 **Thought** (none):
@@ -775,7 +775,7 @@ Original token count: 0
 Output:
 ```
 
-## 31. wait_process / validation  (write_stdin)
+## 31. other / validation  (write_stdin)
 _step 35 | 2026-09-25T05:32:34.252Z_
 
 **Thought** (none):
@@ -803,7 +803,7 @@ Output:
 > Task :api:packageDebugRenderscript NO-SOURCE
 ```
 
-## 32. wait_process / validation  (write_stdin)
+## 32. other / validation  (write_stdin)
 _step 36 | 2026-09-25T05:32:42.328Z | **FAILED**_
 
 **Thought** (none):
@@ -829,7 +829,7 @@ com.ichi2.anki.PreviewerTest > restoresCurrentCardAndSide FAILED
     Unable to resolve a
 ```
 
-## 33. env_setup / validation  (exec_command)
+## 33. edit / validation  (exec_command)
 _step 37 | 2026-09-25T05:32:43.484Z_
 
 **Thought** (none):
@@ -849,7 +849,7 @@ Original token count: 0
 Output:
 ```
 
-## 34. wait_process / validation  (write_stdin)
+## 34. other / validation  (write_stdin)
 _step 38 | 2026-09-25T05:32:56.328Z_
 
 **Thought** (none):
@@ -865,7 +865,7 @@ _(none)_
 write_stdin failed: stdin is closed for this session; rerun exec_command with tty=true to keep stdin open
 ```
 
-## 35. wait_process / validation  (write_stdin)
+## 35. other / validation  (write_stdin)
 _step 39 | 2026-09-25T05:32:58.776Z_
 
 **Thought** (none):
@@ -885,7 +885,7 @@ Original token count: 0
 Output:
 ```
 
-## 36. env_setup / validation  (exec_command)
+## 36. edit / validation  (exec_command)
 _step 40 | 2026-09-25T05:33:05.730Z_
 
 **Thought** (none):
@@ -905,7 +905,7 @@ Original token count: 0
 Output:
 ```
 
-## 37. plan / validation  (update_plan)
+## 37. plan / planning  (update_plan)
 _step 41 | 2026-09-25T05:33:13.356Z_
 
 **Thought** (narration):
@@ -923,7 +923,7 @@ The focused regression test compiled, but this offline environment lacks Robolec
 Plan updated
 ```
 
-## 38. build / validation  (exec_command)
+## 38. edit / validation  (exec_command)
 _step 42 | 2026-09-25T05:33:16.504Z_
 
 **Thought** (none):
@@ -955,7 +955,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 3 stopped Daemons could not be reused, use --status for details
 ```
 
-## 39. wait_process / validation  (write_stdin)
+## 39. other / validation  (write_stdin)
 _step 43 | 2026-09-25T05:33:18.403Z_
 
 **Thought** (none):
@@ -983,7 +983,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.a
 ```
 
-## 40. wait_process / validation  (write_stdin)
+## 40. other / validation  (write_stdin)
 _step 44 | 2026-09-25T05:33:24.412Z_
 
 **Thought** (none):
@@ -1010,7 +1010,7 @@ Output:
 Compatible side by side N
 ```
 
-## 41. wait_process / validation  (write_stdin)
+## 41. other / validation  (write_stdin)
 _step 45 | 2026-09-25T05:33:33.802Z_
 
 **Thought** (none):
@@ -1061,7 +1061,7 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Starting a Gradle Daemon, 1 incompatible and 4 stopped Daemons could not be reused, use --status for details
 ```
 
-## 43. wait_process / validation  (write_stdin)
+## 43. other / validation  (write_stdin)
 _step 47 | 2026-09-25T05:33:43.008Z_
 
 **Thought** (none):
@@ -1089,7 +1089,7 @@ Signing not ready for Gradle Play Publisher. Be sure to specify a signingConfig 
 Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.a
 ```
 
-## 44. wait_process / validation  (write_stdin)
+## 44. other / validation  (write_stdin)
 _step 48 | 2026-09-25T05:33:50.178Z_
 
 **Thought** (none):
@@ -1109,7 +1109,7 @@ Original token count: 0
 Output:
 ```
 
-## 45. wait_process / validation  (write_stdin)
+## 45. other / validation  (write_stdin)
 _step 49 | 2026-09-25T05:33:59.493Z_
 
 **Thought** (none):
@@ -1129,7 +1129,7 @@ Original token count: 0
 Output:
 ```
 
-## 46. wait_process / validation  (write_stdin)
+## 46. other / validation  (write_stdin)
 _step 50 | 2026-09-25T05:34:06.305Z_
 
 **Thought** (none):
@@ -1158,7 +1158,7 @@ Output:
 > Task :ap
 ```
 
-## 47. plan / validation  (update_plan)
+## 47. plan / planning  (update_plan)
 _step 51 | 2026-09-25T05:34:07.951Z_
 
 **Thought** (none):

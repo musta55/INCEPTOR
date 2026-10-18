@@ -9,7 +9,7 @@
 
 Phases: localization(7: unchecked)
 
-## 1. delegate / localization  (agent)
+## 1. sub-agent / localization  (agent)
 _step 1_
 
 **Thought** (reasoning):
@@ -33,7 +33,7 @@ I need to find the authentication settings code in this Android project, specifi
 **Result**:
 _delegated to subagent `sub-call_9a3dda4c31a049d09d891e20` -- its 0 actions follow below_
 
-## 2. wait_process / localization  (send_message)
+## 2. other / localization  (send_message)
 _step 2 | **FAILED**_
 
 **Thought** (reasoning):
@@ -53,7 +53,7 @@ Please return your complete findings about the password visibility toggle code, 
 params must have required property 'message'
 ```
 
-## 3. wait_process / localization  (send_message)
+## 3. other / localization  (send_message)
 _step 3_
 
 **Thought** (reasoning):
@@ -73,7 +73,7 @@ Please return your complete findings about the password visibility toggle code, 
 Message queued for Explore auth/settings code
 ```
 
-## 4. wait_process / localization  (list_agents)
+## 4. other / localization  (list_agents)
 _step 4_
 
 **Thought** (reasoning):
@@ -89,7 +89,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 5. wait_process / localization  (list_agents)
+## 5. other / localization  (list_agents)
 _step 5_
 
 **Thought** (reasoning):
@@ -105,7 +105,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 6. wait_process / localization  (list_agents)
+## 6. other / localization  (list_agents)
 _step 6_
 
 **Thought** (reasoning):
@@ -121,7 +121,7 @@ _(none)_
 Listed 1 background agent.
 ```
 
-## 7. wait_process / localization  (list_agents)
+## 7. other / localization  (list_agents)
 _step 7_
 
 **Thought** (reasoning):
