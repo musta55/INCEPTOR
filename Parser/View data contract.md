@@ -66,7 +66,7 @@ as "not converted").
   },
   "badges": {                                  // process facts (atif.outcomes.phase_badges)
     "self_claims_pass": false,                 // the final message claims the tests pass
-    "reproduced_before_fix": false,            // a Reproduction subphase succeeded
+    "reproduced_before_fix": false,            // always false since Reproduction was dropped (2026-10-19)
     "test_modified": false,                    // a subphase has the test_modified flag
     "repeated_failure": false,                 // a subphase has the repeated_failure flag
     "blocked_checks": 0,                       // subphases with outcome blocked
@@ -119,7 +119,7 @@ the viewer then draws the timeline over the action index only.
   "category": "test",              // action category (vocab.categories, the action table of the
                                    //   Final lookup tables, atif/lookup.py)
   "item": "gradlew test tasks",    // extra: the action table's entry that gave the category
-  "phase": "reproduction",         // final phase: the phase span the action is in
+  "phase": "localization",         // final phase: the phase span the action is in
   "row": "L6",                     // the phase table's row that gave the phase (L1-L15, LG for
                                    //   the general rule), or "user" for a phase row of the user's
   "own_patch": true,               // only when true: it reads back files the agent already changed
@@ -196,8 +196,11 @@ the viewer then draws the timeline over the action index only.
 
 **Outcome colours.** succeeded green ✓, failed red ✗, blocked dark slate ⊘ (the environment
 stopped the check), unchecked light grey ○ (no check); the glyph always goes with the colour.
-The phases are planning pink, localization blue, reproduction orange, repair violet and
-validation amber, so no phase shares a hue with an outcome. The viewer shows subphases only as
+The phases are planning pink, localization blue, repair violet and validation amber, so no
+phase shares a hue with an outcome. Only Validation shows its outcome as a verdict; the
+viewer draws Localization and Repair as their files (at most five dots: grey = read or
+searched, never edited; teal, copper, magenta, olive = edited, one colour per localization ->
+repair cycle) and leaves Planning blank. The viewer shows subphases only as
 the outcomes of their phase (a phase whose checks changed has an outcome history, ✗ → ✓); its
 Trajectory view nests phases → categories (consecutive actions of one category) → steps. The same four outcomes are used in every
 phase; what they mean in each phase is the codebook's Table 6, carried in `vocab.text.outcomes`.
@@ -246,7 +249,7 @@ action, thought or result text is in the overview.
 { "categories": ["search", "read", "orient", "edit", "build", "test", "diff", "vcs", "plan",
                  "sub-agent", "other"],                       // the action table, in its order
   "category_family": {"search": "inspect", ...},             // inspect | modify | execute | coordinate | other
-  "phases": ["planning", "localization", "reproduction", "repair", "validation"],
+  "phases": ["planning", "localization", "repair", "validation"],
   "outcomes": ["succeeded", "failed", "blocked", "unchecked"],
   "phase_outcomes": {"planning": ["unchecked", "succeeded", "blocked"], ...},  // the outcomes each phase can have
   "evidence": ["test", "build", "target_file", "none"],
@@ -287,8 +290,7 @@ it, on the phase result):
 5. Every span `phase`, subphase `outcome` (within `vocab.phase_outcomes` of its phase),
    `evidence` and `flag`, and every action `category` and `phase` is in `vocab`.
 6. Attempts lie within `1..n_actions`, with `start <= end`; `anchor` is null or within `1..n_actions`.
-7. Every source edit is in Repair; Understanding and Reproduction occur only before the anchor,
-   Repair and Validation only from it on (`phase.check_hierarchy`).
+7. Every source edit is in Repair; Repair and Validation occur only from the anchor on (`phase.check_hierarchy`).
 
 ## Viewer deep links (`bug.html`)
 
@@ -344,7 +346,7 @@ viewer keeps beside the upload for the details panel's full texts and raw JSON.
              "mandatory": [...], "optional": [ /* as vocab.rules; an added ready-made rule also
                                                  has matched / skipped */ ],
              "custom": [ { /* the row */ "table": 4, "sentence": "...", "matched": [3, 9],
-                           "skipped": [{"i": 12, "why": "reproduction happens only before the first fix"}] } ] },
+                           "skipped": [{"i": 12, "why": "validation happens only from the first fix on"}] } ] },
   "source": { "name": "...", "format": "claude_code_stream_json|claude_agent_sdk_repr|codex_rollout_jsonl|qwen_stream_json|atif"
                                "|sweagent_traj|sweagent_chat|openhands_messages|openhands_events|mini_swe_agent",
               "agent": "claude", "model": "...", "bug": "18", "bug_inferred": true,

@@ -154,8 +154,7 @@ tool" or "any other program" (`tests/test_phase.py`); other itself is a category
 | Phase | Definition | Where |
 |---|---|---|
 | **Planning** | getting ready: a plan; the opening steps (ls, pwd, git status); reading only docs, or building the untouched project, before the first fix. Codebook versions 3 and 4 called it Understanding | pre-fix, and a plan anywhere |
-| **Localization** | finding the code to change: searching and reading code (and a sub-agent) before the first fix; after it, reading a source file the agent has not changed when it changes code again before the next build, test or diff | anywhere |
-| **Reproduction** | trying to see the bug before changing the code: running tests, a program or the app, or writing a test | pre-fix only |
+| **Localization** | finding the code to change: searching and reading code (and a sub-agent), running tests or writing a test before the first fix; after it, reading a source file the agent has not changed when it changes code again before the next build, test or diff | anywhere |
 | **Repair** | changing the app's code: every edit of a source file | post-fix |
 | **Validation** | checking the patch: every build, test, diff and git command after the first fix; re-reading changed or non-source files; reading unchanged code before a build, test or diff; editing a non-source file | post-fix only |
 
@@ -171,8 +170,8 @@ row that matches its category, its targets and its position:
 | L3 | Planning | read, search | docs only | before the first fix |
 | L4 | Planning | build | any | before the first fix |
 | L5 | Localization | search, read, sub-agent | any (not docs only) | before the first fix |
-| L6 | Reproduction | test | any | before the first fix |
-| L7 | Reproduction | edit | test file | before the first fix |
+| L6 | Localization | test | any | before the first fix |
+| L7 | Localization | edit | test file | before the first fix |
 | L8 | Repair | edit | source file | anywhere (the first one is the anchor) |
 | L9 | Localization | search, read | source file the agent has not changed | after the first fix, when the next source edit comes before the next build, test or diff |
 | L10 | Validation | search, read | source file the agent has not changed | after the first fix, when a build, test or diff (or the end) comes before the next source edit |
@@ -210,8 +209,8 @@ planning); their Table 4 ids are ignored.
 **Invariants** (`phase.check_hierarchy`, raised as errors):
 - phase spans and subphases are contiguous and cover every action exactly once;
 - every source edit is in Repair;
-- Reproduction occurs only pre-fix (Planning occurs anywhere: a plan is Planning wherever it
-  comes);
+- Planning occurs anywhere: a plan is Planning wherever it comes. (Reproduction, pre-fix only,
+  was dropped on 2026-10-19: rows L6 and L7 are Localization);
 - Repair and Validation occur only post-fix;
 - adjacent subphases of a span never share an outcome;
 - every phase, outcome and flag is in the vocabulary.
@@ -236,7 +235,6 @@ The **evidence** attribute records the strongest check behind an outcome: `test`
 |---|---|---|---|---|---|
 | Planning | a build of the untouched project (optional) | it builds | — | the build was stopped (any pre-fix build failure: not the agent's doing) | no build |
 | Localization | reading a target file (a file the agent's own patch changes) | a target file was read | the agent changed files but read none of them in this span | — | the agent changed no app file |
-| Reproduction | a test or device run before the fix | test fails (bug seen) | test passes | the run stopped before the test executed | no run gave a result |
 | Repair | the attempt's judging run | test passes (test) or build passes (build) | test fails (test) or the change does not compile (build) | environment stopped the run | the change was never run |
 | Validation | further runs on the patch | as Repair | as Repair | as Repair | nothing was run (for example, only the diff was read back) |
 
@@ -244,7 +242,7 @@ The **evidence** attribute records the strongest check behind an outcome: `test`
 1. List the span's **events**:
    - each attempt's range (Repair);
    - each decisive run;
-   - a passing build (weak; not in Reproduction).
+   - a passing build (weak).
 2. Give each event its outcome and evidence.
 3. Every other action belongs to the next event. Actions after the last event join it. A
    passing build decides only when no other event follows it in the span.
@@ -261,8 +259,9 @@ it went on to change. That measures focus, not whether the agent found the devel
 location. The `targets` argument can override the set for a corpus that has such a list;
 `metrics.target_source` records which set was used.
 
-The context claim holds at subphase level. The same event, "the target test fails", is
-`succeeded` in Reproduction and `failed` in Repair or Validation.
+The context claim held at subphase level while Reproduction existed (until 2026-10-19): the
+same event, "the target test fails", was `succeeded` in Reproduction and is `failed` in Repair
+or Validation.
 
 **Flags** (`phase.FLAGS`). Each flag is a behaviour, not a result, and each serves a research
 question:
@@ -292,7 +291,7 @@ Polls are excluded from every count.
 | attempts_to_first_pass | the first attempt that succeeded with test evidence |
 | repair_cycles | number of Repair spans |
 | reentries | per phase: spans beyond the first |
-| reproduced_before_fix | some Reproduction subphase succeeded |
+| reproduced_before_fix | always false since Reproduction was dropped (2026-10-19) |
 | actions_to_first_found | tool actions before the first touch of a target file (RQ-T2) |
 | blocked_subphases, `<flag>_subphases` | counts |
 | tool_errors, self_reviews, reverts | per-run counts of failed lookups or edits (no-match searches excluded), diffs or reads of own files after the last fix, and reverts |

@@ -287,8 +287,8 @@ class ProjectTests(unittest.TestCase):
     def test_phases_of_a_swebench_run(self):
         result = phase.phases(swebench.parse_document(sweagent1()), "0")
         labels = [(a["category"], result["phase"][x]) for x, a in enumerate(result["actions"])]
-        self.assertEqual(labels, [("read", "localization"), ("edit", "reproduction"),
-                                  ("test", "reproduction"), ("edit", "repair"),
+        self.assertEqual(labels, [("read", "localization"), ("edit", "localization"),
+                                  ("test", "localization"), ("edit", "repair"),
                                   ("test", "validation"), ("other", "validation")])
         self.assertEqual(result["table_row"], ["L5", "L7", "L6", "L8", "L12", "L14"])
         # the Android table has no row for python: in a SWE-bench project the taxonomy's kind
@@ -337,7 +337,7 @@ class UploadTests(unittest.TestCase):
         self.assertEqual(r["warnings"], [])
         self.assertEqual(r["trajectory"]["project"], "swebench")
         phases = [a["phase"] for a in r["trajectory"]["actions"]]
-        self.assertEqual(phases[:3], ["reproduction"] * 3)
+        self.assertEqual(phases[:3], ["localization"] * 3)
         self.assertEqual(phases[4], "repair")
         self.assertEqual(r["trajectory"]["anchor"], 5)
 

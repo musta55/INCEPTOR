@@ -1,38 +1,32 @@
-/* Corpus page > Statistics: the trajectories of the Trajectories tab (the corpus bugs not
- * removed from view, run 1, plus the user's uploads), compared group by group. A group is
- * one corpus agent, or the uploads of one agent ("yours"). Panels: one card per group (pass
- * rate and size), the corpus outcome across runs (pass matrix + table), where the actions
- * go (100%-stacked phase shares), and the outcomes of each phase (one 100% bar per
- * phase and group). Bars are neutral or wear the phase / outcome colour they encode; groups
- * are told apart by name, never by colour. Counts come from the phase taxonomy's metrics
- * (atif/phase.py), which leave polls out. Context: TV.overview (page-overview.js). */
+/* Corpus page > Statistics: the trajectories of the Trajectories tab (every uploaded run),
+ * compared agent by agent. Panels: one card per agent (pass rate and size), the outcome across
+ * runs (pass matrix + table), where the actions go (100%-stacked phase shares), and the
+ * outcomes of each phase (one 100% bar per phase and agent). Bars are neutral or wear the
+ * phase / outcome colour they encode; agents are told apart by name, never by colour. Counts
+ * come from the phase taxonomy's metrics (atif/phase.py), which leave polls out. Context:
+ * TV.overview (page-overview.js): agents, runs, rows (the table's bugs), groups (an agent's
+ * runs) and href(row, agent, run). */
 (function () {
   'use strict';
   var TV = window.TV, esc = TV.esc;
 
   function ctx() { return TV.overview; }
-  function groupHTML(g) {
-    return '<span class="gname">' + TV.agentHTML(g.agent) + (g.corpus ? '' : '<span class="yours" data-tip="your uploads of this agent">yours</span>') +
-      (g.swebench ? '<span class="yours swe" data-tip="SWE-bench runs on Python repositories, kept apart from the Android ones">SWE-bench</span>' : '') + '</span>';
-  }
+  function groupHTML(g) { return '<span class="gname">' + TV.agentHTML(g.agent) + '</span>'; }
   function fmt1(x) { return x == null ? '–' : (Math.round(x * 10) / 10).toString(); }
+  function passAt(row, a, r) { var c = row.cells[a], x = c && c.at[r]; return x ? x.pass : undefined; }
 
-  /* ------------------------------------------------------------------ one card per group */
+  /* ------------------------------------------------------------------ one card per agent */
   function cards() {
-    var C = ctx(), D = C.data, RUNS = C.runs;
+    var C = ctx();
     return '<section class="scards">' + C.groups.map(function (g) {
       var ts = g.trajs, known = ts.filter(function (t) { return t.pass != null; }), pass = known.filter(function (t) { return t.pass === true; }).length;
-      var model = g.corpus ? (D.models || {})[g.agent] : (ts.map(function (t) { return t.model; }).filter(Boolean)[0] || '');
-      var line;
-      if (g.corpus) {
-        var all = 0, n = 0;
-        C.bugs.forEach(function (b) { RUNS.forEach(function (r) { var v = b.byRun[g.agent][r]; if (v != null) { n++; if (v) all++; } }); });
-        line = 'runs ' + RUNS[0] + '–' + RUNS[RUNS.length - 1] + ': ' + all + ' / ' + n + ' pass';
-      } else line = TV.plural(ts.length, 'trajectory', 'trajectories') + (known.length < ts.length ? ' · ' + (ts.length - known.length) + ' without an outcome' : '');
+      var model = ts.map(function (t) { return t.model; }).filter(Boolean)[0] || '';
+      var nb = C.rows.filter(function (row) { return row.cells[g.agent]; }).length;
+      var line = TV.plural(ts.length, 'run') + ' of ' + TV.plural(nb, 'bug') + (known.length < ts.length ? ' · ' + (ts.length - known.length) + ' without an outcome' : '');
       return '<article class="card scard">' +
-        '<div class="sc-h">' + groupHTML(g) + '<span class="model" title="model">' + esc(model || '') + '</span></div>' +
+        '<div class="sc-h">' + groupHTML(g) + '<span class="model" title="model">' + esc(model) + '</span></div>' +
         '<div class="hero"><b>' + (known.length ? pass + '<small>/' + known.length + '</small>' : '–') + '</b><span>' +
-          (known.length ? 'pass' + (g.corpus ? ' in run ' + C.run : '') + ' · ' + TV.pct(pass / known.length) : 'no outcome set') + '</span></div>' +
+          (known.length ? 'runs pass · ' + TV.pct(pass / known.length) : 'no outcome set') + '</span></div>' +
         '<div class="sc-l">' + esc(line) + '</div>' +
         '<div class="sc-k"><span><b>' + fmt1(TV.median(ts.map(function (t) { return t.n_actions; }))) + '</b> median actions</span>' +
           '<span><b>' + fmt1(TV.median(ts.map(function (t) { return t.stats.n_phases; }))) + '</b> median phase spans</span></div>' +
@@ -40,10 +34,10 @@
     }).join('') + '</section>';
   }
 
-  /* ------------------------------------------------------------------ pass matrix + table (corpus) */
+  /* ------------------------------------------------------------------ pass matrix + table */
   function passPanel() {
-    var C = ctx(), AG = C.agents, RUNS = C.runs, bugs = C.bugs, nb = bugs.length;
-    var h = '<section class="card panel wide"><h3>Corpus outcome across runs</h3>' +
+    var C = ctx(), AG = C.agents, RUNS = C.runs, bugs = C.rows, nb = bugs.length;
+    var h = '<section class="card panel wide"><h3>Outcome across runs</h3>' +
       '<p class="desc">Runs ' + RUNS.join(', ') + ' · filled = pass, ring = fail · click to open.</p>';
     h += '<div class="pm-wrap"><div class="pm">';
     AG.forEach(function (a) {
@@ -51,9 +45,9 @@
       RUNS.forEach(function (r) {
         h += '<span class="pm-r">r' + r + '</span>';
         bugs.forEach(function (b) {
-          var v = b.byRun[a][r];
-          h += '<a class="' + TV.oc(v) + '" href="bug.html#bug=' + encodeURIComponent(b.bug) + '&t=' + a + '-r' + r + '" data-tip="' +
-            esc('bug-' + b.bug + ' · ' + a + ' · run ' + r + ': ' + TV.oc(v)) + '"></a>';
+          var v = passAt(b, a, r), tip = b.label + ' · ' + a + ' · run ' + r + ': ';
+          h += v === undefined ? '<span class="nil" data-tip="' + esc(tip + 'no run') + '"></span>' :
+            '<a class="' + TV.oc(v) + '" href="' + C.href(b, a, r) + '" data-tip="' + esc(tip + TV.oc(v)) + '"></a>';
         });
       });
       h += '</div>';
@@ -65,15 +59,15 @@
     AG.forEach(function (a) {
       var all = 0, none = 0, mixed = 0;
       bugs.forEach(function (b) {
-        var v = RUNS.map(function (r) { return b.byRun[a][r]; }).filter(function (x) { return x != null; });
+        var v = RUNS.map(function (r) { return passAt(b, a, r); }).filter(function (x) { return x != null; });
         if (!v.length) return;
         if (v.every(function (x) { return x; })) all++;
         else if (v.every(function (x) { return !x; })) none++;
         else mixed++;
       });
       h += '<tr><td>' + TV.agentHTML(a) + '</td>' + RUNS.map(function (r) {
-        var known = bugs.filter(function (b) { return b.byRun[a][r] != null; }).length;
-        var p = bugs.filter(function (b) { return b.byRun[a][r] === true; }).length;
+        var known = bugs.filter(function (b) { return passAt(b, a, r) != null; }).length;
+        var p = bugs.filter(function (b) { return passAt(b, a, r) === true; }).length;
         return '<td>' + p + '<span class="muted">/' + known + '</span></td>';
       }).join('') + '<td>' + all + '</td><td>' + none + '</td><td>' + mixed + '</td></tr>';
     });
@@ -97,7 +91,7 @@
         if (!v) return;
         var share = v / n;
         h += '<i style="flex:' + v + ' 1 0;background:' + TV.phaseVar(p) + ';color:' + TV.phaseTextVar(p) + '" data-tip="' +
-          esc(g.agent + (g.corpus ? '' : ' (yours)') + ' · ' + p + ': ' + v + ' actions (' + TV.pct(share) + ')') + '">' + (share >= 0.07 ? TV.pct(share) : '') + '</i>';
+          esc(g.agent + ' · ' + p + ': ' + v + ' actions (' + TV.pct(share) + ')') + '">' + (share >= 0.07 ? TV.pct(share) : '') + '</i>';
       });
       h += '</div>';
     });
@@ -107,10 +101,10 @@
   /* ------------------------------------------------------------------ phase outcomes */
   function outcomePanel() {
     var C = ctx(), G = C.groups;
-    var h = '<section class="card panel' + (G.length > 3 ? ' wide' : '') + '"><h3>Phase outcomes</h3><p class="desc">How each phase ended (count at the right).</p>' +
+    var h = '<section class="card panel' + (G.length > 3 ? ' wide' : '') + '"><h3>Validation outcomes</h3><p class="desc">How Validation ended (count at the right).</p>' +
       '<div class="legend lg-inline">' + TV.outcomeLegend() + '</div>' +
       '<div class="phout" style="--nag:' + G.length + '"><span></span>' + G.map(function (g) { return '<span class="bh">' + groupHTML(g) + '</span>'; }).join('');
-    TV.PHASE_ORDER.forEach(function (p) {
+    TV.VERDICT_PHASES.forEach(function (p) {
       h += '<span class="bl">' + TV.phaseChip(p) + '</span>';
       G.forEach(function (g) {
         var c = {}, n = 0;
@@ -120,7 +114,7 @@
         });
         h += '<span class="bc"><span class="bar100 mini">' + (n ? TV.OUTCOMES.filter(function (o) { return c[o]; }).map(function (o) {
           var share = c[o] / n;
-          return '<i class="o-' + o + '" style="flex:' + c[o] + ' 1 0" data-tip="' + esc(g.agent + (g.corpus ? '' : ' (yours)') + ' · ' + p + ' · ' + c[o] + ' ' + o + ' (' + TV.pct(share) + ') · ' + TV.outcomeDef(p, o)) + '">' +
+          return '<i class="o-' + o + '" style="flex:' + c[o] + ' 1 0" data-tip="' + esc(g.agent + ' · ' + p + ' · ' + c[o] + ' ' + o + ' (' + TV.pct(share) + ') · ' + TV.outcomeDef(p, o)) + '">' +
             (share >= 0.22 ? TV.pct(share) : '') + '</i>';
         }).join('') : '<i class="none"></i>') + '</span><span class="bv">' + n + '</span></span>';
       });
@@ -129,11 +123,8 @@
   }
 
   function render(el) {
-    var C = ctx(), ups = C.groups.filter(function (g) { return !g.corpus; });
-    var nUp = ups.reduce(function (s, g) { return s + g.trajs.length; }, 0);
-    var h = '<p class="stat-head muted">Run ' + C.run + ' of the ' + esc(C.data.config || 'original') + ' configuration: ' + C.bugs.length + ' bugs' +
-      (C.hidden ? ' (' + C.hidden + ' removed from view)' : '') + ' × ' + C.agents.length + ' agents' + (nUp ? ', and ' + TV.plural(nUp, 'upload') : '') +
-      (C.computing ? ' · updating…' : '') + '</p>';
+    var C = ctx(), n = C.groups.reduce(function (s, g) { return s + g.trajs.length; }, 0);
+    var h = '<p class="stat-head muted">' + TV.plural(C.rows.length, 'bug') + ' × ' + TV.plural(C.agents.length, 'agent') + ' · ' + TV.plural(n, 'run') + ' · ' + esc(C.rules) + '</p>';
     h += cards();
     h += '<div class="statgrid">' + passPanel() + phasePanel() + outcomePanel() + '</div>';
     el.innerHTML = h;

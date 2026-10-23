@@ -1,4 +1,4 @@
-/* TrajecTiers dashboard - the review of unrecognised steps (atif/diagnose.py), on an upload's
+/* Inceptor dashboard - the review of unrecognised steps (atif/diagnose.py), on an upload's
  * page (analyze.html#u=<id>) and on the Lookup tables page (every upload's, merged).
  *
  * A step is unrecognised when its tool, or a program of its shell command, is in no lookup
@@ -58,8 +58,8 @@
       var nsug = groups.filter(function (g) { return g.suggest; }).length;
       var h = '<section class="card unrec" aria-labelledby="urH"><div class="ur-h"><h2 id="urH">Unrecognized steps <span class="cnt">' +
         (rep.n_actions ? rep.n_unrecognized + ' of ' + rep.n_actions + ' steps' : TV.plural(rep.n_unrecognized, 'step')) + '</span></h2>' +
-        (nsug > 1 ? '<button type="button" class="btn small primary" data-ur-all>Add the ' + nsug + ' suggested rows</button>' : '') + '</div>' +
-        '<p class="muted small ur-intro">No lookup row matches these, so they count as <b>other</b>. Add a row for each (suggestions come from the tool\'s name; check them).</p><div class="ur-list">';
+        (nsug > 1 ? '<button type="button" class="btn small primary" data-ur-all>Add the ' + nsug + ' suggested rules</button>' : '') + '</div>' +
+        '<p class="muted small ur-intro">No lookup rule matches these, so they count as <b>other</b>. Add a rule for each (suggestions come from the tool\'s name; check them).</p><div class="ur-list">';
       groups.forEach(function (g) {
         var ex = (g.examples || []).map(function (x) {
           return (opts.goto ? '<button type="button" class="lnk" data-goto="' + x.i + '">#' + x.i + '</button>' : '<span class="muted">#' + x.i + '</span>') + ' <code>' + esc(x.text || '') + '</code>';
@@ -69,7 +69,7 @@
           '<span class="muted small">' + TV.plural(g.n, 'step') + ' · now <span class="midchip">' + esc(g.category) + '</span></span></div>' +
           '<div class="ur-ex small">' + ex + (opts.where ? opts.where(g) : '') + '</div>' +
           '<div class="ur-act"><select aria-label="' + esc('What ' + g.key + ' does') + '">' + choices(g) + '</select>' +
-          '<button type="button" class="btn small" data-ur-add>Add row</button>' +
+          '<button type="button" class="btn small" data-ur-add>Add rule</button>' +
           (g.suggest ? '<span class="ur-why muted small">suggested: ' + esc(g.suggest.why) + '</span>' : '<span class="ur-why muted small">no suggestion: pick one</span>') + '</div></div>';
       });
       return h + '</div></section>';

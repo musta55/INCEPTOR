@@ -1,7 +1,9 @@
 /* Bug page > Fingerprint: small multiples of the trajectories of this bug, one bubble grid
  * each. x = action index on a scale shared by all grids, y = action-category lanes (the union
  * over the grids); bubble colour = verdict (pass / fail / none); a dashed line at the first
- * fix; above each grid the phase strip and the phase-outcome strip. Default: the 3 agents
+ * fix; above each grid the phase strip and the outcome strip (Validation: its verdicts;
+ * Localization, Repair: their files as dots, as on the timeline; hover it for the phase's
+ * files). Default: the 3 agents
  * of the selected run; toggle (S.fp = 'runs'): the selected agent across its runs. Click a
  * bubble (any point of its column) to select that trajectory and action; the playhead
  * highlights the current column of the selected one. */
@@ -9,7 +11,7 @@
   'use strict';
   var TV = window.TV, esc = TV.esc;
   var root = null, grids = [];
-  var ROWH = 13, PH = 8, SH = 8, Y0 = 23;     // lane height, phase / outcome strip heights, first lane
+  var ROWH = 13, PH = 8, SH = 10, Y0 = 25;    // lane height, phase / outcome strip heights, first lane
 
   /* the trajectories shown: a comparison's members (TV.bugData.group, the Analyze page), else the
    * bug's agents in the selected run, or the selected agent's runs */
@@ -31,8 +33,18 @@
     t.phases.forEach(function (p) {
       s += '<rect class="band" x="' + xa(p.start).toFixed(2) + '" y="0" width="' + Math.max(1, (p.end - p.start + 1) * cw - 1).toFixed(2) + '" height="' + PH + '" rx="1.5" fill="' + TV.phaseVar(p.phase) + '"/>';
     });
-    t.subs.forEach(function (sg) {
-      s += '<rect class="segr o-' + sg.outcome + '" x="' + xa(sg.start).toFixed(2) + '" y="' + (PH + 2) + '" width="' + Math.max(1, (sg.end - sg.start + 1) * cw - 1).toFixed(2) + '" height="' + SH + '" rx="1.5"/>';
+    t.phases.forEach(function (p) {                 // the outcome strip: one rectangle per phase
+      var w = Math.max(1, (p.end - p.start + 1) * cw - 1);
+      if (TV.hasFiles(p.phase)) {                   // the files as dots, when they all fit
+        var rows = TV.spanFiles(t, p);
+        s += '<rect class="segr fz" x="' + xa(p.start).toFixed(2) + '" y="' + (PH + 2) + '" width="' + w.toFixed(2) + '" height="' + SH + '" rx="1.5"/>';
+        s += TV.marksSVG(rows, xa(p.start), xa(p.start) + w, PH + 2 + SH / 2, 5, 7, 2, 8);   // as many as fit, then "+n"
+        return;
+      }
+      if (!TV.hasVerdict(p.phase)) return;          // Planning: no outcome
+      p.subphases.forEach(function (sg) {
+        s += '<rect class="segr o-' + sg.outcome + '" x="' + xa(sg.start).toFixed(2) + '" y="' + (PH + 2) + '" width="' + Math.max(1, (sg.end - sg.start + 1) * cw - 1).toFixed(2) + '" height="' + SH + '" rx="1.5"/>';
+      });
     });
     lanes.forEach(function (m, k) {
       var yy = Y0 + k * ROWH;
@@ -58,21 +70,22 @@
     root = el;
     var cur = TV.traj(), runs = byRuns(), group = TV.bugData.group;
     var rs = rows(), trajs = rs.map(function (x) { return x.t; }).filter(Boolean);
-    var subUsed = {}, anchors = false;
+    var subUsed = {}, anchors = false, cycles = 1;
     trajs.forEach(function (t) {
-      t.subs.forEach(function (s) { subUsed[s.outcome] = 1; });
+      t.subs.forEach(function (s) { if (TV.hasVerdict(s.p.phase)) subUsed[s.outcome] = 1; });
       if (t.anchor) anchors = true;
+      cycles = Math.max(cycles, t.nCycles || 0);
     });
     var lanes = TV.lanes(trajs);
     var maxN = Math.max.apply(null, [1].concat(trajs.map(function (t) { return t.n; })));
     var W = Math.max(280, el.clientWidth - 26);
     var narrow = W < 560, LW = narrow ? 30 : 96;
     var cw = Math.min(14, (W - LW - 10) / maxN);
-    var h = '<div class="legend fp-legend">' +
-      '<span class="lg-t">Bubble</span><span class="lgm"><i class="bub v-pass"></i>pass</span><span class="lgm"><i class="bub v-fail"></i>fail</span>' +
-      '<span class="lgm"><i class="bub v-none"></i>no verdict</span>' + (anchors ? '<span class="lgm"><i class="anchormk"></i>first fix</span>' : '') + '</div>' +
-      '<div class="legend fp-legend"><span class="lg-t">Phase outcome</span>' + TV.outcomeLegend(subUsed) + '</div>';
-    h += '<p class="fp-sub muted small">' + (runs ? esc(cur.agent) + ' · ' + rs.length + ' runs' : rs.length + ' agents' + (group ? '' : ' · run ' + cur.run)) +
+    var h = TV.legendCardHTML(TV.bandLegendRows(subUsed, cycles).concat([
+      ['Action', 'a bubble per action', '<span class="lgm"><i class="bub v-pass"></i>pass</span><span class="lgm"><i class="bub v-fail"></i>fail</span><span class="lgm"><i class="bub v-none"></i>executed</span>'],
+      ['Marker', '', anchors ? '<span class="lgm"><i class="anchormk"></i>first fix (first edit of a source file)</span>' : '']
+    ]), 'fp-legend');
+    h += '<p class="fp-sub muted small">' + (runs ? esc(cur.agent) + ' · ' + rs.length + ' runs' : rs.length + ' agents' + (group ? (group.run ? ' · run ' + group.run : '') : ' · run ' + cur.run)) +
       ' · one x scale (' + maxN + ' actions max)' + (narrow ? ' · ' + lanes.map(function (m) { return TV.catAbbr(m) + ' ' + m; }).join(', ') : '') + '</p>';
     grids = [];
     rs.forEach(function (x) {
@@ -85,7 +98,7 @@
       h += '<div class="fpcard' + (isCur ? ' cur' : '') + '" data-key="' + esc(t.key) + '">' +
         '<div class="fp-h">' + (runs ? '<b class="fp-run">' + esc(group ? x.label : 'run ' + t.run) + '</b>' :
           TV.agentHTML(t.agent, group && x.label !== t.agent ? ' <span class="muted small">' + esc(x.label.slice(t.agent.length + 3)) + '</span>' : '')) + TV.passPill(t.outcome.pass) +
-        '<span class="muted small">' + TV.plural(t.n, 'action') + ' · ' + TV.plural(t.attempts.length, 'attempt') +
+        '<span class="muted small">' + TV.plural(t.n, 'action') +
         (t.stats.n_failed_actions != null ? ' · ' + t.stats.n_failed_actions + ' failed actions' : '') + '</span>' +
         (isCur ? '<span class="tag cur-tag">selected</span>' : '<button type="button" class="btn small" data-select="' + esc(t.key) + '">select</button>') + '</div>' +
         '<div class="fp-wrap">' + grid(t, lanes, cw, LW, narrow, maxN) + '</div></div>';
@@ -96,9 +109,11 @@
     el.querySelectorAll('[data-select]').forEach(function (b) { b.addEventListener('click', function () { TV.select(b.dataset.select); }); });
     grids.forEach(function (g) {
       var svg = el.querySelector('svg.fp[data-key="' + CSS.escape(g.t.key) + '"]'), ov = svg.querySelector('.overlay');
-      function idx(ev) { var rc = svg.getBoundingClientRect(); return TV.clamp(Math.floor((ev.clientX - rc.left - g.LW) / g.cw) + 1, 1, g.t.n); }
+      function idx(ev) { return TV.clamp(Math.floor((TV.svgPoint(svg, ev).x - g.LW) / g.cw) + 1, 1, g.t.n); }
       ov.addEventListener('mousemove', function (ev) {
-        TV.tip.show('<div class="tt-m">' + esc(g.label || g.t.agent + ' · run ' + g.t.run) + '</div>' + TV.actionTip(g.t, g.t.actions[idx(ev) - 1]), ev);
+        var a = g.t.actions[idx(ev) - 1], head = '<div class="tt-m">' + esc(g.label || g.t.agent + ' · run ' + g.t.run) + '</div>';
+        if (TV.svgPoint(svg, ev).y < Y0 - 2 && a.span) { TV.tip.show(head + TV.phaseTip(g.t, a.span), ev); return; }   // the phase / outcome strips
+        TV.tip.show(head + TV.actionTip(g.t, a), ev);
       });
       ov.addEventListener('mouseleave', function () { TV.tip.hide(); });
       ov.addEventListener('click', function (ev) {

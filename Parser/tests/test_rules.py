@@ -133,7 +133,7 @@ class NormalizeTests(unittest.TestCase):
         self.assertIn("3 or more times", f1["sentence"])
         l6 = next(r for r in listed if r["id"] == "L6")
         self.assertEqual(l6["sentence"], "test, before the first edit of a source file → "
-                                         "reproduction.")
+                                         "localization.")
         l14 = next(r for r in listed if r["id"] == "L14")
         self.assertIn("→ the phase of the previous step", l14["sentence"])
         lg = next(r for r in listed if r["id"] == "LG")
@@ -194,11 +194,11 @@ class RuleTests(unittest.TestCase):
                          ("test", "pass", "build"))
         as_test = _phases(_rule(kind="category", match="lint", value="test"))["actions"][3]
         self.assertEqual((as_test["category"], as_test["mid_level"], as_test["lookup_item"]),
-                         ("test", "run_test", "your row R1"))
+                         ("test", "run_test", "your rule R1"))
         r = _phases(_rule(kind="category", match="lint", value="build"))
         lint = r["actions"][3]
         self.assertEqual((lint["category"], lint["mid_level"], lint["lookup_item"]),
-                         ("build", "build", "your row R1"))
+                         ("build", "build", "your rule R1"))
         self.assertEqual(r["phase"][3], "planning")        # a build before the fix: row 4
         self.assertEqual(r["rules"]["custom"][0]["matched"], [4])
 
@@ -210,14 +210,19 @@ class RuleTests(unittest.TestCase):
         self.assertEqual(r["rules"]["custom"][0]["table"], 4)
 
     def test_phase_rule_never_breaks_the_first_fix(self):
-        r = _phases(_rule(kind="phase", match="git status", value="reproduction"))
+        r = _phases(_rule(kind="phase", match="gradlew lint", value="validation"))
         rep = r["rules"]["custom"][0]
         self.assertEqual(rep["matched"], [])
-        self.assertEqual(rep["skipped"][0]["i"], 9)
-        self.assertIn("before the first fix", rep["skipped"][0]["why"])
+        self.assertEqual(rep["skipped"][0]["i"], 4)
+        self.assertIn("from the first fix on", rep["skipped"][0]["why"])
         r = _phases(_rule(kind="phase", match="apply_patch", value="validation"))
         self.assertTrue(all(s["why"].startswith("an edit of a source file")
                             for s in r["rules"]["custom"][0]["skipped"]))
+
+    def test_a_reproduction_row_of_an_older_file_is_localization(self):
+        r = _phases(_rule(kind="phase", match="git status", value="reproduction"))
+        self.assertEqual(r["rules"]["custom"][0]["value"], "localization")
+        self.assertEqual(r["phase"][8], "localization")
 
     def test_follow_rule_takes_the_phase_before(self):
         r = _phases(_rule(kind="phase", field="tool", match="update_plan", value="follow"))

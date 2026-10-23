@@ -403,7 +403,7 @@ def vocab(ruleset: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
                                "tools": "; ".join(x for x in (shell, native) if x)}
                            for c, shell, native in lookup.ACTION_TABLE},
             "outcomes": {row[0]: dict(zip(("check",) + phase.OUTCOMES, row[1:]))
-                         for row in codebook.OUTCOME_ROWS},
+                         for row in codebook.OUTCOME_ROWS if row[0] in phase.PHASES},
             "flags": dict(codebook.FLAG_TEXT),
         },
         "rules": rules.builtin(checked),

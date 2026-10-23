@@ -1,4 +1,4 @@
-/* TrajecTiers dashboard - the analysis engine, and the corpus under the user's rules.
+/* Inceptor dashboard - the analysis engine, and the corpus under the user's rules.
  *
  * TV.engine   the Python package atif, reached through one of two engines with the same calls:
  *             the local server (python3 -m atif.cli serve: /api/rules, /api/analyze, /api/corpus)
@@ -54,6 +54,8 @@
     get: function (store, key) { return tx(store, 'readonly', function (s) { return s.get(key); }); },
     put: function (store, key, value) { return tx(store, 'readwrite', function (s) { s.put(value, key); }); },
     del: function (store, key) { return tx(store, 'readwrite', function (s) { s.delete(key); }); },
+    /* several values in one write: pairs [[key, value], ...] */
+    putAll: function (store, pairs) { return tx(store, 'readwrite', function (s) { pairs.forEach(function (p) { s.put(p[1], p[0]); }); }); },
     all: function (store) { return tx(store, 'readonly', function (s) { return s.getAll(); }); },
     keys: function (store) { return tx(store, 'readonly', function (s) { return s.getAllKeys(); }); }
   };
@@ -66,7 +68,7 @@
         return r.json().then(function (j) {
           if (!r.ok || j.error) throw answered(j.error || ('HTTP ' + r.status));
           return j;
-        }, function () { throw new Error('no TrajecTiers server here (HTTP ' + r.status + ')'); });   // e.g. a static host
+        }, function () { throw new Error('no Inceptor server here (HTTP ' + r.status + ')'); });   // e.g. a static host
       });
   }
   var SERVER = {
@@ -221,6 +223,14 @@
     if (typeof DecompressionStream === 'undefined') return Promise.reject(new Error('this browser cannot unpack the corpus files'));
     return new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
   }
+  /* a gzipped JSON file of the viewer's data (the example dataset: uploads.js) */
+  TV.fetchGz = function (path) {
+    if (location.protocol === 'file:') return Promise.reject(new Error('a page opened from a file (file://) cannot read ' + path));
+    return fetch(path).then(function (r) {
+      if (!r.ok) throw new Error(path + ': HTTP ' + r.status);
+      return r.arrayBuffer();
+    }).then(function (b) { return gunzipText(new Uint8Array(b)); }).then(JSON.parse);
+  };
   function pack(run, bug) {
     var path = packPath(run, bug);
     if (!PACKS[path]) {
@@ -295,9 +305,7 @@
         var th = el.querySelector('[data-full="thought"]'), rs = el.querySelector('[data-full="result"]');
         if (th && x.thought) th.textContent = x.thought;
         if (rs) {
-          rs.innerHTML = x.text ? markLines(x.text, a.evidence_line) : '<span class="muted">(empty)</span>';
-          var m = rs.querySelector('mark');
-          if (m) rs.scrollTop = Math.max(0, m.offsetTop - rs.clientHeight / 2);
+          rs.innerHTML = x.text ? markLines(x.text, a.evidence_line) : '<span class="muted">(empty)</span>';   // the whole text, from its start
         }
         if (clipped) note('result', ' · full text');
       }, function (err) {

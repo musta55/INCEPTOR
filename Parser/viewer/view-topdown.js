@@ -1,9 +1,10 @@
 /* Bug page > Trajectory: the top-down hierarchy of the selected trajectory.
  * Phase blocks -> category groups (consecutive actions of one action category, "read ×5")
  * -> step rows (collapsible; steps rendered only when open). Each phase carries its outcome:
- * a solid outcome pill with the evidence (test, build, patch files) and, in the codebook's
- * words, what its check was and what it showed, with links to the actions that decided it; a
- * phase whose checks changed shows its earlier outcomes first (✗ → ✓). Above the blocks, the
+ * Validation a solid outcome pill with the evidence (test, build) and, in the codebook's
+ * words, what its check was and what it showed, with links to the actions that decided it (a
+ * phase whose checks changed shows its earlier outcomes first: ✗ → ✓); Localization and Repair
+ * their files as dots (hover for the files). Above the blocks, the
  * phase strip and the phase-outcome strip of the whole run, with the first fix (the anchor:
  * first edit of a source file) marked. A step row selects its action (details panel); the level
  * control sets what is open. The playhead (onCursor) highlights the current step / group /
@@ -14,18 +15,6 @@
   var TV = window.TV, esc = TV.esc;
   var root = null;
 
-  function attemptsIn(t, lo, hi) {
-    return t.attempts.filter(function (at) { return at.start <= hi && at.end >= lo; });
-  }
-  function attemptBadge(list, tipPrefix) {
-    if (!list.length) return '';
-    var bad = list.filter(function (at) { return at.outcome === 'failed'; }).length;
-    var tip = (tipPrefix || '') + list.map(function (at) {
-      return 'attempt ' + at.id + ' #' + at.start + '–#' + at.end + ': ' + TV.plural(at.edits.length, 'edit') + ', ' +
-        (at.judge ? 'judged by #' + at.judge + ' → ' + at.outcome + ' (' + at.evidence + ')' : 'never run');
-    }).join(' · ');
-    return '<span class="attbadge' + (bad ? ' bad' : '') + '" data-tip="' + esc(tip) + '">⟲ ' + TV.plural(list.length, 'attempt') + (bad ? ', ' + bad + ' failed' : '') + '</span>';
-  }
   /* "#3, #4" links to the actions that decided an outcome */
   function decidedBy(s) {
     var c = s.checks || [];
@@ -34,13 +23,11 @@
   }
 
   function stepHTML(t, a) {
-    var role = TV.attemptRole(a);
     return '<div class="step' + (a.i === TV.state.i ? ' cur' : '') + '" data-i="' + a.i + '">' +
       '<button type="button" class="st-h">' +
       '<span class="st-i">#' + a.i + '</span>' +
       (a.scope && a.scope !== 'main' ? '<span class="tag" data-tip="a step of a sub-agent the agent delegated work to">sub</span>' : '') +
       (t.anchor === a.i ? '<span class="tag" data-tip="the first edit of a source file: the anchor of the phases">first fix</span>' : '') +
-      (role === 'edit' || role === 'judging run' ? '<span class="tag" data-tip="' + esc('attempt ' + a.attempt.id + ' (' + a.attempt.outcome + ')') + '">' + (role === 'edit' ? 'edit' : 'judge') + ' ' + a.attempt.id + '</span>' : '') +
       '<span class="st-t">' + esc(a.target || a.tool) + '</span>' +
       (a.verdict !== 'none' ? '<span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + (a.fail_kind ? ' ' + esc(a.fail_kind) : '') + '</span>' : '<span class="vg none"></span>') +
       '</button></div>';
@@ -75,6 +62,7 @@
   /* the outcome line(s) at the top of an open phase: what the check showed, and its deciding
    * actions; a phase whose checks changed gets one line per outcome, in order */
   function outcomeLines(t, p) {
+    if (!TV.hasVerdict(p.phase)) return '';
     var multi = p.subphases.length > 1;
     return '<div class="pb-out">' + p.subphases.map(function (s) {
       return '<div>' + (multi ? TV.outcomePill(s.outcome, null, p.phase, s.evidence) + ' <span class="muted">#' + s.start + (s.end > s.start ? '–#' + s.end : '') + '</span> ' : '') +
@@ -93,7 +81,6 @@
       '<span class="pn">' + TV.plural(n, 'action') + '</span>' +
       TV.phaseOutcomeHTML(t, p) +
       (flags.length ? '<span class="badges">' + flags.map(TV.flagHTML).join('') + '</span>' : '') +
-      (p.phase === 'repair' ? attemptBadge(attemptsIn(t, p.start, p.end), 'repair attempts: ') : '') +
       '</button>';
     if (open) {
       h += '<div class="pb-body">' + outcomeLines(t, p);
@@ -108,18 +95,29 @@
   function pos(start, end, n) {
     return 'left:' + (100 * (start - 1) / n).toFixed(3) + '%;width:calc(' + (100 * (end - start + 1) / n).toFixed(3) + '% - 2px)';
   }
+  /* the file marks that fit in a strip piece px wide (7px marks, 3px apart), then "+n" */
+  function markFit(rows, px) {
+    var f = rows.length ? TV.marksFit(rows.length, px - 6, 10, 3, 10) : null;
+    return f ? TV.dotsHTML(rows, null, f.k) : '';
+  }
   function overview(t, width) {
     var h = '<div class="td-strips"><div class="td-over" role="list" aria-label="Phases (width proportional to actions)">';
     t.phases.forEach(function (p) {
-      var n = p.end - p.start + 1, px = width * n / t.n;
-      var bad = p.subphases.filter(function (s) { return s.outcome === 'failed' || s.outcome === 'blocked'; }).length;
-      var oc = p.subphases.map(function (s) { return TV.OUTCOME_GLYPH[s.outcome] + ' ' + s.outcome; }).join(' → ');
+      var n = p.end - p.start + 1;
+      var oc = TV.hasVerdict(p.phase) ? p.subphases.map(function (s) { return TV.OUTCOME_GLYPH[s.outcome] + ' ' + s.outcome; }).join(' → ') : '';
       h += '<button type="button" role="listitem" class="ov" data-pid="' + esc(p.id) + '" data-label="' + esc(p.phase) + '" style="' + pos(p.start, p.end, t.n) + ';background:' + TV.phaseVar(p.phase) + ';color:' + TV.phaseTextVar(p.phase) + '" ' +
-        'data-tip="' + esc(p.phase + ' #' + p.start + '–#' + p.end + ' · ' + TV.plural(n, 'action') + (oc ? ' · outcome ' + oc : '')) + '">' +
-        '<span>' + esc(p.phase) + '</span>' + (bad && px > 24 ? '<b class="ovbad" aria-hidden="true">' + bad + '</b>' : '') + '</button>';
+        'data-phase-tip="' + esc(p.id) + '" data-tip="' + esc(p.phase + ' #' + p.start + '–#' + p.end + ' · ' + TV.plural(n, 'action') + (oc ? ' · outcome ' + oc : '')) + '">' +
+        '<span>' + esc(p.phase) + '</span></button>';
     });
     h += '</div><div class="td-seg" role="list" aria-label="Phase outcomes">';
+    t.phases.forEach(function (p) {                 // Localization, Repair: the file dots
+      if (!TV.hasFiles(p.phase)) return;
+      var rows = TV.spanFiles(t, p), px = width * (p.end - p.start + 1) / t.n;
+      h += '<button type="button" role="listitem" class="tsg fz" data-sid="' + esc(p.subphases[0] ? p.subphases[0].id : '') + '" style="' + pos(p.start, p.end, t.n) + '" data-phase-tip="' + esc(p.id) + '" ' +
+        'aria-label="' + esc(p.phase + ', ' + TV.filesSummary(p, rows)) + '">' + markFit(rows, px) + '</button>';
+    });
     t.subs.forEach(function (sg) {
+      if (!TV.hasVerdict(sg.p.phase)) return;
       var n = sg.end - sg.start + 1, ev = TV.EVIDENCE_SHORT[sg.evidence];
       h += '<button type="button" role="listitem" class="tsg o-' + sg.outcome + '" data-sid="' + esc(sg.id) + '" style="' + pos(sg.start, sg.end, t.n) + '" ' +
         'data-tip="' + esc(sg.p.phase + ' · ' + TV.OUTCOME_GLYPH[sg.outcome] + ' ' + sg.outcome + (ev ? ' (' + ev + ')' : '') + ' #' + sg.start + (n > 1 ? '–#' + sg.end : '') + ' · ' + TV.outcomeText(sg)) + '" ' +
@@ -132,10 +130,11 @@
 
   function legend(t) {
     var used = {};
-    t.subs.forEach(function (s) { used[s.outcome] = 1; });
-    return '<div class="legend td-legend"><span class="lg-t">Phase outcome</span>' + TV.outcomeLegend(used) +
-      '<span class="lg-t">Action</span><span class="vg v-pass">✓ pass</span><span class="vg v-fail">✗ fail</span><span class="muted">(verdict of a build / test run)</span>' +
-      (t.anchor ? '<span class="lgm"><i class="anchormk"></i>first fix</span>' : '<span class="muted">· no app-source edit (no first fix)</span>') + '</div>';
+    t.subs.forEach(function (s) { if (TV.hasVerdict(s.p.phase)) used[s.outcome] = 1; });
+    return TV.legendCardHTML(TV.bandLegendRows(used, t.nCycles).concat([
+      ['Action', 'verdict of a build or test', '<span class="vg v-pass">✓ pass</span><span class="vg v-fail">✗ fail</span>'],
+      ['Marker', '', t.anchor ? '<span class="lgm"><i class="anchormk"></i>first fix (first edit of a source file)</span>' : '<span class="muted">no source edit, so no first fix</span>']
+    ]), 'td-legend');
   }
 
   function render(el) {

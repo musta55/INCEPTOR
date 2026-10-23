@@ -28,14 +28,12 @@
     el.innerHTML = html || '';
   }
   function rulesLine(extra) {
-    return '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span>' + (extra ? '<span class="rs-x">' + extra + '</span>' : '') + '<a class="rs-edit" href="tables.html">Edit the tables</a>';
+    return '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span>' + (extra ? '<span class="rs-x">' + extra + '</span>' : '') + '<a class="rs-edit" href="tables.html">Customize the rules</a>';
   }
 
   /* ---------------------------------------------------------------- bug order (overview) */
   var OV = window.TRAJ_OVERVIEW;
   var BUGS = OV && OV.bugs ? OV.bugs.map(function (b) { return String(b.bug); }).sort(TV.bugSort) : [];
-  var APP = {};
-  if (OV && OV.bugs) OV.bugs.forEach(function (b) { APP[b.bug] = b.app; });
 
   /* ---------------------------------------------------------------- accessors */
   TV.traj = function () { return B && B.byKey[S.t]; };
@@ -90,8 +88,7 @@
     S.bug = id;
     B = null;
     $('#bugTitle').textContent = 'bug-' + id;
-    $('#bugApp').textContent = APP[id] || '';
-    document.title = 'bug-' + id + ' · TrajecTiers';
+    document.title = 'bug-' + id + ' · Inceptor';
     navButtons();
     $('#nodata').hidden = true;
     $('#app').hidden = false;
@@ -109,11 +106,11 @@
       if (TV.ruleset.isDefault(RS) || d.schema !== 'trajview/3') { ready(d, opts); return; }
       /* the user's rules: re-run this bug's runs from the corpus packs */
       if (!TV.engine.usable()) {
-        status('warn', rulesLine('your rows need the analysis engine, which a page opened from a file cannot start; this page shows the <b>built-in lookup tables</b>'));
+        status('warn', rulesLine('your rules need the analysis engine, which a page opened from a file cannot start; this page shows the <b>built-in lookup tables</b>'));
         ready(d, opts);
         return;
       }
-      $('#view').innerHTML = '<div class="loading">Applying your table rows to bug-' + esc(id) + '…</div>';
+      $('#view').innerHTML = '<div class="loading">Applying your rules to bug-' + esc(id) + '…</div>';
       status('busy', rulesLine('applying them to the ' + d.trajectories.length + ' runs of bug-' + esc(id) + '…'));
       TV.corpus.bug(d, RS).then(function () {
         if (S.bug !== id) return;
@@ -148,7 +145,6 @@
     B = { data: d, trajs: trajs, byKey: {}, agents: agents, runs: d.runs || [1, 2, 3], maxN: 1 };
     trajs.forEach(function (t) { B.byKey[t.key] = t; B.maxN = Math.max(B.maxN, t.n); });
     TV.bugData = B;
-    if (d.app) { $('#bugApp').textContent = d.app; $('#bugApp').title = d.app; }
     var want = opts.t && B.byKey[opts.t] ? opts.t : (B.byKey[S.t] ? S.t : null);
     if (!want) {
       var first = agents.map(function (a) { return a + '-r' + B.runs[0]; }).filter(function (k) { return B.byKey[k]; })[0];
@@ -204,7 +200,6 @@
         h += '<button type="button" class="cell" data-key="' + esc(key) + '" aria-pressed="' + (key === S.t) + '" aria-label="' + esc(a + ' run ' + r + ', ' + t.oc) + '">' +
           '<span class="c1">' + TV.passPill(t.outcome.pass) + '<span class="cn">' + t.n + '<span class="lng"> actions</span></span></span>' +
           '<span class="track">' + TV.stripsHTML(t.strip, t.subStrip, t.n, B.maxN) + '</span>' +
-          attemptsBadge(t) +
           '</button>';
       });
     });
@@ -217,21 +212,13 @@
     if (c) TV.select(c.dataset.key);
   });
 
-  /* "⟲ 2 attempts, 1 failed" under a matrix cell */
-  function attemptsBadge(t) {
-    if (!t.attempts.length) return '';
-    var bad = t.attempts.filter(function (at) { return at.outcome === 'failed'; }).length;
-    var tip = t.attempts.map(function (at) { return 'attempt ' + at.id + ': ' + at.outcome + (TV.EVIDENCE_SHORT[at.evidence] ? ' (' + TV.EVIDENCE_SHORT[at.evidence] + ')' : ''); }).join(' · ');
-    return '<span class="c3"><span class="attbadge' + (bad ? ' bad' : '') + '" data-tip="' + esc('repair attempts (edits of app code and the run that checks them): ' + tip) + '">⟲ ' + TV.plural(t.attempts.length, 'attempt') + (bad ? ', ' + bad + ' failed' : '') + '</span></span>';
-  }
   function renderTrajbar() {
     var t = TV.traj();
     var dur = t.stats.duration_s != null ? t.stats.duration_s : t.stats.reported_duration_s;
     $('#trajbar').innerHTML = '<h2>' + TV.agentHTML(t.agent) + '<span class="muted">run ' + t.run + '</span>' + TV.passPill(t.outcome.pass) + '</h2>' +
-      '<span class="facts">' + TV.plural(t.n, 'action') + ' · ' + TV.plural(t.phases.length, 'phase') + ' · ' + TV.plural(t.attempts.length, 'attempt') +
+      '<span class="facts">' + TV.plural(t.n, 'action') + ' · ' + TV.plural(t.phases.length, 'phase') +
       (t.anchor ? ' · first fix #' + t.anchor : ' · no app-source edit') +
-      (dur != null ? ' · ' + TV.fmtDur(dur) : '') + '</span>' +
-      '<span class="badges">' + TV.badgeHTML(t.badges, t.outcome.pass) + '</span>';
+      (dur != null ? ' · ' + TV.fmtDur(dur) : '') + '</span>';
   }
 
   /* ---------------------------------------------------------------- selection + cursor */
@@ -335,8 +322,7 @@
     $('#speed').value = String(S.speed);
     $('#cursorLabel').innerHTML = a ? '<b>#' + a.i + '</b><span class="muted">/' + t.n + '</span> <span class="cl-mid">' + esc(a.category) + '</span>' +
         (a.verdict !== 'none' ? ' <span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + '</span>' : '') +
-        (a.sub ? ' <span class="opill mini o-' + a.sub.outcome + '" data-tip="' + esc(a.sub.p.phase + ' outcome: ' + TV.outcomeDef(a.sub.p.phase, a.sub.outcome)) + '"><b aria-hidden="true">' +
-          TV.OUTCOME_GLYPH[a.sub.outcome] + '</b><span class="ell">' + esc(a.sub.p.phase) + '</span></span>' : '')
+        TV.cursorPhaseHTML(a)
       : '<b>#–</b><span class="muted">/' + t.n + ' · press ▶ or j</span>';
   }
 
@@ -346,6 +332,7 @@
     var changed = v !== S.view;
     S.view = v;
     $$('.tabs [data-view]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.view === v ? 'true' : 'false'); });
+    $('#viewTitle').textContent = v === 'fingerprint' ? 'Trajectory Comparison' : 'Trajectory Inspection';
     if (changed || force) render();
     saveHash();
   }

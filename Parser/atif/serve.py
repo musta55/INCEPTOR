@@ -41,7 +41,7 @@ PACK_PATH = re.compile(r"^data/atif/run\d+/bug-[A-Za-z0-9_.-]+\.json\.gz$")
 
 
 class Handler(SimpleHTTPRequestHandler):
-    server_version = "TrajecTiers"
+    server_version = "Inceptor"
 
     def log_message(self, fmt: str, *args: Any) -> None:            # quiet static files
         if self.path.startswith("/api/") or (args and str(args[1]).startswith(("4", "5"))):
@@ -121,7 +121,7 @@ def serve(viewer_dir: Path, host: str = "127.0.0.1", port: int = 8765,
     handler = partial(Handler, directory=str(viewer_dir))
     httpd = ThreadingHTTPServer((host, port), handler)
     url = f"http://{'127.0.0.1' if host in ('', '0.0.0.0') else host}:{httpd.server_port}/"
-    print(f"TrajecTiers on {url}  (analyze a log: {url}analyze.html)  Ctrl-C stops it")
+    print(f"Inceptor on {url}  (analyze a log: {url}analyze.html)  Ctrl-C stops it")
     if host not in ("127.0.0.1", "localhost", "::1"):
         print("  warning: listening beyond this machine; anyone who can reach it can upload logs")
     if open_browser:

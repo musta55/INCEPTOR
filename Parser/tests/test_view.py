@@ -162,6 +162,8 @@ class VocabTests(unittest.TestCase):
         self.assertEqual(set(text["flags"]), set(phase.FLAGS))
         self.assertEqual(set(text["outcomes"]), set(phase.PHASES))
         for row in codebook.OUTCOME_ROWS:
+            if row[0] not in phase.PHASES:                  # reproduction, dropped 2026-10-19
+                continue
             self.assertEqual(text["outcomes"][row[0]]["check"], row[1])
             self.assertEqual([text["outcomes"][row[0]][o] for o in phase.OUTCOMES], list(row[2:]))
 

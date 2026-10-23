@@ -1,4 +1,4 @@
-/* TrajecTiers, a trace exploration dashboard - shared core of every page (index, bug, analyze,
+/* Inceptor, a trace exploration dashboard - shared core of every page (index, bug, analyze,
  * tables): helpers, vocabularies and labels (phases, phase outcomes, categories, flags, badges),
  * search, the user's lookup-table rows (TV.ruleset), theme, tooltip, trajectory preparation
  * (trajview/3), small HTML snippets. Plain script (no modules, no fetch) so that the corpus
@@ -35,6 +35,28 @@
   TV.clamp = function (x, lo, hi) { return Math.max(lo, Math.min(hi, x)); };
   TV.plural = function (n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); };
   TV.bugSort = function (a, b) { var x = +a, y = +b; return (isNaN(x) || isNaN(y)) ? String(a).localeCompare(b) : x - y; };
+  /* a bug's key, as the corpus keys it: "bug-1130", "bug_1130" and "1130" are one bug; any
+   * other name (an instance id) is kept as it is. '' when there is none. */
+  TV.bugKey = function (x) {
+    var s = x == null ? '' : String(x).trim(), m = /^bug[-_ ]?(.+)$/i.exec(s);
+    return m ? m[1] : s;
+  };
+  /* a bug key in words: bug-<n> for a number, else the name itself */
+  TV.bugName = function (key) { return /^\d+$/.test(String(key)) ? 'bug-' + key : String(key); };
+  /* an agent's column: a name that matches a known one up to case, spaces and dashes, or that
+   * adds "code" / "cli" to it ("Claude Code", "codex-cli"), is that agent; any other name is
+   * kept as it is (trimmed) and gets a column of its own */
+  TV.agentKey = function (x) { return String(x == null ? '' : x).toLowerCase().replace(/[^a-z0-9]/g, ''); };
+  TV.normAgent = function (name, known) {
+    var s = String(name == null ? '' : name).trim(), k = TV.agentKey(s);
+    if (!k) return '';
+    var list = TV.AGENT_ORDER.concat(TV.OTHER_AGENTS, known || []);
+    for (var i = 0; i < list.length; i++) {
+      var c = TV.agentKey(list[i]);
+      if (k === c || k === c + 'code' || k === c + 'cli') return list[i];
+    }
+    return s;
+  };
 
   /* hash <-> object: "a=1&b=two" */
   TV.readHash = function () {
@@ -57,7 +79,14 @@
    * codebook's own words (atif/codebook.py), which the tooltips quote. */
   TV.vocab = {};
   TV.AGENT_ORDER = ['claude', 'codex', 'qwen'];
-  TV.PHASE_ORDER = ['planning', 'localization', 'reproduction', 'repair', 'validation'];
+  TV.OTHER_AGENTS = ['swe-agent', 'openhands', 'mini-swe-agent'];   // the other agents the engine reads (atif/detect.py)
+  TV.PHASE_ORDER = ['planning', 'localization', 'repair', 'validation'];
+  /* what the outcome band shows per phase: Validation a verdict (its check: a build or test);
+   * Localization and Repair their files as dots (no verdict can be read from them); Planning
+   * nothing */
+  TV.VERDICT_PHASES = ['validation'];
+  TV.hasVerdict = function (p) { return TV.VERDICT_PHASES.indexOf(p) >= 0; };
+  TV.hasFiles = function (p) { return p === 'localization' || p === 'repair'; };
   TV.phaseVar = function (p) { return 'var(--p-' + (TV.PHASE_ORDER.indexOf(p) >= 0 ? p : 'other') + ')'; };
   TV.phaseTextVar = function (p) { return 'var(--pt-' + (TV.PHASE_ORDER.indexOf(p) >= 0 ? p : 'other') + ')'; };
   TV.phaseDef = function (p) {
@@ -148,9 +177,6 @@
     { key: 'self_claims_pass', label: 'claims tests pass', sev: 'info',
       def: 'The final message claims the bug test or the suite passes.',
       test: function (b, pass) { return !!b.self_claims_pass && pass !== false; } },
-    { key: 'reproduced_before_fix', label: 'reproduced first', sev: 'good',
-      def: 'Reproduction succeeded: the bug\'s test failed as reported before the first fix.',
-      test: function (b) { return !!b.reproduced_before_fix; } },
     { key: 'test_modified', label: 'modified tests', sev: 'bad',
       def: 'The run changes test code or the benchmark\'s test script (flag test_modified).',
       test: function (b) { return !!b.test_modified; } },
@@ -222,7 +248,9 @@
   /* phase-outcome strip from [[outcome, start, end, phase, evidence], ...] (sub_strip: one piece per outcome) */
   TV.subStripHTML = function (subStrip, n, ref, cls) {
     var w = ref ? Math.max(2, 100 * n / ref) : 100, N = stripN(subStrip, n);
-    return '<span class="strip outs' + (cls ? ' ' + cls : '') + '" style="width:' + w.toFixed(1) + '%">' + (subStrip || []).map(function (p) {
+    return '<span class="strip outs' + (cls ? ' ' + cls : '') + '" style="width:' + w.toFixed(1) + '%">' + (subStrip || []).filter(function (p) {
+      return !p[3] || TV.hasVerdict(p[3]);                // only Validation has a verdict
+    }).map(function (p) {
       var o = TV.outcomeOf(p[0]), ev = TV.EVIDENCE_SHORT[p[4]];
       return piece(p, N, '', 'o-' + o, (p[3] ? p[3] + ' · ' : '') + TV.OUTCOME_GLYPH[o] + ' ' + o + (ev ? ' (' + ev + ')' : ''));
     }).join('') + '</span>';
@@ -319,7 +347,7 @@
       if (TV.ruleset.isDefault(rs)) return 'Lookup tables';
       var a = activeRules(rs), out = [];
       if (a.optional.length) out.push(a.optional.join(', '));
-      if (a.custom.length) out.push(TV.plural(a.custom.length, 'row') + ' of yours');
+      if (a.custom.length) out.push(a.custom.length + ' Customized ' + (a.custom.length === 1 ? 'Rule' : 'Rules'));
       return 'Tables + ' + out.join(' + ');
     }
   };
@@ -378,14 +406,22 @@
     return rows.filter(function (x) { return x.id === id; })[0] || null;
   };
   TV.phaseRowLabel = function (id) {
-    if (id === 'user') return 'your row';
+    if (id === 'user') return 'your rule';
     if (id === 'LG') return 'the general rule';
     var r = TV.phaseRow(id);
-    return 'phase row ' + (r && r.n ? r.n : String(id).replace(/^[LP]/, ''));
+    return 'phase rule ' + (r && r.n ? r.n : String(id).replace(/^[LP]/, ''));
+  };
+  /* the phase row in a few words: "phase row 6: test, before the first edit of a source file" */
+  TV.phaseRowShort = function (id) {
+    if (id === 'LG') return 'general rule: the phase of the previous step';
+    var r = TV.phaseRow(id);
+    if (!r || !r.categories) return TV.phaseRowLabel(id);
+    return TV.phaseRowLabel(id) + ': ' + r.categories + (r.target && r.target !== 'any' ? ' · ' + r.target : '') + ' · ' +
+      r.position.charAt(0).toLowerCase() + r.position.slice(1);
   };
   TV.phaseRowDef = function (id) {
-    if (id === 'user') return 'a phase row of yours (Lookup tables page) set this phase';
-    if (id === 'LG') return 'no row of the phase table matches this step, so by the general rule it takes the phase of the previous step';
+    if (id === 'user') return 'a phase rule of yours (Lookup tables page) set this phase';
+    if (id === 'LG') return 'no rule of the phase table matches this step, so by the general rule it takes the phase of the previous step';
     var r = TV.phaseRow(id);
     if (!r || !r.categories) return TV.phaseRowLabel(id) + ' of the phase table';
     var to = /^\(previous/.test(r.phase) ? 'the phase of the previous step' : r.phase;
@@ -405,12 +441,12 @@
     builtin = builtin || [];
     var must = builtin.filter(function (r) { return r.mandatory === true || !('mandatory' in r); });
     var h = '<h3 class="rl-h">Phase lookup (built in)</h3>' + list(must, true);
-    if (custom && custom.length) h += '<h3 class="rl-h">Your rows</h3>' + list(custom.filter(function (r) { return r.enabled !== false; }));
+    if (custom && custom.length) h += '<h3 class="rl-h">Your rules</h3>' + list(custom.filter(function (r) { return r.enabled !== false; }));
     return h;
   };
 
   /* ------------------------------------------------------------------ logo */
-  /* TrajecTiers mark: three tiers (phases, categories, actions), each finer than the one above,
+  /* Inceptor mark: three tiers (phases, categories, actions), each finer than the one above,
    * crossed by the trajectory arc. Same geometry as logo.svg (the favicon), but themed with CSS vars. */
   var LOGO_TOP = [[3, 5, 'planning'], [9, 6, 'localization'], [16, 8, 'repair'], [25, 4, 'validation']];
   var LOGO_MID = [[3, 2.5, 0], [6, 2, 0], [9, 3.5, 1], [13, 2, 1], [16, 2.5, 2], [19, 2, 2], [21.5, 2.5, 2], [25, 1.75, 3], [27.25, 1.75, 3]];
@@ -503,22 +539,39 @@
     },
     move: function (ev) {
       if (!tipEl || tipEl.hidden || !ev) return;
-      var w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+      var z = TV.zoom(), w = tipEl.offsetWidth * z, h = tipEl.offsetHeight * z;   // on screen
       var x = ev.clientX + 14, y = ev.clientY + 16;
       if (x + w > window.innerWidth - 8) x = ev.clientX - w - 12;
       if (y + h > window.innerHeight - 8) y = ev.clientY - h - 12;
-      tipEl.style.left = Math.max(4, x) + 'px';
-      tipEl.style.top = Math.max(4, y) + 'px';
+      tipEl.style.left = Math.max(4, x) / z + 'px';
+      tipEl.style.top = Math.max(4, y) / z + 'px';
     },
     hide: function () { if (tipEl) tipEl.hidden = true; }
   };
+  /* the page is drawn larger with CSS zoom on body (viewer.css --zoom): mouse positions are
+   * in screen pixels, lengths inside the page in CSS pixels */
+  TV.zoom = function () { return parseFloat(getComputedStyle(document.body).zoom) || 1; };
+  /* the mouse position inside an SVG, in its own units, whatever the zoom */
+  TV.svgPoint = function (svg, ev) {
+    var r = svg.getBoundingClientRect(), k = (svg.width.baseVal.value || r.width) / (r.width || 1);
+    return { x: (ev.clientX - r.left) * k, y: (ev.clientY - r.top) * k };
+  };
   /* any element with data-tip gets a hover tooltip (text, escaped) */
   var tipOwner = null;
+  /* data-phase-tip="<phase id>": the phase pop-up of the selected trajectory (its outcomes and
+   * the files it edited and looked at), the same one the timeline shows */
+  function phaseTipHTML(el) {
+    var t = TV.traj && TV.traj(), id = el.getAttribute('data-phase-tip');
+    var p = t && (t.phases || []).filter(function (x) { return String(x.id) === id; })[0];
+    return p ? TV.phaseTip(t, p) : null;
+  }
   document.addEventListener('mouseover', function (ev) {
-    var el = ev.target.closest && ev.target.closest('[data-tip]');
+    var el = ev.target.closest && ev.target.closest('[data-tip], [data-phase-tip]');
     if (el === tipOwner) return;
     tipOwner = el;
-    if (el) TV.tip.show(TV.esc(el.getAttribute('data-tip')), ev); else TV.tip.hide();
+    if (!el) { TV.tip.hide(); return; }
+    var html = el.hasAttribute('data-phase-tip') ? phaseTipHTML(el) : null;
+    TV.tip.show(html || TV.esc(el.getAttribute('data-tip') || '').replace(/\n/g, '<br>'), ev);   // a line break in a plain tip is kept
   });
   document.addEventListener('mousemove', function (ev) { if (tipOwner) TV.tip.move(ev); });
   document.addEventListener('scroll', function () { if (tipOwner) { tipOwner = null; TV.tip.hide(); } }, true);
@@ -591,6 +644,14 @@
       a.opened = a.category === 'edit' ? [] : (a.files || []);
       a.found = a.found || [];
     });
+    /* localization -> repair cycles: a Repair span opens a new cycle when a Localization span
+     * came after the previous Repair span (or none came before it); p.cyc = its cycle */
+    var cyc = 0, locSince = true;
+    t.phases.forEach(function (p) {
+      if (p.phase === 'localization') locSince = true;
+      if (p.phase === 'repair') { if (locSince) { cyc++; locSince = false; } p.cyc = cyc; }
+    });
+    t.nCycles = cyc;
     t.hasTs = tsOk >= 2 && tsOk >= 0.8 * t.actions.length;
     if (t.hasTs) {
       var last = NaN;
@@ -604,7 +665,7 @@
   };
   /* the Trajectory view's levels (hash lvl): phases -> categories (runs of one action category
    * within a phase) -> steps; links of earlier versions open the level that replaced theirs */
-  TV.LEVELS = [['phases', 'Phases'], ['categories', '+ Categories'], ['steps', '+ Steps']];
+  TV.LEVELS = [['phases', 'Phase'], ['categories', '+ Action category'], ['steps', '+ Step']];
   var LEVEL_ALIAS = { purposes: 'phases', subphases: 'categories', segments: 'categories' };
   TV.levelOf = function (v) {
     v = LEVEL_ALIAS[v] || v;
@@ -622,6 +683,113 @@
       return '<button type="button" data-level="' + x[0] + '" aria-pressed="' + (level === x[0]) + '">' + x[1] + '</button>';
     }).join('') + '</span>';
   };
+  /* ------------------------------------------------------------------ file dots (Localization, Repair) */
+  /* A Localization span's files are the ones its steps read or searched in (not the names a
+   * search only listed); each is grey, or wears the colour of the cycle whose Repair first
+   * edits it after the span. A Repair span's files are the ones it edits, in its cycle's
+   * colour. Edited files come first, so the marks a band has room for show them; the rest is "+n". */
+  TV.CYCLE_COLORS = 4;
+  TV.cycVar = function (k) { return k ? 'var(--cy-' + ((k - 1) % TV.CYCLE_COLORS + 1) + ')' : 'var(--f-seen)'; };
+  TV.spanFiles = function (t, p) {
+    if (p._files) return p._files;
+    var rows = [];
+    function add(f, a) {
+      var r = rows.filter(function (x) { return TV.sameFile(x.f, f); })[0];
+      if (!r) rows.push(r = { f: f, steps: [] });
+      if (r.steps.indexOf(a) < 0) r.steps.push(a);
+    }
+    for (var i = p.start; i <= p.end; i++) {
+      var a = t.actions[i - 1];
+      if (!a) continue;
+      (p.phase === 'repair' ? a.edited : a.category === 'edit' ? [] : a.opened).forEach(function (f) { add(f, a); });
+    }
+    rows.forEach(function (r) {
+      if (p.phase === 'repair') { r.cyc = p.cyc || 0; return; }
+      var ed = t.actions.filter(function (b) {
+        return b.i > p.end && b.span && b.span.phase === 'repair' && b.edited.some(function (g) { return TV.sameFile(g, r.f); });
+      })[0];
+      r.cyc = ed ? ed.span.cyc || 0 : 0;
+      r.editAt = ed || null;
+    });
+    if (p.phase === 'localization') rows = rows.filter(function (r) { return r.cyc; }).concat(rows.filter(function (r) { return !r.cyc; }));
+    return (p._files = rows);
+  };
+  /* the dots as SVG circles centred on cx (gap = centre to centre); '' when they do not fit in w */
+  /* how many file marks fit in `avail` px (mark width + gap = step): all of them, or as many
+   * as leave room for a "+n" label (fs = its font size); k = 0 with more > 0 is the label alone,
+   * null = not even that fits */
+  TV.marksFit = function (n, avail, step, gap, fs) {
+    var k = Math.min(n, Math.floor((avail + gap) / step));
+    if (k >= n) return { k: n, more: 0, lw: 0 };
+    for (; k >= 0; k--) {
+      var lw = String('+' + (n - k)).length * fs * 0.62 + 2;
+      if ((k ? k * step - gap + 3 : 0) + lw <= avail) return { k: k, more: n - k, lw: lw };
+    }
+    return null;
+  };
+  /* the file marks of a span as SVG rounded rectangles centred in [a, b]: as many as fit, then "+n" */
+  TV.marksSVG = function (rows, a, b, cy, mw, mh, gap, fs) {
+    var step = mw + gap, f = rows.length ? TV.marksFit(rows.length, b - a - 4, step, gap, fs) : null;
+    if (!f) return '';
+    var marks = f.k ? f.k * step - gap : 0, total = marks + (f.more ? (f.k ? 3 : 0) + f.lw : 0);
+    var x = (a + b) / 2 - total / 2, s = '';
+    for (var i = 0; i < f.k; i++) s += '<rect class="fdot" x="' + (x + i * step).toFixed(2) + '" y="' + (cy - mh / 2) + '" width="' + mw + '" height="' + mh + '" rx="1.5" fill="' + TV.cycVar(rows[i].cyc) + '"/>';
+    if (f.more) s += '<text class="fmore" x="' + (x + marks + (f.k ? 3 : 0)).toFixed(2) + '" y="' + (cy + 0.5) + '" dominant-baseline="middle" style="font-size:' + fs + 'px">+' + f.more + '</text>';
+    return s;
+  };
+  TV.dotHTML = function (cyc) { return '<i class="fdot" style="background:' + TV.cycVar(cyc) + '"></i>'; };
+  /* the file marks in HTML: the first `max` (default all), then "+n" */
+  TV.dotsHTML = function (rows, tip, max) {
+    if (!rows.length) return '<span class="fdots none"' + (tip ? ' ' + tip : '') + '>no file</span>';
+    var k = max == null ? rows.length : Math.min(max, rows.length);
+    return '<span class="fdots"' + (tip ? ' ' + tip : '') + '>' + rows.slice(0, k).map(function (r) { return TV.dotHTML(r.cyc); }).join('') +
+      (rows.length > k ? '<span class="more">+' + (rows.length - k) + '</span>' : '') + '</span>';
+  };
+  /* "2 of 7 edited" / "3 files edited" */
+  TV.filesSummary = function (p, rows) {
+    if (p.phase === 'repair') return TV.plural(rows.length, 'file') + ' edited';
+    var ed = rows.filter(function (r) { return r.cyc; }).length;
+    return rows.length ? ed + ' of ' + TV.plural(rows.length, 'file') + ' localized and edited' : 'no file read or searched';
+  };
+  /* a structured legend: one row per item, [label, note, items HTML]; rows without items are left out */
+  TV.legendCardHTML = function (rows, cls) {
+    return '<div class="legendcard lg-compact' + (cls ? ' ' + cls : '') + '">' + rows.filter(function (r) { return r && r[2]; }).map(function (r) {
+      return '<div class="lg-row' + (r[0] ? '' : ' lg-cont') + '"><span class="lg-k"><b>' + r[0] + '</b>' + (r[1] ? '<span class="muted">' + r[1] + '</span>' : '') + '</span><span class="lg-v">' + r[2] + '</span></div>';
+    }).join('') + '</div>';
+  };
+  /* the legend of the dots: grey = localized only, one colour per localization -> repair attempt
+   * (the code's cycles) the trajectories have */
+  TV.fileLegend = function (nCycles) {
+    var h = '<span class="lgm" data-tip="Localization: a file read or searched in, never edited after">' + TV.dotHTML(0) + 'localized only</span>';
+    var n = Math.max(1, Math.min(nCycles || 1, TV.CYCLE_COLORS));
+    for (var k = 1; k <= n; k++) {
+      h += '<span class="lgm" data-tip="' + TV.esc('localized, then edited in Repair' + (nCycles > 1 ? ' at attempt ' + k + ' (a localization followed by a repair)' + (nCycles > TV.CYCLE_COLORS && k === 1 ? '; attempts ' + (TV.CYCLE_COLORS + 1) + ', … repeat the colours' : '') : '') +
+        '; the same colour marks the file in Localization and in Repair') + '">' + TV.dotHTML(k) + 'localized and repaired' + (nCycles > 1 ? ' at attempt ' + k : '') + '</span>';
+    }
+    return h;
+  };
+  /* the legend rows of the outcome band: the verdicts of Validation, then the file dots */
+  TV.bandLegendRows = function (used, nCycles) {
+    var vs = TV.OUTCOMES.filter(function (o) { return (used || {})[o]; });
+    return [
+      [vs.length ? 'Phase outcome' : '', 'validation', vs.length ? TV.outcomeLegend(used) : ''],
+      [vs.length ? '' : 'Phase outcome', 'localization, repair · a dot per file', TV.fileLegend(nCycles)]
+    ];
+  };
+  /* the file list of a Localization / Repair span: dot, name, where it was edited or localized */
+  TV.spanFilesHTML = function (t, p, max) {
+    var rows = TV.spanFiles(t, p);
+    max = max || 10;
+    if (!rows.length) return '';
+    return '<ul class="tt-files dotted">' + rows.slice(0, max).map(function (r) {
+      var rel;
+      if (p.phase === 'repair') rel = fileRelation(t, r.f, r.steps[0], 'edited');
+      else rel = r.editAt ? '<span class="rel ok">localized and edited at #' + r.editAt.i + (t.nCycles > 1 ? ' · attempt ' + r.cyc : '') + '</span>' : '<span class="rel">localized only</span>';
+      return '<li>' + TV.dotHTML(r.cyc) + '<span class="fn" title="' + TV.esc(r.f) + '">' + TV.esc(TV.fileName(r.f)) + '</span>' +
+        '<span class="cnt">' + (r.steps.length > 1 ? '×' + r.steps.length : '#' + r.steps[0].i) + '</span>' + rel + '</li>';
+    }).join('') + (rows.length > max ? '<li class="more">+' + (rows.length - max) + ' more</li>' : '') + '</ul>';
+  };
+
   /* what an action is to its attempt: "edit", "judging run" or "" */
   TV.attemptRole = function (a) {
     var at = a.attempt;
@@ -641,14 +809,6 @@
     return '<div class="dt-ev v-' + a.verdict + '">' + (a.verdict === 'pass' ? 'pass' : 'fail') + ', read from ' +
       (line || (a.evidence === 'exit' ? 'the log, which marks this call as an error' : TV.esc(TV.humanize(a.evidence)))) + '</div>';
   };
-  /* one deciding action of a phase outcome, as a link that moves the cursor there */
-  function checkLine(t, i) {
-    var a = t.actions[i - 1];
-    if (!a) return '<li>#' + i + '</li>';
-    return '<li><button type="button" class="lnk" data-goto="' + i + '">#' + i + '</button> <span class="midchip">' + TV.esc(a.category) + '</span>' +
-      (a.verdict !== 'none' ? ' <span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + ' ' + a.verdict + '</span>' : '') +
-      (a.evidence_line ? ' <code class="evl">' + TV.esc(a.evidence_line) + '</code>' : a.target ? ' <span class="muted">' + TV.esc(a.target.slice(0, 80)) + '</span>' : '') + '</li>';
-  }
   /* the deciding actions of an outcome stretch (s.checks) that lie outside it: the edits of a
    * repair attempt are judged by the build or test after them */
   TV.outsideChecks = function (s) { return (s.checks || []).filter(function (c) { return c < s.start || c > s.end; }); };
@@ -659,20 +819,18 @@
     return '<span class="jby" data-tip="' + TV.esc('These edits hold no check of their own. They belong to a repair attempt, and the ' + (a.category || 'run') +
       ' at #' + out.join(', #') + ' judged that attempt' + (a.evidence_line ? ': ' + a.evidence_line : '') + '.') + '">by #' + out.join(', #') + '</span>';
   };
-  /* "2 attempts · the run that judges an attempt: it passes, or the code compiles": an outcome
-   * in the codebook's words (Table 6), with its count of attempts or checks */
+  /* "a build or test after the first fix: it passes": an outcome in the codebook's words */
   TV.outcomeText = function (s) {
     var row = ((TV.vocab.text || {}).outcomes || {})[s.p.phase] || {};
-    var what = row[s.outcome] && row[s.outcome] !== '–' ? row.check + ': ' + row[s.outcome] : TV.OUTCOME_LABEL[s.outcome];
-    var count = s.n_attempts ? TV.plural(s.n_attempts, 'attempt') : s.n_events > 1 ? s.n_events + ' checks' : '';
-    return (count ? count + ' · ' : '') + what;
+    return row[s.outcome] && row[s.outcome] !== '–' ? row.check + ': ' + row[s.outcome] : TV.OUTCOME_LABEL[s.outcome];
   };
   /* a phase's outcome: the final one as a solid pill (with its evidence, and "by #N" when a
    * later run judged it). A phase whose checks changed shows its earlier outcomes first, as
    * hollow pills (✗ → ✓); cur = the stretch of the action in the details panel (ringed). */
   TV.phaseOutcomeHTML = function (t, p, cur) {
+    if (TV.hasFiles(p.phase)) return TV.dotsHTML(TV.spanFiles(t, p), 'data-phase-tip="' + TV.esc(p.id) + '"');
     var subs = p.subphases || [], last = subs[subs.length - 1];
-    if (!last) return '';
+    if (!last || !TV.hasVerdict(p.phase)) return '';
     var multi = subs.length > 1;
     var h = subs.slice(0, -1).map(function (s) {
       var ev = TV.EVIDENCE_SHORT[s.evidence], out = TV.outsideChecks(s);
@@ -688,26 +846,15 @@
     (p.subphases || []).forEach(function (s) { (s.flags || []).forEach(function (f) { if (out.indexOf(f) < 0) out.push(f); }); });
     return out;
   };
-  /* what decided an outcome, in the details panel */
-  TV.checksHTML = function (t, s) {
-    var checks = s.checks || [], out = TV.outsideChecks(s), h = '<div class="dt-why">';
-    if (s.p.phase === 'localization') {
-      if (!checks.length) return h + (s.outcome === 'unchecked' ? 'The agent never changed a source file, so there are no patch files to check these reads against.' : 'None of these steps touches a file the agent changed.') + '</div>';
-      return h + 'Decided by the steps that touch a file the agent changed:<ul class="checks">' + checks.map(function (i) { return checkLine(t, i); }).join('') + '</ul></div>';
-    }
-    if (!checks.length) return s.outcome === 'unchecked' ? h + 'No build or test ran in this phase, so nothing checked it.</div>' : '';
-    return h + 'Decided by' + (out.length ? ' the run that judged the repair attempt' + (out.length === checks.length ? ' (after this phase)' : '') : '') + ':<ul class="checks">' +
-      checks.map(function (i) { return checkLine(t, i); }).join('') + '</ul></div>';
-  };
   /* the details panel's actions: start a lookup-table row from the action, see its raw step */
   TV.detailsActsHTML = function (a) {
-    return '<div class="dt-acts"><a class="btn small" href="' + TV.esc(TV.ruleDraftHref(a)) + '" title="Start a row of a lookup table, on the Lookup tables page, that matches actions like this one">+ Row from this action</a>' +
+    return '<div class="dt-acts"><a class="btn small" href="' + TV.esc(TV.ruleDraftHref(a)) + '" title="Start a rule of a lookup table, on the Lookup tables page, that matches actions like this one">+ Rule from this action</a>' +
       '<button type="button" class="btn small" data-raw aria-pressed="false" title="This step as the log recorded it (its ATIF JSON): the message, the tool call and the full output">{ } Raw JSON</button></div>';
   };
 
   /* the details panel's body for one action (bug page and Analyze page) */
   TV.actionDetailsHTML = function (t, a) {
-    var s = a.sub, p = a.span, at = a.attempt, h = '';
+    var s = a.sub, p = a.span, h = '';
     h += '<div class="dt-row"><span class="midchip" data-tip="' + TV.esc(TV.catDef(a.category)) + '">' + TV.esc(a.category) + '</span><b>' + TV.esc(a.tool) + '</b>' +
       (a.scope && a.scope !== 'main' ? '<span class="tag" data-tip="a step of a sub-agent the agent delegated work to">sub-agent</span>' : '') +
       (a.verdict !== 'none' ? '<span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + ' ' + a.verdict +
@@ -715,42 +862,29 @@
       (a.failed_raw && a.verdict !== 'fail' ? '<span class="tag" data-tip="the log marks this tool call as an error">log error</span>' : '') +
       (a.file_role ? '<span class="tag" data-tip="the targets of the files this action works on (the target table on the Lookup tables page)">' + TV.esc(a.file_role) + '</span>' : '') +
       (a.reverts ? '<span class="tag" data-tip="undoes earlier changes (git checkout / restore / stash / reset)">reverts</span>' : '') +
-      (t.anchor === a.i ? '<span class="tag" data-tip="the first edit of a source file: reproduction happens only before it, repair and validation only from it on">first fix</span>' : '') +
+      (t.anchor === a.i ? '<span class="tag" data-tip="the first edit of a source file: repair and validation happen only from it on">first fix</span>' : '') +
       (a.rules || []).map(function (r) {
-        var who = /^O\d/.test(r.id) ? 'ready-made row' : 'your row';
+        var who = /^O\d/.test(r.id) ? 'ready-made rule' : 'your rule';
         return '<span class="tag rule" data-tip="' + TV.esc(who + ' (Lookup tables page): ' + r.sentence) + '">' + who + '</span>';
       }).join('') + '</div>';
     h += TV.evidenceHTML(a);
-    if (a.target) h += '<div class="dt-k">Target</div><pre class="dt-code">' + TV.esc(a.target) + '</pre>';
-    if (a.cmd) h += '<div class="dt-k">Command</div><pre class="dt-code">' + TV.esc(a.cmd) + '</pre>';
-    if (a.edits && a.edits.length) h += '<div class="dt-k">Edits</div><pre class="dt-code">' + TV.esc(a.edits.join('\n')) + '</pre>';
+    /* summary, thought, action, result: what it does in short, why, what it ran, what came back */
+    if (a.target) h += '<div class="dt-k">Summary</div><pre class="dt-code">' + TV.esc(a.target) + '</pre>';
     h += '<div class="dt-k">' + (a.thought_source === 'reasoning' ? 'Thought (reasoning)' : a.thought_source === 'narration' ? 'Thought (narration)' : 'Thought') +
       '<span class="dt-full" data-full-note="thought"></span></div>' +
       '<div class="dt-text dt-long" data-full="thought">' + (a.thought ? TV.esc(a.thought) : '<span class="muted">(none)</span>') + '</div>';
+    if (a.cmd || a.tool) h += '<div class="dt-k">Action</div><pre class="dt-code">' + TV.esc(a.cmd || a.tool) + '</pre>';   // a tool call without a command line: its tool
+    if (a.edits && a.edits.length) h += '<div class="dt-k">Edits</div><pre class="dt-code">' + TV.esc(a.edits.join('\n')) + '</pre>';
     h += '<div class="dt-k">Result<span class="dt-full" data-full-note="result"></span></div><pre class="dt-code dt-long" data-full="result">' + (a.result ? TV.esc(a.result) : '<span class="muted">(empty)</span>') + '</pre>';
     h += '<div class="dt-raw" hidden></div>';
     if (p) {
-      h += '<div class="dt-k">Phase</div><div class="dt-row">' + TV.phaseChip(p.phase) + '<span class="muted small">#' + p.start + '–#' + p.end + ' · ' + (a.i < (t.anchor || Infinity) ? 'before' : 'after') + ' the first fix</span>' +
+      h += '<div class="dt-k">Phase</div><div class="dt-row">' + TV.phaseChip(p.phase) + '<span class="muted small">#' + p.start + '–#' + p.end + '</span>' +
         (a.own_patch ? '<span class="tag" data-tip="reads back files the agent already changed (own patch)">own patch</span>' : '') + '</div>';
-      if (a.row) h += '<div class="dt-why">Why this phase: ' + TV.esc(TV.phaseRowDef(a.row)) + '</div>';
+      if (a.row) h += '<div class="dt-why"><b>Phase explanation</b> ' + TV.esc(TV.phaseRowShort(a.row)) + '</div>';
     }
-    if (a.item) h += '<div class="dt-why">Why <b>' + TV.esc(a.category) + '</b>: the action table\'s entry “' + TV.esc(a.item) + '”</div>';
-    if (s) {
-      var multi = p.subphases.length > 1;
-      var count = s.n_attempts ? TV.plural(s.n_attempts, 'attempt') : s.n_events ? TV.plural(s.n_events, 'check') : '';
-      h += '<div class="dt-k">Phase outcome</div><div class="dt-seg">' +
-        (multi ? '<div class="dt-row">' + TV.phaseOutcomeHTML(t, p, s) + '<span class="muted small">' + p.subphases.length + ' outcomes in order; this action\'s is ringed</span></div>' : '') +
-        TV.outcomePill(s.outcome, null, p.phase, s.evidence) +
-        (multi || count ? ' <span class="muted small">' + (multi ? '#' + s.start + (s.end > s.start ? '–#' + s.end : '') + (count ? ' · ' : '') : '') + count + '</span>' : '') +
-        '<div class="dt-text">' + TV.esc(TV.outcomeDef(p.phase, s.outcome)) + '</div>' + TV.checksHTML(t, s) +
-        (s.flags.length ? '<div class="badges">' + s.flags.map(TV.flagHTML).join('') + '</div>' : '') + '</div>';
-    }
-    if (at) {
-      var role = TV.attemptRole(a);
-      h += '<div class="dt-k">Repair attempt</div><div class="attline o-' + at.outcome + '">⟲ attempt ' + at.id + ' #' + at.start + '–#' + at.end + ' · ' + TV.plural(at.edits.length, 'edit') +
-        ' · ' + (at.judge ? 'judged by #' + at.judge + ': <b>' + TV.OUTCOME_GLYPH[at.outcome] + ' ' + at.outcome + '</b>' + (TV.EVIDENCE_SHORT[at.evidence] ? ' (' + TV.esc(TV.EVIDENCE_LABEL[at.evidence]) + ')' : '') : '<b>never run</b>') +
-        (role !== 'between' ? ' · this action is its ' + role : '') + '</div>';
-    }
+    if (a.item) h += '<div class="dt-why"><b>Action explanation</b> action table entry “' + TV.esc(a.item) + '”</div>';
+    /* no phase outcome here: the outcome band and the phase pop-up show it */
+    if (s && s.flags.length) h += '<div class="badges">' + s.flags.map(TV.flagHTML).join('') + '</div>';
     if (a.ts) h += '<div class="dt-meta">' + TV.esc(a.ts) + '</div>';
     return h;
   };
@@ -830,6 +964,7 @@
   /* the outcome this one step shows (atif/phase.py step_outcomes), else unchecked */
   TV.stepOutcomeHTML = function (t, a) {
     var o = a.stepOutcome, ev = a.step_evidence, why;
+    if (!TV.hasVerdict(a.phase)) return '';
     if (o === 'unchecked') {
       why = a.phase === 'localization' ? (t.targets.files.length ? 'touches no file of the agent\'s patch' : 'no patch to check against') :
         a.category === 'edit' ? (a.attempt && !a.attempt.judge ? 'its attempt was never built or tested' : 'no run judged this edit') : 'no evidence at this step';
@@ -842,6 +977,14 @@
       (why ? '<span class="tt-m"> ' + TV.esc(why) + '</span>' : '') + '</div>';
   };
 
+  /* the playbar's phase of the current action: Validation with its outcome, else the phase */
+  TV.cursorPhaseHTML = function (a) {
+    var s = a.sub;
+    if (!s) return '';
+    if (!TV.hasVerdict(s.p.phase)) return ' ' + TV.phaseChip(s.p.phase);
+    return ' <span class="opill mini o-' + s.outcome + '" data-tip="' + TV.esc(s.p.phase + ' outcome: ' + TV.outcomeDef(s.p.phase, s.outcome)) + '"><b aria-hidden="true">' +
+      TV.OUTCOME_GLYPH[s.outcome] + '</b><span class="ell">' + TV.esc(s.p.phase) + '</span></span>';
+  };
   TV.actionTip = function (t, a) {
     var s = a.sub;
     var h = '<div class="tt-h">#' + a.i + ' · ' + TV.esc(a.category) + (a.verdict !== 'none' ? ' <span class="v-' + a.verdict + '">' +
@@ -853,24 +996,25 @@
     if (tg && !(only.length === 1 && TV.fileName(tg) === TV.fileName(only[0]))) h += '<div class="tt-c">' + TV.esc(TV.shortPaths(tg).slice(0, 160)) + '</div>';
     h += TV.stepFilesHTML(t, a);
     h += TV.stepOutcomeHTML(t, a);
-    if (s) h += '<div class="tt-m">' + TV.esc(s.p.phase) + ' outcome: ' + TV.OUTCOME_GLYPH[s.outcome] + ' ' + s.outcome +
+    if (s && TV.hasVerdict(s.p.phase)) h += '<div class="tt-m">' + TV.esc(s.p.phase) + ' outcome: ' + TV.OUTCOME_GLYPH[s.outcome] + ' ' + s.outcome +
       (TV.EVIDENCE_SHORT[s.evidence] ? ' (' + TV.EVIDENCE_SHORT[s.evidence] + ')' : '') + '</div>';
-    if (a.attempt) h += '<div class="tt-m">attempt ' + a.attempt.id + (TV.attemptRole(a) !== 'between' ? ': ' + TV.attemptRole(a) : '') + '</div>';
     if (t.anchor === a.i) h += '<div class="tt-m"><b>first fix</b> (first edit of a source file)</div>';
     if (t.hasTs && !isNaN(a.tms)) h += '<div class="tt-m">+' + TV.fmtDur((a.tms - t.t0) / 1000) + '</div>';
     return h;
   };
 
-  /* a phase span's pop-up: its outcome(s), and the files of the whole span with how they
-   * relate to the rest (Localization: was each file edited later; Repair: was each edited
-   * file localized before; Validation / Reproduction: what the runs tested) */
+  /* a phase span's pop-up: its outcome (Validation: the verdicts; Localization, Repair: the
+   * file dots, each file with where it was edited or localized), and the other files of the
+   * span (Validation: what the runs tested) */
   TV.phaseTip = function (t, p) {
     var h = '<div class="tt-h"><span class="tt-ph"><i style="background:' + TV.phaseVar(p.phase) + '"></i>' + TV.esc(p.phase) + '</span> #' + p.start + '–#' + p.end +
       ' <span class="muted">· ' + TV.plural(p.end - p.start + 1, 'action') + '</span></div>';
-    h += '<div class="tt-o">' + (p.subphases || []).map(function (s) {
+    if (TV.hasVerdict(p.phase)) h += '<div class="tt-o">' + (p.subphases || []).map(function (s) {
       var ev = TV.EVIDENCE_SHORT[s.evidence];
       return '<span class="opill mini o-' + s.outcome + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[s.outcome] + '</b>' + s.outcome + (ev ? ' · ' + TV.esc(ev) : '') + '</span>';
     }).join('<i class="oh-arr">→</i>') + '</div>';
+    var dotted = TV.hasFiles(p.phase) ? TV.spanFiles(t, p) : null;
+    if (dotted) h += '<div class="tt-o">' + TV.dotsHTML(dotted) + '<span class="tt-m"> ' + TV.esc(TV.filesSummary(p, dotted)) + '</span></div>' + TV.spanFilesHTML(t, p, 10);
     var acts = t.actions.slice(p.start - 1, p.end);
     function collect(key) {                       // [file, [steps]] in order of first use
       var out = [];
@@ -891,21 +1035,15 @@
           fileRelation(t, r[0], first, kind) + '</li>';
       }).join('') + (list.length > max ? '<li class="more">+' + (list.length - max) + ' more</li>' : '') + '</ul>';
     }
-    var edited = collect('edited'), opened = collect('opened'), found = collect('found');
-    var foundOnly = found.filter(function (r) { return !opened.some(function (o) { return TV.sameFile(o[0], r[0]); }); });
-    if (edited.length) h += '<div class="tt-k">Files edited (' + edited.length + ')</div>' + rows(edited, 'edited');
-    if (opened.length) h += '<div class="tt-k">Files looked at (' + opened.length + ')</div>' + rows(opened, 'looked', edited.length ? 5 : 10);
-    if (foundOnly.length) h += '<div class="tt-k">Only listed by searches (' + foundOnly.length + ')</div>' + rows(foundOnly, 'looked', 5);
+    var edited = collect('edited'), opened = collect('opened');
+    if (edited.length && p.phase !== 'repair') h += '<div class="tt-k">Files edited (' + edited.length + ')</div>' + rows(edited, 'edited');
+    if (opened.length && p.phase !== 'localization') h += '<div class="tt-k">Files looked at (' + opened.length + ')</div>' + rows(opened, 'looked', edited.length ? 5 : 10);
     var tests = [];
     acts.forEach(function (a) { (a.tests || []).forEach(function (x) { if (tests.indexOf(x) < 0) tests.push(x); }); });
     if (tests.length) h += '<div class="tt-k">Tests run (' + tests.length + ')</div><ul class="tt-files">' + tests.slice(0, 6).map(function (x) {
       return '<li><span class="fn" title="' + TV.esc(x) + '">' + TV.esc(TV.testName(x)) + '</span></li>';
     }).join('') + '</ul>';
-    if (!edited.length && !opened.length && !found.length && !tests.length) h += '<div class="tt-m">No file named in this phase.</div>';
-    if (p.phase === 'localization' && t.targets.files.length) {
-      var hit = t.targets.files.filter(function (f) { return opened.some(function (r) { return TV.sameFile(r[0], f); }); });
-      h += '<div class="tt-m">' + hit.length + ' of the ' + TV.plural(t.targets.files.length, 'file') + ' of the agent\'s patch looked at here</div>';
-    }
+    if (!edited.length && !opened.length && !tests.length) h += '<div class="tt-m">No file named in this phase.</div>';
     return h;
   };
 })();

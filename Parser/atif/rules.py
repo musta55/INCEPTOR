@@ -88,7 +88,7 @@ LEGACY_IDS = {"G1", "G2", "G3", "G4", "G5", "G6", "G7", "FW"} | {f"P{n}" for n i
 OLD_VALUES = {
     "category": dict(lookup.KIND_CATEGORY),
     "file_role": {"toolchain": "build", "harness": "other", "output": "other"},
-    "phase": {"understanding": "planning"},
+    "phase": {"understanding": "planning", "reproduction": "localization"},
 }
 
 
@@ -99,7 +99,7 @@ def _lookup_rows() -> List[Dict[str, Any]]:
     for n, (rid, ph, cats, target, where) in enumerate(lookup.PHASE_TABLE, 1):
         to = "the phase of the previous step" if ph == lookup.PREVIOUS else ph
         on = "" if target == "any" else f" on {target}"
-        out.append({"id": rid, "n": n, "table": 4, "title": f"Row {n}", "phase": ph,
+        out.append({"id": rid, "n": n, "table": 4, "title": f"Rule {n}", "phase": ph,
                     "categories": cats, "target": target, "position": where,
                     "text": f"{cats}{on}, {where[0].lower() + where[1:]} → {to}."})
     out.append({"id": lookup.GENERAL, "n": None, "table": 4, "title": "General rule",
@@ -111,7 +111,7 @@ def _lookup_rows() -> List[Dict[str, Any]]:
 #: is the fixed number.
 BUILTIN: List[Dict[str, Any]] = _lookup_rows() + [
     {"id": "F1", "table": 0, "title": "Repeated reads", "value": phase.REPEATED_READS,
-     "text": "Reading the same file {n} or more times in a row is considered as repeated "
+     "text": "Reading the same file {n} or more times consecutively is considered as repeated "
              "reads."},
 ]
 BUILTIN_IDS = {r["id"] for r in BUILTIN}
@@ -127,7 +127,7 @@ OPTIONAL: List[Dict[str, Any]] = [
      "rule": {"kind": "category", "field": "target", "regex": True, "value": "build",
               "match": r"gradlew?\b[^|;&]*\b\w*(?:lint|detekt|checkstyle|spotbugs|pmd)\w*"}},
     {"id": "O2", "title": "Shared test code",
-     "text": "Files under sharedTest/ or tests/ are test files: changing them is reproduction "
+     "text": "Files under sharedTest/ or tests/ are test files: changing them is localization "
              "before the first fix and validation after.",
      "rule": {"kind": "file_role", "field": "path", "regex": True, "value": "test",
               "match": r"(?:^|/)(?:sharedTest|testFixtures|tests)/"}},
@@ -263,7 +263,7 @@ def _regex(rule: Dict[str, Any]) -> "re.Pattern[str]":
     try:
         return _compile(text, bool(rule.get("regex")), rule.get("field") == "program")
     except re.error as exc:
-        raise RuleError(f"row {rule.get('id') or ''}: bad regular expression {text!r} ({exc})")
+        raise RuleError(f"rule {rule.get('id') or ''}: bad regular expression {text!r} ({exc})")
 
 
 @functools.lru_cache(maxsize=256)
@@ -318,41 +318,41 @@ def normalize(ruleset: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         if rid in LEGACY_IDS:
             continue                                   # a version-3 grouping rule: gone
         if rid in BUILTIN_IDS:
-            raise RuleError(f"{rid} is a built-in row of the phase table: it is always "
+            raise RuleError(f"{rid} is a built-in rule of the phase table: it is always "
                             f"applied and cannot be listed, switched off or removed")
         if rid not in OPTIONAL_BY_ID:
-            raise RuleError(f"unknown ready-made row {rid!r}")
+            raise RuleError(f"unknown ready-made rule {rid!r}")
         added.add(rid)
     chosen = [{"id": r["id"]} for r in OPTIONAL if r["id"] in added]     # catalog order
     custom = []
     for n, rule in enumerate(ruleset.get("custom") or [], 1):
         if not isinstance(rule, dict):
-            raise RuleError(f"row {n} is not an object")
+            raise RuleError(f"rule {n} is not an object")
         rid = str(rule.get("id") or f"R{n}")
         if rid in BUILTIN_IDS or rid in OPTIONAL_BY_ID:
-            raise RuleError(f"row {n}: the id {rid} belongs to a built-in or ready-made row")
+            raise RuleError(f"rule {n}: the id {rid} belongs to a built-in or ready-made rule")
         custom.append(_custom(rule, rid))
     ids = [r["id"] for r in custom]
     if len(set(ids)) != len(ids):
-        raise RuleError("two rows share an id")
+        raise RuleError("two rules share an id")
     return {"schema": SCHEMA, "optional": chosen, "custom": custom}
 
 
 def _custom(rule: Dict[str, Any], rid: str) -> Dict[str, Any]:
     kind = rule.get("kind")
     if kind not in KINDS:
-        raise RuleError(f"row {rid}: kind must be one of {', '.join(KINDS)}")
+        raise RuleError(f"rule {rid}: kind must be one of {', '.join(KINDS)}")
     field = "path" if kind == "file_role" else "tool" if kind == "shell_tool" \
         else rule.get("field") or "target"
     if kind != "file_role" and field not in FIELDS:
-        raise RuleError(f"row {rid}: field must be one of {', '.join(FIELDS)}")
+        raise RuleError(f"rule {rid}: field must be one of {', '.join(FIELDS)}")
     match = str(rule.get("match") or "")
     if not match.strip():
-        raise RuleError(f"row {rid}: the text to match is empty")
+        raise RuleError(f"rule {rid}: the text to match is empty")
     value = rule.get("value")
     if kind == "shell_tool":
         if not isinstance(value, str) or not _ARG_KEY.match(value):
-            raise RuleError(f"row {rid}: a shell tool's value is the argument that holds its "
+            raise RuleError(f"rule {rid}: a shell tool's value is the argument that holds its "
                             f"command, such as command or cmd")
         return {"id": rid, "kind": kind, "field": field, "match": match.strip(),
                 "regex": False, "value": value,
@@ -362,7 +362,7 @@ def _custom(rule: Dict[str, Any], rid: str) -> Dict[str, Any]:
                "file_role": lookup.TARGETS}[kind]
     value = OLD_VALUES[kind].get(value, value)       # a value of codebook version 4
     if value not in allowed:
-        raise RuleError(f"row {rid}: {kind} must be one of {', '.join(allowed)}")
+        raise RuleError(f"rule {rid}: {kind} must be one of {', '.join(allowed)}")
     item = {"id": rid, "kind": kind, "field": field, "match": match,
             "regex": bool(rule.get("regex")), "value": value,
             "enabled": rule.get("enabled", True) is not False}
@@ -486,7 +486,7 @@ def _shell_tools(rules: List[Dict[str, Any]]) -> Iterator[None]:
 def _recategorize(row: dict, category: str, rid: str) -> None:
     """Count a row as ``category`` (``lookup.set_category``): its kind and mid-level follow,
     and only an edit keeps its edited files."""
-    lookup.set_category(row, category, f"your row {rid}")
+    lookup.set_category(row, category, f"your rule {rid}")
     row["reverts"] = False
     if category != "edit":
         row["edit_files"], row["edit_role"] = [], ""

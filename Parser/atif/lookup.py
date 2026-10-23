@@ -97,8 +97,10 @@ COMPOUND_ROW = ("(several programs on one line)", "Take the highest category on 
 #: the highest category of a line wins (``COMPOUND_ROW``)
 ORDER = ("edit", "build", "test", "search", "read", "diff", "vcs", "orient", "other")
 
-#: the phases, in the viewer's order (the workbook's names, lower case)
-PHASES = ("planning", "localization", "reproduction", "repair", "validation")
+#: the phases, in the viewer's order (the workbook's names, lower case).  Reproduction was
+#: dropped on 2026-10-19: rows L6 and L7 (a test run, or an edit of a test file, before the
+#: first fix) are Localization
+PHASES = ("planning", "localization", "repair", "validation")
 PREVIOUS = "(previous step's phase)"
 #: Action Category to Phases Mapping Table: (id, phase or PREVIOUS, action category,
 #: target file, position/rules); the first row that matches counts
@@ -110,8 +112,8 @@ PHASE_TABLE = [
     ("L4", "planning", "build", "any", "Before the first edit of a source file"),
     ("L5", "localization", "search, read, sub-agent", "any (not docs only)",
      "Before the first edit of a source file"),
-    ("L6", "reproduction", "test", "any", "Before the first edit of a source file"),
-    ("L7", "reproduction", "edit", "test file", "Before the first edit of a source file"),
+    ("L6", "localization", "test", "any", "Before the first edit of a source file"),
+    ("L7", "localization", "edit", "test file", "Before the first edit of a source file"),
     ("L8", "repair", "edit", "source file", "Anywhere"),
     ("L9", "localization", "search, read", "source file the agent has not changed",
      "After the first edit of a source file, when the next edit of a source file comes before "
@@ -181,12 +183,10 @@ PHASE_TEXT = {
                  "or building, before the first edit of a source file",
                  "before the first edit of a source file, and a plan anywhere"),
     "localization": ("finding the code to change",
-                     "searching and reading code (a sub-agent too) before the first edit of a "
-                     "source file; after it, reading a source file it has not changed when it "
-                     "changes code again before the next build, test or diff", "anywhere"),
-    "reproduction": ("trying to see the bug before changing the code",
-                     "running tests, a program or the app, or writing a test, before the first "
-                     "edit of a source file", "before the first edit of a source file only"),
+                     "searching and reading code (a sub-agent too), running tests or writing a "
+                     "test before the first edit of a source file; after it, reading a source "
+                     "file it has not changed when it changes code again before the next build, "
+                     "test or diff", "anywhere"),
     "repair": ("changing the app's code", "every edit of a source file",
                "from the first edit of a source file on"),
     "validation": ("checking the patch",

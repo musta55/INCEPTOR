@@ -95,7 +95,7 @@ directly under `data/atif/`, `data/annotation/` and `data/reading/` are archived
 Outcomes come from `Dataset/a_apr_test_results/` (`atif.outcomes`): the harness compiled the patched
 app and ran the bug's instrumentation tests, so the verdict is not the agent's own claim.
 
-The viewer (`viewer/`) is TrajecTiers, a trace exploration dashboard. It has four pages; the
+The viewer (`viewer/`) is Inceptor, a trace exploration dashboard. It has four pages; the
 header links Corpus and Lookup tables. The corpus pages
 (`viewer/index.html`, then a bug's `viewer/bug.html`) open from `file://` with no server. They show
 the `original` configuration: the corpus page holds run 1 of every bug × agent (an Agent filter, an
@@ -121,7 +121,8 @@ one of 11 categories (a shell command program by program, the highest category o
 winning), the target table gives every file a target (source, test, docs, build, other,
 outside), and the phase table (rows 1–15, the first that matches) turns the category, the
 targets and the position (the first step, before or after the first edit of a source file)
-into a phase: planning, localization, reproduction, repair or validation. Rows 14 and 15 and
+into a phase: planning, localization, repair or validation (reproduction was dropped on
+2026-10-19; rows 6 and 7, a test or a test-file edit before the first fix, are localization). Rows 14 and 15 and
 the general rule give the previous step's phase. There are no grouping rules. The phases'
 outcomes still read the runs' verdicts through the taxonomy's finer action kinds. `tables.html` (Lookup tables; `rules.html` redirects
 to it) shows the built-in tables and is the only place where rows are added, and every page
@@ -146,8 +147,8 @@ built-in ones (between two of yours, the later): an action row gives steps whose
 or program matches a category (and reads their runs as that category's), a *shell tool* row
 makes an unknown agent's tool a shell tool (its commands are then read like Bash's), a target row
 gives files whose path contains some text a target, a phase row gives matching steps a phase. A
-match that would break the first fix (an edit of a source file is always repair; reproduction
-only before the first fix, repair and validation only from it on) is skipped. A step's details
+match that would break the first fix (an edit of a source file is always repair; repair and
+validation only from the first fix on) is skipped. A step's details
 panel says why it got its category (the action table's entry) and its phase (the phase table's
 row). "+ Row from this action" in the details panel of any trajectory opens the page
 with a row started from that action. `view --all --rules tables.json` writes the viewer data
@@ -158,16 +159,33 @@ version 3 are baseline B4 and the phase lookup of version 4 (rows P1–P11) base
 (`atif/baselines.py`); table files written for version 4 are read with their values mapped
 (run_test → test, toolchain → build, understanding → planning).
 
-**Uploads.** The Upload page (`upload.html`) takes one or more files and asks how they are
-related: **separate** trajectories, **one bug, several agents**, or **one agent, several runs**.
-It shows each file's agent, model, bug and action count and checks the choice (one agent only for
-runs, distinct run numbers, one bug, no SWE-bench run beside an Android one); a comparison opens
-as `analyze.html#g=<id>` with its members in a bar and the **Fingerprint** tab, and
-`upload.html#g=<id>` edits it. Each upload is kept in the browser (IndexedDB, with its ATIF; a
-comparison is written on its members' records), listed on the corpus page next
-to the corpus, counted in its statistics by agent, and has its own page (`analyze.html#u=<id>`)
-that compares it with the corpus runs of the same agent and, when it names a corpus bug, with
-that bug's runs. **Unrecognized steps** (`atif/diagnose.py`): a step whose tool is in no table
+**Uploads.** The Upload page (`upload.html`) takes a dataset folder or log files. A folder is
+read as `<dataset>/<bug>/<agent>/run<n>/<files>` (`TV.uploads.scan`, `viewer/uploads.js`): the
+folders name each trajectory's bug, agent and run, and in a run folder the first file the engine
+reads is the trajectory (metadata and sandbox logs beside it are passed over). An optional CSV
+anywhere in the folder gives the outcomes: a `bug`, an `agent` and an `outcome` column (pass /
+fail, 1 / 0), with a `run` column or one column per run (`run1`, `run2`…) when they differ.
+Files cannot say how they are related, so for them the page asks: **separate** trajectories,
+**one bug, several agents**, or **one agent, several runs**, and checks the choice (one agent
+only for runs, distinct run numbers, one bug); a comparison opens as `analyze.html#g=<id>` with
+its members in a bar and the **Fingerprint** tab, and `upload.html#g=<id>` edits it. The
+Corpus Overview opens with the example dataset already in it and shows only uploads, in one
+table (`TV.uploads.layout`): a new
+agent is a new column, a new bug a new row at the bottom, and an upload is its cell's next run
+(one dot per run); Statistics summarizes the same runs by agent. A run that is already there (the same bug, agent and run, or the same file uploaded before) waits for
+the user's choice: **replace** it, or **add** this one as run n+1. Each upload is kept in the
+browser (IndexedDB, with its ATIF; a comparison and the run in the table are written on the
+record; ticking bugs on the Corpus Overview deletes them) and has its own page
+(`analyze.html#u=<id>`; a bug's runs: `analyze.html#b=<bug>`, whose Fingerprint shows the
+bug's agents in one run or one agent's runs, as the bug page does). `make_demo.py`
+lays the corpus out as two such folders (`Dataset/demo/dataset1`, `dataset2`: 25 bugs each, with
+`outcomes.csv`) to demonstrate the upload. `make_seed.py` analyses `dataset1` in advance under the
+default tables (`viewer/data/seed/`: one file with every run's analysis, and per run its log and
+ATIF, fetched only when the details panel or another rule set needs them); the first time a
+browser lists the uploads, `TV.uploads.seed` adds those 225 runs as if the folder had been
+uploaded, so the dashboard opens with 25 bugs and `dataset2` is left to upload. They are
+ordinary uploads from then on (deleted, analysed again); when every bug is deleted, the empty
+Corpus Overview offers **Load the example dataset**. **Unrecognized steps** (`atif/diagnose.py`): a step whose tool is in no table
 (it counts as `other`) or whose shell command runs a program in no table (`run_shell`) takes
 the phase of the step before it; the upload's page and the Lookup tables page list them, grouped
 by tool or program, each with a suggested row from fixed name rules (a tool whose `command`
@@ -206,8 +224,9 @@ tracebacks decide a test run), a script the agent writes at the repository root 
 `test_modified` change), running it is a test run, and running an editing script of its own
 (`python edit_file.py <file> ...`, as live-SWE-agent does) edits the file it names. An ATIF file
 whose task names the repository folder gets the same project. Every other trajectory, the
-corpus included, is read exactly as before (`tests/test_swebench.py`). An upload's page does not
-compare a SWE-bench run with the corpus, and Statistics counts it in its own group. Agentless
+corpus included, is read exactly as before (`tests/test_swebench.py`). On the dashboard such a run is
+an upload like any other: its agent is a column of the corpus table and its instance id a row.
+Agentless
 and AutoCodeRover are fixed pipelines, not agents, and are not read.
 
 Manual annotation runs on `Ground Truth/`, built by `python3 make_ground_truth.py`:

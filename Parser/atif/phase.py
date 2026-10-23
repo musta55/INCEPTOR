@@ -42,10 +42,12 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 from . import lookup, project, segment, taxonomy
 
 PHASES = lookup.PHASES
-PLANNING, LOCALIZATION, REPRODUCTION, REPAIR, VALIDATION = PHASES
+PLANNING, LOCALIZATION, REPAIR, VALIDATION = PHASES
+#: the phase dropped on 2026-10-19 (its rows are Localization); only the baselines use it
+REPRODUCTION = "reproduction"
 #: phases that occur only before / only from the anchor on (``check_hierarchy``).  Planning
 #: occurs anywhere: a plan is Planning wherever it comes (row 1)
-PRE_ONLY = {REPRODUCTION}
+PRE_ONLY: Set[str] = set()
 POST_ONLY = {REPAIR, VALIDATION}
 
 #: one question per stretch, the same in every phase: did its check show that the phase's
@@ -62,7 +64,6 @@ EVIDENCE = ("test", "build", "target_file", "none")
 PHASE_OUTCOMES: Dict[str, Tuple[str, ...]] = {
     PLANNING: ("unchecked", "succeeded", "blocked"),
     LOCALIZATION: ("succeeded", "failed", "unchecked"),
-    REPRODUCTION: ("unchecked", "succeeded", "failed", "blocked"),
     REPAIR: ("unchecked", "succeeded", "failed", "blocked"),
     VALIDATION: ("unchecked", "succeeded", "failed", "blocked"),
 }
@@ -81,13 +82,10 @@ NEUTRAL = FOLLOW
 DECISIVE = ("pass", "test_fail", "build_fail", "blocked")
 #: the most deciding actions a subphase lists (``checks``)
 CHECKS_MAX = 5
-#: run result -> outcome, per phase.  Before the fix a failing test is the goal
-#: (Reproduction succeeded); after it, the same result is a failure
+#: run result -> outcome, per phase
 _RUN_OUTCOME: Dict[str, Dict[str, str]] = {
     PLANNING: {"build_pass": "succeeded", "pass": "succeeded", "build_fail": "blocked",
                "blocked": "blocked", "test_fail": "blocked"},
-    REPRODUCTION: {"test_fail": "succeeded", "pass": "failed", "build_fail": "blocked",
-                   "blocked": "blocked"},
     REPAIR: {"pass": "succeeded", "build_pass": "succeeded", "test_fail": "failed",
              "build_fail": "failed", "blocked": "blocked"},
 }
@@ -263,8 +261,8 @@ def _spans(ph: List[str]) -> List[List[Any]]:
 def _event_keys(acts: List[dict], lo: int, hi: int, phase: str,
                 tries: List[dict]) -> List[Optional[tuple]]:
     """Each action's event in the span [lo, hi): ("attempt", id) inside an attempt's
-    range (Repair), ("run", x) at a decisive run, ("weak", x) at a passing build (not in
-    Reproduction, where only a test run checks the goal); None elsewhere."""
+    range (Repair), ("run", x) at a decisive run, ("weak", x) at a passing build; None
+    elsewhere."""
     keys: List[Optional[tuple]] = [None] * (hi - lo)
     if phase == REPAIR:
         for at in tries:
@@ -275,7 +273,7 @@ def _event_keys(acts: List[dict], lo: int, hi: int, phase: str,
             result = run_result(acts, acts[x])
             if result in DECISIVE:
                 keys[x - lo] = ("run", x)
-            elif result == "build_pass" and phase != REPRODUCTION:
+            elif result == "build_pass":
                 keys[x - lo] = ("weak", x)
     return keys
 
@@ -547,8 +545,8 @@ def step_outcomes(result: Dict[str, Any]) -> List[Optional[Tuple[str, str]]]:
     """Per action of a ``phases`` result, the (outcome, evidence) its own step shows, or None
     (unchecked): a Localization step that touches a target file succeeded (``target_file``);
     an edit of a repair attempt takes the attempt's outcome once a run judged it; a decisive
-    run (or a passing build) has the outcome its result means in its phase (``_RUN_OUTCOME``:
-    a failing test before the fix is a reproduction that succeeded)."""
+    run (or a passing build) has the outcome its result means in its phase
+    (``_RUN_OUTCOME``)."""
     acts, ctx = result["actions"], result["context"]
     out: List[Optional[Tuple[str, str]]] = [None] * len(acts)
     for at in result["attempts"]:

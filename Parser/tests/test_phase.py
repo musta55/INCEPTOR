@@ -78,24 +78,23 @@ class CorpusPhaseTests(unittest.TestCase):
 class PhaseRuleTests(unittest.TestCase):
     """The phase table, one row or behaviour per test."""
 
-    def test_reproduction_repair_and_validation(self):
+    def test_localization_repair_and_validation(self):
+        # a test run before the first fix (row 6) is localization, like the read before it
         r = _phased([_call("Bash", {"command": f"sed -n 1,40p {OTHER}"}, "x"),
                      _call("Bash", {"command": TEST}, TEST_FAILS),
                      _edit(), _call("Bash", {"command": TEST}, TEST_PASSES)])
         self.assertEqual(_outline(r), [
-            ("localization", [("failed", "target_file", 1, 1, 1)]),
-            ("reproduction", [("succeeded", "test", 2, 2, 1)]),
+            ("localization", [("failed", "target_file", 1, 2, 1)]),
             ("repair", [("succeeded", "test", 3, 3, 1)]),
             ("validation", [("succeeded", "test", 4, 4, 1)])])
         self.assertEqual(r["table_row"], ["L5", "L6", "L8", "L12"])
-        self.assertTrue(r["metrics"]["reproduced_before_fix"])
 
-    def test_the_same_failing_test_succeeds_before_the_fix_and_fails_after(self):
+    def test_a_failing_test_before_the_fix_is_localization_and_after_it_fails(self):
         r = _phased([_call("Bash", {"command": TEST}, TEST_FAILS),
                      _edit(), _call("Bash", {"command": TEST}, TEST_FAILS)])
         self.assertEqual([(s["phase"], sp[0]) for s, (_, sps) in zip(r["phases"], _outline(r))
                           for sp in sps],
-                         [("reproduction", "succeeded"), ("repair", "failed"),
+                         [("localization", "failed"), ("repair", "failed"),
                           ("validation", "failed")])
 
     def test_a_fix_verify_loop_alternates_repair_and_validation(self):
@@ -146,7 +145,7 @@ class PhaseRuleTests(unittest.TestCase):
         # previous step's phase, and the very first step's is planning
         r = _phased([_edit("app/build.gradle"), _call("Bash", {"command": TEST}, TEST_FAILS)])
         self.assertEqual(_outline(r), [("planning", [("unchecked", "none", 1, 1, 0)]),
-                                       ("reproduction", [("succeeded", "test", 2, 2, 1)])])
+                                       ("localization", [("unchecked", "none", 2, 2, 1)])])
         self.assertEqual(r["table_row"], ["LG", "L6"])
         self.assertIn("environment_workaround", _flags(r, 0))
         self.assertIsNone(r["anchor"])
@@ -285,7 +284,7 @@ class PhaseRuleTests(unittest.TestCase):
     def test_a_poll_follows_its_run(self):
         r = _phased([_sh(TEST, "Process running with session ID 7"),
                      _call("write_stdin", {"session_id": 7, "chars": ""}, TEST_FAILS)])
-        self.assertEqual(_outline(r), [("reproduction", [("succeeded", "test", 1, 2, 1)])])
+        self.assertEqual(_outline(r), [("localization", [("unchecked", "none", 1, 2, 1)])])
         self.assertEqual(r["metrics"]["tool_actions"], 1)
 
     def test_a_patch_and_its_run_in_one_command_are_one_attempt(self):

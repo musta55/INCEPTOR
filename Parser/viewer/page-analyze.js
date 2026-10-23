@@ -1,16 +1,18 @@
 /* An uploaded trajectory (analyze.html#u=<id>), next to the corpus, or a comparison of uploads
- * (analyze.html#g=<group>&m=<member>, set up on upload.html). Uploading itself is upload.html;
+ * (analyze.html#g=<group>&m=<member>, set up on upload.html; analyze.html#b=<bug>&m=<member>,
+ * every upload of one bug, opened from the corpus table). Uploading itself is upload.html;
  * analyze.html with nothing named goes to the corpus page.
  *
  *   analyze.html#g=<id>   a comparison group (uploads.js groups): a bar with its members (one
  *                         bug's agents, or one agent's runs), the selected member shown as
  *                         below, and the Fingerprint tab with every member side by side.
+ *   analyze.html#b=<bug>  the same for every upload of a bug (TV.uploads.bugGroup): each
+ *                         agent's runs, labelled "agent · run n" as in the Corpus Overview.
  *
  *   analyze.html#u=<id>   one upload (uploads.js): its file bar (bug id, harness outcome,
  *                         previous / next, delete), its unrecognised steps with a suggested
- *                         lookup-table row for each (review.js), how it compares with the corpus
- *                         (the same agent's run-1 trajectories, and the same bug's runs when it
- *                         names a corpus bug), then the bug page's Trajectory and Timeline views.
+ *                         lookup-table row for each (review.js), then the bug page's
+ *                         Trajectory and Timeline views.
  *
  * Every upload is analysed with the one table file of tables.html (TV.ruleset); one analysed
  * with other rules is analysed again when opened. The corpus side of the comparison is
@@ -29,7 +31,6 @@
   var REC = null;                  // the open upload
   var CUR = null;                  // its prepared trajectory
   var LIST = [];                   // every upload, newest first
-  var CORPUS = null;               // D under the rules (null until known; D itself for the default rules)
   var GROUP = null;                // the open comparison: {g (uploads.js group), byKey: {upload id: trajectory}}
   if (D) TV.vocab = D.vocab || {};
 
@@ -46,12 +47,15 @@
     var q = TV.readHash();
     stopPlay();
     if (VIEWS.indexOf(q.v) >= 0) S.view = q.v;
+    S.fp = q.fp === 'runs' ? 'runs' : 'agents';
     if (q.g) openGroup(q.g, q.m);
+    else if (q.b) openGroup('b:' + q.b, q.m);
     else if (q.u) { GROUP = null; openUpload(q.u); }
     else location.replace('index.html');            // uploading is upload.html
   }
   function saveHash() {
-    if (GROUP) TV.writeHash({ g: GROUP.g.id, m: REC && REC.id, v: S.view === 'trajectory' ? '' : S.view, theme: TV.readHash().theme });
+    if (GROUP) TV.writeHash(Object.assign(GROUP.g.kind === 'bug' ? { b: GROUP.g.bug } : { g: GROUP.g.id },
+      { m: REC && REC.id, v: S.view === 'trajectory' ? '' : S.view, fp: S.fp === 'runs' ? 'runs' : '', theme: TV.readHash().theme }));
   }
   window.addEventListener('hashchange', route);
   TV.steps.source = function (t) { return REC && t._src === REC.id ? TV.uploads.atif(REC) : null; };
@@ -62,10 +66,12 @@
     $('#trajScreen').hidden = false;
     TV.uploads.list().then(function (xs) {
       LIST = xs;
-      var g = TV.uploads.groups(xs).filter(function (x) { return x.id === gid; })[0];
+      var g = /^b:/.test(gid) ? TV.uploads.bugGroup(null, xs.filter(function (r) { return r && r.result && r.result.trajectory; }), gid.slice(2)) :
+        TV.uploads.groups(xs).filter(function (x) { return x.id === gid; })[0];
+      if (g && !g.members.length) g = null;
       if (!g) {
         $('#trajScreen').hidden = true;
-        $('#err').innerHTML = '<b>No comparison ' + esc(gid) + ' in this browser.</b> <a href="index.html">Back to the corpus</a>';
+        $('#err').innerHTML = '<b>' + (/^b:/.test(gid) ? 'No upload of ' + esc(TV.bugName(gid.slice(2))) : 'No comparison ' + esc(gid)) + ' in this browser.</b> <a href="index.html">Back to the corpus</a>';
         $('#err').hidden = false;
         return;
       }
@@ -85,11 +91,19 @@
       });
     });
   }
-  /* the members as the Fingerprint view reads them (TV.bugData.group) */
+  /* the members as the Fingerprint view reads them (TV.bugData.group); a bug's runs show as on
+   * the bug page: its agents in the open run, or the open agent's runs (S.fp) */
   function groupData() {
-    var g = GROUP.g;
+    var g = GROUP.g, members = g.members, kind = g.kind, run = null;
+    if (kind === 'bug' && REC) {
+      var cur = members.filter(function (r) { return r.id === REC.id; })[0] || members[0], ag = TV.uploads.agent(cur);
+      if (S.fp === 'runs') { kind = 'runs'; members = members.filter(function (r) { return TV.uploads.agent(r) === ag; }); }
+      else { kind = 'agents'; run = cur._bugRun; members = members.filter(function (r) { return r._bugRun === run; }); }
+    }
     TV.bugData = { agents: [], runs: [], byKey: GROUP.byKey, trajs: g.members.map(function (r) { return GROUP.byKey[r.id]; }),
-      group: { kind: g.kind, rows: g.members.map(function (r) { return { key: r.id, t: GROUP.byKey[r.id], label: TV.uploads.memberLabel(r, g.members) }; }) } };
+      group: { kind: kind, run: run, rows: members.map(function (r) {
+        return { key: r.id, t: GROUP.byKey[r.id], label: g.kind !== 'bug' ? TV.uploads.memberLabel(r, members) : kind === 'runs' ? 'run ' + r._bugRun : TV.uploads.agent(r) };
+      }) } };
   }
   function renderGroupBar() {
     var el = $('#grpbar');
@@ -97,11 +111,11 @@
     if (!GROUP) return;
     var g = GROUP.g;
     el.innerHTML = '<h1>' + esc(g.name || 'Comparison') + '</h1><span class="gk">' + esc(TV.uploads.KINDS[g.kind] || '') + '</span><div class="gmembers" role="group" aria-label="Members">' +
-      TV.bugData.group.rows.map(function (x) {
-        var t = x.t, a = t.agent, extra = g.kind === 'agents' && x.label !== a ? ' <span class="muted small">' + esc(x.label.slice(a.length + 3)) + '</span>' : '';
+      g.members.map(function (r) { return { key: r.id, t: GROUP.byKey[r.id], label: TV.uploads.memberLabel(r, g.members) }; }).map(function (x) {
+        var t = x.t, a = t.agent, extra = g.kind !== 'runs' && x.label !== a ? ' <span class="muted small">' + esc(x.label.slice(a.length + 3)) + '</span>' : '';
         return '<button type="button" class="gmem" data-mem="' + esc(x.key) + '" aria-pressed="' + (REC && x.key === REC.id) + '">' +
           (g.kind === 'runs' ? '<b>' + esc(x.label) + '</b>' : TV.agentHTML(a, extra)) + TV.markHTML(t.outcome.pass) + '<span class="n">' + t.n + '</span></button>';
-      }).join('') + '</div><a class="btn small" href="upload.html#g=' + encodeURIComponent(g.id) + '">Edit</a>';
+      }).join('') + '</div>' + (g.kind === 'bug' ? '' : '<a class="btn small" href="upload.html#g=' + encodeURIComponent(g.id) + '">Edit</a>');
   }
   $('#grpbar').addEventListener('click', function (e) {
     var b = e.target.closest('[data-mem]');
@@ -136,6 +150,7 @@
   function prepUpload(rec) {
     var res = rec.result, t = TV.prepTraj(res.trajectory);
     t._src = rec.id;
+    t.agent = TV.uploads.agent(rec);                  // the folder's name for it, when it gave one
     if (rec.group && rec.group.kind === 'runs') t.run = rec.run || 1;
     t.key = rec.id;
     var byIndex = {};
@@ -147,7 +162,7 @@
   }
   function show(rec, fresh) {
     REC = rec;
-    var res = rec.result, t = prepUpload(rec), src = res.source || {}, swe = TV.uploads.project(rec) === 'swebench';
+    var res = rec.result, t = prepUpload(rec), src = res.source || {}, longId = !/^\d*$/.test(String(rec.bug || src.bug || ''));
     if (res.vocab) TV.vocab = res.vocab;
     if (GROUP && GROUP.byKey[rec.id]) { GROUP.byKey[rec.id] = t; groupData(); }
     renderGroupBar();
@@ -158,17 +173,17 @@
     if (fresh) S.expanded = {};
     S.i = keepI ? TV.clamp(keepI, 1, t.n) : 0;
     if (!S.i) S.panel = false;
-    document.title = rec.name + ' · TrajecTiers';
+    /* the bug and the agent only; the file's own details are in the title's tooltip */
+    var bugKey = TV.uploads.bug(rec), head = bugKey ? TV.bugName(bugKey) : rec.name;
+    document.title = head + ' · ' + t.agent + ' · Inceptor';
     document.body.classList.add('has-result', 'docked');
-    $('#fname').textContent = rec.name;
-    $('#fmeta').innerHTML = TV.agentHTML(src.agent || t.agent) + (src.model ? '<span class="model mono">' + esc(src.model) + '</span>' : '') +
-      '<span class="muted">' + esc(TV.uploads.formatLabel(src.format)) + ' · ' + TV.uploads.sizeLabel(rec.size || 0) + '</span>' +
-      (swe ? '<span class="yours swe" data-tip="' + esc('a SWE-bench run' + (src.repo_root ? ': the repository is ' + src.repo_root : '') + '. It is analysed with Python conventions and kept apart from the Android corpus.') + '">SWE-bench</span>' : '') +
-      (src.bug ? '<span class="muted">' + esc(TV.uploads.bugLabel(src.bug, swe ? 'swebench' : 'android')) + (src.bug_inferred ? ' (found in the log)' : '') + '</span>' : '');
-    $('#bugLbl').textContent = swe ? 'Instance' : 'Bug';
-    $('#bugFld').title = swe ? 'The SWE-bench instance id; it only names the run' : 'The bug-<id> checkout the log works in; paths are read relative to it';
-    $('#bug').style.width = swe ? '190px' : '';
-    $('#bug').inputMode = swe ? 'text' : 'numeric';
+    $('#fname').textContent = head;
+    $('#fname').title = [rec.name, src.model, rec.dataset, TV.uploads.formatLabel(src.format), TV.uploads.sizeLabel(rec.size || 0)].filter(Boolean).join(' · ');
+    $('#fmeta').innerHTML = TV.agentHTML(t.agent);
+    $('#bugLbl').textContent = 'Bug';
+    $('#bugFld').title = 'The bug the log works on; paths are read relative to its checkout';
+    $('#bug').style.width = longId ? '190px' : '';
+    $('#bug').inputMode = 'text';
     $('#bug').value = rec.bug || '';
     $('#bug').placeholder = src.bug || 'id';
     $$('#outcomeSeg button').forEach(function (b) {
@@ -183,9 +198,8 @@
     renderReview(res);
     var changed = ((res.rules || {}).optional || []).concat((res.rules || {}).custom || []).reduce(function (s, r) { return s + (r.matched || []).length; }, 0);
     if (!$('#status').classList.contains('warn')) {               // only your own rows are worth a line
-      status('', TV.ruleset.isDefault(RS) ? '' : '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span><span class="rs-x">they changed ' + TV.plural(changed, 'action') + ' here</span><a class="rs-edit" href="tables.html">Edit the tables</a>');
+      status('', TV.ruleset.isDefault(RS) ? '' : '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span><span class="rs-x">they changed ' + TV.plural(changed, 'action') + ' here</span><a class="rs-edit" href="tables.html">Customize the rules</a>');
     }
-    renderCompare();
     syncPanel();
     setView(S.view, true);
     updateCursorUI();
@@ -202,15 +216,14 @@
       RS = rs;
       RKEY = TV.ruleset.key(RS);
       TV.rulesShown(RKEY);
-      CORPUS = null; cmpPromise = null;                       // the corpus side, under the new rows too
-      busy('Analysing ' + REC.name + ' with ' + TV.plural(rows.length, 'new row') + '…');
+      busy('Analysing ' + REC.name + ' with ' + TV.plural(rows.length, 'new rule') + '…');
       TV.uploads.reanalyze(REC, RS).then(function (r) {
         busy('');
         if (GROUP) { route(); return; }                          // the other members get the rows too
         show(r, false);
         status('ok', '<span class="rs-name">' + esc(TV.ruleset.label(RS)) + '</span><span class="rs-x">added ' + TV.plural(rows.length, 'row') +
           '; your other uploads and the corpus get them when you open them</span><a class="rs-edit" href="tables.html">See the tables</a>');
-      }, function (err) { busy(''); status('warn', 'The rows were added, but this upload could not be analysed again: ' + esc(err.message)); });
+      }, function (err) { busy(''); status('warn', 'The rules were added, but this upload could not be analysed again: ' + esc(err.message)); });
     });
   }
 
@@ -248,116 +261,6 @@
     TV.uploads.remove([REC.id]).then(function () { location.href = 'index.html'; });
   });
 
-  /* ---------------------------------------------------------------- with the corpus */
-  function corpusReady() {
-    if (!D) return Promise.resolve(null);
-    if (TV.ruleset.isDefault(RS)) return Promise.resolve(D);
-    var copy = JSON.parse(JSON.stringify(D));
-    return TV.corpus.cached(D, RS).then(function (hit) {
-      if (hit) return TV.corpus.apply(copy, hit);
-      if (!TV.engine.usable()) return null;
-      return TV.corpus.overview(D, RS, function (done, total) {
-        var el = $('#cmpWait');
-        if (el) el.textContent = 'Applying your table rows to the corpus… ' + done + ' / ' + total + ' bugs';
-      }).then(function (res) { return TV.corpus.apply(copy, res); });
-    });
-  }
-  var cmpPromise = null;
-  function renderCompare() {
-    var el = $('#compare'), t = CUR;
-    if (!D) { el.innerHTML = ''; return; }
-    if (t.project === 'swebench') {
-      el.innerHTML = '<div class="card cmp"><div class="cmp-h"><h2>This trajectory and the corpus</h2></div><p class="note">This is a SWE-bench run on a Python repository' +
-        (((REC.result || {}).source || {}).repo_root ? ' (<code>' + esc(REC.result.source.repo_root) + '</code>)' : '') +
-        ', so it is not compared with the corpus of Android app repairs. Its paths are read relative to the repository, and Python\'s test conventions apply (<code>tests/</code>, <code>test_*.py</code>, pytest and unittest results, and the scripts the agent writes at the repository root to reproduce the issue).</p></div>';
-      return;
-    }
-    if (!CORPUS) {
-      el.innerHTML = '<div class="card cmp"><p class="muted" id="cmpWait">Loading the corpus under ' + esc(TV.ruleset.label(RS).toLowerCase()) + '…</p></div>';
-      if (!cmpPromise) cmpPromise = corpusReady().then(function (c) {
-        CORPUS = c || 'none';
-        if (CUR) renderCompare();
-      }, function (err) {
-        CORPUS = 'none';
-        el.innerHTML = '<div class="card cmp"><p class="note">The corpus could not be analysed with your table rows (' + esc(err.message) + '), so there is no comparison.</p></div>';
-      });
-      return;
-    }
-    if (CORPUS === 'none') { el.innerHTML = '<div class="card cmp"><p class="note">Comparing with the corpus under your table rows needs the analysis engine.</p></div>'; return; }
-    var C = CORPUS, agents = C.agents || TV.AGENT_ORDER, same = agents.indexOf(t.agent) >= 0;
-    var pool = [];
-    C.bugs.forEach(function (b) { (same ? [t.agent] : agents).forEach(function (a) { if (b.agents[a]) pool.push(b.agents[a]); }); });
-    var who = same ? t.agent + '\'s ' + pool.length + ' corpus runs' : 'all ' + pool.length + ' corpus runs';
-    /* a tile: this run's value, the corpus median, and where the value falls among the runs */
-    function tile(label, value, xs, fmt, tip) {
-      var a = xs.filter(function (x) { return x != null && !isNaN(x); }), med = TV.median(a), cmp = '';
-      if (med != null) {
-        cmp = 'corpus median ' + fmt(med);
-        if (value != null) {
-          var lo = a.filter(function (x) { return x < value; }).length / a.length, hi = a.filter(function (x) { return x > value; }).length / a.length;
-          cmp += lo >= 0.5 ? ' · above ' + Math.round(100 * lo) + '% of runs' : hi >= 0.5 ? ' · below ' + Math.round(100 * hi) + '% of runs' : ' · typical';
-        }
-      }
-      return '<div class="tile"' + (tip ? ' data-tip="' + esc(tip) + '"' : '') + '><span>' + label + '</span><b>' + (value == null ? '–' : fmt(value)) + '</b>' +
-        (cmp ? '<span class="tc">' + cmp + '</span>' : '') + '</div>';
-    }
-    var id = function (x) { return String(Math.round(x)); };
-    var dur = t.stats.duration_s != null ? t.stats.duration_s : t.stats.reported_duration_s;
-    var failedAtt = t.attempts.filter(function (a) { return a.outcome === 'failed'; }).length;
-    var h = '<div class="card cmp"><div class="cmp-h"><h2>This trajectory and the corpus</h2><span class="muted small">compared with ' + esc(who) + ' (run 1) · ' + esc(TV.ruleset.label(RS)) + '</span></div>';
-    h += '<div class="tiles">' +
-      tile('Actions', t.n, pool.map(function (x) { return x.n_actions; }), id, TV.plural(t.n_steps || 0, 'agent step') + ' (LLM turns)') +
-      tile('Phase spans', t.phases.length, pool.map(function (x) { return x.stats.n_phases; }), id, 'stretches of one phase; a phase may come back') +
-      tile('Repair attempts', t.attempts.length, pool.map(function (x) { return x.stats.n_attempts; }), id, 'edits of app code, each checked by the first build or test after it' + (failedAtt ? '; ' + failedAtt + ' failed here' : '')) +
-      tile('First fix', t.anchor, pool.map(function (x) { return x.stats.anchor; }), function (x) { return '#' + Math.round(x); }, t.anchor ? 'the first edit of a source file' : 'this log never edits a source file') +
-      (dur != null ? tile('Duration', dur, pool.map(function (x) { return x.stats.duration_s != null ? x.stats.duration_s : x.stats.reported_duration_s; }), TV.fmtDur) : '') +
-      '</div>';
-    /* phase shares: this run against the pooled corpus runs */
-    function shares(list) {
-      var tot = {}, n = 0;
-      list.forEach(function (x) { TV.PHASE_ORDER.forEach(function (p) { var k = (x.metrics || {})[p + '_actions'] || 0; tot[p] = (tot[p] || 0) + k; n += k; }); });
-      return { tot: tot, n: n };
-    }
-    function bar(sh, label) {
-      return '<div class="ps-l">' + label + '</div><div class="bar100">' + (sh.n ? TV.PHASE_ORDER.filter(function (p) { return sh.tot[p]; }).map(function (p) {
-        var share = sh.tot[p] / sh.n;
-        return '<i style="flex:' + sh.tot[p] + ' 1 0;background:' + TV.phaseVar(p) + ';color:' + TV.phaseTextVar(p) + '" data-tip="' + esc(p + ': ' + sh.tot[p] + ' actions (' + TV.pct(share) + ')') + '">' + (share >= 0.08 ? TV.pct(share) : '') + '</i>';
-      }).join('') : '<i class="none"></i>') + '</div>';
-    }
-    h += '<div class="cmp-cols"><div><h3>Where the actions go</h3><div class="pshare">' + bar(shares([t]), '<b>This run</b>') + bar(shares(pool), same ? TV.agentHTML(t.agent) + '<span class="muted small">corpus, ' + pool.length + ' runs</span>' : '<b>Corpus</b><span class="muted small">all ' + pool.length + ' runs</span>') + '</div>' +
-      '<div class="legend lg-inline">' + TV.phaseLegend() + '</div></div>';
-    /* phase outcomes: this run's counts against the corpus shares, phase by phase (a phase whose
-     * checks changed counts each of its outcomes) */
-    var mine = {};
-    t.subs.forEach(function (s) { var r = mine[s.p.phase] || (mine[s.p.phase] = {}); r[s.outcome] = (r[s.outcome] || 0) + 1; });
-    h += '<div><h3>Phase outcomes</h3><div class="ocmp">';
-    TV.PHASE_ORDER.filter(function (p) { return mine[p]; }).forEach(function (p) {
-      var c = {}, n = 0;
-      pool.forEach(function (x) { var row = ((x.subphases || {}).by_phase || {})[p] || {}; Object.keys(row).forEach(function (o) { c[o] = (c[o] || 0) + row[o]; n += row[o]; }); });
-      h += '<span class="bl">' + TV.phaseChip(p) + '</span><span class="oc-mine">' + TV.OUTCOMES.filter(function (o) { return mine[p][o]; }).map(function (o) {
-        return '<span class="ocount o-' + o + '" data-tip="' + esc(mine[p][o] + ' here · ' + TV.outcomeDef(p, o)) + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[o] + '</b>' + mine[p][o] + '</span>';
-      }).join('') + '</span><span class="bar100 mini" data-tip="the outcomes of this phase in the corpus runs">' + (n ? TV.OUTCOMES.filter(function (o) { return c[o]; }).map(function (o) {
-        return '<i class="o-' + o + '" style="flex:' + c[o] + ' 1 0" data-tip="' + esc('corpus: ' + c[o] + ' ' + o + ' (' + TV.pct(c[o] / n) + ')') + '">' + (c[o] / n >= 0.25 ? TV.pct(c[o] / n) : '') + '</i>';
-      }).join('') : '<i class="none"></i>') + '</span>';
-    });
-    h += '</div><div class="legend lg-inline"><span class="muted small">this run (counts) · corpus (shares)</span>' + TV.outcomeLegend() + '</div></div></div>';
-    /* the same bug in the corpus */
-    var bug = t.bug && C.bugs.filter(function (b) { return String(b.bug) === String(t.bug); })[0];
-    if (bug) {
-      h += '<div class="samebug"><h3>bug-' + esc(bug.bug) + ' in the corpus <span class="muted small">run ' + (C.run || 1) + (bug.app ? ' · ' + esc(bug.app) : '') + '</span></h3>';
-      var maxN = Math.max(t.n, Math.max.apply(null, agents.map(function (a) { return (bug.agents[a] || {}).n_actions || 0; })));
-      h += '<div class="sb-row"><span class="sb-a"><b>This run</b></span>' + TV.markHTML(t.outcome.pass) + '<span class="track">' + TV.stripsHTML(t.strip, t.subStrip, t.n, maxN) + '<span class="an">' + t.n + '</span></span></div>';
-      agents.forEach(function (a) {
-        var x = bug.agents[a];
-        if (!x) return;
-        h += '<a class="sb-row" href="bug.html#bug=' + encodeURIComponent(bug.bug) + '&t=' + a + '-r' + (C.run || 1) + '"><span class="sb-a">' + TV.agentHTML(a) + '</span>' + TV.markHTML(x.pass) +
-          '<span class="track">' + TV.stripsHTML(x.strip, x.sub_strip, x.n_actions, maxN) + '<span class="an">' + x.n_actions + '</span></span></a>';
-      });
-      h += '<a class="btn small" href="bug.html#bug=' + encodeURIComponent(bug.bug) + '">Open bug-' + esc(bug.bug) + ' (3 agents × 3 runs)</a></div>';
-    }
-    el.innerHTML = h + '</div>';
-  }
-
   /* ---------------------------------------------------------------- the views' shell */
   TV.traj = function () { return CUR; };
   TV.applyLevel = function (t, level) { S.expanded[t.id] = TV.levelExpansion(t, level); };
@@ -390,13 +293,20 @@
     var changed = v !== S.view;
     S.view = v;
     $$('.tabs [data-view]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.view === v ? 'true' : 'false'); });
+    $('#viewTitle').textContent = v === 'fingerprint' ? 'Trajectory Comparison' : 'Trajectory Inspection';
     if (changed || force) render();
     saveHash();
   }
   function tabCtl() {
     var h = '';
     if (S.view === 'fingerprint') {
-      h = '';
+      var g = GROUP && GROUP.g;
+      if (g && g.kind === 'bug' && REC) {
+        var ag = TV.uploads.agent(REC), run = REC._bugRun;
+        var nAg = g.members.filter(function (r) { return r._bugRun === run; }).length, nRun = g.members.filter(function (r) { return TV.uploads.agent(r) === ag; }).length;
+        h = '<span class="seg small" role="group" aria-label="Fingerprints of"><button type="button" data-fp="agents" aria-pressed="' + (S.fp !== 'runs') + '" title="the agents in the selected run">' + TV.plural(nAg, 'agent') + ' · run ' + run + '</button>' +
+          '<button type="button" data-fp="runs" aria-pressed="' + (S.fp === 'runs') + '" title="the selected agent in each of its runs">' + esc(ag) + ' · ' + TV.plural(nRun, 'run') + '</button></span>';
+      }
     } else if (S.view === 'trajectory') {
       h = TV.levelCtlHTML(S.level);
     } else if (CUR.hasTs) {
@@ -410,6 +320,7 @@
     if (!b) return;
     if (b.dataset.level) { S.level = b.dataset.level; TV.applyLevel(CUR, S.level); render(); }
     else if (b.dataset.x) { S.timeMode = b.dataset.x === 'time'; render(); }
+    else if (b.dataset.fp) { S.fp = b.dataset.fp === 'runs' ? 'runs' : 'agents'; groupData(); render(); saveHash(); }
   });
   function render() {
     if (!CUR) return;
@@ -511,7 +422,7 @@
     $('#playBtn').disabled = !t.n;
     $('#cursorLabel').innerHTML = a ? '<b>#' + a.i + '</b><span class="muted">/' + t.n + '</span> <span class="cl-mid">' + esc(a.category) + '</span>' +
         (a.verdict !== 'none' ? ' <span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + '</span>' : '') +
-        (a.sub ? ' <span class="opill mini o-' + a.sub.outcome + '" data-tip="' + esc(a.sub.p.phase + ' outcome: ' + TV.outcomeDef(a.sub.p.phase, a.sub.outcome)) + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[a.sub.outcome] + '</b><span class="ell">' + esc(a.sub.p.phase) + '</span></span>' : '')
+        TV.cursorPhaseHTML(a)
       : '<b>#–</b><span class="muted">/' + t.n + ' · press ▶ or j</span>';
   }
 

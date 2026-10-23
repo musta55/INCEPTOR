@@ -96,7 +96,7 @@
   function hits(id) {
     if (!HITS || HITS_KEY !== TV.ruleset.key(RS)) return '';
     var x = HITS[id];
-    return x ? '<span class="hits" data-tip="steps of the corpus (run 1) this row matched">' + TV.plural(x.actions, 'step') + '</span>' : '<span class="hits none" data-tip="no step of the corpus (run 1) matches it; it may match your uploads">no corpus match</span>';
+    return x ? '<span class="hits" data-tip="steps of the corpus (run 1) this rule matched">' + TV.plural(x.actions, 'step') + '</span>' : '<span class="hits none" data-tip="no step of the corpus (run 1) matches it; it may match your uploads">no corpus match</span>';
   }
   function mineHTML(kinds) {
     var rows = RS.custom.filter(function (r) { return kinds.indexOf(r.kind) >= 0; });
@@ -104,7 +104,7 @@
     return '<ul class="lt-rows">' + rows.map(function (r) {
       return '<li class="lt-row' + (r.enabled === false ? ' off' : '') + '"><span class="lt-yours">yours</span><span class="lt-sent">' + esc(TV.ruleSentence(r)) +
         (r.regex ? ' <span class="muted small">(pattern)</span>' : '') + '</span>' + hits(r.id) +
-        '<button type="button" class="btn ghost icon small" data-del="' + esc(r.id) + '" title="Delete this row" aria-label="Delete this row">✕</button></li>';
+        '<button type="button" class="btn ghost icon small" data-del="' + esc(r.id) + '" title="Delete this rule" aria-label="Delete this rule">✕</button></li>';
     }).join('') + '</ul>';
   }
 
@@ -114,7 +114,7 @@
     return TV.PHASE_ORDER.indexOf(v) >= 0 ? TV.phaseChip(v) : esc(v);
   }
   function changeBtn(table, value, label) {
-    return '<button type="button" class="btn ghost small lt-change" data-change="' + table + '" data-value="' + esc(value) + '" data-label="' + esc(label) + '" title="Start a row of yours from this one">Change…</button>';
+    return '<button type="button" class="btn ghost small lt-change" data-change="' + table + '" data-value="' + esc(value) + '" data-label="' + esc(label) + '" title="Start a rule of yours from this one">Change…</button>';
   }
   /* a cell of the table, its entries split at ";" and "," into code chips, word for word */
   function entriesHTML(cell) {
@@ -125,7 +125,6 @@
   }
   function renderBuiltIn() {
     $('#ltVersion').textContent = L.version || 'Final lookup table';
-    $('#ltDate').textContent = L.version_date ? '· ' + L.version_date : '';
     $('#actSum').textContent = '· ' + L.actions.length + ' categories, with the shell commands and the native tools that give each';
     $('#actBody').innerHTML = L.actions.map(function (a) {
       return '<tr><td><span class="midchip" data-tip="' + esc(a.type + ': ' + a.does) + '">' + esc(a.type) + '</span><div class="muted small">' + esc(a.does) + '</div></td>' +
@@ -141,11 +140,11 @@
       return '<tr><td><b>' + esc(r.name) + '</b></td><td>' + esc(r.files) + '</td><td>' + changeBtn('role', r.target, r.name) + '</td></tr>';
     }).join('');
     $('#roleNote').textContent = L.targets_swebench || '';
-    $('#phaseSum').textContent = '· ' + L.phases.length + ' rows; the first that matches the step decides';
+    $('#phaseSum').textContent = '· ' + L.phases.length + ' rules; the first that matches the step decides';
     $('#phaseBody').innerHTML = L.phases.map(function (p) {
       var value = TV.PHASE_ORDER.indexOf(p.phase) >= 0 ? p.phase : 'follow';
       return '<tr><td class="lt-n">' + p.n + '</td><td>' + phaseCell(p.phase) + '</td><td>' + esc(p.categories) + '</td><td>' + esc(p.target) + '</td><td>' + esc(p.position) + '</td>' +
-        '<td>' + changeBtn('phase', value, 'row ' + p.n + ': ' + p.categories + (p.target !== 'any' ? ' on a ' + p.target : '')) + '</td></tr>';
+        '<td>' + changeBtn('phase', value, 'rule ' + p.n + ': ' + p.categories + (p.target !== 'any' ? ' on a ' + p.target : '')) + '</td></tr>';
     }).join('');
     $('#sameNote').innerHTML = '<b>General rule</b>: ' + esc(L.general) + ' <b>' + SAME + '</b>: ' + esc(L.same) + '.';
   }
@@ -172,7 +171,6 @@
   function render() {
     if (!L) return;
     var n = RS.custom.length;
-    $('#rsName').textContent = n ? TV.plural(n, 'row') : 'none';
     $('#resetAll').hidden = !n;
     $('#actMine').innerHTML = mineHTML(['category', 'shell_tool']);
     $('#roleMine').innerHTML = mineHTML(['file_role']);
@@ -210,7 +208,7 @@
   }
   function preview(form) {
     var r = formRow(form), el = form.querySelector('.lt-preview');
-    el.innerHTML = r.match ? '<span class="muted small">The row will read:</span> ' + esc(TV.ruleSentence(r)) : '<span class="muted small">Type the ' +
+    el.innerHTML = r.match ? '<span class="muted small">The rule will read:</span> ' + esc(TV.ruleSentence(r)) : '<span class="muted small">Type the ' +
       (r.kind === 'shell_tool' ? 'tool\'s name' : r.kind === 'file_role' ? 'text to look for in file paths' : 'text to look for') + ' above.</span>';
   }
   function openForm(form, focus) {
@@ -270,7 +268,7 @@
     }
   });
   $('#resetAll').addEventListener('click', function () {
-    if (!window.confirm('Remove all your rows?')) return;
+    if (!window.confirm('Remove all your rules?')) return;
     RS = TV.ruleset.clean(null);
     changed();
   });
@@ -280,7 +278,7 @@
     L = info.lookup;
     renderBuiltIn();
     fillSelects();
-    if (hq.draft) {                                   // "+ Row from this action" on a step
+    if (hq.draft) {                                   // "+ Rule from this action" on a step
       try {
         var d = JSON.parse(hq.draft), form = d.kind === 'category' ? $('#actForm') : d.kind === 'file_role' ? $('#roleForm') : $('#phaseForm');
         form.match.value = String(d.match || '');
