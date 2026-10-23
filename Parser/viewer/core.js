@@ -1,5 +1,5 @@
 /* Inceptor, a trace exploration dashboard - shared core of every page (index, bug, analyze,
- * tables): helpers, vocabularies and labels (phases, phase outcomes, categories, flags, badges),
+ * tables): helpers, vocabularies and labels (phases, phase outcomes, categories, verdicts),
  * search, the user's lookup-table rows (TV.ruleset), theme, tooltip, trajectory preparation
  * (trajview/3), small HTML snippets. Plain script (no modules, no fetch) so that the corpus
  * pages work from file://. */
@@ -93,38 +93,46 @@
     var x = ((TV.vocab.text || {}).phases || {})[p];
     return x ? p + ': ' + x.doing + ' (' + x.where + ')' : p;
   };
-  /* phase outcomes: one question, the same in every phase (did its check show that the
-   * phase's goal was reached?); atif/phase.py OUTCOMES. A phase whose checks changed (failed,
-   * then succeeded) has an outcome history; the data keeps each stretch as a subphase. */
-  TV.OUTCOMES = ['succeeded', 'failed', 'blocked', 'unchecked'];
-  TV.OUTCOME_GLYPH = { succeeded: '✓', failed: '✗', blocked: '⊘', unchecked: '○' };
+  /* Two validations, kept apart in every label:
+   *  - self-validation: what the agent's own builds, compilations and tests showed. Each such
+   *    action is passed (a build, compilation or test passed), errored (it failed, or the
+   *    environment stopped it) or executed (it ran, but its output shows no such result: an
+   *    exit code 0 alone is not a pass). The Validation phase's outcome is the same reading
+   *    over its runs: passed, errored or unchecked (no build, compilation or test result).
+   *  - external validation: the benchmark's own verdict on the final patch (the outcome file
+   *    of an upload), never the agent's.
+   * The engine's outcomes (atif/phase.py OUTCOMES) are folded into the dashboard's three:
+   * succeeded -> passed, failed and blocked -> errored. A phase whose checks changed (errored,
+   * then passed) has an outcome history; the data keeps each stretch as a subphase. */
+  TV.OUTCOMES = ['passed', 'errored', 'unchecked'];
+  var OUTCOME_FOLD = { succeeded: 'passed', failed: 'errored', blocked: 'errored' };
   TV.OUTCOME_LABEL = {
-    succeeded: 'succeeded: the phase\'s check shows its goal was reached',
-    failed: 'failed: the check shows the goal was not reached',
-    blocked: 'blocked: a check was attempted, but the environment stopped it',
-    unchecked: 'unchecked: no check was attempted'
+    passed: 'passed: a build, compilation or test the agent ran passed',
+    errored: 'errored: a build, compilation or test the agent ran failed, or the environment stopped it',
+    unchecked: 'unchecked: the agent ran no build, compilation or test with a readable result'
   };
-  TV.outcomeOf = function (o) { return TV.OUTCOMES.indexOf(o) >= 0 ? o : 'unchecked'; };
-  /* the codebook's meaning of an outcome in one phase (Table 6), else the general label */
-  TV.outcomeDef = function (phase, o) {
-    var row = ((TV.vocab.text || {}).outcomes || {})[phase];
-    if (!row || !row[o] || row[o] === '–') return TV.OUTCOME_LABEL[o] || o;
-    return phase + ' ' + o + ': ' + row[o] + ' (check: ' + row.check + ')';
-  };
+  TV.outcomeOf = function (o) { o = OUTCOME_FOLD[o] || o; return TV.OUTCOMES.indexOf(o) >= 0 ? o : 'unchecked'; };
+  TV.outcomeVar = function (o) { return { passed: 'var(--sv-pass)', errored: 'var(--sv-err)' }[TV.outcomeOf(o)] || 'var(--o-unchecked)'; };
+  /* the meaning of a Validation outcome (the only phase with one) */
+  TV.outcomeDef = function (phase, o) { return (phase ? phase + ' ' : '') + (TV.OUTCOME_LABEL[TV.outcomeOf(o)] || o); };
   TV.EVIDENCE = ['test', 'build', 'target_file', 'none'];
   TV.EVIDENCE_LABEL = { test: 'a test run', build: 'a build', target_file: 'the files of the agent\'s patch', none: 'no check' };
   TV.EVIDENCE_SHORT = { test: 'test', build: 'build', target_file: 'patch files', none: '' };
-  TV.VERDICT_GLYPH = { pass: '✓', fail: '✗', none: '' };
-  TV.FAIL_KINDS = ['test', 'build', 'env', 'exit'];
-  TV.FAIL_KIND_LABEL = { test: 'a test ran and failed', build: 'compile / build error', env: 'environment / sandbox', exit: 'other non-zero exit' };
-  TV.failGlyphSVG = function (kind, cx, cy, r) {
-    var c = 'class="fk fk-' + (kind || 'exit') + '"';
-    switch (kind) {
-      case 'test': return '<path ' + c + ' d="M' + cx + ' ' + (cy - r) + 'L' + (cx + r) + ' ' + (cy + r * 0.8) + 'L' + (cx - r) + ' ' + (cy + r * 0.8) + 'Z"/>';
-      case 'build': return '<rect ' + c + ' x="' + (cx - r * 0.8) + '" y="' + (cy - r * 0.8) + '" width="' + (r * 1.6) + '" height="' + (r * 1.6) + '"/>';
-      case 'env': return '<path ' + c + ' d="M' + cx + ' ' + (cy - r) + 'L' + (cx + r) + ' ' + cy + 'L' + cx + ' ' + (cy + r) + 'L' + (cx - r) + ' ' + cy + 'Z"/>';
-      default: return '<path ' + c + ' d="M' + (cx - r * 0.75) + ' ' + (cy - r * 0.75) + 'L' + (cx + r * 0.75) + ' ' + (cy + r * 0.75) + 'M' + (cx + r * 0.75) + ' ' + (cy - r * 0.75) + 'L' + (cx - r * 0.75) + ' ' + (cy + r * 0.75) + '"/>';
-    }
+  /* an action's self-check (atif/verdict.py: pass | fail | none) in the dashboard's words, and
+   * its mark: a dot coloured like the action dots of the Fingerprint and Comparison tabs (the
+   * square box belongs to the external validation alone). */
+  TV.verdictDot = function (v) { return '<i class="vdot v-' + (v || 'none') + '" aria-hidden="true"></i>'; };
+  TV.VERDICT_WORD = { pass: 'passed', fail: 'errored', none: 'executed' };
+  TV.VERDICT_LABEL = {
+    pass: 'passed: its output shows a build, compilation or test that passed',
+    fail: 'errored: its output shows a build, compilation or test that failed, or an error that stopped it',
+    none: 'executed: it ran, but its output shows no build, compilation or test result (an exit code 0 alone is not a pass)'
+  };
+  /* the action legend: passed / errored / executed, with the mark each view draws (cls) */
+  TV.verdictLegend = function (mark) {
+    return ['pass', 'fail', 'none'].map(function (v) {
+      return '<span class="lgm" data-tip="' + TV.esc(TV.VERDICT_LABEL[v]) + '"><i class="' + mark + ' v-' + v + '"></i>' + TV.VERDICT_WORD[v] + '</span>';
+    }).join('');
   };
   /* action categories (the action table of the Final lookup tables, atif/lookup.py), in table
    * order, with two-letter abbreviations */
@@ -145,90 +153,31 @@
     Object.keys(used).forEach(function (c) { if (lanes.indexOf(c) < 0) lanes.push(c); });
     return lanes;
   };
-  TV.SELF_REPORT_LABEL = {
-    reports_failure: 'reports a failure', claims_suite_pass: 'claims the test suite passes', claims_target_pass: 'claims the bug test passes',
-    claims_unit_tests: 'claims unit tests pass', claims_build_only: 'claims only that it builds', no_test_claim: 'makes no test claim', empty: 'no final message'
-  };
-
-  /* flags (Table 7): a short label; the definition comes from the codebook */
-  TV.FLAGS = ['test_modified', 'environment_workaround', 'repeated_failure', 'repeated_reads', 'manual_ui_check'];
-  TV.FLAG_INFO = {
-    test_modified: ['test modified', 'changes test code or the benchmark\'s test script', 'bad'],
-    environment_workaround: ['env workaround', 'changes build files, or changes environment settings and runs again after a failure', 'warn'],
-    repeated_failure: ['repeated failure', 'repeats a run that failed, the same way, with nothing changed in between', 'bad'],
-    repeated_reads: ['repeated reads', 'reads one file three or more times', 'info'],
-    manual_ui_check: ['manual UI check', 'drives the app on a device (taps, screenshots): a check with no automatic result', 'info']
-  };
-  TV.flagLabel = function (f) { return (TV.FLAG_INFO[f] || [TV.humanize(f)])[0]; };
-  TV.flagDef = function (f) {
-    var text = ((TV.vocab.text || {}).flags || {})[f] || (TV.FLAG_INFO[f] || [])[1] || TV.humanize(f);
-    return f + ': ' + text;
-  };
-  TV.flagHTML = function (f) {
-    return '<span class="flag sev-' + ((TV.FLAG_INFO[f] || [])[2] || 'info') + '" data-tip="' + TV.esc(TV.flagDef(f)) + '">' + TV.esc(TV.flagLabel(f)) + '</span>';
-  };
-
-  /* trajectory-level process badges (atif/outcomes.py phase_badges): plain words, a definition,
-   * a severity. Only the ones that hold are shown; "claims pass, harness fails" replaces "claims pass". */
-  TV.BADGES = [
-    { key: 'claims_but_fails', label: 'claims pass, harness fails', sev: 'bad',
-      def: 'The final message claims the tests pass, but the harness outcome is fail.',
-      test: function (b, pass) { return !!b.self_claims_pass && pass === false; } },
-    { key: 'self_claims_pass', label: 'claims tests pass', sev: 'info',
-      def: 'The final message claims the bug test or the suite passes.',
-      test: function (b, pass) { return !!b.self_claims_pass && pass !== false; } },
-    { key: 'test_modified', label: 'modified tests', sev: 'bad',
-      def: 'The run changes test code or the benchmark\'s test script (flag test_modified).',
-      test: function (b) { return !!b.test_modified; } },
-    { key: 'repeated_failure', label: 'repeated failure', sev: 'bad',
-      def: 'The run repeats a failed run the same way, with nothing changed in between (flag repeated_failure).',
-      test: function (b) { return !!b.repeated_failure; } },
-    { key: 'blocked_checks', label: 'blocked checks', sev: 'warn',
-      def: 'Checks the environment stopped (phase outcome blocked).',
-      test: function (b) { return (b.blocked_checks || 0) > 0; },
-      text: function (b) { return 'blocked checks: ' + b.blocked_checks; } },
-    { key: 'patch_unchecked', label: 'final change never run', sev: 'warn',
-      def: 'The last Repair outcome is unchecked: the final change was never built or tested.',
-      test: function (b) { return b.final_repair_outcome === 'unchecked'; } },
-    { key: 'build_only', label: 'final check: build only', sev: 'info',
-      def: 'The last Repair outcome succeeded on a build, not a test: the patch compiles, but no test judged it.',
-      test: function (b) { return b.final_repair_outcome === 'succeeded' && b.final_repair_evidence === 'build'; } },
-    { key: 'last_test_fail', label: 'last test failed', sev: 'warn',
-      def: 'The last test run in the trajectory failed.',
-      test: function (b) { return b.last_test_verdict === 'fail'; } }
-  ];
-  TV.badgesFor = function (badges, pass) {
-    badges = badges || {};
-    return TV.BADGES.filter(function (x) { return x.test(badges, pass); });
-  };
-  TV.badgeHTML = function (badges, pass) {
-    return TV.badgesFor(badges, pass).map(function (x) {
-      return '<span class="badge sev-' + x.sev + '" data-tip="' + TV.esc(x.def) + '">' + TV.esc(x.text ? x.text(badges) : x.label) + '</span>';
-    }).join('');
-  };
-
   /* ------------------------------------------------------------------ snippets */
   TV.agentHTML = function (a, extra) {
     return '<span class="agent"><i class="adot ' + TV.esc(a) + '" aria-hidden="true"></i>' + TV.esc(a) + (extra || '') + '</span>';
   };
   TV.oc = function (pass) { return pass === true ? 'pass' : pass === false ? 'fail' : 'unknown'; };
+  /* the external validation's one mark: a box, green = passed, red = failed, grey outline =
+   * unknown (no other label in the dashboard is a square box) */
+  TV.extBox = function (pass) { return '<i class="xbox ' + TV.oc(pass) + '" aria-hidden="true"></i>'; };
   TV.markHTML = function (pass, tip) {
     var oc = TV.oc(pass);
-    return '<span class="mark ' + oc + '"' + (tip ? ' data-tip="' + TV.esc(tip) + '"' : '') + ' aria-label="' + oc + '">' +
-      (oc === 'pass' ? '✓' : oc === 'fail' ? '✗' : '?') + '</span>';
+    return '<span class="xbox ' + oc + '"' + (tip ? ' data-tip="' + TV.esc(tip) + '"' : '') + ' role="img" aria-label="external validation ' + TV.EXTERNAL_WORD[oc] + '"></span>';
   };
+  TV.EXTERNAL_DEF = 'External validation: the benchmark\'s own verdict on the agent\'s final patch (it builds the patched app and runs the bug\'s tests), not the agent\'s';
+  TV.EXTERNAL_WORD = { pass: 'passed', fail: 'failed', unknown: 'unknown' };
   TV.passPill = function (pass) {
     var oc = TV.oc(pass);
-    return '<span class="tpill ' + oc + '" data-tip="Harness outcome: the patched app was built and the bug test run">' +
-      (oc === 'pass' ? '✓ pass' : oc === 'fail' ? '✗ fail' : '? no outcome') + '</span>';
+    return '<span class="tpill ' + oc + '" data-tip="' + TV.esc(TV.EXTERNAL_DEF) + '">' +
+      TV.extBox(pass) + TV.EXTERNAL_WORD[oc] + '</span>';
   };
-  /* three small dots for runs 1..3: filled = pass, ring = fail, grey ring = no outcome */
-  TV.runDots = function (byRun, runs, cur, agent) {
-    runs = runs || [1, 2, 3];
-    var desc = runs.map(function (r) { return 'run ' + r + ': ' + TV.oc((byRun || {})[r]); }).join(', ');
-    return '<span class="rdots" data-tip="' + TV.esc((agent ? agent + ' · ' : '') + desc) + '" aria-label="' + TV.esc(desc) + '">' + runs.map(function (r) {
-      return '<i class="rdot ' + TV.oc((byRun || {})[r]) + (r === cur ? ' cur' : '') + '"></i>';
-    }).join('') + '</span>';
+  /* the legend row of the external validation: its pills, or (marks) its boxes, one per run */
+  TV.externalLegendRow = function (marks) {
+    return ['External validation', marks ? 'by the benchmark · a box per run' : 'by the benchmark',
+      [true, false, null].map(function (p) {
+        return marks ? '<span class="lgm" data-tip="' + TV.esc(TV.EXTERNAL_DEF) + '">' + TV.markHTML(p) + TV.EXTERNAL_WORD[TV.oc(p)] + '</span>' : TV.passPill(p);
+      }).join('')];
   };
   /* strips: pieces placed by action index (left / width in % of n), so a phase strip and the
    * phase-outcome strip under it line up exactly; a 1px surface gap separates pieces */
@@ -252,7 +201,7 @@
       return !p[3] || TV.hasVerdict(p[3]);                // only Validation has a verdict
     }).map(function (p) {
       var o = TV.outcomeOf(p[0]), ev = TV.EVIDENCE_SHORT[p[4]];
-      return piece(p, N, '', 'o-' + o, (p[3] ? p[3] + ' · ' : '') + TV.OUTCOME_GLYPH[o] + ' ' + o + (ev ? ' (' + ev + ')' : ''));
+      return piece(p, N, '', 'o-' + o, 'self-validation · ' + (p[3] ? p[3] + ' · ' : '') + o + (ev ? ' (' + ev + ')' : ''));
     }).join('') + '</span>';
   };
   /* phase strip with the phase-outcome strip under it, both scaled to n / ref */
@@ -269,8 +218,7 @@
     o = TV.outcomeOf(o);
     var evs = ev && TV.EVIDENCE_SHORT[ev];
     return '<span class="opill o-' + o + (cls ? ' ' + cls : '') + '" data-tip="' + TV.esc(phase ? TV.outcomeDef(phase, o) : TV.OUTCOME_LABEL[o]) +
-      (evs ? TV.esc(' · evidence: ' + TV.EVIDENCE_LABEL[ev]) : '') + '"><b aria-hidden="true">' +
-      TV.OUTCOME_GLYPH[o] + '</b>' + TV.esc(text != null ? text : o) + (evs ? '<span class="ev"> · ' + TV.esc(evs) + '</span>' : '') + '</span>';
+      (evs ? TV.esc(' · evidence: ' + TV.EVIDENCE_LABEL[ev]) : '') + '">' + TV.esc(text != null ? text : o) + (evs ? '<span class="ev"> · ' + TV.esc(evs) + '</span>' : '') + '</span>';
   };
   TV.phaseLegend = function (used) {
     return TV.PHASE_ORDER.filter(function (p) { return !used || used[p]; }).map(TV.phaseChip).join('');
@@ -300,8 +248,9 @@
    * corpus data as exported. The engine checks the file again (rules.normalize), so this only
    * keeps its shape. TABLES_VERSION is part of every cache key: results computed by an
    * earlier engine are never reused (t1: codebook version 4; t2: + verdict lines, deciding
-   * actions, unrecognised steps, shell-tool rows; t3: the Final lookup tables). */
-  var RULES_KEY = 'tv-rules', TABLES_VERSION = 't3';
+   * actions, unrecognised steps, shell-tool rows; t3: the Final lookup tables; t4: an exit
+   * code 0 alone is no pass). */
+  var RULES_KEY = 'tv-rules', TABLES_VERSION = 't4';
   /* ready-made rows (O1-O4) are no longer offered: the built-in tables cover them, so a
    * file that still lists some keeps only its own rows */
   function cleanRules(rs) {
@@ -559,7 +508,7 @@
   /* any element with data-tip gets a hover tooltip (text, escaped) */
   var tipOwner = null;
   /* data-phase-tip="<phase id>": the phase pop-up of the selected trajectory (its outcomes and
-   * the files it edited and looked at), the same one the timeline shows */
+   * the files it edited and looked at), the same one the Fingerprint tab shows */
   function phaseTipHTML(el) {
     var t = TV.traj && TV.traj(), id = el.getAttribute('data-phase-tip');
     var p = t && (t.phases || []).filter(function (x) { return String(x.id) === id; })[0];
@@ -760,7 +709,7 @@
   /* the legend of the dots: grey = localized only, one colour per localization -> repair attempt
    * (the code's cycles) the trajectories have */
   TV.fileLegend = function (nCycles) {
-    var h = '<span class="lgm" data-tip="Localization: a file read or searched in, never edited after">' + TV.dotHTML(0) + 'localized only</span>';
+    var h = '<span class="lgm" data-tip="Localization: a file read or searched in, never edited after (one mark per file)">' + TV.dotHTML(0) + 'localized only</span>';
     var n = Math.max(1, Math.min(nCycles || 1, TV.CYCLE_COLORS));
     for (var k = 1; k <= n; k++) {
       h += '<span class="lgm" data-tip="' + TV.esc('localized, then edited in Repair' + (nCycles > 1 ? ' at attempt ' + k + ' (a localization followed by a repair)' + (nCycles > TV.CYCLE_COLORS && k === 1 ? '; attempts ' + (TV.CYCLE_COLORS + 1) + ', … repeat the colours' : '') : '') +
@@ -768,12 +717,12 @@
     }
     return h;
   };
-  /* the legend rows of the outcome band: the verdicts of Validation, then the file dots */
+  /* the legend rows of the outcome band: Validation's self-validation, then the file marks */
   TV.bandLegendRows = function (used, nCycles) {
     var vs = TV.OUTCOMES.filter(function (o) { return (used || {})[o]; });
     return [
-      [vs.length ? 'Phase outcome' : '', 'validation', vs.length ? TV.outcomeLegend(used) : ''],
-      [vs.length ? '' : 'Phase outcome', 'localization, repair · a dot per file', TV.fileLegend(nCycles)]
+      [vs.length ? 'Phase outcome' : '', 'validation · self-validation by the agent', vs.length ? TV.outcomeLegend(used) : ''],
+      [vs.length ? '' : 'Phase outcome', 'localization, repair · a mark per file', TV.fileLegend(nCycles)]
     ];
   };
   /* the file list of a Localization / Repair span: dot, name, where it was edited or localized */
@@ -804,9 +753,11 @@
     if (!a.evidence) return '';
     var line = a.evidence_line ? '<code class="evl">' + TV.esc(a.evidence_line) + '</code>' : '';
     if (a.verdict === 'none') {
-      return a.evidence === 'no_test_evidence' ? '<div class="dt-ev">no verdict: a test run needs a test result, and the output shows only ' + (line || 'an exit code') + '</div>' : '';
+      if (a.evidence === 'no_test_evidence') return '<div class="dt-ev">executed, not passed: a test run needs a test result, and the output shows only ' + (line || 'an exit code') + '</div>';
+      if (a.evidence === 'no_check_evidence') return '<div class="dt-ev">executed, not passed: the output shows only ' + (line || 'an exit code') + ', no build, compilation or test result</div>';
+      return '';
     }
-    return '<div class="dt-ev v-' + a.verdict + '">' + (a.verdict === 'pass' ? 'pass' : 'fail') + ', read from ' +
+    return '<div class="dt-ev v-' + a.verdict + '">' + TV.VERDICT_WORD[a.verdict] + ' (self-check by the agent), read from ' +
       (line || (a.evidence === 'exit' ? 'the log, which marks this call as an error' : TV.esc(TV.humanize(a.evidence)))) + '</div>';
   };
   /* the deciding actions of an outcome stretch (s.checks) that lie outside it: the edits of a
@@ -819,14 +770,11 @@
     return '<span class="jby" data-tip="' + TV.esc('These edits hold no check of their own. They belong to a repair attempt, and the ' + (a.category || 'run') +
       ' at #' + out.join(', #') + ' judged that attempt' + (a.evidence_line ? ': ' + a.evidence_line : '') + '.') + '">by #' + out.join(', #') + '</span>';
   };
-  /* "a build or test after the first fix: it passes": an outcome in the codebook's words */
-  TV.outcomeText = function (s) {
-    var row = ((TV.vocab.text || {}).outcomes || {})[s.p.phase] || {};
-    return row[s.outcome] && row[s.outcome] !== '–' ? row.check + ': ' + row[s.outcome] : TV.OUTCOME_LABEL[s.outcome];
-  };
+  /* an outcome in words (self-validation: what the agent's own runs showed) */
+  TV.outcomeText = function (s) { return TV.OUTCOME_LABEL[s.outcome]; };
   /* a phase's outcome: the final one as a solid pill (with its evidence, and "by #N" when a
    * later run judged it). A phase whose checks changed shows its earlier outcomes first, as
-   * hollow pills (✗ → ✓); cur = the stretch of the action in the details panel (ringed). */
+   * hollow pills (errored → passed); cur = the stretch of the action in the details panel (ringed). */
   TV.phaseOutcomeHTML = function (t, p, cur) {
     if (TV.hasFiles(p.phase)) return TV.dotsHTML(TV.spanFiles(t, p), 'data-phase-tip="' + TV.esc(p.id) + '"');
     var subs = p.subphases || [], last = subs[subs.length - 1];
@@ -836,15 +784,9 @@
       var ev = TV.EVIDENCE_SHORT[s.evidence], out = TV.outsideChecks(s);
       return '<span class="opill hist o-' + s.outcome + (s === cur ? ' cur' : '') + '" aria-label="' + s.outcome + '" data-tip="' +
         TV.esc('#' + s.start + '–#' + s.end + ' · ' + TV.outcomeDef(p.phase, s.outcome) + (ev ? ' · evidence: ' + TV.EVIDENCE_LABEL[s.evidence] : '') +
-          (out.length ? ' · decided by #' + out.join(', #') : '')) + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[s.outcome] + '</b></span><i class="oh-arr" aria-hidden="true">→</i>';
+          (out.length ? ' · decided by #' + out.join(', #') : '')) + '">' + s.outcome + '</span><i class="oh-arr" aria-hidden="true">→</i>';
     }).join('');
     return '<span class="ohist">' + h + TV.outcomePill(last.outcome, null, p.phase, last.evidence, 'final' + (multi && last === cur ? ' cur' : '')) + TV.judgedByHTML(t, last) + '</span>';
-  };
-  /* the flags of a phase (over its outcome stretches), once each */
-  TV.phaseFlags = function (p) {
-    var out = [];
-    (p.subphases || []).forEach(function (s) { (s.flags || []).forEach(function (f) { if (out.indexOf(f) < 0) out.push(f); }); });
-    return out;
   };
   /* the details panel's actions: start a lookup-table row from the action, see its raw step */
   TV.detailsActsHTML = function (a) {
@@ -854,14 +796,10 @@
 
   /* the details panel's body for one action (bug page and Analyze page) */
   TV.actionDetailsHTML = function (t, a) {
-    var s = a.sub, p = a.span, h = '';
+    var p = a.span, h = '';
     h += '<div class="dt-row"><span class="midchip" data-tip="' + TV.esc(TV.catDef(a.category)) + '">' + TV.esc(a.category) + '</span><b>' + TV.esc(a.tool) + '</b>' +
       (a.scope && a.scope !== 'main' ? '<span class="tag" data-tip="a step of a sub-agent the agent delegated work to">sub-agent</span>' : '') +
-      (a.verdict !== 'none' ? '<span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + ' ' + a.verdict +
-        (a.fail_kind ? ' · ' + TV.esc(TV.FAIL_KIND_LABEL[a.fail_kind] || a.fail_kind) : '') + '</span>' : '') +
-      (a.failed_raw && a.verdict !== 'fail' ? '<span class="tag" data-tip="the log marks this tool call as an error">log error</span>' : '') +
-      (a.file_role ? '<span class="tag" data-tip="the targets of the files this action works on (the target table on the Lookup tables page)">' + TV.esc(a.file_role) + '</span>' : '') +
-      (a.reverts ? '<span class="tag" data-tip="undoes earlier changes (git checkout / restore / stash / reset)">reverts</span>' : '') +
+      '<span class="vg v-' + a.verdict + '" data-tip="' + TV.esc(TV.VERDICT_LABEL[a.verdict]) + '">' + TV.verdictDot(a.verdict) + TV.VERDICT_WORD[a.verdict] + '</span>' +
       (t.anchor === a.i ? '<span class="tag" data-tip="the first edit of a source file: repair and validation happen only from it on">first fix</span>' : '') +
       (a.rules || []).map(function (r) {
         var who = /^O\d/.test(r.id) ? 'ready-made rule' : 'your rule';
@@ -878,13 +816,11 @@
     h += '<div class="dt-k">Result<span class="dt-full" data-full-note="result"></span></div><pre class="dt-code dt-long" data-full="result">' + (a.result ? TV.esc(a.result) : '<span class="muted">(empty)</span>') + '</pre>';
     h += '<div class="dt-raw" hidden></div>';
     if (p) {
-      h += '<div class="dt-k">Phase</div><div class="dt-row">' + TV.phaseChip(p.phase) + '<span class="muted small">#' + p.start + '–#' + p.end + '</span>' +
-        (a.own_patch ? '<span class="tag" data-tip="reads back files the agent already changed (own patch)">own patch</span>' : '') + '</div>';
+      h += '<div class="dt-k">Phase</div><div class="dt-row">' + TV.phaseChip(p.phase) + '<span class="muted small">#' + p.start + '–#' + p.end + '</span></div>';
       if (a.row) h += '<div class="dt-why"><b>Phase explanation</b> ' + TV.esc(TV.phaseRowShort(a.row)) + '</div>';
     }
     if (a.item) h += '<div class="dt-why"><b>Action explanation</b> action table entry “' + TV.esc(a.item) + '”</div>';
     /* no phase outcome here: the outcome band and the phase pop-up show it */
-    if (s && s.flags.length) h += '<div class="badges">' + s.flags.map(TV.flagHTML).join('') + '</div>';
     if (a.ts) h += '<div class="dt-meta">' + TV.esc(a.ts) + '</div>';
     return h;
   };
@@ -924,10 +860,10 @@
       var loc = t.actions.filter(function (b) {
         return b.i < a.i && b.phase === 'localization' && b.opened.concat(b.found).some(function (g) { return TV.sameFile(g, f); });
       });
-      if (loc.length) return '<span class="rel ok">✓ localized at ' + links(loc) + '</span>';
+      if (loc.length) return '<span class="rel ok">localized at ' + links(loc) + '</span>';
       var seen = stepsWith(t, f, 'opened', a.i).concat(stepsWith(t, f, 'found', a.i));
       if (seen.length) return '<span class="rel">seen at ' + links(seen.sort(function (x, y) { return x.i - y.i; })) + ', not in Localization</span>';
-      return '<span class="rel no">✗ never looked at before</span>';
+      return '<span class="rel no">never looked at before</span>';
     }
     var ed = stepsWith(t, f, 'edited');
     if (ed.length) return '<span class="rel ok">→ edited at ' + links(ed) + '</span>';
@@ -973,7 +909,7 @@
     } else {
       why = ev === 'target_file' ? 'touches a file of the agent\'s patch' : TV.EVIDENCE_SHORT[ev] ? 'this ' + TV.EVIDENCE_SHORT[ev] + ' run' : '';
     }
-    return '<div class="tt-o"><span class="tt-ok">Step outcome</span><span class="opill mini o-' + o + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[o] + '</b>' + o + '</span>' +
+    return '<div class="tt-o"><span class="tt-ok">Step outcome</span><span class="opill mini o-' + o + '">' + o + '</span>' +
       (why ? '<span class="tt-m"> ' + TV.esc(why) + '</span>' : '') + '</div>';
   };
 
@@ -982,36 +918,35 @@
     var s = a.sub;
     if (!s) return '';
     if (!TV.hasVerdict(s.p.phase)) return ' ' + TV.phaseChip(s.p.phase);
-    return ' <span class="opill mini o-' + s.outcome + '" data-tip="' + TV.esc(s.p.phase + ' outcome: ' + TV.outcomeDef(s.p.phase, s.outcome)) + '"><b aria-hidden="true">' +
-      TV.OUTCOME_GLYPH[s.outcome] + '</b><span class="ell">' + TV.esc(s.p.phase) + '</span></span>';
+    return ' <span class="opill mini o-' + s.outcome + '" data-tip="' + TV.esc(s.p.phase + ' outcome (self-validation): ' + TV.OUTCOME_LABEL[s.outcome]) + '"><span class="ell">' + TV.esc(s.p.phase) + '</span></span>';
   };
   TV.actionTip = function (t, a) {
     var s = a.sub;
     var h = '<div class="tt-h">#' + a.i + ' · ' + TV.esc(a.category) + (a.verdict !== 'none' ? ' <span class="v-' + a.verdict + '">' +
-      TV.VERDICT_GLYPH[a.verdict] + ' ' + a.verdict + (a.fail_kind ? ' (' + TV.esc(a.fail_kind) + ')' : '') + '</span>' : '') +
+      TV.verdictDot(a.verdict) + TV.VERDICT_WORD[a.verdict] + '</span>' : '') +
       (s ? ' <span class="tt-ph"><i style="background:' + TV.phaseVar(s.p.phase) + '"></i>' + TV.esc(s.p.phase) + '</span>' : '') + '</div>';
-    h += '<div class="tt-m">' + TV.esc(a.tool) + (a.scope && a.scope !== 'main' ? ' · sub-agent' : '') + (a.file_role ? ' · ' + TV.esc(a.file_role) : '') + '</div>';
+    h += '<div class="tt-m">' + TV.esc(a.tool) + (a.scope && a.scope !== 'main' ? ' · sub-agent' : '') + '</div>';
     var tg = a.cmd || a.target;
     var only = a.opened.concat(a.edited);                   // a target that is just the one file listed below is not repeated
     if (tg && !(only.length === 1 && TV.fileName(tg) === TV.fileName(only[0]))) h += '<div class="tt-c">' + TV.esc(TV.shortPaths(tg).slice(0, 160)) + '</div>';
     h += TV.stepFilesHTML(t, a);
     h += TV.stepOutcomeHTML(t, a);
-    if (s && TV.hasVerdict(s.p.phase)) h += '<div class="tt-m">' + TV.esc(s.p.phase) + ' outcome: ' + TV.OUTCOME_GLYPH[s.outcome] + ' ' + s.outcome +
+    if (s && TV.hasVerdict(s.p.phase)) h += '<div class="tt-m">' + TV.esc(s.p.phase) + ' outcome (self-validation): ' + s.outcome +
       (TV.EVIDENCE_SHORT[s.evidence] ? ' (' + TV.EVIDENCE_SHORT[s.evidence] + ')' : '') + '</div>';
     if (t.anchor === a.i) h += '<div class="tt-m"><b>first fix</b> (first edit of a source file)</div>';
     if (t.hasTs && !isNaN(a.tms)) h += '<div class="tt-m">+' + TV.fmtDur((a.tms - t.t0) / 1000) + '</div>';
     return h;
   };
 
-  /* a phase span's pop-up: its outcome (Validation: the verdicts; Localization, Repair: the
+  /* a phase span's pop-up: its outcome (Validation: its self-validation; Localization, Repair: the
    * file dots, each file with where it was edited or localized), and the other files of the
    * span (Validation: what the runs tested) */
   TV.phaseTip = function (t, p) {
     var h = '<div class="tt-h"><span class="tt-ph"><i style="background:' + TV.phaseVar(p.phase) + '"></i>' + TV.esc(p.phase) + '</span> #' + p.start + '–#' + p.end +
       ' <span class="muted">· ' + TV.plural(p.end - p.start + 1, 'action') + '</span></div>';
-    if (TV.hasVerdict(p.phase)) h += '<div class="tt-o">' + (p.subphases || []).map(function (s) {
+    if (TV.hasVerdict(p.phase)) h += '<div class="tt-o"><span class="tt-ok">Self-validation</span>' + (p.subphases || []).map(function (s) {
       var ev = TV.EVIDENCE_SHORT[s.evidence];
-      return '<span class="opill mini o-' + s.outcome + '"><b aria-hidden="true">' + TV.OUTCOME_GLYPH[s.outcome] + '</b>' + s.outcome + (ev ? ' · ' + TV.esc(ev) : '') + '</span>';
+      return '<span class="opill mini o-' + s.outcome + '">' + s.outcome + (ev ? ' · ' + TV.esc(ev) : '') + '</span>';
     }).join('<i class="oh-arr">→</i>') + '</div>';
     var dotted = TV.hasFiles(p.phase) ? TV.spanFiles(t, p) : null;
     if (dotted) h += '<div class="tt-o">' + TV.dotsHTML(dotted) + '<span class="tt-m"> ' + TV.esc(TV.filesSummary(p, dotted)) + '</span></div>' + TV.spanFilesHTML(t, p, 10);

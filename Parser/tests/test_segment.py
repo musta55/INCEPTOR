@@ -646,12 +646,15 @@ class VerdictTests(unittest.TestCase):
                          ("fail", "env"))
 
     def test_exit_status_lines_of_each_agent(self):
-        self.assertEqual(verdict.verdict("build", "Process exited with code 0")[0], "pass")
+        # exit 0 alone shows that the command was executed, not that it built or passed
+        self.assertEqual(verdict.verdict("build", "Process exited with code 0"),
+                         ("none", None, "no_check_evidence"))
         qwen = ("Command: ./gradlew assembleDebug | grep -E \"BUILD FAILED|error:\"\n"
                 "Directory: (root)\nOutput: (empty)\nError: (none)\nExit Code: {}\n"
                 "Signal: (none)\nProcess Group PGID: 12")
         # the echoed command is the agent's text: its "BUILD FAILED" is not a build failure
-        self.assertEqual(verdict.verdict("build", qwen.format(0)), ("pass", None, "exit"))
+        self.assertEqual(verdict.verdict("build", qwen.format(0)),
+                         ("none", None, "no_check_evidence"))
         self.assertEqual(verdict.verdict("build", qwen.format(1)), ("fail", "exit", "exit"))
         self.assertEqual(verdict.verdict("run_shell", "Command exited with code: 2")[:2],
                          ("fail", "exit"))

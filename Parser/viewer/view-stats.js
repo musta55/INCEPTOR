@@ -1,7 +1,7 @@
 /* Corpus page > Statistics: the trajectories of the Trajectories tab (every uploaded run),
- * compared agent by agent. Panels: one card per agent (pass rate and size), the outcome across
- * runs (pass matrix + table), where the actions go (100%-stacked phase shares), and the
- * outcomes of each phase (one 100% bar per phase and agent). Bars are neutral or wear the
+ * compared agent by agent. Panels: one card per agent (external pass rate and median steps),
+ * the external validation across runs (pass matrix + table), where the actions go
+ * (100%-stacked phase shares), and the agent's self-validation (one 100% bar per agent). Bars are neutral or wear the
  * phase / outcome colour they encode; agents are told apart by name, never by colour. Counts
  * come from the phase taxonomy's metrics (atif/phase.py), which leave polls out. Context:
  * TV.overview (page-overview.js): agents, runs, rows (the table's bugs), groups (an agent's
@@ -22,14 +22,13 @@
       var ts = g.trajs, known = ts.filter(function (t) { return t.pass != null; }), pass = known.filter(function (t) { return t.pass === true; }).length;
       var model = ts.map(function (t) { return t.model; }).filter(Boolean)[0] || '';
       var nb = C.rows.filter(function (row) { return row.cells[g.agent]; }).length;
-      var line = TV.plural(ts.length, 'run') + ' of ' + TV.plural(nb, 'bug') + (known.length < ts.length ? ' · ' + (ts.length - known.length) + ' without an outcome' : '');
+      var line = TV.plural(ts.length, 'run') + ' of ' + TV.plural(nb, 'bug');
       return '<article class="card scard">' +
         '<div class="sc-h">' + groupHTML(g) + '<span class="model" title="model">' + esc(model) + '</span></div>' +
-        '<div class="hero"><b>' + (known.length ? pass + '<small>/' + known.length + '</small>' : '–') + '</b><span>' +
-          (known.length ? 'runs pass · ' + TV.pct(pass / known.length) : 'no outcome set') + '</span></div>' +
+        '<div class="hero" data-tip="' + esc(TV.EXTERNAL_DEF) + '"><b>' + (known.length ? pass + '<small>/' + known.length + '</small>' : '–') + '</b><span>' +
+          (known.length ? 'runs pass external validation · ' + TV.pct(pass / known.length) : 'no external validation set') + '</span></div>' +
         '<div class="sc-l">' + esc(line) + '</div>' +
-        '<div class="sc-k"><span><b>' + fmt1(TV.median(ts.map(function (t) { return t.n_actions; }))) + '</b> median actions</span>' +
-          '<span><b>' + fmt1(TV.median(ts.map(function (t) { return t.stats.n_phases; }))) + '</b> median phase spans</span></div>' +
+        '<div class="sc-k"><span><b>' + fmt1(TV.median(ts.map(function (t) { return t.n_actions; }))) + '</b> median steps per trajectory</span></div>' +
         '</article>';
     }).join('') + '</section>';
   }
@@ -37,8 +36,8 @@
   /* ------------------------------------------------------------------ pass matrix + table */
   function passPanel() {
     var C = ctx(), AG = C.agents, RUNS = C.runs, bugs = C.rows, nb = bugs.length;
-    var h = '<section class="card panel wide"><h3>Outcome across runs</h3>' +
-      '<p class="desc">Runs ' + RUNS.join(', ') + ' · filled = pass, ring = fail · click to open.</p>';
+    var h = '<section class="card panel wide"><h3 data-tip="' + esc(TV.EXTERNAL_DEF) + '">External validation across runs</h3>' +
+      '<p class="desc">Runs ' + RUNS.join(', ') + ' · green = passed, red = failed · click to open.</p>';
     h += '<div class="pm-wrap"><div class="pm">';
     AG.forEach(function (a) {
       h += '<div>' + TV.agentHTML(a) + '</div><div class="pm-grid" style="--nb:' + nb + '" role="img" aria-label="' + esc(a) + ' pass matrix">';
@@ -47,13 +46,15 @@
         bugs.forEach(function (b) {
           var v = passAt(b, a, r), tip = b.label + ' · ' + a + ' · run ' + r + ': ';
           h += v === undefined ? '<span class="nil" data-tip="' + esc(tip + 'no run') + '"></span>' :
-            '<a class="' + TV.oc(v) + '" href="' + C.href(b, a, r) + '" data-tip="' + esc(tip + TV.oc(v)) + '"></a>';
+            '<a class="' + TV.oc(v) + '" href="' + C.href(b, a, r) + '" data-tip="' + esc(tip + 'external validation ' + TV.EXTERNAL_WORD[TV.oc(v)]) + '"></a>';
         });
       });
       h += '</div>';
     });
     h += '</div>';
-    h += '<div class="tscroll"><table class="ptab"><thead><tr><th>Agent</th>' + RUNS.map(function (r) { return '<th>Run ' + r + '</th>'; }).join('') +
+    h += '<div class="tscroll"><table class="ptab"><thead><tr><th rowspan="2">Agent</th>' +
+      '<th class="grp" colspan="' + (RUNS.length + 3) + '" data-tip="' + esc(TV.EXTERNAL_DEF) + '">External validation</th></tr><tr>' +
+      RUNS.map(function (r) { return '<th data-tip="bugs that pass in run ' + r + '">Run ' + r + '</th>'; }).join('') +
       '<th data-tip="bugs that pass in every run">All pass</th><th data-tip="bugs that fail in every run">None pass</th>' +
       '<th data-tip="bugs that pass in some runs and fail in others">Runs disagree</th></tr></thead><tbody>';
     AG.forEach(function (a) {
@@ -101,7 +102,7 @@
   /* ------------------------------------------------------------------ phase outcomes */
   function outcomePanel() {
     var C = ctx(), G = C.groups;
-    var h = '<section class="card panel' + (G.length > 3 ? ' wide' : '') + '"><h3>Validation outcomes</h3><p class="desc">How Validation ended (count at the right).</p>' +
+    var h = '<section class="card panel' + (G.length > 3 ? ' wide' : '') + '"><h3>Self-validation outcomes</h3><p class="desc">How the Validation phase ended, judged by the agent\'s own builds, compilations and tests (count at the right).</p>' +
       '<div class="legend lg-inline">' + TV.outcomeLegend() + '</div>' +
       '<div class="phout" style="--nag:' + G.length + '"><span></span>' + G.map(function (g) { return '<span class="bh">' + groupHTML(g) + '</span>'; }).join('');
     TV.VERDICT_PHASES.forEach(function (p) {
@@ -110,7 +111,7 @@
         var c = {}, n = 0;
         g.trajs.forEach(function (t) {
           var row = ((t.subphases || {}).by_phase || {})[p] || {};
-          Object.keys(row).forEach(function (o) { c[o] = (c[o] || 0) + row[o]; n += row[o]; });
+          Object.keys(row).forEach(function (k) { var o = TV.outcomeOf(k); c[o] = (c[o] || 0) + row[k]; n += row[k]; });
         });
         h += '<span class="bc"><span class="bar100 mini">' + (n ? TV.OUTCOMES.filter(function (o) { return c[o]; }).map(function (o) {
           var share = c[o] / n;
@@ -123,9 +124,7 @@
   }
 
   function render(el) {
-    var C = ctx(), n = C.groups.reduce(function (s, g) { return s + g.trajs.length; }, 0);
-    var h = '<p class="stat-head muted">' + TV.plural(C.rows.length, 'bug') + ' × ' + TV.plural(C.agents.length, 'agent') + ' · ' + TV.plural(n, 'run') + ' · ' + esc(C.rules) + '</p>';
-    h += cards();
+    var h = cards();
     h += '<div class="statgrid">' + passPanel() + phasePanel() + outcomePanel() + '</div>';
     el.innerHTML = h;
   }

@@ -192,8 +192,8 @@ def _actions(result: Dict[str, Any], bug: str) -> List[dict]:
             item["cmd"] = command            # the shell command, when the target is not it
         if row.get("reverts"):
             item["reverts"] = True
-        if row.get("verdict_evidence") and (row["verdict"] != "none"
-                                             or row["verdict_evidence"] == "no_test_evidence"):
+        if row.get("verdict_evidence") and (row["verdict"] != "none" or row["verdict_evidence"]
+                                             in ("no_test_evidence", "no_check_evidence")):
             item["evidence"] = row["verdict_evidence"]
             line = verdict.evidence_line(row.get("result") or "", row["verdict_evidence"])
             if line:

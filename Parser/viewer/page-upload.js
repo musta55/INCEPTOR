@@ -156,12 +156,12 @@
       [TV.plural(bugs.length, 'bug'), TV.plural(ags.length, 'agent'), TV.plural(items.length, 'run')].join(' · ') + '</span>';
     var notes = [];
     notes.push(F.csvs.length ? 'Outcomes from <b>' + esc(F.csvs.join(', ')) + '</b>: ' + nOut + ' of ' + items.length + ' runs.' :
-      'No outcome file: the runs show as unknown until you set them. A CSV with the columns <code>bug</code>, <code>agent</code> and <code>outcome</code> (pass / fail) gives them.');
+      'No outcome file: the external validation of the runs shows as unknown until you set it. A CSV with the columns <code>bug</code>, <code>agent</code> and <code>outcome</code> (pass / fail: the benchmark\'s verdict on the final patch) gives it.');
     if (F.badCsvs.length) notes.push(esc(F.badCsvs.join(', ')) + ': no <code>bug</code> and <code>outcome</code> columns, so not read.');
     if (F.scan.ignored.length) notes.push('<span data-tip="' + esc(F.scan.ignored.slice(0, 12).join('\n') + (F.scan.ignored.length > 12 ? '\n…' : '')) + '">' + TV.plural(F.scan.ignored.length, 'file') + ' outside run folders skipped.</span>');
     if (items.some(function (it) { return !it.bug || !it.agent; })) notes.push('Where a bug or agent folder is missing, the log names it.');
     $('#fNotes').innerHTML = notes.map(function (n) { return '<p>' + n + '</p>'; }).join('');
-    var h = '<div class="ufrow head frun" role="row"><span>Bug</span><span>Agent</span><span>Run</span><span>Files</span><span>Outcome</span><span>' +
+    var h = '<div class="ufrow head frun" role="row"><span>Bug</span><span>Agent</span><span>Run</span><span>Files</span><span>External validation</span><span>' +
       (nClash ? 'Already there <span class="bulk"><button type="button" class="linkbtn" data-all="replace">replace all</button> · <button type="button" class="linkbtn" data-all="add">add all</button></span>' : '') + '</span></div>';
     items.forEach(function (it, k) {
       var fs = it.src.files;
@@ -276,7 +276,7 @@
   /* ---------------------------------------------------------------- render */
   function outcomeSeg(it, k) {
     var cur = it.outcome === true ? 'pass' : it.outcome === false ? 'fail' : '';
-    return '<span class="seg small" role="group" aria-label="Harness outcome">' + [['', '?'], ['pass', 'pass'], ['fail', 'fail']].map(function (o) {
+    return '<span class="seg small" role="group" aria-label="External validation">' + [['', '?'], ['pass', 'passed'], ['fail', 'failed']].map(function (o) {
       return '<button type="button" data-oc="' + o[0] + '" data-k="' + k + '" aria-pressed="' + (cur === o[0]) + '"' + (o[0] ? '' : ' title="unknown"') + '>' + o[1] + '</button>';
     }).join('') + '</span>';
   }
@@ -291,7 +291,7 @@
     $('#gName').placeholder = defaultName();
     var cls = (KIND === 'runs' ? ' runs' : '') + (clashCol ? ' clashes' : '');
     var h = '<div class="ufrow head' + cls + '" role="row"><span>File</span><span>Agent</span><span>Bug in log</span><span>Actions</span>' + (KIND === 'runs' ? '<span>Run</span>' : '') +
-      '<span>Outcome</span>' + (clashCol ? '<span>Already there</span>' : '') + '<span></span></div>';
+      '<span>External validation</span>' + (clashCol ? '<span>Already there</span>' : '') + '<span></span></div>';
     ITEMS.forEach(function (it, k) {
       var r = it.rec, t = (r.result || {}).trajectory || {}, model = TV.uploads.model(r), bug = bugOf(r);
       h += '<div class="ufrow' + cls + '" role="row">' +

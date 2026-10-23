@@ -1,10 +1,10 @@
-/* Bug page > Timeline: the selected trajectory as one strip per action category
- * (position = category, a dot per action, colour = verdict), under a phase band and an
- * outcome band: Validation
- * shows its verdicts (the legend chips use the same fills), Localization and Repair show their
- * files as at most five dots (grey = looked at, never edited; a colour per localization ->
- * repair attempt = edited), Planning nothing. Failures on a rail by kind (shape); a dashed line
- * at the first fix. Hover an action for its files, hover the phase or outcome band for the
+/* Bug page > Fingerprint tab (view id 'timeline'): the selected trajectory as one strip per
+ * action category (position = category, a dot per action, colour = the agent's self-check:
+ * passed, errored, executed), under a phase band and an outcome band: Validation shows its
+ * self-validation (the legend chips use the same fills), Localization and Repair show their
+ * files as marks (grey = looked at, never edited; a colour per localization -> repair
+ * attempt = edited), Planning nothing. A dashed line at the first fix. Hover an action for
+ * its files, hover the phase or outcome band for the
  * phase's files (the dots that did not fit show there); click to move the playhead there
  * (details panel); the playhead draws a cursor line and column. x = action index, or
  * wall-clock when the log has timestamps. A change of width redraws the chart only (relayout),
@@ -49,15 +49,10 @@
   }
 
   function legend(t) {
-    var kinds = {};
-    t.actions.forEach(function (a) { if (a.verdict === 'fail') kinds[a.fail_kind || 'exit'] = 1; });
     var used = {};
     t.subs.forEach(function (s) { if (TV.hasVerdict(s.p.phase)) used[s.outcome] = 1; });
     return TV.legendCardHTML(TV.bandLegendRows(used, t.nCycles).concat([
-      ['Action', 'a dot per action', '<span class="lgm"><i class="mk v-pass"></i>pass</span><span class="lgm"><i class="mk v-fail"></i>fail</span><span class="lgm"><i class="mk"></i>executed</span>'],
-      ['Failure', 'failures rail', TV.FAIL_KINDS.filter(function (k) { return kinds[k]; }).map(function (k) {
-        return '<span class="lgm" data-tip="' + esc(TV.FAIL_KIND_LABEL[k]) + '"><svg width="12" height="12" aria-hidden="true">' + TV.failGlyphSVG(k, 6, 6, 5) + '</svg>' + esc(k) + '</span>';
-      }).join('')],
+      ['Action', 'a dot per action · self-check by the agent', TV.verdictLegend('mk')],
       ['Marker', '', t.anchor ? '<span class="lgm"><i class="anchormk"></i>first fix (first edit of a source file)</span>' : '']
     ]));
   }
@@ -94,11 +89,10 @@
     Y.cap = y + 8; y += 8 + 12;
     Y.lanes = y;
     lanes.forEach(function (c) { laneY[c] = y; y += laneH; });
-    Y.rail = y + 6; y += 6 + 18;
-    Y.axis = y + 2; y += 26;
+    Y.axis = y + 6; y += 6 + 26;
     var H = y;
     geo.Y = Y;
-    var s = '<svg class="tl" width="' + W + '" height="' + H + '" role="img" aria-label="Timeline of ' + esc(t.id) + '">';
+    var s = '<svg class="tl" width="' + W + '" height="' + H + '" role="img" aria-label="Fingerprint of ' + esc(t.id) + '">';
     function rowLabel(yy, txt, cls) { return '<text class="rl ' + (cls || '') + '" x="' + (L - 8) + '" y="' + yy + '" text-anchor="end" dominant-baseline="middle">' + esc(txt) + '</text>'; }
     s += rowLabel(Y.pur + 10, 'phase') + rowLabel(Y.seg + 10, 'outcome');
     t.phases.forEach(function (p) {
@@ -107,7 +101,7 @@
       if (b - a > p.phase.length * 6.4 + 8) s += '<text class="bandlbl" style="fill:' + TV.phaseTextVar(p.phase) + '" x="' + ((a + b) / 2) + '" y="' + (Y.pur + 10.5) + '" text-anchor="middle" dominant-baseline="middle">' + esc(p.phase) + '</text>';
     });
     /* the outcome band, one rectangle per phase: Validation filled with its outcome (glyph and
-     * label), Localization and Repair outlined with their file dots inside, Planning empty */
+     * label), Localization and Repair outlined with their file marks inside, Planning empty */
     t.phases.forEach(function (p) {
       var a = x0(p.start), b = x1(p.end), w = Math.max(1, b - a - 1);
       if (TV.hasFiles(p.phase)) {                   // the files as dots, when they all fit
@@ -121,8 +115,8 @@
         var a = x0(sg.start), b = x1(sg.end), ev = TV.EVIDENCE_SHORT[sg.evidence];
         s += '<rect class="segr o-' + sg.outcome + '" x="' + (a + 0.5) + '" y="' + Y.seg + '" width="' + Math.max(1, b - a - 1) + '" height="20" rx="3"/>';
         if (b - a >= 13) {
-          var txt = TV.OUTCOME_GLYPH[sg.outcome], full = sg.outcome + (ev ? ' · ' + ev : '');
-          if (b - a > full.length * 6.5 + 22) txt += ' ' + full; else if (b - a > sg.outcome.length * 6.5 + 22) txt += ' ' + sg.outcome;
+          var full = sg.outcome + (ev ? ' · ' + ev : '');
+          var txt = b - a > full.length * 6.5 + 12 ? full : b - a > sg.outcome.length * 6.5 + 12 ? sg.outcome : '';
           s += '<text class="seglbl o-' + sg.outcome + '" x="' + ((a + b) / 2) + '" y="' + (Y.seg + 10.5) + '" text-anchor="middle" dominant-baseline="middle">' + esc(txt) + '</text>';
         }
       });
@@ -138,12 +132,6 @@
     t.actions.forEach(function (a) {                // one dot per action
       var r = Math.max(1.8, Math.min(geo.ws[a.i - 1] / 2 - 0.4, 6));
       s += '<circle class="mk v-' + a.verdict + '" data-i="' + a.i + '" cx="' + (x0(a.i) + geo.ws[a.i - 1] / 2).toFixed(2) + '" cy="' + (laneY[a.category] + laneH / 2) + '" r="' + r.toFixed(2) + '"/>';
-    });
-    s += rowLabel(Y.rail + 9, 'failures');
-    s += '<line class="railline" x1="' + L + '" x2="' + (L + geo.plotW) + '" y1="' + (Y.rail + 9) + '" y2="' + (Y.rail + 9) + '"/>';
-    t.actions.forEach(function (a) {
-      if (a.verdict !== 'fail') return;
-      s += TV.failGlyphSVG(a.fail_kind, x0(a.i) + geo.ws[a.i - 1] / 2, Y.rail + 9, 5.5);
     });
     s += '<line class="axis" x1="' + L + '" x2="' + (L + geo.plotW) + '" y1="' + Y.axis + '" y2="' + Y.axis + '"/>';
     var ticks = [];

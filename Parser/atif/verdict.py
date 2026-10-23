@@ -31,8 +31,10 @@ Rules, in order (first match wins):
    lines, and an executed Gradle unit-test task (``> Task :app:testDebugUnitTest``)
    followed by ``BUILD SUCCESSFUL`` are test evidence.  ``BUILD SUCCESSFUL`` or exit 0
    alone are not: for a ``run_test`` action (or a poll of one) they give ``none``, since a
-   ``| head -60`` can cut the output before the test result; for every other action they
-   give ``pass``.
+   ``| head -60`` can cut the output before the test result.  For every other action
+   ``BUILD SUCCESSFUL`` is a passing build (``pass``), but exit 0 alone gives ``none``
+   (``no_check_evidence``): a command that exits 0 was executed, it did not show that
+   anything builds, compiles or passes its tests.
 6. A background run still in progress, and anything unrecognised, give ``none``.
 
 SWE-bench projects (``atif.project``): a test run (``run_test``: pytest, unittest, or a
@@ -229,6 +231,8 @@ def verdict(mid: str, text: str, failed: Optional[bool] = False, command: str = 
     if result == "pass" and (effective_mid or mid) == "run_test" \
             and evidence in _NO_TEST_EVIDENCE:
         return "none", None, "no_test_evidence"
+    if result == "pass" and evidence == "exit":
+        return "none", None, "no_check_evidence"
     return result, kind, evidence
 
 
@@ -240,6 +244,7 @@ _EVIDENCE_MARKERS: Dict[str, Tuple["re.Pattern[str]", ...]] = {
     "junit_ok": (RE_JUNIT_OK, RE_JUNIT_RUN_OK), "running": (RE_RUNNING,),
     "gradle_tests": (RE_GRADLE_TEST_FAILED, RE_GRADLE_TEST_PASSED, RE_GRADLE_TEST_TASK),
     "build_ok": (RE_BUILD_OK,), "no_test_evidence": (RE_BUILD_OK, RE_EXIT),
+    "no_check_evidence": (RE_EXIT,),
     "env_head": (RE_ENV_FAIL,), "exit": (RE_EXIT, RE_ENV_FAIL),
     "pytest": (RE_PYTEST,), "pytest_empty": (RE_PYTEST_NONE,), "unittest": (RE_UNITTEST,),
     "unittest_empty": (RE_UNITTEST,), "traceback": (RE_EXCEPTION_LINE, RE_TRACEBACK),

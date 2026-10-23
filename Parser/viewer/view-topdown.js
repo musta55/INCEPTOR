@@ -1,10 +1,10 @@
 /* Bug page > Trajectory: the top-down hierarchy of the selected trajectory.
  * Phase blocks -> category groups (consecutive actions of one action category, "read ×5")
  * -> step rows (collapsible; steps rendered only when open). Each phase carries its outcome:
- * Validation a solid outcome pill with the evidence (test, build) and, in the codebook's
- * words, what its check was and what it showed, with links to the actions that decided it (a
- * phase whose checks changed shows its earlier outcomes first: ✗ → ✓); Localization and Repair
- * their files as dots (hover for the files). Above the blocks, the
+ * Validation its self-validation as a solid outcome pill with the evidence (test, build) and
+ * what the agent's runs showed, with links to the actions that decided it (a phase whose
+ * checks changed shows its earlier outcomes first: errored → passed); Localization and Repair their
+ * files as marks (hover for the files). Above the blocks, the
  * phase strip and the phase-outcome strip of the whole run, with the first fix (the anchor:
  * first edit of a source file) marked. A step row selects its action (details panel); the level
  * control sets what is open. The playhead (onCursor) highlights the current step / group /
@@ -29,7 +29,7 @@
       (a.scope && a.scope !== 'main' ? '<span class="tag" data-tip="a step of a sub-agent the agent delegated work to">sub</span>' : '') +
       (t.anchor === a.i ? '<span class="tag" data-tip="the first edit of a source file: the anchor of the phases">first fix</span>' : '') +
       '<span class="st-t">' + esc(a.target || a.tool) + '</span>' +
-      (a.verdict !== 'none' ? '<span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + (a.fail_kind ? ' ' + esc(a.fail_kind) : '') + '</span>' : '<span class="vg none"></span>') +
+      (a.verdict !== 'none' ? '<span class="vg v-' + a.verdict + '" data-tip="' + esc(TV.VERDICT_LABEL[a.verdict]) + '">' + TV.verdictDot(a.verdict) + '</span>' : '<span class="vg none"></span>') +
       '</button></div>';
   }
 
@@ -49,7 +49,8 @@
       '<span class="cb-r">#' + g.start + (n > 1 ? '–#' + g.end : '') + '</span>' +
       (t.anchor >= g.start && t.anchor <= g.end ? '<span class="tag" data-tip="the first edit of a source file: the anchor of the phases">first fix</span>' : '') +
       '<span class="st-t">' + esc(targets[0] || '') + (targets.length > 1 ? ' <span class="muted">+' + (targets.length - 1) + ' more</span>' : '') + '</span>' +
-      (pass ? '<span class="vg v-pass">✓' + (pass > 1 ? pass : '') + '</span>' : '') + (fail ? '<span class="vg v-fail">✗' + (fail > 1 ? fail : '') + '</span>' : '') +
+      (pass ? '<span class="vg v-pass" data-tip="' + esc(TV.plural(pass, 'action') + ' passed') + '">' + TV.verdictDot('pass') + (pass > 1 ? pass : '') + '</span>' : '') +
+      (fail ? '<span class="vg v-fail" data-tip="' + esc(TV.plural(fail, 'action') + ' errored') + '">' + TV.verdictDot('fail') + (fail > 1 ? fail : '') + '</span>' : '') +
       '</button>';
     if (open) {
       h += '<div class="cb-body">';
@@ -66,12 +67,12 @@
     var multi = p.subphases.length > 1;
     return '<div class="pb-out">' + p.subphases.map(function (s) {
       return '<div>' + (multi ? TV.outcomePill(s.outcome, null, p.phase, s.evidence) + ' <span class="muted">#' + s.start + (s.end > s.start ? '–#' + s.end : '') + '</span> ' : '') +
-        esc(TV.outcomeText(s)) + decidedBy(s) + '</div>';
+        'Self-validation ' + esc(TV.outcomeText(s)) + decidedBy(s) + '</div>';
     }).join('') + '</div>';
   }
 
   function phaseHTML(t, p, e) {
-    var open = !!e.p[p.id], n = p.end - p.start + 1, flags = TV.phaseFlags(p);
+    var open = !!e.p[p.id], n = p.end - p.start + 1;
     var h = '<div class="pblk" data-pid="' + esc(p.id) + '" style="--pc:' + TV.phaseVar(p.phase) + '">' +
       '<button type="button" class="pb-h" aria-expanded="' + open + '">' +
       '<span class="caret" aria-hidden="true">' + (open ? '▾' : '▸') + '</span>' +
@@ -80,7 +81,6 @@
       '<span class="psize" data-tip="' + esc(n + ' of ' + t.n + ' actions') + '"><i style="width:' + Math.max(2, 100 * n / t.n) + '%"></i></span>' +
       '<span class="pn">' + TV.plural(n, 'action') + '</span>' +
       TV.phaseOutcomeHTML(t, p) +
-      (flags.length ? '<span class="badges">' + flags.map(TV.flagHTML).join('') + '</span>' : '') +
       '</button>';
     if (open) {
       h += '<div class="pb-body">' + outcomeLines(t, p);
@@ -104,13 +104,13 @@
     var h = '<div class="td-strips"><div class="td-over" role="list" aria-label="Phases (width proportional to actions)">';
     t.phases.forEach(function (p) {
       var n = p.end - p.start + 1;
-      var oc = TV.hasVerdict(p.phase) ? p.subphases.map(function (s) { return TV.OUTCOME_GLYPH[s.outcome] + ' ' + s.outcome; }).join(' → ') : '';
+      var oc = TV.hasVerdict(p.phase) ? p.subphases.map(function (s) { return s.outcome; }).join(' → ') : '';
       h += '<button type="button" role="listitem" class="ov" data-pid="' + esc(p.id) + '" data-label="' + esc(p.phase) + '" style="' + pos(p.start, p.end, t.n) + ';background:' + TV.phaseVar(p.phase) + ';color:' + TV.phaseTextVar(p.phase) + '" ' +
         'data-phase-tip="' + esc(p.id) + '" data-tip="' + esc(p.phase + ' #' + p.start + '–#' + p.end + ' · ' + TV.plural(n, 'action') + (oc ? ' · outcome ' + oc : '')) + '">' +
         '<span>' + esc(p.phase) + '</span></button>';
     });
     h += '</div><div class="td-seg" role="list" aria-label="Phase outcomes">';
-    t.phases.forEach(function (p) {                 // Localization, Repair: the file dots
+    t.phases.forEach(function (p) {                 // Localization, Repair: the file squares
       if (!TV.hasFiles(p.phase)) return;
       var rows = TV.spanFiles(t, p), px = width * (p.end - p.start + 1) / t.n;
       h += '<button type="button" role="listitem" class="tsg fz" data-sid="' + esc(p.subphases[0] ? p.subphases[0].id : '') + '" style="' + pos(p.start, p.end, t.n) + '" data-phase-tip="' + esc(p.id) + '" ' +
@@ -120,7 +120,7 @@
       if (!TV.hasVerdict(sg.p.phase)) return;
       var n = sg.end - sg.start + 1, ev = TV.EVIDENCE_SHORT[sg.evidence];
       h += '<button type="button" role="listitem" class="tsg o-' + sg.outcome + '" data-sid="' + esc(sg.id) + '" style="' + pos(sg.start, sg.end, t.n) + '" ' +
-        'data-tip="' + esc(sg.p.phase + ' · ' + TV.OUTCOME_GLYPH[sg.outcome] + ' ' + sg.outcome + (ev ? ' (' + ev + ')' : '') + ' #' + sg.start + (n > 1 ? '–#' + sg.end : '') + ' · ' + TV.outcomeText(sg)) + '" ' +
+        'data-tip="' + esc(sg.p.phase + ' · ' + sg.outcome + (ev ? ' (' + ev + ')' : '') + ' #' + sg.start + (n > 1 ? '–#' + sg.end : '') + ' · ' + TV.outcomeText(sg)) + '" ' +
         'aria-label="' + esc(sg.p.phase + ', ' + sg.outcome) + '"></button>';
     });
     h += '</div>';
@@ -132,7 +132,7 @@
     var used = {};
     t.subs.forEach(function (s) { if (TV.hasVerdict(s.p.phase)) used[s.outcome] = 1; });
     return TV.legendCardHTML(TV.bandLegendRows(used, t.nCycles).concat([
-      ['Action', 'verdict of a build or test', '<span class="vg v-pass">✓ pass</span><span class="vg v-fail">✗ fail</span>'],
+      ['Action', 'self-check by the agent: a build, compilation or test', '<span class="lgm" data-tip="' + esc(TV.VERDICT_LABEL.pass) + '">' + TV.verdictDot('pass') + 'passed</span><span class="lgm" data-tip="' + esc(TV.VERDICT_LABEL.fail) + '">' + TV.verdictDot('fail') + 'errored</span><span class="lgm muted" data-tip="' + esc(TV.VERDICT_LABEL.none) + '">no dot: executed</span>'],
       ['Marker', '', t.anchor ? '<span class="lgm"><i class="anchormk"></i>first fix (first edit of a source file)</span>' : '<span class="muted">no source edit, so no first fix</span>']
     ]), 'td-legend');
   }

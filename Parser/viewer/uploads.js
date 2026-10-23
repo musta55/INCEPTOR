@@ -183,7 +183,7 @@
         });
       }, Promise.resolve()).then(function () { return { done: done, failed: failed }; });
     },
-    /* the harness outcome the user knows; no re-analysis needed (only the outcome changes) */
+    /* the external validation the user knows; no re-analysis needed (only the outcome changes) */
     setOutcome: function (rec, pass) {
       rec.outcome = pass;
       var t = rec.result && rec.result.trajectory;

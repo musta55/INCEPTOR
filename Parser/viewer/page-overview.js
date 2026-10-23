@@ -4,8 +4,8 @@
  * folder or log the user uploads; when every bug was deleted it offers the example again.
  *
  * Trajectories tab: search (a bug id matches that bug exactly; any other text, a bug name or
- * a file name), an Agent filter and an Outcome filter, the legend (phases and phase outcomes
- * kept apart) and the table. A row is a bug, a column an agent, both in the order they were
+ * a file name), an Agent filter and an External validation filter, the legend (phases, the
+ * agent's self-validation and the benchmark's external validation kept apart) and the table. A row is a bug, a column an agent, both in the order they were
  * first uploaded, so a new bug is added at the bottom and a new agent at the right. A cell
  * shows one run's strips (run 1, else its first run) and a dot per run (TV.uploads.layout: an
  * upload is the cell's next run, or replaces a run the user chose to replace); a dot opens its
@@ -128,8 +128,8 @@
     return ROWS.filter(function (row) { return (!S.ag || row.cells[S.ag]) && rowMatchesQuery(row) && ocOf(row, oc); });
   }
   var OC_TIP = {
-    all: { '': 'every bug', pass: 'every agent passes (run 1, or its first run)', fail: 'every agent fails (run 1, or its first run)', mixed: 'some agents pass and some fail' },
-    one: { '': 'every bug', pass: '{a} passes in the run its strips show', fail: '{a} fails in the run its strips show', mixed: '{a} passes in some runs and fails in others' }
+    all: { '': 'every bug', pass: 'external validation: every agent passed (run 1, or its first run)', fail: 'external validation: every agent failed (run 1, or its first run)', mixed: 'external validation: some agents passed and some failed' },
+    one: { '': 'every bug', pass: 'external validation: {a} passed in the run its strips show', fail: 'external validation: {a} failed in the run its strips show', mixed: 'external validation: {a} passed in some runs and failed in others' }
   };
   function renderFilters() {
     if (S.ag && COLS.indexOf(S.ag) < 0 && loaded) S.ag = '';
@@ -138,7 +138,7 @@
       var tip = a ? a + ': its column only; ' + TV.plural(n, 'bug') : 'all agents side by side';
       return '<button type="button" data-ag="' + esc(a) + '" aria-pressed="' + (S.ag === a) + '" data-tip="' + esc(tip) + '">' + (a ? TV.agentHTML(a) : 'All') + '</button>';
     }).join('');
-    $('#ocSeg').innerHTML = [['', 'All'], ['pass', '✓ Pass'], ['fail', '✗ Fail'], ['mixed', 'Mixed']].map(function (x) {
+    $('#ocSeg').innerHTML = [['', 'All'], ['pass', TV.extBox(true) + 'Passed'], ['fail', TV.extBox(false) + 'Failed'], ['mixed', 'Mixed']].map(function (x) {
       var n = bugRows(x[0]).length;
       var tip = (S.ag ? OC_TIP.one : OC_TIP.all)[x[0]].replace('{a}', S.ag);
       return '<button type="button" data-oc="' + x[0] + '" aria-pressed="' + (S.oc === x[0]) + '" data-tip="' + esc(tip) + '">' + x[1] + ' <span class="cnt">' + n + '</span></button>';
@@ -155,31 +155,31 @@
     $('#legend').innerHTML = '<h2 class="lg-title">Legend</h2>' +
       '<div class="lg-row"><span class="lg-k">' + sample('tall', TV.PHASE_ORDER.map(TV.phaseVar)) + '<b>Phase</b><span class="muted">upper strip</span></span>' +
         '<span class="lg-v">' + TV.phaseLegend() + '</span></div>' +
-      '<div class="lg-row"><span class="lg-k">' + sample('thin', TV.OUTCOMES.map(function (o) { return 'var(--o-' + o + ')'; })) + '<b>Validation outcome</b><span class="muted">lower strip</span></span>' +
-        '<span class="lg-v">' + TV.outcomeLegend() + '</span></div>';
+      '<div class="lg-row"><span class="lg-k">' + sample('thin', TV.OUTCOMES.map(TV.outcomeVar)) + '<b>Validation outcome</b><span class="muted">lower strip · self-validation by the agent</span></span>' +
+        '<span class="lg-v">' + TV.outcomeLegend() + '</span></div>' +
+      (function (r) { return '<div class="lg-row"><span class="lg-k"><b>' + r[0] + '</b><span class="muted">' + r[1] + '</span></span><span class="lg-v">' + r[2] + '</span></div>'; })(TV.externalLegendRow(true));
   }
 
   /* ---------------------------------------------------------------- the table */
   function stripCell(s, max) {
     return '<span class="track">' + TV.stripsHTML(s.strip, s.sub_strip, s.n_actions, max * 1.04) +
-      '<span class="an" data-tip="' + esc(s.n_actions + ' actions · ' + s.stats.n_phases + ' phase spans') + '">' + s.n_actions + '</span></span>';
+      '<span class="an" data-tip="' + esc(TV.plural(s.n_actions, 'step')) + '">' + s.n_actions + '</span></span>';
   }
-  /* a dot per run, each a link to its run */
-  function dotsHTML(row, c) {
-    var desc = c.runs.map(function (r) { var x = c.at[r]; return 'run ' + r + ' (' + x.rec.name + '): ' + TV.oc(x.pass); }).join('\n');
-    return '<span class="rdots" data-tip="' + esc(c.agent + '\n' + desc) + '">' + c.runs.map(function (r) {
+  /* the external validation of each run (a green, red or grey box), each a link to its run */
+  function runMarksHTML(row, c) {
+    var desc = c.runs.map(function (r) { var x = c.at[r]; return 'run ' + r + ' (' + x.rec.name + '): ' + TV.EXTERNAL_WORD[TV.oc(x.pass)]; }).join('\n');
+    return '<span class="rdots" data-tip="' + esc(c.agent + ' · external validation\n' + desc) + '">' + c.runs.map(function (r) {
       var x = c.at[r];
-      return '<a class="rdot ' + TV.oc(x.pass) + '" href="' + runHref(row, c.agent, r) + '" aria-label="' + esc(c.agent + ' run ' + r + ': ' + TV.oc(x.pass)) + '"></a>';
+      return '<a class="xbox ' + TV.oc(x.pass) + '" href="' + runHref(row, c.agent, r) + '" aria-label="' + esc(c.agent + ' run ' + r + ': external validation ' + TV.EXTERNAL_WORD[TV.oc(x.pass)]) + '"></a>';
     }).join('') + '</span>';
   }
   function cellHTML(row, a, single) {
     var c = row.cells[a];
     var lbl = '<span class="alabel">' + TV.agentHTML(a) + '</span>';
     if (!c) return '<span class="acell blank" data-agent="' + esc(a) + '" role="cell">' + lbl + '</span>';
-    var tip = a + ' · run ' + c.shown + ' (' + c.rec.name + '): ' + TV.oc(c.pass);
-    return '<span class="acell" data-agent="' + esc(a) + '" data-run="' + c.shown + '" role="cell">' + lbl + TV.markHTML(c.pass, tip) +
+    return '<span class="acell" data-agent="' + esc(a) + '" data-run="' + c.shown + '" role="cell">' + lbl +
       stripCell(c.sum, single ? Math.max.apply(null, ROWS.map(function (x) { return x.cells[a] ? x.cells[a].sum.n_actions || 0 : 0; })) : maxN) +
-      dotsHTML(row, c) + '</span>';
+      runMarksHTML(row, c) + '</span>';
   }
   function bugCell(row) {
     var href = row.noBug || row.ups.length === 1 ? 'analyze.html#u=' + encodeURIComponent(row.ups[0].id) : 'analyze.html#b=' + encodeURIComponent(row.bug);
@@ -242,7 +242,7 @@
     var runs = [];
     ROWS.forEach(function (row) { row.agents.forEach(function (a) { row.cells[a].runs.forEach(function (r) { if (runs.indexOf(r) < 0) runs.push(r); }); }); });
     runs.sort(function (x, y) { return x - y; });
-    TV.overview = { agents: COLS, runs: runs, rows: ROWS, groups: groups, href: runHref, rules: TV.ruleset.label(RS) };
+    TV.overview = { agents: COLS, runs: runs, rows: ROWS, groups: groups, href: runHref };
     try { TV.views.stats.render($('#tab-stats')); }
     catch (err) { $('#tab-stats').innerHTML = '<p class="note">Statistics error: ' + esc(err && err.message) + '</p>'; if (window.console) console.error(err); }
   }

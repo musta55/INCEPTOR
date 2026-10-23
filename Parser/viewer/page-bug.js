@@ -7,8 +7,9 @@
  *
  * Playhead (ported from the old viewer.js): play / pause (space), step -/+ (k / j), a range
  * slider over the actions, speed 1-16 actions per second. The cursor S.i drives every view
- * (onCursor) and the details panel. Hash keys: bug, t, i, v (trajectory|timeline|fingerprint),
- * lvl (phases|categories|steps; subphases and segments open categories, purposes phases),
+ * (onCursor) and the details panel. Tabs: Trajectory, Fingerprint (view id timeline),
+ * Comparison (view id fingerprint). Hash keys: bug, t, i, v (trajectory|timeline|fingerprint),
+ * lvl (phases, the default|categories|steps; subphases and segments open categories),
  * fp (agents|runs), speed, details=0 (cursor set, panel closed), theme; play=1 starts playing
  * on open (read only, never written back). */
 (function () {
@@ -16,7 +17,7 @@
   var TV = window.TV, esc = TV.esc, $ = TV.$, $$ = TV.$$;
   var VIEWS = ['trajectory', 'timeline', 'fingerprint'];
   var SPEEDS = [1, 2, 4, 8, 16];
-  var S = TV.state = { bug: null, t: null, i: 0, view: 'trajectory', level: 'categories', fp: 'agents', timeMode: false,
+  var S = TV.state = { bug: null, t: null, i: 0, view: 'trajectory', level: 'phases', fp: 'agents', timeMode: false,
     expanded: {}, playing: false, speed: 4, panel: false };
   var B = null;          // the loaded bug: {data, trajs, byKey, agents, runs, maxN}
   var RS = TV.ruleset.get(), RKEY = TV.ruleset.key(RS);
@@ -52,7 +53,7 @@
     hashTimer = setTimeout(function () {
       hashTimer = 0;
       TV.writeHash({ bug: S.bug, t: S.t, i: S.i || '', v: S.view === 'trajectory' ? '' : S.view,
-        lvl: S.level === 'categories' ? '' : S.level, fp: S.fp === 'agents' ? '' : S.fp,
+        lvl: S.level === 'phases' ? '' : S.level, fp: S.fp === 'agents' ? '' : S.fp,
         speed: S.speed === 4 ? '' : S.speed, details: S.i && !S.panel ? '0' : '', theme: TV.readHash().theme });
     }, 150);
   }
@@ -155,6 +156,7 @@
     S.i = opts.i ? TV.clamp(+opts.i || 0, 0, t.n) : 0;
     S.panel = !!S.i && opts.details !== '0';
     document.body.classList.add('docked');
+    if (!S.panel) document.body.classList.add('dock-off');      // no details column until an action is picked
     renderMatrix();
     renderTrajbar();
     setView(S.view, true);
@@ -321,7 +323,7 @@
     $('#playBtn').disabled = !t.n;
     $('#speed').value = String(S.speed);
     $('#cursorLabel').innerHTML = a ? '<b>#' + a.i + '</b><span class="muted">/' + t.n + '</span> <span class="cl-mid">' + esc(a.category) + '</span>' +
-        (a.verdict !== 'none' ? ' <span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + '</span>' : '') +
+        (a.verdict !== 'none' ? ' ' + TV.verdictDot(a.verdict) : '') +
         TV.cursorPhaseHTML(a)
       : '<b>#–</b><span class="muted">/' + t.n + ' · press ▶ or j</span>';
   }
@@ -427,7 +429,7 @@
     var want = !!(t && S.i && S.panel);
     var was = document.body.classList.contains('panel-open');
     document.body.classList.toggle('panel-open', want);
-    if (want) renderPanel(); else emptyPanel();
+    if (want) { document.body.classList.remove('dock-off'); renderPanel(); } else emptyPanel();
     if (want !== was && !RO) setTimeout(relayout, 180);                   // no ResizeObserver: redraw after the slide
   }
   /* no action picked: the docked column says how to fill it */
@@ -437,10 +439,14 @@
     $('#dtPrev').disabled = $('#dtNext').disabled = true;
     $('#dtBody').innerHTML = '<p class="dt-empty">Click an action, or press <kbd>j</kbd>.</p>';
   }
+  /* closing also removes the docked column; picking an action brings it back */
   function closePanel(silent) {
     S.panel = false;
     if (silent) { document.body.classList.remove('panel-open'); return; }
+    var off = document.body.classList.contains('dock-off');
+    document.body.classList.add('dock-off');
     syncPanel();
+    if (!off && !RO) setTimeout(relayout, 180);
   }
   TV.closePanel = closePanel;
   function renderPanel() {

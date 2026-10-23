@@ -9,10 +9,11 @@
  *   analyze.html#b=<bug>  the same for every upload of a bug (TV.uploads.bugGroup): each
  *                         agent's runs, labelled "agent · run n" as in the Corpus Overview.
  *
- *   analyze.html#u=<id>   one upload (uploads.js): its file bar (bug id, harness outcome,
+ *   analyze.html#u=<id>   one upload (uploads.js): its file bar (bug id, external validation,
  *                         previous / next, delete), its unrecognised steps with a suggested
  *                         lookup-table row for each (review.js), then the bug page's
- *                         Trajectory and Timeline views.
+ *                         Trajectory and Fingerprint tabs (Comparison: the view id
+ *                         fingerprint, Fingerprint: the view id timeline).
  *
  * Every upload is analysed with the one table file of tables.html (TV.ruleset); one analysed
  * with other rules is analysed again when opened. The corpus side of the comparison is
@@ -23,7 +24,7 @@
   'use strict';
   var TV = window.TV, esc = TV.esc, $ = TV.$, $$ = TV.$$;
   var VIEWS = ['trajectory', 'timeline', 'fingerprint'];
-  var S = TV.state = { t: null, i: 0, view: 'trajectory', level: 'categories', fp: 'agents', timeMode: false,
+  var S = TV.state = { t: null, i: 0, view: 'trajectory', level: 'phases', fp: 'agents', timeMode: false,
     expanded: {}, playing: false, speed: 4, panel: false };
   var D = window.TRAJ_OVERVIEW && window.TRAJ_OVERVIEW.schema === 'trajview-overview/3' ? window.TRAJ_OVERVIEW : null;
   var RS = TV.ruleset.get(), RKEY = TV.ruleset.key(RS);
@@ -114,8 +115,9 @@
       g.members.map(function (r) { return { key: r.id, t: GROUP.byKey[r.id], label: TV.uploads.memberLabel(r, g.members) }; }).map(function (x) {
         var t = x.t, a = t.agent, extra = g.kind !== 'runs' && x.label !== a ? ' <span class="muted small">' + esc(x.label.slice(a.length + 3)) + '</span>' : '';
         return '<button type="button" class="gmem" data-mem="' + esc(x.key) + '" aria-pressed="' + (REC && x.key === REC.id) + '">' +
-          (g.kind === 'runs' ? '<b>' + esc(x.label) + '</b>' : TV.agentHTML(a, extra)) + TV.markHTML(t.outcome.pass) + '<span class="n">' + t.n + '</span></button>';
-      }).join('') + '</div>' + (g.kind === 'bug' ? '' : '<a class="btn small" href="upload.html#g=' + encodeURIComponent(g.id) + '">Edit</a>');
+          (g.kind === 'runs' ? '<b>' + esc(x.label) + '</b>' : TV.agentHTML(a, extra)) + TV.markHTML(t.outcome.pass, 'external validation: ' + TV.EXTERNAL_WORD[TV.oc(t.outcome.pass)]) + '<span class="n">' + t.n + '</span></button>';
+      }).join('') + '</div>' + '<span class="gk gext" data-tip="' + esc(TV.EXTERNAL_DEF) + '">' + TV.extBox(true) + TV.extBox(false) + 'external validation</span>' +
+      (g.kind === 'bug' ? '' : '<a class="btn small" href="upload.html#g=' + encodeURIComponent(g.id) + '">Edit</a>');
   }
   $('#grpbar').addEventListener('click', function (e) {
     var b = e.target.closest('[data-mem]');
@@ -177,6 +179,7 @@
     var bugKey = TV.uploads.bug(rec), head = bugKey ? TV.bugName(bugKey) : rec.name;
     document.title = head + ' · ' + t.agent + ' · Inceptor';
     document.body.classList.add('has-result', 'docked');
+    if (!S.i) document.body.classList.add('dock-off');          // no details column until an action is picked
     $('#fname').textContent = head;
     $('#fname').title = [rec.name, src.model, rec.dataset, TV.uploads.formatLabel(src.format), TV.uploads.sizeLabel(rec.size || 0)].filter(Boolean).join(' · ');
     $('#fmeta').innerHTML = TV.agentHTML(t.agent);
@@ -227,7 +230,7 @@
     });
   }
 
-  /* bug id and harness outcome */
+  /* bug id and external validation */
   var bugTimer = 0;
   $('#bug').addEventListener('input', function () {
     clearTimeout(bugTimer);
@@ -421,7 +424,7 @@
     $('#stepFwd').disabled = !t.n || S.i >= t.n;
     $('#playBtn').disabled = !t.n;
     $('#cursorLabel').innerHTML = a ? '<b>#' + a.i + '</b><span class="muted">/' + t.n + '</span> <span class="cl-mid">' + esc(a.category) + '</span>' +
-        (a.verdict !== 'none' ? ' <span class="vg v-' + a.verdict + '">' + TV.VERDICT_GLYPH[a.verdict] + '</span>' : '') +
+        (a.verdict !== 'none' ? ' ' + TV.verdictDot(a.verdict) : '') +
         TV.cursorPhaseHTML(a)
       : '<b>#–</b><span class="muted">/' + t.n + ' · press ▶ or j</span>';
   }
@@ -431,7 +434,7 @@
     var want = !!(CUR && S.i && S.panel);
     var was = document.body.classList.contains('panel-open');
     document.body.classList.toggle('panel-open', want);
-    if (want) renderPanel(); else emptyPanel();
+    if (want) { document.body.classList.remove('dock-off'); renderPanel(); } else emptyPanel();
     if (want !== was && !RO) setTimeout(relayout, 180);                   // no ResizeObserver: redraw after the slide
   }
   /* no action picked: the docked column says how to fill it */
@@ -441,7 +444,14 @@
     $('#dtPrev').disabled = $('#dtNext').disabled = true;
     $('#dtBody').innerHTML = '<p class="dt-empty">Click an action, or press <kbd>j</kbd>.</p>';
   }
-  function closePanel() { S.panel = false; syncPanel(); }
+  /* closing also removes the docked column; picking an action brings it back */
+  function closePanel() {
+    var off = document.body.classList.contains('dock-off');
+    S.panel = false;
+    document.body.classList.add('dock-off');
+    syncPanel();
+    if (!off && !RO) setTimeout(relayout, 180);
+  }
   TV.closePanel = closePanel;
   function renderPanel() {
     var t = CUR, a = t.actions[S.i - 1];
