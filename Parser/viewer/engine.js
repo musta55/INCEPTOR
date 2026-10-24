@@ -316,7 +316,7 @@
           });
         }, function (err) {
           if (el.getAttribute('data-for') !== tag) return;
-          raw.innerHTML = '<div class="dt-k">Raw JSON</div><p class="note">The raw step could not be loaded: ' + TV.esc(err.message) + '. Open the <a href="https://trajectiers.vercel.app/">hosted dashboard</a>, or run <code>python3 -m atif.cli serve</code> from the Parser directory.</p>';
+          raw.innerHTML = '<div class="dt-k">Raw JSON</div><p class="note">The raw step could not be loaded: ' + TV.esc(err.message) + '. Open the <a href="https://inceptor-tool.vercel.app/">hosted dashboard</a>, or run <code>python3 -m atif.cli serve</code> from the Parser directory.</p>';
         });
       }
       if (btn) btn.addEventListener('click', function () { RAW_OPEN = !RAW_OPEN; showRaw(); if (RAW_OPEN) raw.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });

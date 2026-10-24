@@ -44,7 +44,7 @@ python3 -m atif.cli validate                            # re-validate the conver
 python3 -m atif.cli validate --from-raw --config all    # all 7,650 converted in memory; writes only the report
 python3 -m atif.cli validate --harbor                   # plus Harbor's official validator
 python3 -m atif.cli phases 18 --runs 1                  # phases -> subphases outline, with outcomes
-python3 -m atif.cli view --all                          # viewer data: overview.js, bugs/bug-<id>.js, corpus packs, engine
+python3 -m atif.cli view --all                          # viewer data: overview.js, corpus packs, engine
 python3 -m atif.cli segment 18 --runs 1                 # purposes -> segments outline (baseline B3)
 python3 -m atif.cli actions 18                          # categories, phases and the phase sequence
 python3 -m atif.cli audit 18 --agent qwen               # how much of each raw log survived conversion
@@ -134,7 +134,7 @@ applies them to every trajectory: the corpus packs and the uploads. With rows
 added, the corpus is re-run from its packs by the analysis engine (about 4 s for the 150 run-1
 trajectories in the browser, then cached per set of rows), and each row shows how many corpus
 actions it changed. The engine is this package: on the hosted viewer
-(https://trajectiers.vercel.app) it runs in the browser with Pyodide (CPython in WebAssembly,
+(https://inceptor-tool.vercel.app) it runs in the browser with Pyodide (CPython in WebAssembly,
 about 10 MB from cdn.jsdelivr.net on the first visit), from `viewer/engine/atif.zip`, which
 `view` and `engine` rewrite and `tests/test_rules.py` checks is current; locally,
 `python3 -m atif.cli serve` starts a server (standard library only, this machine only) that

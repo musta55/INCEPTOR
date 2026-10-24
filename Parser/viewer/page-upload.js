@@ -42,7 +42,7 @@
   function uniq(xs) { return xs.filter(function (x, k) { return x && xs.indexOf(x) === k; }); }
   function typedBug() { return TV.bugKey($('#gBug').value); }
   function noEngine() {
-    status('warn', 'Uploading needs the analysis engine. Open the <a href="https://trajectiers.vercel.app/">hosted dashboard</a> or run <code>python3 -m atif.cli serve</code>.');
+    status('warn', 'Uploading needs the analysis engine. Open the <a href="https://inceptor-tool.vercel.app/">hosted dashboard</a> or run <code>python3 -m atif.cli serve</code>.');
   }
   /* the uploads kept, without the ones this page holds */
   function loadExisting() {
