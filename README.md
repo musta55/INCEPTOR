@@ -115,8 +115,8 @@ It recognizes the format from the file's content.
 You need Python 3.9 or later; the tool has no other dependencies.
 
 ```bash
-git clone https://github.com/musta55/Trajectiers.git
-cd Trajectiers/Parser
+git clone https://github.com/musta55/INCEPTOR.git
+cd INCEPTOR/Parser
 python3 -m atif.cli serve --open            # dashboard + engine on http://127.0.0.1:8765/
 ```
 
@@ -143,7 +143,7 @@ python3 make_seed.py                    # rebuild the dashboard's preloaded exam
 ### Repository Structure
 
 ```
-Trajectiers/
+INCEPTOR/
 ├── README.md
 ├── Lookup tables/
 │   └── Inceptor lookup tables.xlsx      Final lookup table + justification
