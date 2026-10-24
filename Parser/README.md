@@ -78,6 +78,10 @@ data/reading/<config>/run<k>/bug-<id>_<agent>.md         TAR transcript, for rea
 data/validation/<validator>-<source>[-<selection>].json   validator summary (+ -failures.csv)
 ```
 
+Only `data/atif/original/` is kept in the repository (the viewer data and the ground-truth
+scripts read it); the annotation sheets, reading views and validation reports are rebuilt by
+`convert` and `validate` when needed.
+
 A validation report is named after what it covers: `atif-raw.json` / `harbor-raw.json` (or
 `-converted`) for the whole corpus (17 configs × 3 runs × 3 agents × 50 bugs), otherwise with the
 selection appended, e.g. `atif-converted-original-r123.json` for the default `validate` or
@@ -96,14 +100,14 @@ Outcomes come from `Dataset/a_apr_test_results/` (`atif.outcomes`): the harness 
 app and ran the bug's instrumentation tests, so the verdict is not the agent's own claim.
 
 The viewer (`viewer/`) is Inceptor, a trace exploration dashboard. It has four pages; the
-header links Corpus and Lookup tables. The corpus pages
-(`viewer/index.html`, then a bug's `viewer/bug.html`) open from `file://` with no server. They show
-the `original` configuration: the corpus page holds run 1 of every bug × agent (an Agent filter, an
+header links Corpus Overview (`index.html`), Upload (`upload.html`) and Lookup tables
+(`tables.html`), and each trajectory, bug or comparison opens on the Analyze page
+(`analyze.html`). The Corpus Overview holds the uploaded runs, bug × agent (an Agent filter, an
 Outcome filter, a search where a bug id such as `8` or `bug8` matches exactly that bug, and a
-Statistics tab), and each bug page holds runs 1–3 as phases → categories (consecutive actions of
-one category) → steps, each phase with its outcome (a phase whose checks changed shows them in
-order, ✗ → ✓), with the repair attempts and the first fix marked; its tooltips quote the
-codebook. The only identifier shown for an action is its number (`#12`). A step's details panel
+Statistics tab). The Analyze page has three tabs: Trajectory (phases → categories, consecutive
+actions of one category → steps, each phase with its outcome, with the repair attempts and the
+first fix marked; its tooltips quote the codebook), Fingerprint and, for a bug or a group,
+Comparison. The only identifier shown for an action is its number (`#12`). A step's details panel
 shows the line of the output that decided its verdict (`BUILD SUCCESSFUL in 1m 55s`), the
 actions that decided its phase's outcome as links (the edits of a repair attempt are judged by
 the build or test after them), why it got its phase (the phase lookup's row), the step's full
@@ -124,9 +128,9 @@ targets and the position (the first step, before or after the first edit of a so
 into a phase: planning, localization, repair or validation (reproduction was dropped on
 2026-10-19; rows 6 and 7, a test or a test-file edit before the first fix, are localization). Rows 14 and 15 and
 the general rule give the previous step's phase. There are no grouping rules. The phases'
-outcomes still read the runs' verdicts through the taxonomy's finer action kinds. `tables.html` (Lookup tables; `rules.html` redirects
-to it) shows the built-in tables and is the only place where rows are added, and every page
-applies them to every trajectory: the corpus page, each bug page and the uploads. With rows
+outcomes still read the runs' verdicts through the taxonomy's finer action kinds. `tables.html` (Lookup tables)
+shows the built-in tables and is the only place where rows are added, and every page
+applies them to every trajectory: the corpus packs and the uploads. With rows
 added, the corpus is re-run from its packs by the analysis engine (about 4 s for the 150 run-1
 trajectories in the browser, then cached per set of rows), and each row shows how many corpus
 actions it changed. The engine is this package: on the hosted viewer
@@ -177,7 +181,7 @@ the user's choice: **replace** it, or **add** this one as run n+1. Each upload i
 browser (IndexedDB, with its ATIF; a comparison and the run in the table are written on the
 record; ticking bugs on the Corpus Overview deletes them) and has its own page
 (`analyze.html#u=<id>`; a bug's runs: `analyze.html#b=<bug>`, whose Fingerprint shows the
-bug's agents in one run or one agent's runs, as the bug page does). `make_demo.py`
+bug's agents in one run or one agent's runs). `make_demo.py`
 lays the corpus out as two such folders (`Dataset/demo/dataset1`, `dataset2`: 25 bugs each, with
 `outcomes.csv`) to demonstrate the upload. `make_seed.py` analyses `dataset1` in advance under the
 default tables (`viewer/data/seed/`: one file with every run's analysis, and per run its log and
@@ -229,16 +233,26 @@ an upload like any other: its agent is a column of the corpus table and its inst
 Agentless
 and AutoCodeRover are fixed pipelines, not agents, and are not read.
 
-Manual annotation runs on `Ground Truth/`, built by `python3 make_ground_truth.py`:
-- 15 trajectories of `original`/run 1, 5 per agent, split by each agent's pass rate;
-- one workbook, `annotation_workbook.xlsx`: all 15 trajectories on its Annotation sheet, with
-  three columns per annotator (`A1 …`, `A2 …`) and the ATIF columns (full command, shell
-  command, result, …); `--workbook-only --labels FILE:K` rewrites it and copies labels in.
+Manual annotation runs on `Ground Truth/` (the codebook, the procedure and one workbook):
+- `make_ground_truth.py` drew the 15 trajectories T01–T15 of `original`/run 1 (5 per agent,
+  split by each agent's pass rate; the record is `ground_truth_sample.csv`), wrote their ATIF
+  to `Ground Truth/atif/` and built `annotation_workbook.xlsx`: one Annotation sheet with every
+  action, three columns per annotator (`A1 …`, `A2 …`), the agreed `Final Phase` and
+  `Final Category`, and the ATIF columns (full command, shell command, result, …);
+  `--workbook-only --labels FILE:K` rewrites it and copies labels in.
+- `make_splits.py` split `original`/runs 1–3 into `data/splits/`: the pilot set (T01, T03, T05),
+  the development set the lookup tables were expanded on, and a held-out set (`splits.csv`).
+- The workbook's tabs record the process: Lookup table creation and Pilot table check (the
+  pilot), Pilot agreement (A1 vs A2 on the pilot, live formulas), Final lookup table (what
+  `atif/lookup.py` holds word for word) and Lookup justification (the development steps behind
+  each added entry), and Evaluation scores: RQ1, A1 vs A2 before adjudication, and RQ2, the tool
+  vs `Final Phase`, on T02, T04 and T06–T15 (12 trajectories, 557 actions).
 
 The procedure and the lookup tables are in
-[Annotation Codebook.docx](Annotation%20Codebook.docx) (v4.0).
+[Annotation Codebook.docx](Annotation%20Codebook.docx) and
+`Ground Truth/Trajectory Annotation Procedure.docx`.
 
-Scoring (codebook §11.1, spec §9): download each annotator's filled workbook from Drive, then
+`score_ground_truth.py` scores the kit from the annotators' filled workbooks:
 
 ```bash
 python3 score_ground_truth.py --annotator a1.xlsx --annotator a2.xlsx       # before adjudication
@@ -246,17 +260,13 @@ python3 score_ground_truth.py --annotator a1.xlsx --annotator a2.xlsx --referenc
 ```
 
 It reports the annotators' agreement (kappa with a bootstrap CI over trajectories, boundary F1
-exact and ±1, WindowDiff, and the Levenshtein distance between the phase sequences), the tool, baselines B1–B3 and the ablations against the reference
-(round 2 = scored set, round 1 = development set), per-phase F1, a confusion matrix, results by
+exact and ±1, WindowDiff, and the Levenshtein distance between the phase sequences), the tool, baselines B1, B3, B4 and B5 and the ablations against the reference,
+per-phase F1, a confusion matrix, results by
 agent, the category accuracy, and the subphase-outcome precision. It writes into
-`data/ground_truth/`: `tool_labels.csv` (the tool's labels for the 630 rows), `rows.csv` (every
+`data/ground_truth/`: `tool_labels.csv`, `rows.csv` (every
 workbook beside them), `disagreements.csv` (for the adjudication meeting, without tool labels),
 `scores.json`, `report.md`, and once `subphase_audit.xlsx` (fill in `correct`, then run again).
-The automated labels of every trajectory are also in `data/annotation/` (columns `phase`,
-`own_phase`, `subphase`, `subphase_outcome`, `subphase_evidence`, `attempt`). The tool's phase rules are in
-[Phase taxonomy.md](Phase%20taxonomy.md). The conversion pipeline is explained in
-`Technical report.md`, which was written for the earlier corpus and is archived, with the
-other plans of September, in `../Inspection/plans-and-reports-before-phase-taxonomy-2026-10-11.tar.gz`.
+The tool's phase rules are in [Phase taxonomy.md](Phase%20taxonomy.md).
 
 ## Modules
 
@@ -310,5 +320,5 @@ other plans of September, in `../Inspection/plans-and-reports-before-phase-taxon
 - Codex's system prompt, sandbox rules and project AGENTS.md are carried as `system`/`user`
   steps tagged `extra.record_kind`, so the context the agent acted under is in the file.
 - Every trajectory records what its source format cannot express, in
-  `extra.known_gaps` — see [Log audit and collection spec.md](Log%20audit%20and%20collection%20spec.md).
+  `extra.known_gaps`.
 - The taxonomy never reads thought text. It cannot: thought is absent for many actions.

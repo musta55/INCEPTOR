@@ -8,28 +8,28 @@ attempts and per-trajectory metrics.
 - **Producer:** `python3 -m atif.cli view --all` (run `python3 -m atif.cli convert --config original
   --runs 1 2 3 --all` first). Options: `--config original` (exactly one configuration),
   `--runs 1 2 3`, `--overview-run 1`, `--path Parser/viewer`, and bug ids instead of `--all`
-  (`view 8 18` rewrites those bug files; the overview is always rewritten for every bug).
+  (`view 8 18` rewrites those bugs' corpus packs; the overview is always rewritten for every bug).
 - **Files:**
 
   | file | statement | schema | page |
   |---|---|---|---|
-  | `viewer/data/overview.js` | `window.TRAJ_OVERVIEW = {...};` | `trajview-overview/3` | `index.html` |
-  | `viewer/data/bugs/bug-<id>.js` | `window.TRAJ_BUG = {...};` | `trajview/3` | `bug.html#bug=<id>` |
+  | `viewer/data/overview.js` | `window.TRAJ_OVERVIEW = {...};` | `trajview-overview/3` | every page |
 
-  Both are JavaScript statements, not JSON, so the pages work from `file://`, where `fetch()` of
-  a local file is blocked. `bug.html` loads a bug file by injecting a `<script>` tag.
-  `view.read_js(path)` loads either one back into Python.
+  It is a JavaScript statement, not JSON, so the pages work from `file://`, where `fetch()` of
+  a local file is blocked. `view.read_js(path)` loads it back into Python. The bug object
+  `trajview/3` below is not written to a file: `view.build_bug` returns it, and an upload's
+  trajectory (`trajview-single/1`) and a re-run corpus pack carry the same trajectory views.
 - **Scope:** one prompt configuration (`original` by default). The overview holds one run
-  (`--overview-run`, default 1) of every bug x agent as summaries; a bug file holds every run
+  (`--overview-run`, default 1) of every bug x agent as summaries; a bug object holds every run
   (`--runs`, default 1 2 3) of every agent of that bug in full.
 - **Rule:** the viewer must ignore fields it does not know. Fields marked *extra* below are
   written today but are not needed by the viewer. The viewer refuses a file of another schema
   and says how to regenerate it.
 
-## Bug file: `trajview/3`
+## Bug object: `trajview/3`
 
 ```jsonc
-window.TRAJ_BUG = {
+{
   "schema": "trajview/3",
   "generated_by": "atif <parser_version>",
   "bug": "18",                                 // string
@@ -213,14 +213,13 @@ window.TRAJ_OVERVIEW = {
   "generated_by": "atif <parser_version>",
   "config": "original",
   "run": 1,                                    // the run summarised in "agents"
-  "runs": [1, 2, 3],                           // the runs of the bug files (and of by_run)
+  "runs": [1, 2, 3],                           // the runs of by_run
   "agents": ["claude", "codex", "qwen"],
   "outcome_source": "a_apr_test_results",
   "models": {"claude": "claude-opus-5", "codex": "gpt-5.6-sol", "qwen": "qwen/qwen3.6-35b-a3b"},
   "vocab": { /* see "Vocabulary" */ },
   "bugs": [                                    // every bug of the dataset, sorted by numeric id
     { "bug": "8", "app": "de.koelle.christian.trickytripper",
-      "page": true,                            // viewer/data/bugs/bug-8.js exists
       "by_run": {                              // every agent, straight from the outcome CSVs
         "claude": {"1": true, "2": true, "3": true}, "codex": {...}, "qwen": {"1": false, "2": true, "3": true} },
       "agents": {                              // agents whose overview run is converted
@@ -292,16 +291,14 @@ it, on the phase result):
 6. Attempts lie within `1..n_actions`, with `start <= end`; `anchor` is null or within `1..n_actions`.
 7. Every source edit is in Repair; Repair and Validation occur only from the anchor on (`phase.check_hierarchy`).
 
-## Viewer deep links (`bug.html`)
+## Viewer deep links
 
-`bug.html#bug=<id>&t=<agent>-r<k>&i=<action>&v=trajectory|timeline|fingerprint&lvl=phases|categories|steps&fp=agents|runs&speed=1|2|4|8|16&details=0&play=1&theme=auto|light|dark`
-— all but `bug` optional. `play=1` starts the playhead on open; `details=0` keeps the action details
-closed while the cursor is set. Older links keep working: `lvl=purposes` opens `phases`,
-`lvl=subphases` and `lvl=segments` open `categories`, `v=compare` opens the fingerprint.
+`analyze.html#u=<id>` opens one upload, `analyze.html#b=<bug>` a bug's uploaded runs and
+`analyze.html#g=<id>` a comparison; `&m=<upload id>` picks the member shown,
+`&v=trajectory|timeline|fingerprint` the tab and `&fp=agents|runs` the comparison's axis.
 `index.html#tab=stats&q=<search>&ag=<agent>&oc=pass|fail|mixed&sort=actions|failures` (links of the
-earlier `ag=<agent>:pass|fail` and `f=allpass|disagree` filters still open). An upload's page is
-`analyze.html#u=<id>`; the Lookup tables page takes `tables.html#draft=<row JSON>&back=<page>`
-(`rules.html` redirects there, hash included).
+earlier `ag=<agent>:pass|fail` and `f=allpass|disagree` filters still open); the Lookup tables
+page takes `tables.html#draft=<row JSON>&back=<page>`.
 
 ## Lookup tables in the vocabulary
 

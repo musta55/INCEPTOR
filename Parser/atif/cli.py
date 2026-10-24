@@ -755,8 +755,8 @@ def cmd_phases(args: argparse.Namespace) -> int:
 
 
 def cmd_view(args: argparse.Namespace) -> int:
-    """Write the viewer data: ``data/overview.js`` (one run, every bug) and one
-    ``data/bugs/bug-<id>.js`` per selected bug (every selected run). Reads converted files."""
+    """Write the viewer data: ``data/overview.js`` (one run, every bug) and the corpus packs
+    ``data/atif/run<k>/bug-<id>.json.gz`` of the selected bugs. Reads converted files."""
     dataset, out = _paths(args)
     sel = selection(args, default_all_bugs=True)
     if len(sel.configs) != 1:
@@ -764,12 +764,13 @@ def cmd_view(args: argparse.Namespace) -> int:
     if args.overview_run not in sel.runs:
         raise SystemExit(f"view: --overview-run {args.overview_run} is not among --runs")
     ruleset = load_rules(args.rules) if args.rules else None
-    try:
-        summary = view.export(out, dataset, Path(args.path), config=sel.configs[0],
-                              runs=sel.runs, overview_run=args.overview_run,
-                              bug_ids=sel.bugs, agents=sel.agents, ruleset=ruleset)
-    except ValueError as exc:
-        raise SystemExit(f"view: {exc}")
+    every_bug = corpus.all_bug_ids(dataset)
+    unknown = [b for b in (sel.bugs or ()) if str(b).replace("bug-", "") not in every_bug]
+    if unknown:
+        raise SystemExit(f"view: no such bug(s) in {dataset}: {', '.join(map(str, unknown))}")
+    summary = view.export(out, dataset, Path(args.path), config=sel.configs[0],
+                          runs=sel.runs, overview_run=args.overview_run,
+                          agents=sel.agents, ruleset=ruleset)
     if ruleset:
         added = ", ".join(o["id"] + (f"={o['value']}" if "value" in o else "")
                           for o in ruleset["optional"]) or "none"
@@ -778,12 +779,8 @@ def cmd_view(args: argparse.Namespace) -> int:
     print(f"wrote {_rel(Path(summary['overview']))} ({summary['overview_bytes']:,} bytes, "
           f"{summary['bugs']} bugs, {summary['overview_trajectories']} trajectories of run "
           f"{summary['overview_run']})")
-    print(f"wrote {summary['bug_files']} bug page file(s), {summary['bug_bytes']:,} bytes, "
-          f"{summary['trajectories']} trajectories; largest "
-          f"{_rel(Path(summary['largest_bug_file'])) if summary['largest_bug_file'] else '-'} "
-          f"({summary['largest_bug_bytes']:,} bytes)")
     packs = view.write_packs(out, Path(args.path), config=sel.configs[0], runs=sel.runs,
-                             bug_ids=sel.bugs or corpus.all_bug_ids(dataset), agents=sel.agents)
+                             bug_ids=sel.bugs or every_bug, agents=sel.agents)
     print(f"wrote {packs['files']} corpus pack(s), {packs['bytes']:,} bytes "
           f"(data/atif/: the ATIF the viewer re-runs under a user's rules)")
     _write_engine(Path(args.path))
@@ -1040,7 +1037,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_selection(phaser)
     phaser.set_defaults(func=cmd_phases)
 
-    viewer = sub.add_parser("view", help="write the viewer data (overview + one file per bug)")
+    viewer = sub.add_parser("view", help="write the viewer data (overview + corpus packs)")
     add_selection(viewer)
     viewer.add_argument("--overview-run", type=int, default=1, metavar="K",
                         help="the run the overview page shows (default 1)")

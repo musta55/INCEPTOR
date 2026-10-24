@@ -2,7 +2,7 @@
 
 Deliberately uses only the *action* side of the trajectory (tool name, arguments,
 result status). Thought text is not consulted anywhere here, because it is absent
-for most actions in this corpus -- see ``Parser/Log audit and collection spec.md``.
+for most actions in this corpus.
 
 low      : one ATIF ``tool_call``
 mid      : one of MID_LEVEL -- what the agent did; the verdict parser and ``atif.segment``

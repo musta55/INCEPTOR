@@ -1,46 +1,41 @@
-# Ground Truth: phase annotation kit (codebook v4.0)
+# Ground Truth: phase annotation kit (codebook v4)
 
-Built on 2026-10-10 by `python3 make_ground_truth.py` (run from `Parser/`); the workbook was
-rewritten for codebook version 4 on 2026-10-14 with `make_ground_truth.py --workbook-only`.
-The procedure and the lookup tables are in [Annotation Codebook.docx](../Annotation%20Codebook.docx).
+Built by `python3 make_ground_truth.py` (run from `Parser/`). The procedure is in
+`Trajectory Annotation Procedure.docx` and the codebook with the lookup tables in
+[Annotation Codebook.docx](../Annotation%20Codebook.docx).
 
 | File | What it is |
 |---|---|
-| `annotation_workbook.xlsx` | The one workbook. Tabs: Start here; Annotation (all 15 trajectories, one row per action, with the columns `A1 phase`, `A1 category_fix`, `A1 notes` for annotator 1 and the same `A2 …` columns for annotator 2, then the given columns); the reference tabs Phases, Action lookup and Phase lookup; Codebook changes. Each annotator works in a copy and fills only their own columns. The workbook is blind: no automatic phase, subphase or outcome, and no pass/fail. The A1 columns of T01–T05 carry the round-1 labels annotator 1 made with version 3 |
-| `annotator_1_Mustahid.xlsx` | Annotator 1's version 3 workbook (one tab per trajectory), whose labels were copied into the A1 columns |
-| `atif/T<nn>_bug-<id>_<agent>.atif.json` | The full trajectory behind each tab |
-| `tracker.xlsx` | One row per tab: round, agent, bug, actions, and a done column per annotator |
+| `annotation_workbook.xlsx` | The one workbook (tabs below) |
+| `atif/T<nn>_bug-<id>_<agent>.atif.json` | The full trajectory behind each of T01–T15 |
+| `tracker.xlsx` | One row per trajectory: agent, bug, actions, and a done column per annotator |
+
+**Workbook tabs.**
+- **Start here**: how to fill in the workbook.
+- **Annotation**: every action of T01–T15, one row each: `A1 phase`, `A1 category_fix`,
+  `A1 notes`, the same `A2 …` columns, the agreed `Final Phase` and `Final Category`, then the
+  ATIF columns. Phase marks are sparse; a row takes the phase above it.
+- **Lookup table creation**, **Pilot table check**: the lookup tables drafted and checked on the
+  pilot set T01, T03 and T05.
+- **Pilot agreement**: A1 vs A2 on the pilot set (live formulas over Annotation).
+- **Final lookup table**: the action, target and phase tables, word for word as
+  `atif/lookup.py` holds them. **Lookup justification**: the development steps behind each
+  entry added on the development set (`../data/splits/`, built by `make_splits.py`).
+- **Phases**: the phase definitions. **Action lookup (depricated)**, **Phase lookup
+  (depricated)**: the version 4 tables the Final tables replaced.
+- **Evaluation scores**: RQ1 (A1 vs A2 before adjudication: agreement, Cohen's kappa,
+  Krippendorff's alpha) and RQ2 (the tool vs `Final Phase`: accuracy, macro precision, recall
+  and F1, sequence distance) on T02, T04 and T06–T15 (12 trajectories, 557 actions).
 
 **Sample.** The frame is configuration `original`, run 1: 3 agents × 50 bugs = 150
-trajectories. Each agent gets 5 trajectories, split by its APR pass rate:
+trajectories. Each agent got 5 trajectories, split by its APR pass rate (Claude 4 pass + 1
+fail, Codex 4 + 1, Qwen 2 + 3), drawn at random within each stratum with seed 20261010, no app
+twice for one agent, no bug twice, and bug 18 (the codebook's worked example) excluded. The
+sampling record, with the outcomes, is `../ground_truth_sample.csv`.
 
-| Agent | Passed | Sample |
-|---|---|---|
-| Claude | 44 / 50 | 4 pass + 1 fail |
-| Codex | 42 / 50 | 4 pass + 1 fail |
-| Qwen | 25 / 50 | 2 pass + 3 fail (ties go to fail) |
+**Do not run `make_ground_truth.py --overwrite`.** It replaces the workbook. Rebuild only the
+reference tabs with `--workbook-only --labels FILLED.xlsx:K`, or update them by hand.
 
-Other rules of the draw:
-- simple random within each stratum, with seed 20261010;
-- no app twice for one agent, and no bug twice in the sample;
-- bug 18 is excluded, because it is the codebook's worked example.
-
-The draw gives 15 trajectories and 630 actions. The sampling record, which includes the
-outcomes, is `../ground_truth_sample.csv`, kept outside this folder.
-
-**Rounds.**
-- **Round 1** is T01–T06 (255 actions): one passing and one failing trajectory per agent.
-  The codebook may change during this round.
-- **Round 2** is T07–T15 (375 actions), annotated after the codebook is frozen.
-
-**Do not run `make_ground_truth.py --overwrite` after annotation has started.** It replaces
-the workbook (never an annotator's own copy). After the round-1 meeting, rebuild the reference
-tabs with `--workbook-only --labels FILLED.xlsx:K`, or update them by hand.
-
-**On Google Drive** this kit lives in Trajectory Annotation Kit / Ground Truth. There, the
-Tracker is a Google Sheet, which replaces `tracker.xlsx`; annotators keep their copies in the
-Annotator 1 and Annotator 2 folders. The previous Drive kit and both annotator copies of it
-were moved to "Archive - segment and purpose kit (Oct 8)".
-
-The previous local kits (the segment/purpose kit of 2026-10-07 and the older
-`Annotation kit/`) are archived in `Inspection/annotation-kits-before-2026-10-10.tar.gz`.
+**On Google Drive** the kit lives in Trajectory Annotation Kit / Ground Truth, where the Tracker
+is a Google Sheet and the annotators keep their copies in the Annotator 1 and Annotator 2
+folders.

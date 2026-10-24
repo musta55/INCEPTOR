@@ -10,7 +10,7 @@
  *             A rejection with .answered is the engine's own answer (a log or a rule to fix);
  *             any other means the engine cannot run here (file://, offline).
  * TV.corpus   the corpus under the current rule set: run-1 summaries of every bug (overview,
- *             statistics, comparisons) or one bug's full trajectories (bug page), re-run from
+ *             statistics, comparisons), re-run from
  *             data/atif/run<k>/bug-<id>.json.gz; the summaries are cached in IndexedDB per
  *             rule set, so a rule set is applied to the corpus once.
  * TV.idb      a small IndexedDB store (uploads, their texts, that cache); every call rejects
@@ -195,24 +195,6 @@
       });
       if (res.vocab) D.vocab = res.vocab;
       return D;
-    },
-    /* one bug's trajectories (d = window.TRAJ_BUG) re-run under rs, in d's order, with d's
-     * outcomes and app name; resolves to d itself, changed in place */
-    bug: function (d, rs) {
-      var runs = (d.runs || [1, 2, 3]);
-      return TV.engine.corpus({ rules: rs, summary: false, paths: runs.map(function (r) { return packPath(r, d.bug); }) }).then(function (res) {
-        var by = {};
-        res.packs.forEach(function (pk) { Object.keys(pk.views).forEach(function (a) { by[a + '-r' + pk.run] = pk.views[a]; }); });
-        d.trajectories = d.trajectories.map(function (t) {
-          var n = by[t.agent + '-r' + t.run];
-          if (!n) return t;
-          n.outcome = t.outcome;
-          n.app = t.app;
-          return n;
-        });
-        if (res.vocab) d.vocab = res.vocab;
-        return d;
-      });
     }
   };
 

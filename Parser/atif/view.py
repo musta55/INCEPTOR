@@ -1,22 +1,20 @@
 """The viewer datasets ``trajview/3`` and ``trajview-overview/3`` (``Parser/View data contract.md``).
 
-    python3 -m atif.cli view --all      # -> Parser/viewer/data/overview.js + data/bugs/bug-<id>.js
+    python3 -m atif.cli view --all      # -> Parser/viewer/data/overview.js + data/atif/
 
-The viewer shows one prompt configuration (``original`` by default) at two levels, so no
-page has to load the whole corpus:
+The viewer shows one prompt configuration (``original`` by default), so no page has to
+load the whole corpus:
 
 ``viewer/data/overview.js``         ``window.TRAJ_OVERVIEW = {...};`` -- one run (run 1) of
                                     every bug x agent, summaries only (no per-action text),
                                     plus every bug's pass/fail in each run from the outcome CSVs;
-``viewer/data/bugs/bug-<id>.js``    ``window.TRAJ_BUG = {...};`` -- the bug's trajectories in
-                                    full (3 agents x 3 runs), for ``viewer/bug.html``;
-``viewer/data/atif/run<k>/bug-<id>.json.gz``  the same trajectories as converted ATIF
+``viewer/data/atif/run<k>/bug-<id>.json.gz``  the bug's trajectories as converted ATIF
                                     (``write_packs``), which the viewer re-runs when the user
                                     sets rules of their own.
 
-Both are JavaScript statements, not JSON, so the pages work from ``file://`` (where
-``fetch()`` of a local file is blocked): ``bug.html`` loads a bug by injecting a
-``<script>`` tag.  Built from the converted ATIF files (``convert`` first), the phase
+The overview is a JavaScript statement, not JSON, so the pages work from ``file://`` (where
+``fetch()`` of a local file is blocked).  ``build_bug`` gives one bug's ``trajview/3`` object
+(the shape an upload's view has).  Built from the converted ATIF files (``convert`` first), the phase
 taxonomy (``atif.phase``: phases -> outcome subphases, attempts, metrics), the badges and
 outcomes (``atif.outcomes``) and the codebook's tables (``atif.codebook``), which the viewer
 quotes in its tooltips.
@@ -60,7 +58,6 @@ TARGET_CHARS = 200
 #: the files an action names, and the files a search's output lists (``files``, ``found``)
 FILES_MAX = 12
 FOUND_MAX = 20
-BUG_VAR = "window.TRAJ_BUG"
 OVERVIEW_VAR = "window.TRAJ_OVERVIEW"
 #: the targets of the files an action works on (the target table), the actions' file_role
 FILE_ROLES = lookup.TARGETS
@@ -493,18 +490,13 @@ def write_js(variable: str, data: Dict[str, Any], path: Path) -> Path:
 
 
 def read_js(path: Path, variable: Optional[str] = None) -> Dict[str, Any]:
-    """Load a written overview.js or bug-<id>.js back (for the tests and for checking a
-    viewer bug)."""
+    """Load a written overview.js back (for the tests)."""
     text = Path(path).read_text(encoding="utf-8").strip()
-    for name in ([variable] if variable else [OVERVIEW_VAR, BUG_VAR]):
+    for name in ([variable] if variable else [OVERVIEW_VAR]):
         prefix = f"{name} = "
         if text.startswith(prefix) and text.endswith(";"):
             return json.loads(text[len(prefix):-1])
     raise ValueError(f"{path}: not a trajview data file")
-
-
-def bug_file(viewer_dir: Path, bug: str) -> Path:
-    return Path(viewer_dir) / "data" / "bugs" / f"bug-{bug}.js"
 
 
 def pack_file(viewer_dir: Path, run: int, bug: str) -> Path:
@@ -544,66 +536,38 @@ def overview_file(viewer_dir: Path) -> Path:
 
 def export(out_dir: Path, dataset: Path, viewer_dir: Path, config: str = corpus.DEFAULT_CONFIG,
            runs: Iterable[int] = corpus.RUNS, overview_run: int = 1,
-           bug_ids: Optional[Iterable[str]] = None,
            agents: Optional[Iterable[str]] = None,
            ruleset: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-    """Write ``viewer/data/bugs/bug-<id>.js`` for ``bug_ids`` (default: every bug) and
-    rewrite ``viewer/data/overview.js``; ``ruleset`` (``atif.rules``) replaces the default
-    phase rules.
+    """Rewrite ``viewer/data/overview.js`` for every bug of the dataset; ``ruleset``
+    (``atif.rules``) replaces the default phase rules.
 
-    The overview always covers every bug of the dataset, so that refreshing a few bug pages
-    (``view 8 18``) leaves it complete; a bug's row says whether its page file exists.
     ``out_dir`` is the conversion output root (``Parser/data``), whose
     ``atif/<config>/run<k>/`` files are read; nothing is converted here.  Returns a summary:
-    files written with sizes, trajectory counts and the ids of trajectories with no
+    the file written with its size, trajectory counts and the ids of trajectories with no
     converted file."""
     out_dir, dataset, viewer_dir = Path(out_dir), Path(dataset), Path(viewer_dir)
     runs = [int(r) for r in runs]
     overview_run = int(overview_run)
     agents = [a for a in corpus.AGENTS if agents is None or a in set(agents)]
     table = outcomes.load(dataset)
-    every_bug = corpus.all_bug_ids(dataset)
-    pages = sorted({str(b).replace("bug-", "") for b in bug_ids}, key=int) if bug_ids \
-        else list(every_bug)
-    unknown = [b for b in pages if b not in every_bug]
-    if unknown:
-        raise ValueError(f"no such bug(s) in {dataset}: {', '.join(unknown)}")
-    written: List[Tuple[str, int]] = []
     missing: List[str] = []
-    n_traj = 0
     entries: List[Dict[str, Any]] = []
-    page_set = set(pages)
-    for bug in every_bug:
-        if bug in page_set:
-            obj, views, lacking = build_bug(out_dir, dataset, bug, config=config, runs=runs,
-                                            agents=agents, outcome_table=table,
-                                            extra_runs=[overview_run], ruleset=ruleset)
-            missing.extend(lacking)
-            n_traj += len(obj["trajectories"])
-            path = write_js(BUG_VAR, obj, bug_file(viewer_dir, bug))
-            written.append((str(path), path.stat().st_size))
-            app = obj["app"]
-        else:
-            _obj, views, _lacking = build_bug(out_dir, dataset, bug, config=config, runs=runs,
-                                              agents=agents, outcome_table=table,
-                                              extra_runs=[overview_run],
-                                              view_runs=[overview_run], ruleset=ruleset)
-            app = _obj["app"]
-        entry = bug_entry(bug, app, views.get(overview_run, {}), config=config,
-                          overview_run=overview_run, agents=agents, table=table)
-        entry["page"] = bug_file(viewer_dir, bug).is_file()
-        entries.append(entry)
+    for bug in corpus.all_bug_ids(dataset):
+        obj, views, lacking = build_bug(out_dir, dataset, bug, config=config, runs=runs,
+                                        agents=agents, outcome_table=table,
+                                        extra_runs=[overview_run],
+                                        view_runs=[overview_run], ruleset=ruleset)
+        missing.extend(lacking)
+        entries.append(bug_entry(bug, obj["app"], views.get(overview_run, {}), config=config,
+                                 overview_run=overview_run, agents=agents, table=table))
     overview = {"schema": OVERVIEW_SCHEMA, "generated_by": _generated_by(), "config": config,
                 "run": overview_run, "runs": runs, "agents": agents,
                 "outcome_source": outcomes.OUTCOME_SOURCE,
                 "models": _models(entries, agents), "vocab": vocab(ruleset), "bugs": entries}
     opath = write_js(OVERVIEW_VAR, overview, overview_file(viewer_dir))
-    largest = max(written, key=lambda w: w[1]) if written else (None, 0)
     return {"config": config, "runs": runs, "overview_run": overview_run, "agents": agents,
             "overview": str(opath), "overview_bytes": opath.stat().st_size,
-            "bug_files": len(written), "bug_bytes": sum(w[1] for w in written),
-            "largest_bug_file": largest[0], "largest_bug_bytes": largest[1],
-            "bugs": len(entries), "trajectories": n_traj,
+            "bugs": len(entries),
             "overview_trajectories": sum(len(e["agents"]) for e in entries),
             "missing": missing}
 

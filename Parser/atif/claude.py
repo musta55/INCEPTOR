@@ -2,8 +2,8 @@
 
 Source format: a line-per-message ``repr()`` dump of ``claude-agent-sdk`` objects,
 e.g. ``AssistantMessage(content=[ToolUseBlock(id='toolu_01', name='Read', input={...})])``.
-This is a derived log, not Claude Code's native session JSONL; see
-``Parser/Log audit and collection spec.md`` for what it loses.
+This is a derived log, not Claude Code's native session JSONL, and it loses some of what
+the native log records.
 
 Claude Code's raw JSON is read too (``read_json_messages``, format ``JSON_SOURCE_FORMAT``):
 the ``--output-format stream-json`` stream, whose events are the same messages the SDK

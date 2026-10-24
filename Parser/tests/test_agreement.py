@@ -9,7 +9,6 @@ Run from ``Parser/``: ``python3 -m unittest discover -s tests -t .``
 """
 from __future__ import annotations
 
-import csv
 import math
 import sys
 import tempfile
@@ -19,7 +18,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 
-from atif import agreement, phase, view  # noqa: E402
+from atif import agreement, phase  # noqa: E402
 
 A, B, C = "localization", "repair", "validation"
 
@@ -165,7 +164,6 @@ class WorkbookReaderTests(unittest.TestCase):
 
 
 KIT = HERE.parent / "Ground Truth"
-ANNOTATION = HERE.parent / "data" / "annotation" / "original" / "run1"
 
 
 @unittest.skipUnless((KIT / "atif").is_dir() and (HERE.parent / "ground_truth_sample.csv").is_file(),
@@ -185,24 +183,6 @@ class KitTests(unittest.TestCase):
             for method in ("tool", "B1", "B3", "B4", "B5"):
                 self.assertEqual(len(self.tool[e["tab"]][method]), e["actions"], (e["tab"], method))
             self.assertTrue(set(self.tool[e["tab"]]["tool"]) <= set(phase.PHASES))
-
-    @unittest.skipUnless(ANNOTATION.is_dir(), "data/annotation/original/run1 not present")
-    def test_the_annotation_sheets_carry_the_same_phases(self):
-        for e in self.sample:
-            with (ANNOTATION / f"bug-{e['bug']}_actions.csv").open(newline="") as handle:
-                sheet = [r["phase"] for r in csv.DictReader(handle) if r["agent"] == e["agent"]]
-            self.assertEqual(sheet, self.tool[e["tab"]]["tool"], e["tab"])
-
-    def test_the_viewer_draws_the_same_phases(self):
-        bug_file = HERE.parent / "viewer" / "data" / "bugs" / "bug-{}.js"
-        for e in self.sample:
-            path = Path(str(bug_file).format(e["bug"]))
-            if not path.is_file():
-                continue
-            data = view.read_js(path)
-            traj = next(t for t in data["trajectories"] if t["agent"] == e["agent"] and t["run"] == 1)
-            self.assertEqual([a["phase"] for a in traj["actions"]], self.tool[e["tab"]]["tool"], e["tab"])
-
 
 if __name__ == "__main__":
     unittest.main()

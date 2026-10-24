@@ -149,7 +149,7 @@ tool" or "any other program" (`tests/test_phase.py`); other itself is a category
 | decisive run | a run whose result is `pass`, `test_fail`, `build_fail` or `blocked` |
 | attempt (K1) | a block of source edits checked by one run. Its judging run is the first decisive run at or after its first edit. A passing build judges it weakly when the agent edits again before any decisive run, so edit → build → edit is two attempts, and edit → build → test is one |
 
-## 5. The five phases
+## 5. The four phases
 
 | Phase | Definition | Where |
 |---|---|---|
@@ -285,7 +285,7 @@ Polls are excluded from every count.
 | Metric | Definition |
 |---|---|
 | tool_actions | actions without polls |
-| planning_actions … validation_actions | per phase; together they equal `tool_actions` (V2's names; V2's cleanup is part of validation, and reproduction is new) |
+| planning_actions … validation_actions | per phase; together they equal `tool_actions` (V2's names; V2's cleanup is part of validation) |
 | env_actions | env_setup, R2 probes, toolchain edits and runs failed by the environment, wherever they are |
 | n_attempts, n_failed_attempts, n_blocked_attempts | from K1, by attempt outcome |
 | attempts_to_first_pass | the first attempt that succeeded with test evidence |

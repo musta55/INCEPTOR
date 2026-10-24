@@ -299,11 +299,12 @@ class PackTests(unittest.TestCase):
 
     def test_default_rules_give_the_exported_views(self):
         pack = self._pack()
-        exported = view.read_js(view.bug_file(self.VIEWER, "18"))
+        if not HAVE_DATASET:
+            self.skipTest("Dataset/ not present")
+        exported, _views, _missing = view.build_bug(self.VIEWER.parent / "data", DATASET, "18",
+                                                    runs=[1])
         got = upload.reanalyze(pack)["views"]
         for t in exported["trajectories"]:
-            if t["run"] != 1:
-                continue
             mine = {k: v for k, v in got[t["agent"]].items() if k not in ("outcome", "app", "rule_hits")}
             self.assertEqual(mine, {k: v for k, v in t.items() if k not in ("outcome", "app")})
 

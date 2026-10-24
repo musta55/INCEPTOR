@@ -171,18 +171,15 @@ class VocabTests(unittest.TestCase):
 @unittest.skipUnless(HAVE_DATASET and HAVE_CONVERTED, "Dataset/ or converted original/run1 missing")
 class ExportTests(unittest.TestCase):
 
-    def test_export_writes_both_files_and_reads_back(self):
+    def test_export_writes_the_overview_and_reads_back(self):
         with tempfile.TemporaryDirectory() as tmp:
-            summary = view.export(DATA, DATASET, Path(tmp), runs=[1], overview_run=1,
-                                  bug_ids=["18"])
-            self.assertEqual(summary["bug_files"], 1)
-            bug = view.read_js(view.bug_file(Path(tmp), "18"))
+            view.export(DATA, DATASET, Path(tmp), runs=[1], overview_run=1)
             overview = view.read_js(view.overview_file(Path(tmp)))
+        bug, _views, _missing = view.build_bug(DATA, DATASET, "18", runs=[1])
         self.assertEqual(bug["schema"], view.SCHEMA)
         self.assertEqual(overview["schema"], view.OVERVIEW_SCHEMA)
         self.assertEqual([t["agent"] for t in bug["trajectories"]], list(corpus.AGENTS))
         row = next(b for b in overview["bugs"] if b["bug"] == "18")
-        self.assertTrue(row["page"])
         self.assertEqual(set(row["agents"]), set(corpus.AGENTS))
         self.assertEqual(len(overview["bugs"]), 50)
 
