@@ -19,7 +19,6 @@ runs on the same bug.
 |---|---|
 | 450 trajectories (50 Android bugs × 3 agents × 3 runs), converted to [ATIF v1.7](Parser/ATIF-v1.7-RFC.md) | [`Parser/data/atif/original/`](Parser/data/atif/original/) |
 | Example datasets to upload: raw logs plus `outcomes.csv`, 25 bugs each | [`Dataset/demo/`](Dataset/demo/) (`dataset1`, `dataset2`) |
-| Pilot / development / test split | [`Parser/data/splits/splits.csv`](Parser/data/splits/splits.csv) |
 | Case-study screenshots (Bug 84) | [`Dataset/Case Study/`](Dataset/Case%20Study/) |
 
 The agents are Claude Code (Opus 5), Codex (GPT-5.6-Sol) and Qwen Code (Qwen3.6-35B-A3B). Each
@@ -53,12 +52,14 @@ See [`Parser/README.md`](Parser/README.md) for all commands and the data formats
 
 ## Evaluation
 
-The heuristics were built and tested on three sets of trajectories:
+The heuristics were built and tested on three separate sets of trajectories, sampled by agent
+and patch outcome:
 
 1. **Pilot** (3 trajectories, 73 steps). Two authors labelled the steps and drafted the lookup
    tables.
-2. **Development** (339 trajectories). An LLM proposed new table entries, and an author checked
-   each one. The *Lookup justification* tab of the Excel file records every entry that was added.
+2. **Development** (339 trajectories, which leave out the pilot and test sets). An LLM proposed
+   new table entries, and an author checked each one. The *Lookup justification* tab of the
+   Excel file records every entry that was added.
 3. **Test** (12 trajectories, 4 per agent, 557 steps). Two authors labelled each step
    independently, then settled their disagreements. They agreed on 94.1% of phases (κ = 0.91)
    and on all action categories.
