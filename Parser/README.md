@@ -9,37 +9,32 @@ Runs on the system Python 3.9+, no dependencies (Harbor's official validator run
 
 ## The corpus
 
-50 Android UI bugs, three agents, 17 prompt configurations, 3 runs each:
-3 × 17 × 3 × 50 = **7,650 trajectories**, every one with an APR outcome. An 18th configuration,
-`file_method_screen` (Claude and Codex runs 1–2, Qwen run 1; 250 logs), has no outcome column; it
-is converted only when named and stays out of every default and statistic.
+50 Android UI bugs, three agents, 3 runs each: 3 × 50 × 3 = **450 trajectories**, every one
+with an APR outcome.
 
 ```
-Dataset/a_apr_test_results/<agent>_run<k>.csv        outcomes: bug_id + 17 config columns, 1 = APR pass
-Dataset/p_claude_results/claude_<config>_run<k>/claude_logs/bug-<id>_output.txt    claude-agent-sdk dump
-Dataset/o_codex_results/codex_<config>_run<k>/codex/log-bug-<id>/logs/codex-session-rollout-*.jsonl
-Dataset/q_qwen_results/qwen_<config>_run<k>/qwen/bug-<id>.log    Qwen Code stream-json (+ bug-<id>.meta.json)
+Dataset/a_apr_test_results/<agent>_run<k>.csv        outcomes: bug_id + one column per configuration, 1 = APR pass
+Dataset/p_claude_results/claude_original_run<k>/claude_logs/bug-<id>_output.txt    claude-agent-sdk dump
+Dataset/o_codex_results/codex_original_run<k>/codex/log-bug-<id>/logs/codex-session-rollout-*.jsonl
+Dataset/q_qwen_results/qwen_original_run<k>/qwen/bug-<id>.log    Qwen Code stream-json (+ bug-<id>.meta.json)
 ```
 
-Configurations, in CSV order: `original`, `perfect`, `reference`, `title_ob`, `ob_omitted`,
-`eb_omitted`, `s2r_omitted`, `file_method_no_screen`, and `{causing,manifesting,caus_man}_screen_description`
-each alone, `_screenshot` and `_screenshot_xml`. Models: Claude Code `claude-opus-5`, Codex CLI 0.138.0
-`gpt-5.6-sol`, Qwen Code 0.24.2 `qwen/qwen3.6-35b-a3b`. Some Claude run1/run2 transcripts are reruns;
-see `Dataset/p_claude_results/{RERUN,RETEST}_SUBSTITUTIONS.txt`.
+Models: Claude Code `claude-opus-5`, Codex CLI 0.138.0 `gpt-5.6-sol`, Qwen Code 0.24.2
+`qwen/qwen3.6-35b-a3b`.
 
 ## Commands
 
-Every command takes the same selection flags: bug ids (`8 18`, or `--all`, not both), `--config NAME… | all` (default `original`, for `list` every config; `all` = the 17 with outcomes), `--runs K… | all` (default `1 2 3`) and `--agent claude|codex|qwen` (repeatable; default all three). Bug ids
+Every command takes the same selection flags: bug ids (`8 18`, or `--all`, not both), `--config NAME` (default `original`), `--runs K… | all` (default `1 2 3`) and `--agent claude|codex|qwen` (repeatable; default all three). Bug ids
 may come anywhere on the line except straight after `--config` or `--runs`, which take several
 values.
 
 ```bash
 cd Parser
-python3 -m atif.cli list                                # agent x config x run matrix + APR pass counts
+python3 -m atif.cli list                                # agent x run matrix + APR pass counts
 python3 -m atif.cli convert --all                       # original, runs 1-3, 3 agents: 450 trajectories
-python3 -m atif.cli convert 18 --config all --runs 1    # one bug, every config, run 1
+python3 -m atif.cli convert 18 --runs 1                 # one bug, run 1
 python3 -m atif.cli validate                            # re-validate the converted files of the selection
-python3 -m atif.cli validate --from-raw --config all    # all 7,650 converted in memory; writes only the report
+python3 -m atif.cli validate --from-raw                 # convert in memory and validate; writes only the report
 python3 -m atif.cli validate --harbor                   # plus Harbor's official validator
 python3 -m atif.cli phases 18 --runs 1                  # phases -> subphases outline, with outcomes
 python3 -m atif.cli view --all                          # viewer data: overview.js, corpus packs, engine
@@ -62,7 +57,7 @@ process for the whole selection. The module can also be run directly from `Parse
 
 ```bash
 uv run --python 3.12 --no-project --with harbor python -m atif.harbor_check data/atif/original
-uv run --python 3.12 --no-project --with harbor python -m atif.harbor_check --from-raw --config all --all
+uv run --python 3.12 --no-project --with harbor python -m atif.harbor_check --from-raw --all
 ```
 
 ## Output
@@ -81,7 +76,7 @@ scripts read it); the annotation sheets, reading views and validation reports ar
 `convert` and `validate` when needed.
 
 A validation report is named after what it covers: `atif-raw.json` / `harbor-raw.json` (or
-`-converted`) for the whole corpus (17 configs × 3 runs × 3 agents × 50 bugs), otherwise with the
+`-converted`) for the whole corpus, otherwise with the
 selection appended, e.g. `atif-converted-original-r123.json` for the default `validate` or
 `harbor-raw-all-r2-qwen-bug18.json`, so a narrower run never overwrites a wider one. Each summary
 also records its `selection`.
