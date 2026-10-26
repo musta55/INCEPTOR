@@ -113,4 +113,4 @@ same files as Claude, but its edits and checks differ.
 
 ## License
 
-Research use only.
+Inceptor is released under the [MIT License](LICENSE).
