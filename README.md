@@ -18,7 +18,9 @@ runs on the same bug.
 
 ## Architecture
 
-![Inceptor's architecture](Dataset/Case%20Study/architecture.drawio.png)
+<p align="center">
+  <img src="Dataset/Case%20Study/architecture.drawio.png" alt="Inceptor's architecture" width="800">
+</p>
 
 Converters turn each agent's log into ATIF. The classification engine then labels every step
 using the lookup tables, the phase rules and any custom rules the user adds. The labels are
