@@ -13,6 +13,18 @@ runs on the same bug.
 
 ---
 
+## Architecture
+
+![Inceptor's architecture](Dataset/Case%20Study/architecture.drawio.png)
+
+Converters turn each agent's log into ATIF. The classification engine then labels every step
+using the lookup tables, the phase rules and any custom rules the user adds. The labels are
+kept in the browser's storage (IndexedDB) and drive the dashboard's three views: corpus
+exploration, trajectory inspection and comparison. Everything runs in the browser: the Python
+engine runs through Pyodide, and the dashboard is written in JavaScript.
+
+---
+
 ## Data
 
 | What | Where |
