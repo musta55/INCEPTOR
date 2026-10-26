@@ -11,6 +11,8 @@ runs on the same bug.
 - **Demo video:** [youtube.com/watch?v=A2dEy6_VhUM](https://www.youtube.com/watch?v=A2dEy6_VhUM)
 - **Lookup tables:** [`Lookup tables/Inceptor lookup tables.xlsx`](Lookup%20tables/Inceptor%20lookup%20tables.xlsx),
   expanded with this [prompt](Lookup%20tables/Heuristic%20Expansion%20Prompt.md)
+- **Annotation workbook** (sets, lookup-table construction, evaluation):
+  [`Lookup tables/annotation_workbook.xlsx`](Lookup%20tables/annotation_workbook.xlsx)
 
 ---
 
@@ -65,33 +67,19 @@ See [`Parser/README.md`](Parser/README.md) for all commands and the data formats
 
 ## Evaluation
 
-The heuristics were built and tested on three separate sets of trajectories, sampled by agent
-and patch outcome:
+The full process is recorded in the annotation workbook,
+[`Lookup tables/annotation_workbook.xlsx`](Lookup%20tables/annotation_workbook.xlsx):
 
-1. **Pilot** (3 trajectories, 73 steps). Two authors labelled the steps and drafted the lookup
-   tables.
-2. **Development** (339 trajectories, which leave out the pilot and test sets). An LLM proposed
-   new table entries, using the [heuristic expansion prompt](Lookup%20tables/Heuristic%20Expansion%20Prompt.md),
-   and an author checked each one. The *Lookup justification* tab of the Excel file records
-   every entry that was added.
-3. **Test** (12 trajectories, 4 per agent, 557 steps). Two authors labelled each step
-   independently, then settled their disagreements. They agreed on 94.1% of phases (κ = 0.91)
-   and on all action categories.
+| Step | Workbook tab |
+|---|---|
+| Pilot set (3 trajectories) and test set (12 trajectories): every step with both annotators' labels and the agreed label | *Annotation for Pilot + test set* |
+| Lookup tables drafted on the pilot set, and the annotators' agreement on it | *Pilot Look up table*, *Pilot agreement* |
+| Lookup tables expanded on the development set (339 trajectories) with this [prompt](Lookup%20tables/Heuristic%20Expansion%20Prompt.md) | *Final lookup table*, *Justification for Heurisitic Ex* |
+| Phase definitions | *Phase Definition* |
+| Inceptor's labels vs. the agreed labels on the test set | *Evaluation scores* |
 
-**Result: Inceptor's labels vs. the ground truth on the 557 test steps**
-
-| Label | Correct | Accuracy | Macro precision / recall / F1 |
-|---|---|---|---|
-| Action category | 555 / 557 | 99.6% | 0.99 / 1.00 / 1.00 |
-| Phase | 496 / 557 | 89.0% | 0.86 / 0.79 / 0.82 |
-
-Most phase errors are steps whose purpose depends on what the agent intended. Examples:
-re-reading a file it has already changed to prepare its next edit, or surveying the repository
-at the start.
-
-Artifacts: the [annotation workbook](Parser/Ground%20Truth/annotation_workbook.xlsx) (labels and
-scores), the [codebook](Parser/Annotation%20Codebook.docx), and the
-[annotated trajectories](Parser/Ground%20Truth/atif/).
+On the 557 test steps, Inceptor assigns the correct action category to 99.6% of steps and the
+correct phase to 89.0% (macro-F1 0.82).
 
 ---
 
