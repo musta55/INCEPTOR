@@ -16,6 +16,42 @@ runs on the same bug.
 
 ---
 
+## Try it: upload Dataset 2
+
+The tool opens with **Dataset 1** already loaded (25 bugs). **Dataset 2** holds 25 other bugs
+for you to upload yourself: 225 raw logs (25 bugs × 3 agents × 3 runs) and their test outcomes.
+
+1. **Get the folder** [`Dataset/demo/dataset2`](Dataset/demo/dataset2), using either option:
+   - Download it as a zip with
+     [download-directory](https://download-directory.github.io/?url=https://github.com/musta55/INCEPTOR/tree/main/Dataset/demo/dataset2),
+     then unzip it.
+   - Fetch only that folder with git:
+
+     ```bash
+     git clone --depth 1 --filter=blob:none --sparse https://github.com/musta55/INCEPTOR.git
+     cd INCEPTOR && git sparse-checkout set Dataset/demo/dataset2
+     ```
+
+2. **Upload it.** Open the [Upload page](https://inceptor-tool.vercel.app/upload.html), click
+   **choose a folder** and select `dataset2`, or drag the folder onto the page. The logs are
+   analysed in your browser and never leave it. `outcomes.csv` gives each run's pass/fail.
+3. **Explore.** The 25 new bugs appear on the **Corpus Overview** below Dataset 1. Open a bug
+   to inspect a run's phases, steps and files. Compare the three agents, or one agent's three
+   runs. Edit the rules on the **Lookup tables** page and see the labels change.
+
+To try your own runs, arrange them the same way. Each run folder holds one log of any
+supported format, including Markdown transcripts (SpecStory, Claude Code `/export`):
+
+```
+<dataset>/
+  bug-<id>/
+    <agent>/          claude, codex, qwen, …
+      run1/  <log>
+  outcomes.csv        bug,agent,run1,run2,run3  (pass / fail; optional)
+```
+
+---
+
 ## Architecture
 
 <p align="center">
@@ -35,7 +71,7 @@ engine runs through Pyodide, and the dashboard is written in JavaScript.
 | What | Where |
 |---|---|
 | 450 trajectories (50 Android bugs × 3 agents × 3 runs), converted to [ATIF v1.7](Parser/ATIF-v1.7-RFC.md) | [`Parser/data/atif/original/`](Parser/data/atif/original/) |
-| Example datasets to upload: raw logs plus `outcomes.csv`, 25 bugs each | [`Dataset/demo/`](Dataset/demo/) (`dataset1`, `dataset2`) |
+| Example datasets: raw logs plus `outcomes.csv`, 25 bugs each. `dataset1` is preloaded in the tool; `dataset2` is for you to upload ([Try it](#try-it-upload-dataset-2)) | [`Dataset/demo/`](Dataset/demo/) |
 | Case-study screenshots (Bug 84) | [`Dataset/Case Study/`](Dataset/Case%20Study/) |
 
 The agents are Claude Code (Opus 5), Codex (GPT-5.6-Sol) and Qwen Code (Qwen3.6-35B-A3B). Each
