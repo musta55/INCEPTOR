@@ -20,6 +20,10 @@ Non-JSON lines (harness stderr) and JSON lines split by them are skipped while p
 A file that is one JSON document is first offered to the SWE-bench adapters
 (``atif.swebench``: SWE-agent, OpenHands, mini-swe-agent), whose formats are whole documents
 rather than event lines and share no shape with the three above.
+
+A file that does not start as JSON may be a Markdown transcript (``atif.markdown``): SpecStory's
+export of a Claude Code, Codex CLI or other agent session, or Claude Code's ``/export``.  Its
+agent is the one the transcript names (``agent_of``), not the format's.
 """
 from __future__ import annotations
 
@@ -27,7 +31,7 @@ import json
 from pathlib import Path
 from typing import Optional
 
-from . import claude, codex, qwen, swebench
+from . import claude, codex, markdown, qwen, swebench
 
 PARSERS = {
     claude.SOURCE_FORMAT: claude.parse,
@@ -40,12 +44,16 @@ SWEBENCH_FORMATS = {"sweagent_traj": "swe-agent", "sweagent_chat": "swe-agent",
                     "openhands_messages": "openhands", "openhands_events": "openhands",
                     "mini_swe_agent": "mini-swe-agent"}
 PARSERS.update({fmt: swebench.parse for fmt in SWEBENCH_FORMATS})
+PARSERS.update({fmt: markdown.parse for fmt in markdown.FORMATS})
 AGENT_OF_FORMAT = {
     claude.SOURCE_FORMAT: "claude",
     claude.JSON_SOURCE_FORMAT: "claude",
     codex.SOURCE_FORMAT: "codex",
     qwen.SOURCE_FORMAT: "qwen",
     **SWEBENCH_FORMATS,
+    #: a SpecStory transcript names its agent (``agent_of``); this is the fallback
+    markdown.SPECSTORY_FORMAT: "agent",
+    markdown.EXPORT_FORMAT: "claude",
 }
 CLAUDE_CLASSES = ("SystemMessage(", "AssistantMessage(", "UserMessage(", "ResultMessage(",
                   "TaskStartedMessage(", "TaskNotificationMessage(", "TaskProgressMessage(",
@@ -114,6 +122,9 @@ def detect(path: Path, probe_lines: int = 400) -> Optional[str]:
         found = swebench.detect(path)
         if found:
             return found
+    found = markdown.detect(path)
+    if found:
+        return found
     try:
         handle = path.open(encoding="utf-8", errors="replace")
     except OSError:
@@ -145,6 +156,13 @@ def detect(path: Path, probe_lines: int = 400) -> Optional[str]:
                         return qwen.SOURCE_FORMAT
                     tentative = qwen.SOURCE_FORMAT
     return tentative
+
+
+def agent_of(fmt: str, trajectory: dict) -> str:
+    """The agent of a parsed log: the format's, or the one a Markdown transcript names."""
+    if fmt in markdown.FORMATS:
+        return str((trajectory.get("extra") or {}).get("agent") or AGENT_OF_FORMAT[fmt])
+    return AGENT_OF_FORMAT[fmt]
 
 
 def parse(path: Path, **kwargs):

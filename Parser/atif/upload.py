@@ -1,5 +1,6 @@
 """Analyse one trajectory that is not in the corpus: a raw log of Claude Code, Codex CLI or
-Qwen Code, a SWE-bench run of SWE-agent, OpenHands or mini-swe-agent (``atif.swebench``), or an
+Qwen Code, a SWE-bench run of SWE-agent, OpenHands or mini-swe-agent (``atif.swebench``), a
+Markdown transcript (SpecStory's, or Claude Code's ``/export``: ``atif.markdown``), or an
 ATIF file, given as text (the viewer's Analyze page) or as a path
 (``python3 -m atif.cli analyze``).
 
@@ -129,12 +130,13 @@ def parse_text(text: str, name: str = "") -> Dict[str, Any]:
         fmt = detect.detect(path)
         if fmt is None:
             raise UploadError("this is not a log of Claude Code, Codex CLI, Qwen Code, "
-                              "SWE-agent, OpenHands or mini-swe-agent, nor an ATIF file")
+                              "SWE-agent, OpenHands or mini-swe-agent, a Markdown transcript "
+                              "(SpecStory, Claude Code /export), nor an ATIF file")
         try:
             trajectory = detect.PARSERS[fmt](path)
         except Exception as exc:                    # a damaged log: say so, do not crash
             raise UploadError(f"the {detect.AGENT_OF_FORMAT[fmt]} log could not be read: {exc}")
-    return {"trajectory": trajectory, "format": fmt, "agent": detect.AGENT_OF_FORMAT[fmt]}
+    return {"trajectory": trajectory, "format": fmt, "agent": detect.agent_of(fmt, trajectory)}
 
 
 def _agent_of(trajectory: dict) -> str:

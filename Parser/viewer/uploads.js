@@ -87,7 +87,7 @@
   }
   /* which files of a run folder to try, in order: the log formats first, the largest first;
    * a .meta.json last (it describes a run, it is not one) */
-  var TRY_EXT = { jsonl: 0, ndjson: 0, traj: 0, json: 1, log: 2, txt: 3 };
+  var TRY_EXT = { jsonl: 0, ndjson: 0, traj: 0, json: 1, log: 2, txt: 3, md: 3, markdown: 3 };
   function tryRank(f) {
     var ext = (/\.([a-z0-9]+)$/i.exec(f.name) || [])[1], r = TRY_EXT[(ext || '').toLowerCase()];
     return /\.meta\.json$/i.test(f.name) ? 9 : r == null ? -1 : r;
@@ -425,7 +425,8 @@
       return { atif: 'ATIF', claude_agent_sdk_repr: 'Claude Agent SDK dump', claude_code_stream_json: 'Claude Code JSON',
         codex_rollout_jsonl: 'Codex rollout', qwen_stream_json: 'Qwen Code stream-json',
         sweagent_traj: 'SWE-agent .traj', sweagent_chat: 'SWE-agent chat export', openhands_messages: 'OpenHands messages',
-        openhands_events: 'OpenHands events', mini_swe_agent: 'mini-swe-agent .traj.json' }[fmt] || fmt || '';
+        openhands_events: 'OpenHands events', mini_swe_agent: 'mini-swe-agent .traj.json',
+        specstory_markdown: 'SpecStory Markdown', claude_code_export: 'Claude Code /export' }[fmt] || fmt || '';
     },
     sizeLabel: function (n) {
       return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : n >= 1024 ? Math.round(n / 1024) + ' KB' : n + ' B';

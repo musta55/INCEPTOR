@@ -47,7 +47,7 @@ ran three times on each of the 50 bugs. Each patch was checked with the bug's te
 
 | Component | Where |
 |---|---|
-| Log parsers (6 agents + ATIF) and the classification engine (Python) | [`Parser/atif/`](Parser/atif/) |
+| Log parsers (6 agents, ATIF, and Markdown transcripts from SpecStory or Claude Code's `/export`) and the classification engine (Python) | [`Parser/atif/`](Parser/atif/) |
 | Lookup tables as code | [`Parser/atif/lookup.py`](Parser/atif/lookup.py) |
 | Dashboard (HTML/JS; the engine runs in the browser via Pyodide) | [`Parser/viewer/`](Parser/viewer/) |
 | Ground-truth and split scripts | `Parser/make_ground_truth.py`, `Parser/make_splits.py`, `Parser/score_ground_truth.py` |

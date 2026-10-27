@@ -199,8 +199,11 @@ and format are recognised from the content, never the file name:
 | SWE-agent      | a SWE-bench run's `<instance>.traj`, or a row of Hugging Face's SWE-agent chat export (`nebius/SWE-agent-trajectories`)                                                                                 | 0.x and 1.x (SWE-bench Verified submissions) | `.traj` `.json`                    |
 | OpenHands      | the run's messages (SWE-bench submissions' `trajs/<instance>.json`, `nebius/SWE-rebench-openhands-trajectories` rows) or its event stream (`--save-trajectory-path`, an evaluation row's `history`) | CodeAct 2.x                                  | `.json`                              |
 | mini-swe-agent | `<instance>.traj.json` (live-SWE-agent too)                                                                                                                                                               | 1.13–1.14                                   | `.json`                              |
+| Markdown       | a transcript rather than a log: SpecStory's export (`.specstory/history/*.md`) of a Claude Code, Codex CLI or other session, in either tool markup (`<tool-use>` blocks or `[external_agent_tool_call]` blocks), or Claude Code's `/export` | SpecStory Markdown v2.1                      | `.md` `.txt`                         |
 
-A JSON array of events works too. Categories need the agent's tool names, which live in the
+A JSON array of events works too. A Markdown transcript names its agent (SpecStory's session
+header, else its model), keeps fewer inputs than a log (an edit's path is read from its result)
+and no sub-agent steps; what it lacks is listed in `extra.known_gaps`. Categories need the agent's tool names, which live in the
 "Agent vocabularies" tables of `atif/taxonomy.py`: Claude Code, Codex CLI and Qwen Code are
 checked on the corpus; OpenHands, Terminus-2, mini-swe-agent and Trae Agent on published Harbor
 ATIF runs (`tests/test_parsers.py`, `ForeignAgentTests`), and Gemini CLI shares Qwen Code's names.
@@ -270,6 +273,7 @@ The tool's phase rules are in [Phase taxonomy.md](<Phase%20taxonomy.md>).
 | `atif/claude.py`                       | `claude-agent-sdk` `repr()` dump → ATIF (AST-based, no `eval`)                                                                               |
 | `atif/codex.py`                        | Codex rollout JSONL → ATIF                                                                                                                         |
 | `atif/qwen.py`                         | Qwen Code `stream-json` → ATIF                                                                                                                   |
+| `atif/markdown.py`                     | Markdown transcripts → ATIF: SpecStory's export of any agent, Claude Code's `/export`                                                              |
 | `atif/detect.py`                       | which parser a file needs, from its content                                                                                                         |
 | `atif/corpus.py`                       | the dataset layout: find any (agent, config, run, bug) log, output paths                                                                            |
 | `atif/outcomes.py`                     | APR outcomes per (agent, config, run, bug); badges read from the trajectory                                                                         |
